@@ -3061,8 +3061,9 @@ void CCharacter::Snap(int SnappingClient)
 {
 	int id = m_pPlayer->GetCID();
 
-	if (!Server()->Translate(id, SnappingClient))
-		return;
+	if(SnappingClient != -1)
+		if (!Server()->Translate(id, SnappingClient))
+			return;
 
 	if(NetworkClipped(SnappingClient))
 		return;
@@ -3085,6 +3086,8 @@ void CCharacter::Snap(int SnappingClient)
 		pFlag->m_Team = TEAM_RED;
 	}
 	
+	if(SnappingClient != -1)
+	{
 	if(m_Armor < 10 && SnappingClient != m_pPlayer->GetCID() && IsHuman() && GetClass() != PLAYERCLASS_HERO)
 	{
 		if(pClient && pClient->GetClass() == PLAYERCLASS_MEDIC)
@@ -3170,6 +3173,7 @@ void CCharacter::Snap(int SnappingClient)
 			}
 
 		}
+	}
 	}
 	
 	if(SnappingClient == m_pPlayer->GetCID())
@@ -3294,8 +3298,9 @@ void CCharacter::Snap(int SnappingClient)
 
 	if (pCharacter->m_HookedPlayer != -1)
 	{
-		if (!Server()->Translate(pCharacter->m_HookedPlayer, SnappingClient))
-			pCharacter->m_HookedPlayer = -1;
+		if (SnappingClient != -1)
+			if (!Server()->Translate(pCharacter->m_HookedPlayer, SnappingClient))
+				pCharacter->m_HookedPlayer = -1;
 	}
 	pCharacter->m_Emote = m_EmoteType;
 

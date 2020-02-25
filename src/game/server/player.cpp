@@ -234,7 +234,8 @@ void CPlayer::Snap(int SnappingClient)
 		return;
 
 	int id = m_ClientID;
-	if (!Server()->Translate(id, SnappingClient)) return;
+	if(SnappingClient != -1)
+		if (!Server()->Translate(id, SnappingClient)) return;
 
 	CNetObj_ClientInfo *pClientInfo = static_cast<CNetObj_ClientInfo *>(Server()->SnapNewItem(NETOBJTYPE_CLIENTINFO, id, sizeof(CNetObj_ClientInfo)));
 
@@ -244,10 +245,11 @@ void CPlayer::Snap(int SnappingClient)
 	StrToInts(&pClientInfo->m_Name0, 4, Server()->ClientName(m_ClientID));
 	
 	int SnapScoreMode = PLAYERSCOREMODE_SCORE;
-	if(GameServer()->m_apPlayers[SnappingClient])
-	{
-		SnapScoreMode = GameServer()->m_apPlayers[SnappingClient]->GetScoreMode();
-	}
+	if(SnappingClient != -1)
+		if(GameServer()->m_apPlayers[SnappingClient])
+		{
+			SnapScoreMode = GameServer()->m_apPlayers[SnappingClient]->GetScoreMode();
+		}
 	
 /* INFECTION MODIFICATION STRAT ***************************************/
 	int PlayerInfoScore = 0;

@@ -551,6 +551,8 @@ void CGameControllerMOD::Snap(int SnappingClient)
 			ClassMask |= CMapConverter::MASK_SUPPORT;
 	}
 	
+	if(SnappingClient != -1)
+	{
 	if(GameServer()->m_apPlayers[SnappingClient])
 	{
 		int Page = -1;
@@ -570,6 +572,7 @@ void CGameControllerMOD::Snap(int SnappingClient)
 			pGameInfoObj->m_RoundStartTick = Server()->Tick() - TimeShift;
 			pGameInfoObj->m_TimeLimit += (TimeShift/Server()->TickSpeed())/60;
 		}
+	}
 	}
 
 	CNetObj_GameData *pGameDataObj = (CNetObj_GameData *)Server()->SnapNewItem(NETOBJTYPE_GAMEDATA, 0, sizeof(CNetObj_GameData));
