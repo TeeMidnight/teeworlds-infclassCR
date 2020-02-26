@@ -3068,7 +3068,10 @@ void CCharacter::Snap(int SnappingClient)
 	if(NetworkClipped(SnappingClient))
 		return;
 	
-	CPlayer* pClient = GameServer()->m_apPlayers[SnappingClient];
+		CPlayer* pClient = GameServer()->m_apPlayers[SnappingClient];
+
+	if(SnappingClient == -1)
+		pClient = nullptr;
 	
 /* INFECTION MODIFICATION START ***************************************/
 	if(GetClass() == PLAYERCLASS_GHOST)
@@ -3176,6 +3179,8 @@ void CCharacter::Snap(int SnappingClient)
 	}
 	}
 	
+	if(SnappingClient != -1)
+	{
 	if(SnappingClient == m_pPlayer->GetCID())
 	{
 		if(GetClass() == PLAYERCLASS_SCIENTIST && m_ActiveWeapon == WEAPON_GRENADE)
@@ -3263,6 +3268,7 @@ void CCharacter::Snap(int SnappingClient)
 				pObj->m_StartTick = Server()->Tick();
 			}
 		}
+	}
 	}
 /* INFECTION MODIFICATION END ***************************************/
 

@@ -173,11 +173,14 @@ public:
 		T tmp;
 		if (ClientID == -1)
 		{
+			//Only for demo record
+			SendPackMsgOne(pMsg, Flags|MSGFLAG_NOSEND, -1);
+
 			for(int i = 0; i < MAX_CLIENTS; i++)
 				if(ClientIngame(i))
 				{
 					mem_copy(&tmp, pMsg, sizeof(T));
-					result = SendPackMsgTranslate(&tmp, Flags, i);
+					result = SendPackMsgTranslate(&tmp, Flags|MSGFLAG_NORECORD, i);
 				}
 		} else {
 			mem_copy(&tmp, pMsg, sizeof(T));
