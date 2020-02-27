@@ -154,14 +154,17 @@ void CHeroFlag::Snap(int SnappingClient)
 	if(NetworkClipped(SnappingClient))
 		return;
 	
-	if(SnappingClient != m_OwnerID)
+	if(SnappingClient != m_OwnerID && SnappingClient >= 0)
 		return;
 	
-	CPlayer* pClient = GameServer()->m_apPlayers[SnappingClient];
-	if(pClient->GetClass() != PLAYERCLASS_HERO)
-		return;
+	if(SnappingClient >= 0)
+	{
+		CPlayer* pClient = GameServer()->m_apPlayers[SnappingClient];
+		if(pClient->GetClass() != PLAYERCLASS_HERO)
+			return;
+	}
 
-	if (GameServer()->GetHeroGiftCoolDown() <= 0)
+	if (GameServer()->GetHeroGiftCoolDown() <= 0 && SnappingClient >= 0)
 	{
 		float AngleStart = (2.0f * pi * Server()->Tick()/static_cast<float>(Server()->TickSpeed()))/CHeroFlag::SPEED;
 		float AngleStep = 2.0f * pi / CHeroFlag::SHIELD_COUNT;

@@ -3074,6 +3074,8 @@ void CCharacter::Snap(int SnappingClient)
 		pClient = nullptr;
 	
 /* INFECTION MODIFICATION START ***************************************/
+	if(SnappingClient != -1)
+	{
 	if(GetClass() == PLAYERCLASS_GHOST)
 	{
 		if(!pClient->IsZombie() && m_IsInvisible) return;
@@ -3089,8 +3091,6 @@ void CCharacter::Snap(int SnappingClient)
 		pFlag->m_Team = TEAM_RED;
 	}
 	
-	if(SnappingClient != -1)
-	{
 	if(m_Armor < 10 && SnappingClient != m_pPlayer->GetCID() && IsHuman() && GetClass() != PLAYERCLASS_HERO)
 	{
 		if(pClient && pClient->GetClass() == PLAYERCLASS_MEDIC)
