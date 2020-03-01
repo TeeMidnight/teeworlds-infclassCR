@@ -3074,13 +3074,7 @@ void CCharacter::Snap(int SnappingClient)
 		pClient = nullptr;
 	
 /* INFECTION MODIFICATION START ***************************************/
-	if(SnappingClient != -1)
-	{
-	if(GetClass() == PLAYERCLASS_GHOST)
-	{
-		if(!pClient->IsZombie() && m_IsInvisible) return;
-	}
-	else if(GetClass() == PLAYERCLASS_WITCH)
+	if(GetClass() == PLAYERCLASS_WITCH)
 	{
 		CNetObj_Flag *pFlag = (CNetObj_Flag *)Server()->SnapNewItem(NETOBJTYPE_FLAG, m_FlagID, sizeof(CNetObj_Flag));
 		if(!pFlag)
@@ -3089,6 +3083,13 @@ void CCharacter::Snap(int SnappingClient)
 		pFlag->m_X = (int)m_Pos.x;
 		pFlag->m_Y = (int)m_Pos.y;
 		pFlag->m_Team = TEAM_RED;
+	}
+
+	if(SnappingClient != -1)
+	{
+	if(GetClass() == PLAYERCLASS_GHOST)
+	{
+		if(!pClient->IsZombie() && m_IsInvisible) return;
 	}
 	
 	if(m_Armor < 10 && SnappingClient != m_pPlayer->GetCID() && IsHuman() && GetClass() != PLAYERCLASS_HERO)
