@@ -59,9 +59,10 @@ void CGameControllerMOD::OnClientDrop(int ClientID, int Type)
 	{
 		SetFirstInfectedNumber();
 		
-		if(GameServer()->GetZombieCount() < GetFirstInfNb())
+		if(GameServer()->GetZombieCount() <= GetFirstInfNb()) // quit client not deleted, so zombie number should subtract 1
 		{
 			Server()->Ban(ClientID, 60*g_Config.m_InfLeaverBanTime, "Leaver");
+			m_InfectedStarted = false;
 		}
 	}
 }
