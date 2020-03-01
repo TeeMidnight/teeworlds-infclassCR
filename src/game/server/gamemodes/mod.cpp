@@ -24,6 +24,7 @@ CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 	m_GrowingMap = new int[m_MapWidth*m_MapHeight];
 	
 	m_InfectedStarted = false;
+	m_InfectedQuit = false;
 	m_NumFirstInfected = 0;
 	
 	for(int j=0; j<m_MapHeight; j++)
@@ -63,6 +64,7 @@ void CGameControllerMOD::OnClientDrop(int ClientID, int Type)
 		{
 			Server()->Ban(ClientID, 60*g_Config.m_InfLeaverBanTime, "Leaver");
 			m_InfectedStarted = false;
+			m_InfectedQuit = true;
 		}
 	}
 }
@@ -168,7 +170,10 @@ void CGameControllerMOD::DoFairInfection()
 		Server()->InfectClient(FairInfVector[random]);
 
 		//infect player behind clientid taken from vector
-		GameServer()->m_apPlayers[FairInfVector[random]]->StartInfection();
+		if(m_InfectedQuit)
+			GameServer()->m_apPlayers[FairInfVector[random]]->GetCharacter()->Die(FairInfVector[random], WEAPON_GAME);
+		else
+			GameServer()->m_apPlayers[FairInfVector[random]]->StartInfection();
 
 		//notification to other players
 		GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_INFECTION, _("{str:VictimName} has been infected"),
@@ -306,6 +311,7 @@ void CGameControllerMOD::Tick()
 				DoFairInfection();
 				DoUnfairInfection();
 				m_InfectedStarted = true;
+				m_InfectedQuit = false;
 			}
 		}
 		else

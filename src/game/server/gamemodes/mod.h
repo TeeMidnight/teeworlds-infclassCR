@@ -51,6 +51,7 @@ private:
 	bool m_ExplosionStarted;
 	
 	bool m_InfectedStarted;
+	bool m_InfectedQuit;
 	int m_NumFirstInfected;
 };
 #endif
