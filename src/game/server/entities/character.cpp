@@ -971,6 +971,10 @@ void CCharacter::FireWeapon()
 								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_Config.m_InfBatDamage,
 									m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
 							}
+							else if(GetClass() == PLAYERCLASS_SPIDER) {
+								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_Config.m_InfSpiderDamage,
+									m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
+							}
 							else if(GameServer()->m_pController->IsInfectionStarted())
 							{
 								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_pData->m_Weapons.m_Hammer.m_pBase->m_Damage,
@@ -1558,6 +1562,10 @@ void CCharacter::HandleWeapons()
 				{
 					Rate = 0.5f;
 					Damage = g_Config.m_InfSmokerHookDamage;
+				}
+				else if(GetClass() == PLAYERCLASS_SPIDER)
+				{
+					Damage = g_Config.m_InfSpiderHookDamage;
 				}
 				else if(GetClass() == PLAYERCLASS_GHOUL)
 				{
