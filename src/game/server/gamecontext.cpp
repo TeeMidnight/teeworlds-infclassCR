@@ -245,7 +245,7 @@ int CGameContext::RandomZombieToWitch()
 	{
 		if (!m_apPlayers[i])
 			continue;
-		if (m_apPlayers[i]->IsZombie()) {
+		if (m_apPlayers[i]->IsZombie() && !(m_apPlayers[i]->GetTeam() == TEAM_SPECTATORS && g_Config.m_InfIgnoreSpec)) {
 			zombies_id.push_back(i);
 		}
 	}
