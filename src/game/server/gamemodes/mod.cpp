@@ -58,7 +58,6 @@ void CGameControllerMOD::OnClientDrop(int ClientID, int Type)
 	CPlayer* pPlayer = GameServer()->m_apPlayers[ClientID];
 	if(pPlayer && pPlayer->IsZombie() && m_InfectedStarted)
 	{
-		GameServer()->CountInfPlayers();
 		SetFirstInfectedNumber();
 		
 		if(GameServer()->GetZombieCount() <= GetFirstInfNb()) // quit client not deleted, so zombie number should subtract 1
@@ -122,7 +121,7 @@ void CGameControllerMOD::SetFirstInfectedNumber()
 {
 	int NumHumans = GameServer()->GetHumanCount();
 	int NumInfected = GameServer()->GetZombieCount();
-	//int NumSpec = GameServer()->GetSpectatorCount();
+	int NumSpec = GameServer()->GetSpectatorCount();
 	
 	if(NumHumans + NumInfected <= 1)
 		m_NumFirstInfected = 0;
@@ -131,8 +130,8 @@ void CGameControllerMOD::SetFirstInfectedNumber()
 	else
 		m_NumFirstInfected = 2;
 
-	//if(g_Config.m_InfIgnoreSpec)
-	//	m_NumFirstInfected += NumSpec;
+	if(g_Config.m_InfIgnoreSpec)
+		m_NumFirstInfected += NumSpec;
 }
 
 int CGameControllerMOD::GetFirstInfNb()
