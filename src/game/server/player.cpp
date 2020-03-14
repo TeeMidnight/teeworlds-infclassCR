@@ -820,7 +820,7 @@ void CPlayer::StartInfection(bool force)
 
 bool CPlayer::IsZombie() const
 {
-	return (m_class > END_HUMANCLASS);
+	return ((m_class > END_HUMANCLASS) && !(m_Team == TEAM_SPECTATORS && g_Config.m_InfIgnoreSpec));
 }
 
 bool CPlayer::IsHuman() const
