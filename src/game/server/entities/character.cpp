@@ -2816,7 +2816,11 @@ void CCharacter::Die(int Killer, int Weapon)
 		{
 			CCharacter* pKiller = GameServer()->m_apPlayers[Killer]->GetCharacter();
 			if(pKiller)
+			{
+				if(Weapon == WEAPON_RIFLE)
+					pKiller->m_aWeapons[WEAPON_RIFLE].m_Ammo += g_Config.m_InfSniperKillAmmo;
 				GiveWeapon(WEAPON_RIFLE, 1);
+			}
 		}
 	}
 	
