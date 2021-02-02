@@ -3050,10 +3050,13 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 			}
 		}
 		
-		if (pKillerPlayer)
-			pKillerPlayer->IncreaseNumberKills();
-		if (pKillerChar)
-			pKillerChar->CheckSuperWeaponAccess();
+		if (!(GetClass() == PLAYERCLASS_UNDEAD) || g_Config.m_InfUndeadIncNumKills)
+		{
+			if (pKillerPlayer)
+				pKillerPlayer->IncreaseNumberKills();
+			if (pKillerChar)
+				pKillerChar->CheckSuperWeaponAccess();
+		}
 		
 		return false;
 	}
