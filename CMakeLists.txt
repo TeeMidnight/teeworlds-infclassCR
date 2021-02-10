@@ -699,7 +699,7 @@ endif()
 
 # Sources
 set_glob(ENGINE_SERVER GLOB src/engine/server
- crypt.cpp
+  crypt.cpp
   crypt.h
   mapconverter.cpp
   mapconverter.h
@@ -786,11 +786,21 @@ set_glob(GAME_SERVER GLOB_RECURSE src/game/server
   eventhandler.cpp
   gamecontroller.h
 )
+set_glob(INFCLASSR_SERVER GLOB_RECURSE src/infclassr
+  geolocation.cpp
+  geolocation.h
+  GeoLite2PP/GeoLite2PP.cpp
+  GeoLite2PP/GeoLite2PP_error_category.cpp
+  GeoLite2PP/GeoLite2PP_error_category.hpp
+  GeoLite2PP/GeoLite2PP.hpp
+  GeoLite2PP/GeoLite2PP_version.hpp
+  GeoLite2PP/GeoLite2PP_version.hpp.in
+)
 set(GAME_GENERATED_SERVER
   "src/game/generated/server_data.cpp"
   "src/game/generated/server_data.h"
 )
-set(SERVER_SRC ${ENGINE_SERVER} ${GAME_SERVER} ${GAME_GENERATED_SERVER})
+set(SERVER_SRC ${ENGINE_SERVER} ${GAME_SERVER} ${INFCLASSR_SERVER} ${GAME_GENERATED_SERVER})
 if(TARGET_OS STREQUAL "windows")
   set(SERVER_ICON "other/icons/${SERVER_EXECUTABLE}.rc")
 else()
