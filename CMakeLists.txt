@@ -675,8 +675,9 @@ set(LIBS
   ${PLATFORM_LIBS}
   # Add pthreads (on non-Windows) at the end, so that other libraries can depend
   # on it.
-  ICU::i18n
-  ICU::uc
+  #ICU::i18n
+  #ICU::uc
+  ${ICU_LIBRARIES}
   ${CMAKE_THREAD_LIBS_INIT}
 )
 
@@ -851,8 +852,9 @@ list(APPEND TARGETS_LINK ${TARGET_SERVER})
 #target_link_libraries(${TARGET_SERVER} md5)
 #target_link_libraries(${TARGET_SERVER} engine-shared)
 #target_link_libraries(${TARGET_SERVER} game-shared)
-target_link_libraries(${TARGET_SERVER} ICU::i18n)
-target_link_libraries(${TARGET_SERVER} ICU::uc)
+#target_link_libraries(${TARGET_SERVER} ICU::i18n)
+#target_link_libraries(${TARGET_SERVER} ICU::uc)
+target_link_libraries(${TARGET_SERVER} ${ICU_LIBRARIES})
 
 if(TARGET_OS AND TARGET_OS STREQUAL "mac")
   set(SERVER_LAUNCHER_SRC src/osxlaunch/server.mm)
