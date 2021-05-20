@@ -1270,6 +1270,12 @@ void CCharacter::FireWeapon()
 						auto pScientist = GetPlayer()->GetCharacter();
 						pScientist->TakeDamage(vec2(0.0f, 0.0f), g_Config.m_InfScientistTpSelfharm * 2, GetPlayer()->GetCID(), WEAPON_HAMMER, TAKEDAMAGEMODE_SELFHARM);
 					}
+					CCharacterCore *p = m_Core.m_Passenger;
+					while (p != nullptr)
+					{
+						p->m_HookState = HOOK_RETRACTED;
+						p = p->m_Passenger;
+					}
 					GameServer()->CreateDeath(OldPos, GetPlayer()->GetCID());
 					GameServer()->CreateDeath(PortalPos, GetPlayer()->GetCID());
 					GameServer()->CreateSound(PortalPos, SOUND_CTF_RETURN);
