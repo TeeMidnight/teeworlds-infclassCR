@@ -566,6 +566,12 @@ set_glob(BASE GLOB_RECURSE src/base
   tl/threading.h
   vmath.h
 )
+
+set(teeuniverses_SOURCES
+    src/teeuniverses/components/localization.cpp
+    src/teeuniverses/components/localization.h
+)
+
 set_glob(ENGINE_INTERFACE GLOB src/engine
   message.h
   kernel.h
@@ -820,7 +826,7 @@ set(GAME_GENERATED_SERVER
   "src/game/generated/server_data.cpp"
   "src/game/generated/server_data.h"
 )
-set(SERVER_SRC ${ENGINE_SERVER} ${GAME_SERVER} ${GAME_GENERATED_SERVER})
+set(SERVER_SRC ${ENGINE_SERVER} ${GAME_SERVER} ${GAME_GENERATED_SERVER} ${INFCLASSR_SERVER})
 if(TARGET_OS STREQUAL "windows")
   set(SERVER_ICON "other/icons/DDNet-Server.rc")
 else()
@@ -834,6 +840,7 @@ set(LIBS_SERVER
   # Add pthreads (on non-Windows) at the end, so that other libraries can depend
   # on it.
   ${CMAKE_THREAD_LIBS_INIT}
+  maxminddb
 )
 
 # Target
@@ -845,6 +852,7 @@ add_executable(${TARGET_SERVER}
   $<TARGET_OBJECTS:engine-shared>
   $<TARGET_OBJECTS:game-shared>
 )
+set_property(TARGET Infclass-Server PROPERTY CXX_STANDARD 11)
 target_link_libraries(${TARGET_SERVER} ${LIBS_SERVER})
 list(APPEND TARGETS_OWN ${TARGET_SERVER})
 list(APPEND TARGETS_LINK ${TARGET_SERVER})
