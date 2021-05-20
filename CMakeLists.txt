@@ -1,8 +1,10 @@
-cmake_minimum_required(VERSION 2.8)
+# DDNet-based CMakeLists for InfclassR
+
+cmake_minimum_required(VERSION 3.3)
 
 file(STRINGS src/game/version.h VERSION_LINE
   LIMIT_COUNT 1
-  REGEX GAME_RELEASE_VERSION
+  REGEX "^#define GAME_RELEASE_VERSION "
 )
 
 if(VERSION_LINE MATCHES "\"([0-9]+)\\.([0-9]+)\\.([0-9]+)\"")
@@ -20,12 +22,12 @@ endif()
 if(POLICY CMP0048)
   cmake_policy(SET CMP0048 NEW)
   if(VERSION_PATCH STREQUAL "0")
-    project(teeworlds VERSION ${VERSION_MAJOR}.${VERSION_MINOR})
+    project(InfclassR VERSION ${VERSION_MAJOR}.${VERSION_MINOR})
   else()
-    project(teeworlds VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
+    project(InfclassR VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
   endif()
 else()
-  project(teeworlds)
+  project(DDNet)
   set(PROJECT_VERSION_MAJOR ${VERSION_MAJOR})
   set(PROJECT_VERSION_MINOR ${VERSION_MINOR})
   set(PROJECT_VERSION_PATCH ${VERSION_PATCH})
@@ -68,20 +70,34 @@ else()
 endif()
 
 set(AUTO_DEPENDENCIES_DEFAULT OFF)
+set(AUTOUPDATE_DEFAULT OFF)
 if(TARGET_OS STREQUAL "windows")
   set(AUTO_DEPENDENCIES_DEFAULT ON)
+  set(AUTOUPDATE_DEFAULT ON)
+elseif(TARGET_OS STREQUAL "linux")
+  set(AUTOUPDATE_DEFAULT ON)
 endif()
 
+option(WEBSOCKETS "Enable websockets support" OFF)
+option(MYSQL "Enable mysql support" OFF)
+option(AUTOUPDATE "Enable the autoupdater" ${AUTOUPDATE_DEFAULT})
+option(DOWNLOAD_GTEST "Download and compile GTest" ${AUTO_DEPENDENCIES_DEFAULT})
 option(PREFER_BUNDLED_LIBS "Prefer bundled libraries over system libraries" ${AUTO_DEPENDENCIES_DEFAULT})
 option(DEV "Don't generate stuff necessary for packaging" OFF)
 
+set(OpenGL_GL_PREFERENCE LEGACY)
+
 # Set the default build type to Release
 if(NOT(CMAKE_BUILD_TYPE))
-  if(DEV)
+  if(NOT(DEV))
     set(CMAKE_BUILD_TYPE Release)
   else()
     set(CMAKE_BUILD_TYPE Debug)
   endif()
+endif()
+
+if(NOT(CMAKE_BUILD_TYPE MATCHES "^(Release|Debug|RelWithDebInfo|MinSizeRel)$"))
+  message(WARNING "Unknown CMAKE_BUILD_TYPE, should be one of Release, Debug, RelWithDebInfo or MinSizeRel")
 endif()
 
 set(DBG $<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>)
@@ -90,7 +106,7 @@ set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
   src/game/version.h
 )
 
-set(SERVER_EXECUTABLE teeworlds_srv CACHE STRING "Name of the built server executable")
+set(SERVER_EXECUTABLE Infclass-Server CACHE STRING "Name of the built server executable")
 
 ########################################################################
 # Compiler flags
@@ -113,7 +129,25 @@ function(add_c_compiler_flag_if_supported VARIABLE FLAG)
   endif()
 endfunction()
 
+# Force compiler colors on when using ninja. Ninja filters the colors out when
+# it's not printing to a terminal on its own.
+if(CMAKE_GENERATOR STREQUAL "Ninja")
+  add_c_compiler_flag_if_supported(OUR_FLAGS -fdiagnostics-color=always)
+  add_c_compiler_flag_if_supported(OUR_FLAGS -fcolor-diagnostics)
+endif()
+
 if(NOT MSVC)
+  if(CMAKE_VERSION VERSION_LESS 3.1 OR TARGET_OS STREQUAL "mac")
+    check_cxx_compiler_flag(-std=gnu++11 FLAG_SUPPORTED_std_gnu__11)
+    if(FLAG_SUPPORTED_std_gnu__11)
+      if(CMAKE_CXX_FLAGS)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
+      else()
+        set(CMAKE_CXX_FLAGS -std=gnu++11)
+      endif()
+    endif()
+  endif()
+
   # Protect the stack pointer.
   # -fstack-protector-all doesn't work on MinGW.
   add_c_compiler_flag_if_supported(OUR_FLAGS -fstack-protector-all)
@@ -143,6 +177,16 @@ if(NOT MSVC)
   add_c_compiler_flag_if_supported(OUR_FLAGS_OWN -Wno-missing-field-initializers)
   add_c_compiler_flag_if_supported(OUR_FLAGS_OWN -Wformat=2) # Warn about format strings.
   add_c_compiler_flag_if_supported(OUR_FLAGS_DEP -Wno-implicit-function-declaration)
+  add_c_compiler_flag_if_supported(OUR_FLAGS_OWN -Wduplicated-cond)
+  add_c_compiler_flag_if_supported(OUR_FLAGS_OWN -Wduplicated-branches)
+  add_c_compiler_flag_if_supported(OUR_FLAGS_OWN -Wlogical-op)
+  add_c_compiler_flag_if_supported(OUR_FLAGS_OWN -Wrestrict)
+  # TODO: Enable for C++ code except gtest
+  #add_cxx_compiler_flag_if_supported(OUR_FLAGS_OWN "-Wuseless-cast")
+endif()
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type")
 endif()
 
 if(NOT MSVC)
@@ -183,6 +227,9 @@ function(set_glob VAR GLOBBING DIRECTORY) # ...
       if(GLOB_BUT_NOT_LIST)
         message(AUTHOR_WARNING "Entries only present in ${DIRECTORY}: ${GLOB_BUT_NOT_LIST}")
       endif()
+      if(NOT LIST_BUT_NOT_GLOB AND NOT GLOB_BUT_NOT_LIST)
+        message(AUTHOR_WARNING "${VAR} is not alphabetically sorted")
+      endif()
     endif()
   endif()
 
@@ -211,7 +258,7 @@ function(set_extra_dirs_lib VARIABLE NAME)
     set(TYPE PATHS)
   endif()
   if(TARGET_BITS AND TARGET_OS)
-    set(DIR "other/${NAME}/${TARGET_OS}/lib${TARGET_BITS}")
+    set(DIR "ddnet-libs/${NAME}/${TARGET_OS}/lib${TARGET_BITS}")
     set("${TYPE}_${VARIABLE}_LIBDIR" "${DIR}" PARENT_SCOPE)
     set("EXTRA_${VARIABLE}_LIBDIR" "${DIR}" PARENT_SCOPE)
   endif()
@@ -222,7 +269,7 @@ function(set_extra_dirs_include VARIABLE NAME LIBRARY)
   set("HINTS_${VARIABLE}_INCLUDEDIR" PARENT_SCOPE)
   is_bundled(IS_BUNDLED "${LIBRARY}")
   if(IS_BUNDLED)
-    set("HINTS_${VARIABLE}_INCLUDEDIR" "other/${NAME}/include" "other/${NAME}/include/${TARGET_OS}" PARENT_SCOPE)
+    set("HINTS_${VARIABLE}_INCLUDEDIR" "ddnet-libs/${NAME}/include" "ddnet-libs/${NAME}/include/${TARGET_OS}" PARENT_SCOPE)
   endif()
 endfunction()
 
@@ -251,13 +298,32 @@ if(NOT CMAKE_CROSSCOMPILING)
   find_package(PkgConfig)
 endif()
 find_package(ZLIB)
-find_package(Freetype)
-find_package(Git)
-find_package(Pnglite)
+find_package(Crypto)
+#find_package(Curl)
+find_package(OwnFreetype)
+if(DOWNLOAD_GTEST)
+  find_package(Git)
+endif()
+find_package(GLEW)
+find_package(GTest)
+if(MYSQL)
+  find_package(MySQL)
+else()
+  set(MYSQL_LIBRARIES)
+endif()
+find_package(Ogg)
+#find_package(Opus)
+#find_package(Opusfile)
+#find_package(Pnglite)
 find_package(PythonInterp)
-find_package(SDL)
+find_package(SDL2)
 find_package(Threads)
-find_package(Wavpack)
+if(WEBSOCKETS)
+  find_package(Websockets)
+else()
+  set(WEBSOCKETS_LIBRARIES)
+  set(WEBSOCKETS_INCLUDE_DIRS)
+endif()
 
 
 if(TARGET_OS AND TARGET_OS STREQUAL "mac")
@@ -273,7 +339,7 @@ if(TARGET_OS AND TARGET_OS STREQUAL "mac")
   find_program(HDIUTIL hdiutil)
 endif()
 
-message(STATUS "******** Teeworlds ********")
+message(STATUS "******** DDNet ********")
 message(STATUS "Target OS: ${TARGET_OS} ${TARGET_BITS}bit")
 message(STATUS "Compiler: ${CMAKE_CXX_COMPILER}")
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
@@ -291,31 +357,57 @@ function(show_dependency_status OUTPUT_NAME NAME)
   endif()
 endfunction()
 
+show_dependency_status("Curl" CURL)
 if(TARGET_OS AND TARGET_OS STREQUAL "mac")
   show_dependency_status("Dmg tools" DMGTOOLS)
 endif()
 show_dependency_status("Freetype" FREETYPE)
+if(DOWNLOAD_GTEST)
+  show_dependency_status("Git" GIT)
+endif()
+show_dependency_status("Glew" GLEW)
+show_dependency_status("GTest" GTEST)
 if(TARGET_OS AND TARGET_OS STREQUAL "mac")
   show_dependency_status("Hdiutil" HDIUTIL)
 endif()
-show_dependency_status("Pnglite" PNGLITE)
+if(MYSQL)
+  show_dependency_status("MySQL" MYSQL)
+endif()
+show_dependency_status("Ogg" OGG)
+show_dependency_status("OpenSSL Crypto" CRYPTO)
+show_dependency_status("Opus" OPUS)
+show_dependency_status("Opusfile" OPUSFILE)
+#show_dependency_status("Pnglite" PNGLITE)
 show_dependency_status("PythonInterp" PYTHONINTERP)
-show_dependency_status("SDL" SDL)
-show_dependency_status("Wavpack" WAVPACK)
+show_dependency_status("SDL2" SDL2)
 show_dependency_status("Zlib" ZLIB)
-
-if(NOT(PYTHONINTERP_FOUND))
-  message(SEND_ERROR "You must install Python to compile Teeworlds")
+if(WEBSOCKETS)
+  show_dependency_status("Websockets" WEBSOCKETS)
 endif()
 
 if(TARGET_OS STREQUAL "windows")
+  set(PLATFORM_CLIENT)
+  set(PLATFORM_CLIENT_LIBS opengl32 glu32 winmm)
   set(PLATFORM_LIBS ws2_32) # Windows sockets
 elseif(TARGET_OS STREQUAL "mac")
   find_library(CARBON Carbon)
   find_library(COCOA Cocoa)
   find_library(OPENGL OpenGL)
-  set(PLATFORM_LIBS ${CARBON})
+  find_library(SECURITY Security)
+  set(PLATFORM_CLIENT
+    src/osx/notification.h
+    src/osx/notification.mm
+    src/osxlaunch/client.h
+    src/osxlaunch/client.m
+  )
+  set(PLATFORM_CLIENT_LIBS ${COCOA} ${OPENGL})
+  set(PLATFORM_LIBS ${CARBON} ${SECURITY})
 else()
+  set(PLATFORM_CLIENT)
+  find_package(OpenGL)
+  find_package(X11)
+  set(PLATFORM_CLIENT_LIBS ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY} ${X11_X11_LIB})
+  set(PLATFORM_CLIENT_INCLUDE_DIRS ${OPENGL_INCLUDE_DIR} ${X11_X11_INCLUDE_PATH})
   if(TARGET_OS STREQUAL "linux")
     set(PLATFORM_LIBS rt) # clock_gettime for glibc < 2.17
   else()
@@ -324,14 +416,74 @@ else()
 endif()
 
 ########################################################################
+# DOWNLOAD GTEST
+########################################################################
+
+if(NOT(GTEST_FOUND) AND DOWNLOAD_GTEST)
+  # Change to the 1.9.0 release tag once that works.
+  set(DDNET_GTEST_VERSION 7b6561c56e353100aca8458d7bc49c4e0119bae8)
+  configure_file(cmake/Download_GTest_CMakeLists.txt.in googletest-download/CMakeLists.txt)
+  execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+    RESULT_VARIABLE result
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/googletest-download
+  )
+  if(result)
+    message(WARNING "CMake step for googletest failed: ${result}")
+    set(DOWNLOAD_GTEST OFF)
+  else()
+    execute_process(COMMAND ${CMAKE_COMMAND} --build .
+      RESULT_VARIABLE result
+      WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/googletest-download
+    )
+    if(result)
+      message(WARNING "Build step for googletest failed: ${result}")
+      set(DOWNLOAD_GTEST OFF)
+    else()
+      # Prevent overriding the parent project's compiler/linker settings on Windows
+      set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+      # Add googletest directly to our build. This defines the gtest target.
+      add_subdirectory(
+        ${PROJECT_BINARY_DIR}/googletest-src
+        ${PROJECT_BINARY_DIR}/googletest-build
+        EXCLUDE_FROM_ALL
+      )
+
+      if(MSVC)
+        foreach(target gtest)
+          # `/w` disables all warnings. This is needed because `gtest` enables
+          # `/WX` (equivalent of `-Werror`) for some reason, breaking builds
+          # when MSVS adds new warnings.
+          target_compile_options(${target} PRIVATE $<$<NOT:${DBG}>:/MT> $<${DBG}:/MTd> /w)
+        endforeach()
+      endif()
+
+      set(GTEST_LIBRARIES gtest)
+      set(GTEST_INCLUDE_DIRS)
+      if(CMAKE_VERSION VERSION_LESS 2.8.11)
+        set(GTEST_INCLUDE_DIRS "${gtest_SOURCE_DIR}/include")
+      endif()
+    endif()
+  endif()
+endif()
+
+########################################################################
 # DEPENDENCY COMPILATION
 ########################################################################
+
+# Static dependencies
+set_glob(DEP_JSON_SRC GLOB src/engine/external/json-parser json.c json.h)
+add_library(json EXCLUDE_FROM_ALL OBJECT ${DEP_JSON_SRC})
 
 set_glob(DEP_MD5_SRC GLOB src/engine/external/md5 md5.c md5.h)
 add_library(md5 EXCLUDE_FROM_ALL OBJECT ${DEP_MD5_SRC})
 
-list(APPEND TARGETS_DEP md5)
-set(DEP_MD5 $<TARGET_OBJECTS:md5>)
+list(APPEND TARGETS_DEP json md5)
+set(DEP_JSON $<TARGET_OBJECTS:json>)
+set(DEP_MD5)
+if(NOT CRYPTO_FOUND)
+  set(DEP_MD5 $<TARGET_OBJECTS:md5>)
+endif()
 
 ########################################################################
 # COPY DATA AND DLLS
@@ -339,23 +491,16 @@ set(DEP_MD5 $<TARGET_OBJECTS:md5>)
 
 file(COPY bin/data DESTINATION .)
 set(COPY_FILES
+  ${CURL_COPY_FILES}
   ${FREETYPE_COPY_FILES}
-  ${SDL_COPY_FILES}
+  ${OPUSFILE_COPY_FILES}
+  ${SDL2_COPY_FILES}
 )
 file(COPY ${COPY_FILES} DESTINATION .)
 
 ########################################################################
 # CODE GENERATION
 ########################################################################
-
-function(chash output_file)
-  add_custom_command(OUTPUT ${output_file}
-    COMMAND ${PYTHON_EXECUTABLE} scripts/cmd5.py ${ARGN}
-      > "${PROJECT_BINARY_DIR}/${output_file}"
-    DEPENDS scripts/cmd5.py ${ARGN}
-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-  )
-endfunction()
 
 function(generate_source output_file script_parameter)
   add_custom_command(OUTPUT ${output_file}
@@ -371,12 +516,29 @@ function(generate_source output_file script_parameter)
 endfunction()
 
 file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/src/game/generated/")
-chash("src/game/generated/nethash.cpp"
-  "src/engine/shared/protocol.h"
-  "${PROJECT_BINARY_DIR}/src/game/generated/protocol.h"
-  "src/game/tuning.h"
-  "src/game/gamecore.cpp"
+execute_process(COMMAND git rev-parse --git-dir
+  ERROR_QUIET
+  OUTPUT_VARIABLE PROJECT_GIT_DIR
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+  RESULT_VARIABLE PROJECT_GIT_DIR_ERROR
 )
+if(NOT PROJECT_GIT_DIR_ERROR)
+  set(GIT_REVISION_EXTRA_DEPS
+    ${PROJECT_GIT_DIR}/index
+    ${PROJECT_GIT_DIR}/logs/HEAD
+  )
+endif()
+add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/src/game/generated/git_revision.cpp
+  COMMAND ${PYTHON_EXECUTABLE}
+    scripts/git_revision.py
+    > ${PROJECT_BINARY_DIR}/src/game/generated/git_revision.cpp
+  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+  DEPENDS
+    ${GIT_REVISION_EXTRA_DEPS}
+    scripts/git_revision.py
+)
+generate_source("src/game/generated/client_data.cpp" "client_content_source")
+generate_source("src/game/generated/client_data.h" "client_content_header")
 generate_source("src/game/generated/protocol.cpp" "network_source")
 generate_source("src/game/generated/protocol.h" "network_header")
 generate_source("src/game/generated/server_data.cpp" "server_content_source")
@@ -467,7 +629,7 @@ set_glob(ENGINE_SHARED GLOB src/engine/shared
   snapshot.h
   storage.cpp
 )
-set(ENGINE_GENERATED_SHARED src/game/generated/protocol.cpp src/game/generated/protocol.h)
+
 set_glob(GAME_SHARED GLOB src/game
   animation.cpp
   animation.h
@@ -483,21 +645,71 @@ set_glob(GAME_SHARED GLOB src/game
   version.h
   voting.h
 )
+# A bit hacky, but these are needed to register all the UUIDs, even for stuff
+# that doesn't link game.
+set(ENGINE_UUID_SHARED
+  src/game/generated/protocol.cpp
+  src/game/generated/protocol.h
+)
+foreach(s ${GAME_SHARED})
+  if(s MATCHES "mapitems_(ex.cpp|ex.h|ex_types.h)$")
+    list(REMOVE_ITEM GAME_SHARED ${s})
+  endif()
+endforeach()
+list(REMOVE_ITEM GAME_SHARED ${ENGINE_UUID_SHARED})
 set(GAME_GENERATED_SHARED
   src/game/generated/nethash.cpp
   src/game/generated/protocol.h
   src/game/generated/protocol.cpp
 )
 
-set(DEPS ${DEP_MD5} ${ZLIB_DEP})
+set(DEPS ${DEP_JSON} ${DEP_MD5} ${ZLIB_DEP})
+
+find_package(ICU REQUIRED COMPONENTS uc i18n)
 
 # Libraries
-set(LIBS ${CMAKE_THREAD_LIBS_INIT} ${ZLIB_LIBRARIES} ${PLATFORM_LIBS})
+set(LIBS
+  ${CRYPTO_LIBRARIES}
+  ${WEBSOCKETS_LIBRARIES}
+  ${ZLIB_LIBRARIES}
+  ${PLATFORM_LIBS}
+  # Add pthreads (on non-Windows) at the end, so that other libraries can depend
+  # on it.
+  ICU::i18n
+  ICU::uc
+  ${CMAKE_THREAD_LIBS_INIT}
+)
 
 # Targets
-add_library(engine-shared EXCLUDE_FROM_ALL OBJECT ${ENGINE_INTERFACE} ${ENGINE_SHARED} ${ENGINE_GENERATED_SHARED} ${BASE})
-add_library(game-shared EXCLUDE_FROM_ALL OBJECT ${GAME_SHARED} ${GAME_GENERATED_SHARED})
+add_library(engine-shared EXCLUDE_FROM_ALL OBJECT ${ENGINE_INTERFACE} ${ENGINE_SHARED} ${BASE})
+add_library(game-shared EXCLUDE_FROM_ALL OBJECT ${GAME_SHARED} ${GAME_GENERATED_SHARED} ${ENGINE_UUID_SHARED} ${teeuniverses_SOURCES})
 list(APPEND TARGETS_OWN engine-shared game-shared)
+
+#add_library(pnglite STATIC
+#    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/external/pnglite/pnglite.c
+#    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/external/pnglite/pnglite.h
+#)
+#target_include_directories(pnglite PUBLIC
+#    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/external/pnglite
+#)
+#add_library(pnglite::pnglite ALIAS pnglite)
+
+include_directories(SYSTEM
+	${CMAKE_CURRENT_SOURCE_DIR}/src
+	${CMAKE_CURRENT_BINARY_DIR}/src
+)
+
+#set(PNGLITE_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/src/engine/external/pnglite")
+#message(STATUS "PNGLITE_INCLUDE_DIRS: ${PNGLITE_INCLUDE_DIRS}")
+
+#target_link_libraries(engine-shared PUBLIC
+#  pnglite::pnglite
+#)
+
+#target_include_directories(src PUBLIC
+#    ${CMAKE_CURRENT_SOURCE_DIR}
+#    ${CMAKE_CURRENT_SOURCE_DIR}/Crypto
+#)
 
 ########################################################################
 # SERVER
@@ -527,6 +739,7 @@ set_glob(ENGINE_SERVER GLOB src/engine/server
   sql_string_helpers.cpp
   sql_string_helpers.h
 )
+
 set_glob(GAME_SERVER GLOB_RECURSE src/game/server
   gameworld.cpp
   player.cpp
@@ -606,15 +819,21 @@ set(GAME_GENERATED_SERVER
   "src/game/generated/server_data.cpp"
   "src/game/generated/server_data.h"
 )
-set(SERVER_SRC ${ENGINE_SERVER} ${GAME_SERVER} ${INFCLASSR_SERVER} ${GAME_GENERATED_SERVER})
+set(SERVER_SRC ${ENGINE_SERVER} ${GAME_SERVER} ${GAME_GENERATED_SERVER})
 if(TARGET_OS STREQUAL "windows")
-  set(SERVER_ICON "other/icons/${SERVER_EXECUTABLE}.rc")
+  set(SERVER_ICON "other/icons/DDNet-Server.rc")
 else()
   set(SERVER_ICON)
 endif()
 
 # Libraries
-set(LIBS_SERVER ${LIBS})
+set(LIBS_SERVER
+  ${LIBS}
+  ${MYSQL_LIBRARIES}
+  # Add pthreads (on non-Windows) at the end, so that other libraries can depend
+  # on it.
+  ${CMAKE_THREAD_LIBS_INIT}
+)
 
 # Target
 set(TARGET_SERVER ${SERVER_EXECUTABLE})
@@ -628,6 +847,12 @@ add_executable(${TARGET_SERVER}
 target_link_libraries(${TARGET_SERVER} ${LIBS_SERVER})
 list(APPEND TARGETS_OWN ${TARGET_SERVER})
 list(APPEND TARGETS_LINK ${TARGET_SERVER})
+
+#target_link_libraries(${TARGET_SERVER} md5)
+#target_link_libraries(${TARGET_SERVER} engine-shared)
+#target_link_libraries(${TARGET_SERVER} game-shared)
+target_link_libraries(${TARGET_SERVER} ICU::i18n)
+target_link_libraries(${TARGET_SERVER} ICU::uc)
 
 if(TARGET_OS AND TARGET_OS STREQUAL "mac")
   set(SERVER_LAUNCHER_SRC src/osxlaunch/server.mm)
@@ -643,415 +868,7 @@ endif()
 ########################################################################
 
 set_glob(MASTERSRV_SRC GLOB src/mastersrv mastersrv.cpp mastersrv.h)
-set_glob(VERSIONSRV_SRC GLOB src/versionsrv mapversions.h versionsrv.cpp versionsrv.h)
 
 set(TARGET_MASTERSRV mastersrv)
-set(TARGET_VERSIONSRV versionsrv)
 
 add_executable(${TARGET_MASTERSRV} EXCLUDE_FROM_ALL ${MASTERSRV_SRC} $<TARGET_OBJECTS:engine-shared> ${DEPS})
-add_executable(${TARGET_VERSIONSRV} EXCLUDE_FROM_ALL ${VERSIONSRV_SRC} $<TARGET_OBJECTS:engine-shared> ${DEPS})
-
-target_link_libraries(${TARGET_MASTERSRV} ${LIBS})
-target_link_libraries(${TARGET_VERSIONSRV} ${LIBS})
-
-list(APPEND TARGETS_OWN ${TARGET_MASTERSRV} ${TARGET_VERSIONSRV})
-list(APPEND TARGETS_LINK ${TARGET_MASTERSRV} ${TARGET_VERSIONSRV})
-
-set(TARGETS_TOOLS)
-set_glob(TOOLS GLOB src/tools
-  crapnet.cpp
-  dilate.cpp
-  fake_server.cpp
-  map_resave.cpp
-  map_version.cpp
-  packetgen.cpp
-  tileset_borderadd.cpp
-  tileset_borderfix.cpp
-  tileset_borderrem.cpp
-  tileset_borderset.cpp
-)
-foreach(ABS_T ${TOOLS})
-  file(RELATIVE_PATH T "${PROJECT_SOURCE_DIR}/src/tools/" ${ABS_T})
-  if(T MATCHES "\\.cpp$")
-    string(REGEX REPLACE "\\.cpp$" "" TOOL "${T}")
-    set(TOOL_DEPS ${DEPS})
-    set(TOOL_LIBS ${LIBS})
-    if(TOOL MATCHES "^(tileset_.*|dilate|map_extract|map_replace_image)$")
-      list(APPEND TOOL_DEPS ${PNGLITE_DEP})
-      list(APPEND TOOL_LIBS ${PNGLITE_LIBRARIES})
-      list(APPEND TOOL_INCLUDE_DIRS ${PNGLITE_INCLUDE_DIRS})
-    endif()
-    set(EXCLUDE_FROM_ALL)
-    add_executable(${TOOL} EXCLUDE_FROM_ALL
-      ${TOOL_DEPS}
-      src/tools/${TOOL}.cpp
-      ${EXTRA_TOOL_SRC}
-      $<TARGET_OBJECTS:engine-shared>
-    )
-    target_include_directories(${TOOL} PRIVATE ${TOOL_INCLUDE_DIRS})
-    target_link_libraries(${TOOL} ${TOOL_LIBS})
-    list(APPEND TARGETS_TOOLS ${TOOL})
-  endif()
-endforeach()
-
-list(APPEND TARGETS_OWN ${TARGETS_TOOLS})
-list(APPEND TARGETS_LINK ${TARGETS_TOOLS})
-
-add_custom_target(tools DEPENDS ${TARGETS_TOOLS})
-add_custom_target(everything DEPENDS ${TARGETS_OWN})
-
-########################################################################
-# INSTALLATION
-########################################################################
-
-function(escape_regex VAR STRING)
-  string(REGEX REPLACE "([][^$.+*?|()\\\\])" "\\\\\\1" ESCAPED "${STRING}")
-  set(${VAR} ${ESCAPED} PARENT_SCOPE)
-endfunction()
-
-function(escape_backslashes VAR STRING)
-  string(REGEX REPLACE "\\\\" "\\\\\\\\" ESCAPED "${STRING}")
-  set(${VAR} ${ESCAPED} PARENT_SCOPE)
-endfunction()
-
-function(max_length VAR)
-  set(MAX_LENGTH 0)
-  foreach(str ${ARGN})
-    string(LENGTH ${str} LENGTH)
-    if(LENGTH GREATER MAX_LENGTH)
-      set(MAX_LENGTH ${LENGTH})
-    endif()
-  endforeach()
-  set(${VAR} ${MAX_LENGTH} PARENT_SCOPE)
-endfunction()
-
-# Tries to generate a list of regex that matches everything except the given
-# parameters.
-function(regex_inverted VAR)
-  max_length(MAX_LENGTH ${ARGN})
-  math(EXPR UPPER_BOUND "${MAX_LENGTH}-1")
-
-  set(REMAINING ${ARGN})
-  set(RESULT)
-
-  foreach(i RANGE ${UPPER_BOUND})
-    set(TEMP ${REMAINING})
-    set(REMAINING)
-    foreach(str ${TEMP})
-      string(LENGTH ${str} LENGTH)
-      if(i LESS LENGTH)
-        list(APPEND REMAINING ${str})
-      endif()
-    endforeach()
-
-    set(ADDITIONAL)
-    foreach(outer ${REMAINING})
-      string(SUBSTRING ${outer} 0 ${i} OUTER_PREFIX)
-      set(CHARS "")
-      foreach(inner ${REMAINING})
-        string(SUBSTRING ${inner} 0 ${i} INNER_PREFIX)
-        if(OUTER_PREFIX STREQUAL INNER_PREFIX)
-          string(SUBSTRING ${inner} ${i} 1 INNER_NEXT)
-          set(CHARS "${CHARS}${INNER_NEXT}")
-        endif()
-      endforeach()
-      escape_regex(OUTER_PREFIX_ESCAPED "${OUTER_PREFIX}")
-
-      list(APPEND ADDITIONAL "${OUTER_PREFIX_ESCAPED}([^${CHARS}]|$)")
-    endforeach()
-    list(REMOVE_DUPLICATES ADDITIONAL)
-    list(APPEND RESULT ${ADDITIONAL})
-  endforeach()
-  set(${VAR} ${RESULT} PARENT_SCOPE)
-endfunction()
-
-set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
-set(CPACK_GENERATOR TGZ TXZ)
-set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
-set(CPACK_STRIP_FILES TRUE)
-set(CPACK_COMPONENTS_ALL portable)
-set(CPACK_SOURCE_GENERATOR ZIP TGZ TBZ2 TXZ)
-set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
-set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
-set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
-if(VERSION_PATCH STREQUAL "0")
-  set(CPACK_PACKAGE_VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR})
-else()
-  set(CPACK_PACKAGE_VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH})
-endif()
-set(CPACK_SYSTEM_NAME ${CMAKE_SYSTEM_NAME})
-
-if(TARGET_OS AND TARGET_BITS)
-  if(TARGET_OS STREQUAL "windows")
-    set(CPACK_SYSTEM_NAME "win${TARGET_BITS}")
-    set(CPACK_GENERATOR ZIP)
-  elseif(TARGET_OS STREQUAL "linux")
-    # Assuming Intel here.
-    if(TARGET_BITS EQUAL 32)
-      set(CPACK_SYSTEM_NAME "linux_x86")
-    elseif(TARGET_BITS EQUAL 64)
-      set(CPACK_SYSTEM_NAME "linux_x86_64")
-    endif()
-  elseif(TARGET_OS STREQUAL "mac")
-    set(CPACK_SYSTEM_NAME "osx")
-    set(CPACK_GENERATOR DMG)
-  endif()
-endif()
-
-set(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_SYSTEM_NAME})
-set(CPACK_ARCHIVE_PORTABLE_FILE_NAME ${CPACK_PACKAGE_FILE_NAME})
-set(CPACK_SOURCE_PACKAGE_FILE_NAME ${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-src)
-set(CPACK_SOURCE_FILES
-  CMakeLists.txt
-  bam.lua
-  cmake/
-  configure.lua
-  data/
-  datasrc/
-  docs/
-  license.txt
-  objs/
-  other/
-  readme.txt
-  scripts/
-  src/
-  storage.cfg
-)
-set(CPACK_SOURCE_IGNORE_FILES
-  "\\\\.o$"
-  "\\\\.pyc$"
-  "/\\\\.git"
-  "/__pycache__/"
-)
-
-regex_inverted(CPACK_SOURCE_FILES_INVERTED ${CPACK_SOURCE_FILES})
-escape_regex(PROJECT_SOURCE_DIR_ESCAPED ${PROJECT_SOURCE_DIR})
-
-foreach(str ${CPACK_SOURCE_FILES_INVERTED})
-  escape_backslashes(STR_ESCAPED "${PROJECT_SOURCE_DIR_ESCAPED}/${str}")
-  list(APPEND CPACK_SOURCE_IGNORE_FILES "${STR_ESCAPED}")
-endforeach()
-
-set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME ${PROJECT_NAME})
-
-set(CPACK_TARGETS
-  ${TARGET_SERVER}
-)
-set(CPACK_DIRS data)
-set(CPACK_FILES
-  license.txt
-  storage.cfg
-  ${COPY_FILES}
-)
-if(TARGET_OS STREQUAL "windows")
-  list(APPEND CPACK_FILES other/config_directory.bat)
-endif()
-
-if(NOT DEV)
-  install(DIRECTORY data DESTINATION share/${PROJECT_NAME} COMPONENT data)
-  install(TARGETS ${TARGET_SERVER} DESTINATION bin COMPONENT server)
-endif()
-
-if(DEV)
-  # Don't generate CPack targets.
-elseif(CMAKE_VERSION VERSION_LESS 3.6 OR CMAKE_VERSION VERSION_EQUAL 3.6)
-  message(WARNING "Cannot create CPack targets, CMake version too old. Use CMake 3.6 or newer.")
-else()
-  set(EXTRA_ARGS DESTINATION ${CPACK_PACKAGE_FILE_NAME} COMPONENT portable EXCLUDE_FROM_ALL)
-  install(TARGETS ${CPACK_TARGETS} ${EXTRA_ARGS})
-  install(DIRECTORY ${CPACK_DIRS} ${EXTRA_ARGS})
-  install(FILES ${CPACK_FILES} ${EXTRA_ARGS})
-endif()
-
-set(PACKAGE_TARGETS)
-
-if(DMGTOOLS_FOUND OR HDIUTIL)
-  file(MAKE_DIRECTORY bundle/server/)
-  configure_file(other/bundle/server/Info.plist.in bundle/server/Info.plist)
-
-  if(HDIUTIL)
-    set(DMG_PARAMS --hdiutil ${HDIUTIL})
-  elseif(DMGTOOLS_FOUND)
-    set(DMG_PARAMS --dmgtools ${DMG} ${HFSPLUS} ${NEWFS_HFS})
-  endif()
-  set(DMG_TMPDIR pack_${CPACK_PACKAGE_FILE_NAME}_dmg)
-  set(DMG_MKDIRS
-    ${TARGET_SERVER}.app
-    ${TARGET_SERVER}.app/Contents
-    ${TARGET_SERVER}.app/Contents/MacOS
-    ${TARGET_SERVER}.app/Contents/Resources
-    ${TARGET_SERVER}.app/Contents/Resources/data
-    ${TARGET_SERVER}.app/Contents/Resources/data/mapres
-  )
-  set(DMG_MKDIR_COMMANDS)
-  foreach(dir ${DMG_MKDIRS})
-    list(APPEND DMG_MKDIR_COMMANDS COMMAND ${CMAKE_COMMAND} -E make_directory ${DMG_TMPDIR}/${dir})
-  endforeach()
-  add_custom_command(OUTPUT ${CPACK_PACKAGE_FILE_NAME}.dmg
-    COMMAND ${CMAKE_COMMAND} -E remove_directory ${DMG_TMPDIR}
-    ${DMG_MKDIR_COMMANDS}
-
-    # SERVER
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/data/maps ${DMG_TMPDIR}/${TARGET_SERVER}.app/Contents/Resources/data/maps
-    COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/other/icons/${TARGET_SERVER}.icns ${DMG_TMPDIR}/${TARGET_SERVER}.app/Contents/Resources/
-    COMMAND ${CMAKE_COMMAND} -E copy bundle/server/Info.plist ${PROJECT_SOURCE_DIR}/other/bundle/server/PkgInfo ${DMG_TMPDIR}/${TARGET_SERVER}.app/Contents/
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${TARGET_SERVER}> $<TARGET_FILE:${TARGET_SERVER_LAUNCHER}> ${DMG_TMPDIR}/${TARGET_SERVER}.app/Contents/MacOS/
-
-    # DMG
-    COMMAND ${PYTHON_EXECUTABLE} ${PROJECT_SOURCE_DIR}/scripts/dmg.py create ${DMG_PARAMS} ${CPACK_PACKAGE_FILE_NAME}.dmg ${CPACK_PACKAGE_FILE_NAME} ${DMG_TMPDIR}
-
-    DEPENDS
-      ${TARGET_SERVER_LAUNCHER}
-      ${TARGET_SERVER}
-      ${PROJECT_BINARY_DIR}/bundle/server/Info.plist
-      data
-      other/bundle/server/PkgInfo
-      other/icons/${TARGET_SERVER}.icns
-      scripts/dmg.py
-  )
-  add_custom_target(package_dmg DEPENDS ${CPACK_PACKAGE_FILE_NAME}.dmg)
-  list(APPEND PACKAGE_TARGETS package_dmg)
-endif()
-
-foreach(ext zip tar.gz tar.xz)
-  set(TAR_MODE c)
-  set(TAR_EXTRA_ARGS)
-  string(REPLACE . _ EXT_SLUG ${ext})
-
-  set(TMPDIR pack_${CPACK_PACKAGE_FILE_NAME}_${EXT_SLUG}/${CPACK_PACKAGE_FILE_NAME})
-
-  set(COPY_FILE_COMMANDS)
-  set(COPY_DIR_COMMANDS)
-  set(COPY_TARGET_COMMANDS)
-  set(STRIP_TARGET_COMMANDS)
-  foreach(file ${CPACK_FILES})
-    list(APPEND COPY_FILE_COMMANDS COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/${file} ${TMPDIR}/)
-  endforeach()
-  foreach(dir ${CPACK_DIRS})
-    list(APPEND COPY_DIR_COMMANDS COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/${dir} ${TMPDIR}/${dir})
-  endforeach()
-  foreach(target ${CPACK_TARGETS})
-    list(APPEND COPY_TARGET_COMMANDS COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${target}> ${TMPDIR}/)
-  endforeach()
-
-  if(ext STREQUAL zip)
-    set(TAR_EXTRA_ARGS --format=zip)
-  elseif(ext STREQUAL tar.gz)
-    set(TAR_MODE cz)
-  elseif(ext STREQUAL tar.xz)
-    set(TAR_MODE cJ)
-  endif()
-  add_custom_command(OUTPUT ${CPACK_PACKAGE_FILE_NAME}.${ext}
-    COMMAND ${CMAKE_COMMAND} -E remove_directory ${TMPDIR}
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${TMPDIR}
-    ${COPY_FILE_COMMANDS}
-    ${COPY_DIR_COMMANDS}
-    ${COPY_TARGET_COMMANDS}
-    ${STRIP_TARGET_COMMANDS}
-    COMMAND ${CMAKE_COMMAND} -E chdir pack_${CPACK_PACKAGE_FILE_NAME}_${EXT_SLUG} ${CMAKE_COMMAND} -E tar ${TAR_MODE} ../${CPACK_PACKAGE_FILE_NAME}.${ext} ${TAR_EXTRA_ARGS} -- ${CPACK_PACKAGE_FILE_NAME}/
-    DEPENDS ${CPACK_TARGETS}
-  )
-  add_custom_target(package_${EXT_SLUG} DEPENDS ${CPACK_PACKAGE_FILE_NAME}.${ext})
-  list(APPEND PACKAGE_TARGETS package_${EXT_SLUG})
-endforeach()
-
-set(PACKAGE_DEFAULT tar_xz)
-if(TARGET_OS STREQUAL "windows")
-  set(PACKAGE_DEFAULT zip)
-elseif(TARGET_OS STREQUAL "mac")
-  set(PACKAGE_DEFAULT dmg)
-endif()
-add_custom_target(package_default DEPENDS package_${PACKAGE_DEFAULT})
-
-add_custom_target(package_all DEPENDS ${PACKAGE_TARGETS})
-
-# Unset these variables, they might do something in the future of CPack.
-unset(CPACK_SOURCE_FILES)
-unset(CPACK_SOURCE_FILES_INVERTED)
-unset(CPACK_TARGETS)
-unset(CPACK_DIRS)
-unset(CPACK_FILES)
-
-include(CPack)
-
-########################################################################
-# COMPILER-SPECIFICS
-########################################################################
-
-# In the future (CMake 3.8.0+), use source_group(TREE ...)
-macro(source_group_tree dir)
-  file(GLOB ents RELATIVE ${PROJECT_SOURCE_DIR}/${dir} ${PROJECT_SOURCE_DIR}/${dir}/*)
-  foreach(ent ${ents})
-    if(IS_DIRECTORY ${PROJECT_SOURCE_DIR}/${dir}/${ent})
-      source_group_tree(${dir}/${ent})
-    else()
-      string(REPLACE "/" "\\" group ${dir})
-      source_group(${group} FILES ${PROJECT_SOURCE_DIR}/${dir}/${ent})
-    endif()
-  endforeach()
-endmacro()
-source_group_tree(src)
-
-set(TARGETS ${TARGETS_OWN} ${TARGETS_DEP})
-
-foreach(target ${TARGETS})
-  if(MSVC)
-    target_compile_options(${target} PRIVATE $<$<NOT:${DBG}>:/MT> $<${DBG}:/MTd>) # Use static CRT
-    target_compile_options(${target} PRIVATE /MP) # Use multiple cores
-    target_compile_options(${target} PRIVATE /EHsc) # Only catch C++ exceptions with catch.
-    target_compile_options(${target} PRIVATE /GS) # Protect the stack pointer.
-    target_compile_options(${target} PRIVATE /wd4996) # Use of non-_s functions.
-  endif()
-  if(OUR_FLAGS)
-    target_compile_options(${target} PRIVATE ${OUR_FLAGS})
-  endif()
-  if(DEFINE_FORTIFY_SOURCE)
-    target_compile_definitions(${target} PRIVATE $<$<NOT:$<CONFIG:Debug>>:_FORTIFY_SOURCE=2>) # Detect some buffer overflows.
-  endif()
-endforeach()
-
-foreach(target ${TARGETS_LINK})
-  if(MSVC)
-    set_property(TARGET ${target} APPEND PROPERTY LINK_FLAGS /SAFESEH:NO) # Disable SafeSEH because the shipped libraries don't support it (would cause error LNK2026 otherwise).
-  endif()
-  if(TARGET_OS STREQUAL "mac")
-    target_link_libraries(${target} -stdlib=libc++)
-    target_link_libraries(${target} -mmacosx-version-min=10.7)
-  endif()
-  if((MINGW OR TARGET_OS STREQUAL "linux") AND PREFER_BUNDLED_LIBS)
-    # Statically link the standard libraries with on MinGW/Linux so we don't
-    # have to ship them as DLLs.
-    target_link_libraries(${target} -static-libgcc)
-    target_link_libraries(${target} -static-libstdc++)
-    if(MINGW)
-      # Link pthread library statically instead of dynamically.
-      # Solution from https://stackoverflow.com/a/28001261.
-      target_link_libraries(${target} -Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic)
-    endif()
-  endif()
-endforeach()
-
-foreach(target ${TARGETS_OWN})
-  if(MSVC)
-    target_compile_options(${target} PRIVATE /wd4244) # Possible loss of data (float -> int, int -> float, etc.).
-    target_compile_options(${target} PRIVATE /wd4267) # Possible loss of data (size_t - int on win64).
-    target_compile_options(${target} PRIVATE /wd4800) # Implicit conversion of int to bool.
-  endif()
-  if(OUR_FLAGS_OWN)
-    target_compile_options(${target} PRIVATE ${OUR_FLAGS_OWN})
-  endif()
-  target_include_directories(${target} PRIVATE ${PROJECT_BINARY_DIR}/src)
-  target_include_directories(${target} PRIVATE src)
-  target_compile_definitions(${target} PRIVATE $<$<CONFIG:Debug>:CONF_DEBUG>)
-  target_include_directories(${target} PRIVATE ${CURL_INCLUDE_DIRS})
-  target_include_directories(${target} PRIVATE ${ZLIB_INCLUDE_DIRS})
-endforeach()
-
-foreach(target ${TARGETS_DEP})
-  if(MSVC)
-    target_compile_options(${target} PRIVATE /W0)
-  endif()
-  if(OUR_FLAGS_DEP)
-    target_compile_options(${target} PRIVATE ${OUR_FLAGS_DEP})
-  endif()
-endforeach()
