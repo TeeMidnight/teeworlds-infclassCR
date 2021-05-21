@@ -136,8 +136,8 @@ if(CMAKE_GENERATOR STREQUAL "Ninja")
   add_c_compiler_flag_if_supported(OUR_FLAGS -fcolor-diagnostics)
 endif()
 
-if(NOT MSVC)
-  if(CMAKE_VERSION VERSION_LESS 3.1 OR TARGET_OS STREQUAL "mac")
+#if(NOT MSVC)
+  #if(CMAKE_VERSION VERSION_LESS 3.1 OR TARGET_OS STREQUAL "mac")
     check_cxx_compiler_flag(-std=gnu++11 FLAG_SUPPORTED_std_gnu__11)
     if(FLAG_SUPPORTED_std_gnu__11)
       if(CMAKE_CXX_FLAGS)
@@ -145,8 +145,8 @@ if(NOT MSVC)
       else()
         set(CMAKE_CXX_FLAGS -std=gnu++11)
       endif()
-    endif()
-  endif()
+    #endif()
+  #endif()
 
   # Protect the stack pointer.
   # -fstack-protector-all doesn't work on MinGW.
@@ -528,6 +528,15 @@ if(NOT PROJECT_GIT_DIR_ERROR)
     ${PROJECT_GIT_DIR}/logs/HEAD
   )
 endif()
+
+function(chash output_file)
+  add_custom_command(OUTPUT ${output_file}
+    COMMAND ${PYTHON_EXECUTABLE} scripts/cmd5.py ${ARGN}
+      > "${PROJECT_BINARY_DIR}/${output_file}"
+    DEPENDS scripts/cmd5.py ${ARGN}
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+  )
+endfunction()
 add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/src/game/generated/git_revision.cpp
   COMMAND ${PYTHON_EXECUTABLE}
     scripts/git_revision.py
@@ -536,6 +545,12 @@ add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/src/game/generated/git_revision.
   DEPENDS
     ${GIT_REVISION_EXTRA_DEPS}
     scripts/git_revision.py
+)
+chash("src/generated/nethash.cpp"
+  "src/engine/shared/protocol.h"
+  "src/game/tuning.h"
+  "src/game/gamecore.cpp"
+  "${PROJECT_BINARY_DIR}/src/generated/protocol.h"
 )
 generate_source("src/game/generated/client_data.cpp" "client_content_source")
 generate_source("src/game/generated/client_data.h" "client_content_header")
@@ -552,8 +567,8 @@ generate_source("src/game/generated/server_data.h" "server_content_header")
 # Sources
 set_glob(BASE GLOB_RECURSE src/base
   detect.h
-  math.h
   math.cpp
+  math.h
   system.c
   system.h
   tl/algorithm.h
@@ -573,16 +588,16 @@ set(teeuniverses_SOURCES
 )
 
 set_glob(ENGINE_INTERFACE GLOB src/engine
-  message.h
-  kernel.h
-  console.h
-  server.h
-  masterserver.h
-  demo.h
-  storage.h
   config.h
-  map.h
+  console.h
+  demo.h
   engine.h
+  kernel.h
+  map.h
+  masterserver.h
+  message.h
+  server.h
+  storage.h
 )
 set_glob(ENGINE_SHARED GLOB src/engine/shared
   compression.cpp
@@ -664,7 +679,6 @@ foreach(s ${GAME_SHARED})
 endforeach()
 list(REMOVE_ITEM GAME_SHARED ${ENGINE_UUID_SHARED})
 set(GAME_GENERATED_SHARED
-  src/game/generated/nethash.cpp
   src/game/generated/protocol.h
   src/game/generated/protocol.cpp
 )
@@ -823,6 +837,7 @@ set_glob(INFCLASSR_SERVER GLOB_RECURSE src/infclassr
   GeoLite2PP/GeoLite2PP_version.hpp.in
 )
 set(GAME_GENERATED_SERVER
+  "src/game/generated/nethash.cpp"
   "src/game/generated/server_data.cpp"
   "src/game/generated/server_data.h"
 )
