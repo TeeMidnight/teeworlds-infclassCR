@@ -300,23 +300,17 @@ endif()
 find_package(ZLIB)
 find_package(Crypto)
 #find_package(Curl)
-find_package(OwnFreetype)
 if(DOWNLOAD_GTEST)
   find_package(Git)
 endif()
-find_package(GLEW)
 find_package(GTest)
 if(MYSQL)
   find_package(MySQL)
 else()
   set(MYSQL_LIBRARIES)
 endif()
-find_package(Ogg)
-#find_package(Opus)
-#find_package(Opusfile)
 #find_package(Pnglite)
 find_package(PythonInterp)
-find_package(SDL2)
 find_package(Threads)
 if(WEBSOCKETS)
   find_package(Websockets)
@@ -361,11 +355,9 @@ show_dependency_status("Curl" CURL)
 if(TARGET_OS AND TARGET_OS STREQUAL "mac")
   show_dependency_status("Dmg tools" DMGTOOLS)
 endif()
-show_dependency_status("Freetype" FREETYPE)
 if(DOWNLOAD_GTEST)
   show_dependency_status("Git" GIT)
 endif()
-show_dependency_status("Glew" GLEW)
 show_dependency_status("GTest" GTEST)
 if(TARGET_OS AND TARGET_OS STREQUAL "mac")
   show_dependency_status("Hdiutil" HDIUTIL)
@@ -373,41 +365,21 @@ endif()
 if(MYSQL)
   show_dependency_status("MySQL" MYSQL)
 endif()
-show_dependency_status("Ogg" OGG)
 show_dependency_status("OpenSSL Crypto" CRYPTO)
-show_dependency_status("Opus" OPUS)
-show_dependency_status("Opusfile" OPUSFILE)
 #show_dependency_status("Pnglite" PNGLITE)
 show_dependency_status("PythonInterp" PYTHONINTERP)
-show_dependency_status("SDL2" SDL2)
 show_dependency_status("Zlib" ZLIB)
 if(WEBSOCKETS)
   show_dependency_status("Websockets" WEBSOCKETS)
 endif()
 
 if(TARGET_OS STREQUAL "windows")
-  set(PLATFORM_CLIENT)
-  set(PLATFORM_CLIENT_LIBS opengl32 glu32 winmm)
   set(PLATFORM_LIBS ws2_32) # Windows sockets
 elseif(TARGET_OS STREQUAL "mac")
   find_library(CARBON Carbon)
-  find_library(COCOA Cocoa)
-  find_library(OPENGL OpenGL)
   find_library(SECURITY Security)
-  set(PLATFORM_CLIENT
-    src/osx/notification.h
-    src/osx/notification.mm
-    src/osxlaunch/client.h
-    src/osxlaunch/client.m
-  )
-  set(PLATFORM_CLIENT_LIBS ${COCOA} ${OPENGL})
   set(PLATFORM_LIBS ${CARBON} ${SECURITY})
 else()
-  set(PLATFORM_CLIENT)
-  find_package(OpenGL)
-  find_package(X11)
-  set(PLATFORM_CLIENT_LIBS ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY} ${X11_X11_LIB})
-  set(PLATFORM_CLIENT_INCLUDE_DIRS ${OPENGL_INCLUDE_DIR} ${X11_X11_INCLUDE_PATH})
   if(TARGET_OS STREQUAL "linux")
     set(PLATFORM_LIBS rt) # clock_gettime for glibc < 2.17
   else()
@@ -492,9 +464,6 @@ endif()
 file(COPY bin/data DESTINATION .)
 set(COPY_FILES
   ${CURL_COPY_FILES}
-  ${FREETYPE_COPY_FILES}
-  ${OPUSFILE_COPY_FILES}
-  ${SDL2_COPY_FILES}
 )
 file(COPY ${COPY_FILES} DESTINATION .)
 
@@ -530,6 +499,7 @@ if(NOT PROJECT_GIT_DIR_ERROR)
 endif()
 
 function(chash output_file)
+  message(${PROJECT_BINARY_DIR}/${output_file})
   add_custom_command(OUTPUT ${output_file}
     COMMAND ${PYTHON_EXECUTABLE} scripts/cmd5.py ${ARGN}
       > "${PROJECT_BINARY_DIR}/${output_file}"
@@ -537,6 +507,7 @@ function(chash output_file)
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
   )
 endfunction()
+
 add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/src/game/generated/git_revision.cpp
   COMMAND ${PYTHON_EXECUTABLE}
     scripts/git_revision.py
@@ -546,14 +517,12 @@ add_custom_command(OUTPUT ${PROJECT_BINARY_DIR}/src/game/generated/git_revision.
     ${GIT_REVISION_EXTRA_DEPS}
     scripts/git_revision.py
 )
-chash("src/generated/nethash.cpp"
+chash("src/game/generated/nethash.cpp"
   "src/engine/shared/protocol.h"
   "src/game/tuning.h"
   "src/game/gamecore.cpp"
-  "${PROJECT_BINARY_DIR}/src/generated/protocol.h"
+  "${PROJECT_BINARY_DIR}/src/game/generated/protocol.h"
 )
-generate_source("src/game/generated/client_data.cpp" "client_content_source")
-generate_source("src/game/generated/client_data.h" "client_content_header")
 generate_source("src/game/generated/protocol.cpp" "network_source")
 generate_source("src/game/generated/protocol.h" "network_header")
 generate_source("src/game/generated/server_data.cpp" "server_content_source")
@@ -602,9 +571,9 @@ set_glob(ENGINE_INTERFACE GLOB src/engine
 set_glob(ENGINE_SHARED GLOB src/engine/shared
   compression.cpp
   compression.h
+  config_variables.h
   config.cpp
   config.h
-  config_variables.h
   console.cpp
   console.h
   datafile.cpp
@@ -623,9 +592,9 @@ set_glob(ENGINE_SHARED GLOB src/engine/shared
   kernel.cpp
   linereader.cpp
   linereader.h
+  map.cpp
   mapchecker.cpp
   mapchecker.h
-  map.cpp
   masterserver.cpp
   memheap.cpp
   memheap.h
@@ -638,9 +607,9 @@ set_glob(ENGINE_SHARED GLOB src/engine/shared
   network_conn.cpp
   network_console_conn.cpp
   network_console.cpp
+  network_server.cpp
   network.cpp
   network.h
-  network_server.cpp
   packer.cpp
   packer.h
   protocol.h
@@ -666,19 +635,15 @@ set_glob(GAME_SHARED GLOB src/game
   version.h
   voting.h
 )
-# A bit hacky, but these are needed to register all the UUIDs, even for stuff
-# that doesn't link game.
-set(ENGINE_UUID_SHARED
-  src/game/generated/protocol.cpp
-  src/game/generated/protocol.h
+
+set(ENGINE_GENERATED_SHARED
+src/game/generated/nethash.cpp
+src/game/generated/protocol.h
+src/game/generated/protocol.cpp
 )
-foreach(s ${GAME_SHARED})
-  if(s MATCHES "mapitems_(ex.cpp|ex.h|ex_types.h)$")
-    list(REMOVE_ITEM GAME_SHARED ${s})
-  endif()
-endforeach()
-list(REMOVE_ITEM GAME_SHARED ${ENGINE_UUID_SHARED})
+
 set(GAME_GENERATED_SHARED
+  src/game/generated/nethash.cpp
   src/game/generated/protocol.h
   src/game/generated/protocol.cpp
 )
@@ -702,8 +667,8 @@ set(LIBS
 )
 
 # Targets
-add_library(engine-shared EXCLUDE_FROM_ALL OBJECT ${ENGINE_INTERFACE} ${ENGINE_SHARED} ${BASE})
-add_library(game-shared EXCLUDE_FROM_ALL OBJECT ${GAME_SHARED} ${GAME_GENERATED_SHARED} ${ENGINE_UUID_SHARED} ${teeuniverses_SOURCES})
+add_library(engine-shared EXCLUDE_FROM_ALL OBJECT ${ENGINE_INTERFACE} ${ENGINE_GENERATED_SHARED} ${ENGINE_SHARED} ${BASE})
+add_library(game-shared EXCLUDE_FROM_ALL OBJECT ${GAME_SHARED} ${GAME_GENERATED_SHARED} ${teeuniverses_SOURCES})
 list(APPEND TARGETS_OWN engine-shared game-shared)
 
 #add_library(pnglite STATIC
@@ -878,15 +843,6 @@ list(APPEND TARGETS_LINK ${TARGET_SERVER})
 #target_link_libraries(${TARGET_SERVER} ICU::i18n)
 #target_link_libraries(${TARGET_SERVER} ICU::uc)
 target_link_libraries(${TARGET_SERVER} ${ICU_LIBRARIES})
-
-if(TARGET_OS AND TARGET_OS STREQUAL "mac")
-  set(SERVER_LAUNCHER_SRC src/osxlaunch/server.mm)
-  set(TARGET_SERVER_LAUNCHER ${TARGET_SERVER}-Launcher)
-  add_executable(${TARGET_SERVER_LAUNCHER} ${SERVER_LAUNCHER_SRC})
-  target_link_libraries(${TARGET_SERVER_LAUNCHER} ${COCOA})
-  list(APPEND TARGETS_OWN ${TARGET_SERVER_LAUNCHER})
-  list(APPEND TARGETS_LINK ${TARGET_SERVER_LAUNCHER})
-endif()
 
 ########################################################################
 # VARIOUS TARGETS
