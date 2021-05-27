@@ -849,3 +849,11 @@ set_glob(MASTERSRV_SRC GLOB src/mastersrv mastersrv.cpp mastersrv.h)
 set(TARGET_MASTERSRV mastersrv)
 
 add_executable(${TARGET_MASTERSRV} EXCLUDE_FROM_ALL ${MASTERSRV_SRC} $<TARGET_OBJECTS:engine-shared> ${DEPS})
+
+foreach(target ${TARGETS_OWN})
+  target_include_directories(${target} PRIVATE ${PROJECT_BINARY_DIR}/src)
+  target_include_directories(${target} PRIVATE src)
+  target_compile_definitions(${target} PRIVATE $<$<CONFIG:Debug>:CONF_DEBUG>)
+  target_include_directories(${target} PRIVATE ${CURL_INCLUDE_DIRS})
+  target_include_directories(${target} PRIVATE ${ZLIB_INCLUDE_DIRS})
+endforeach()
