@@ -198,7 +198,7 @@ endif()
 ########################################################################
 
 function(set_glob VAR GLOBBING DIRECTORY) # ...
-  file(${GLOBBING} GLOB_RESULT "${DIRECTORY}/*.c" "${DIRECTORY}/*.cpp" "${DIRECTORY}/*.h")
+  file(${GLOBBING} GLOB_RESULT "${DIRECTORY}/*.c" "${DIRECTORY}/*.cpp" "${DIRECTORY}/*.h" "${DIRECTORY}/*.hpp")
   list(SORT GLOB_RESULT)
   set(FILES)
   foreach(file ${ARGN})
@@ -298,7 +298,7 @@ if(NOT CMAKE_CROSSCOMPILING)
   find_package(PkgConfig)
 endif()
 find_package(ZLIB)
-find_package(Crypto)
+#find_package(Crypto)
 #find_package(Curl)
 if(DOWNLOAD_GTEST)
   find_package(Git)
@@ -499,7 +499,6 @@ if(NOT PROJECT_GIT_DIR_ERROR)
 endif()
 
 function(chash output_file)
-  message(${PROJECT_BINARY_DIR}/${output_file})
   add_custom_command(OUTPUT ${output_file}
     COMMAND ${PYTHON_EXECUTABLE} scripts/cmd5.py ${ARGN}
       > "${PROJECT_BINARY_DIR}/${output_file}"
@@ -571,9 +570,9 @@ set_glob(ENGINE_INTERFACE GLOB src/engine
 set_glob(ENGINE_SHARED GLOB src/engine/shared
   compression.cpp
   compression.h
-  config_variables.h
   config.cpp
   config.h
+  config_variables.h
   console.cpp
   console.h
   datafile.cpp
@@ -603,13 +602,13 @@ set_glob(ENGINE_SHARED GLOB src/engine/shared
   netban.h
   netdatabase.cpp
   netdatabase.h
-  network_client.cpp
-  network_conn.cpp
-  network_console_conn.cpp
-  network_console.cpp
-  network_server.cpp
   network.cpp
   network.h
+  network_client.cpp
+  network_conn.cpp
+  network_console.cpp
+  network_console_conn.cpp
+  network_server.cpp
   packer.cpp
   packer.h
   protocol.h
@@ -667,7 +666,7 @@ set(LIBS
 )
 
 # Targets
-add_library(engine-shared EXCLUDE_FROM_ALL OBJECT ${ENGINE_INTERFACE} ${ENGINE_GENERATED_SHARED} ${ENGINE_SHARED} ${BASE})
+add_library(engine-shared EXCLUDE_FROM_ALL OBJECT ${ENGINE_INTERFACE} ${ENGINE_SHARED} ${BASE})
 add_library(game-shared EXCLUDE_FROM_ALL OBJECT ${GAME_SHARED} ${GAME_GENERATED_SHARED} ${teeuniverses_SOURCES})
 list(APPEND TARGETS_OWN engine-shared game-shared)
 
@@ -727,79 +726,78 @@ set_glob(ENGINE_SERVER GLOB src/engine/server
 )
 
 set_glob(GAME_SERVER GLOB_RECURSE src/game/server
-  gameworld.cpp
-  player.cpp
   classes.h
-  gamecontext.cpp
-  entity.h
-  gamemodes/mod.h
-  gamemodes/mod.cpp
-  entities/soldier-bomb.h
-  entities/character.h
-  entities/turret.cpp
-  entities/bouncing-bullet.cpp
-  entities/flyingpoint.h
-  entities/growingexplosion.h
-  entities/biologist-laser.h
-  entities/laser-teleport.cpp
-  entities/growingexplosion.cpp
-  entities/character.cpp
   entities/biologist-laser.cpp
-  entities/entity-timer.cpp
-  entities/hero-flag.cpp
-  entities/medic-grenade.h
-  entities/bouncing-bullet.h
-  entities/laser.cpp
-  entities/looper-wall.h
-  entities/slug-slime.h
-  entities/laser-teleport.h
-  entities/slug-slime.cpp
-  entities/merc-bomb.cpp
-  entities/projectile.h
-  entities/biologist-mine.h
-  entities/superweapon-indicator.cpp
-  entities/entity-timer.h
-  entities/looper-wall.cpp
-  entities/superweapon-indicator.h
-  entities/scatter-grenade.h
-  entities/medic-grenade.cpp
-  entities/scientist-laser.h
-  entities/soldier-bomb.cpp
-  entities/merc-bomb.h
-  entities/scatter-grenade.cpp
-  entities/projectile.cpp
-  entities/scientist-laser.cpp
-  entities/plasma.h
+  entities/biologist-laser.h
   entities/biologist-mine.cpp
-  entities/hero-flag.h
-  entities/plasma.cpp
-  entities/scientist-mine.cpp
-  entities/laser.h
-  entities/turret.h
-  entities/scientist-mine.h
-  entities/white-hole.h
-  entities/engineer-wall.h
-  entities/white-hole.cpp
-  entities/flyingpoint.cpp
+  entities/biologist-mine.h
+  entities/bouncing-bullet.cpp
+  entities/bouncing-bullet.h
+  entities/character.cpp
+  entities/character.h
   entities/engineer-wall.cpp
-  gamecontext.h
+  entities/engineer-wall.h
+  entities/entity-timer.cpp
+  entities/entity-timer.h
+  entities/flyingpoint.cpp
+  entities/flyingpoint.h
+  entities/growingexplosion.cpp
+  entities/growingexplosion.h
+  entities/hero-flag.cpp
+  entities/hero-flag.h
+  entities/laser-teleport.cpp
+  entities/laser-teleport.h
+  entities/laser.cpp
+  entities/laser.h
+  entities/looper-wall.cpp
+  entities/looper-wall.h
+  entities/medic-grenade.cpp
+  entities/medic-grenade.h
+  entities/merc-bomb.cpp
+  entities/merc-bomb.h
+  entities/plasma.cpp
+  entities/plasma.h
+  entities/projectile.cpp
+  entities/projectile.h
+  entities/scatter-grenade.cpp
+  entities/scatter-grenade.h
+  entities/scientist-laser.cpp
+  entities/scientist-laser.h
+  entities/scientist-mine.cpp
+  entities/scientist-mine.h
+  entities/slug-slime.cpp
+  entities/slug-slime.h
+  entities/soldier-bomb.cpp
+  entities/soldier-bomb.h
+  entities/superweapon-indicator.cpp
+  entities/superweapon-indicator.h
+  entities/turret.cpp
+  entities/turret.h
+  entities/white-hole.cpp
+  entities/white-hole.h
   entity.cpp
-  eventhandler.h
-  player.h
-  gamecontroller.cpp
-  gameworld.h
+  entity.h
   eventhandler.cpp
+  eventhandler.h
+  gamecontext.cpp
+  gamecontext.h
+  gamecontroller.cpp
   gamecontroller.h
+  gamemodes/mod.cpp
+  gamemodes/mod.h
+  gameworld.cpp
+  gameworld.h
+  player.cpp
+  player.h
 )
 set_glob(INFCLASSR_SERVER GLOB_RECURSE src/infclassr
-  geolocation.cpp
-  geolocation.h
   GeoLite2PP/GeoLite2PP.cpp
+  GeoLite2PP/GeoLite2PP.hpp
   GeoLite2PP/GeoLite2PP_error_category.cpp
   GeoLite2PP/GeoLite2PP_error_category.hpp
-  GeoLite2PP/GeoLite2PP.hpp
   GeoLite2PP/GeoLite2PP_version.hpp
-  GeoLite2PP/GeoLite2PP_version.hpp.in
+  geolocation.cpp
+  geolocation.h
 )
 set(GAME_GENERATED_SERVER
   "src/game/generated/nethash.cpp"
@@ -840,8 +838,6 @@ list(APPEND TARGETS_LINK ${TARGET_SERVER})
 #target_link_libraries(${TARGET_SERVER} md5)
 #target_link_libraries(${TARGET_SERVER} engine-shared)
 #target_link_libraries(${TARGET_SERVER} game-shared)
-#target_link_libraries(${TARGET_SERVER} ICU::i18n)
-#target_link_libraries(${TARGET_SERVER} ICU::uc)
 target_link_libraries(${TARGET_SERVER} ${ICU_LIBRARIES})
 
 ########################################################################

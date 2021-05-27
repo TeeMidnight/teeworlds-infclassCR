@@ -3,7 +3,7 @@
 #ifndef GAME_VERSION_H
 #define GAME_VERSION_H
 #define GAME_RELEASE_VERSION "0.6.4"
-#include "generated/nethash.cpp"
+#include "game/generated/nethash.cpp"
 #define GAME_VERSION "0.6.4"
 #define GAME_NETVERSION "0.6 " GAME_NETVERSION_HASH
 #define LAST_COMPILE_DATE __DATE__
