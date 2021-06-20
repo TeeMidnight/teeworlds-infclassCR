@@ -20,11 +20,13 @@ CEntity::CEntity(CGameWorld *pGameWorld, int ObjType)
 	m_MarkedForDestroy = false;
 	m_ID = Server()->SnapNewID();
 	
+	/*
 	m_IDs.set_size(2);
 	for(int i=0; i<2; i++)
 	{
 		m_IDs[i] = Server()->SnapNewID();
 	}
+	*/
 
 	m_pPrevTypeEntity = 0;
 	m_pNextTypeEntity = 0;
@@ -36,6 +38,7 @@ CEntity::~CEntity()
 	Server()->SnapFreeID(m_ID);
 	
 	
+	/*
 	if(m_IDs[0] >= 0)
 	{
 		for(int i=0; i<2; i++) 
@@ -45,6 +48,7 @@ CEntity::~CEntity()
 		}
 		
 	}
+	*/
 	
 }
 

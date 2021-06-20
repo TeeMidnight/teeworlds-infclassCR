@@ -869,6 +869,35 @@ void CCharacter::FireWeapon()
 					Die(m_pPlayer->GetCID(), WEAPON_SELF);
 				}
 			}
+			else if(GetClass() == PLAYERCLASS_HERO)
+			{
+				if (g_Config.m_InfTurretEnable && !AutoFire)
+				{
+					if(m_TurretCount)
+					{
+						if (g_Config.m_InfTurretEnableLaser) 
+						{
+							new CTurret(GameWorld(), m_Pos, m_pPlayer->GetCID(), Direction, GameServer()->Tuning()->m_LaserReach,INFAMMO_LASER);
+						}
+						else if (g_Config.m_InfTurretEnablePlasma) 
+						{
+							new CTurret(GameWorld(), m_Pos, m_pPlayer->GetCID(), Direction, GameServer()->Tuning()->m_LaserReach,INFAMMO_PLASMA);
+						}
+
+						GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
+						m_TurretCount--;
+						char aBuf[256];
+						str_format(aBuf, sizeof(aBuf), "placed turret, %i left", m_TurretCount);
+						GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_SCORE, aBuf, NULL);
+						if (m_TurretCount == 0)
+						{
+							m_aWeapons[WEAPON_HAMMER].m_Got = false;
+							HandleWeaponSwitch();
+							SetWeapon(m_LastWeapon);
+						}
+					}
+				}
+			}
 			else
 			{
 /* INFECTION MODIFICATION END *****************************************/
@@ -890,35 +919,6 @@ void CCharacter::FireWeapon()
 						m_InvisibleTick = Server()->Tick();
 					}
 					
-					if(GetClass() == PLAYERCLASS_HERO)
-					{
-						if (g_Config.m_InfTurretEnable) {
-							
-							if(m_TurretCount)
-							{
-								
-								if (g_Config.m_InfTurretEnableLaser) 
-								{
-									new CTurret(GameWorld(), m_Pos, m_pPlayer->GetCID(), Direction, GameServer()->Tuning()->m_LaserReach,INFAMMO_LASER);
-								}
-								else if (g_Config.m_InfTurretEnablePlasma) 
-								{
-									new CTurret(GameWorld(), m_Pos, m_pPlayer->GetCID(), Direction, GameServer()->Tuning()->m_LaserReach,INFAMMO_PLASMA);
-								}
-								
-								GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
-								m_TurretCount--;
-								char aBuf[256];
-								str_format(aBuf, sizeof(aBuf), "placed turret, %i left", m_TurretCount);
-								GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_SCORE, aBuf, NULL);
-								if (m_TurretCount == 0)
-								{
-									m_aWeapons[WEAPON_HAMMER].m_Got = false;
-								}
-									
-							}
-						}
-					}
 					
 					CCharacter *apEnts[MAX_CLIENTS];
 					int Num = GameServer()->m_World.FindEntities(ProjStartPos, m_ProximityRadius*0.5f, (CEntity**)apEnts,
@@ -969,6 +969,10 @@ void CCharacter::FireWeapon()
 							}
 							else if(GetClass() == PLAYERCLASS_BAT) {
 								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_Config.m_InfBatDamage,
+									m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
+							}
+							else if(GetClass() == PLAYERCLASS_SPIDER) {
+								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_Config.m_InfSpiderDamage,
 									m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
 							}
 							else if(GameServer()->m_pController->IsInfectionStarted())
@@ -1266,6 +1270,12 @@ void CCharacter::FireWeapon()
 						auto pScientist = GetPlayer()->GetCharacter();
 						pScientist->TakeDamage(vec2(0.0f, 0.0f), g_Config.m_InfScientistTpSelfharm * 2, GetPlayer()->GetCID(), WEAPON_HAMMER, TAKEDAMAGEMODE_SELFHARM);
 					}
+					CCharacterCore *p = m_Core.m_Passenger;
+					while (p != nullptr)
+					{
+						p->m_HookState = HOOK_RETRACTED;
+						p = p->m_Passenger;
+					}
 					GameServer()->CreateDeath(OldPos, GetPlayer()->GetCID());
 					GameServer()->CreateDeath(PortalPos, GetPlayer()->GetCID());
 					GameServer()->CreateSound(PortalPos, SOUND_CTF_RETURN);
@@ -1558,6 +1568,10 @@ void CCharacter::HandleWeapons()
 				{
 					Rate = 0.5f;
 					Damage = g_Config.m_InfSmokerHookDamage;
+				}
+				else if(GetClass() == PLAYERCLASS_SPIDER)
+				{
+					Damage = g_Config.m_InfSpiderHookDamage;
 				}
 				else if(GetClass() == PLAYERCLASS_GHOUL)
 				{
@@ -2808,7 +2822,11 @@ void CCharacter::Die(int Killer, int Weapon)
 		{
 			CCharacter* pKiller = GameServer()->m_apPlayers[Killer]->GetCharacter();
 			if(pKiller)
+			{
+				if(Weapon == WEAPON_RIFLE)
+					pKiller->m_aWeapons[WEAPON_RIFLE].m_Ammo += g_Config.m_InfSniperKillAmmo;
 				GiveWeapon(WEAPON_RIFLE, 1);
+			}
 		}
 	}
 	
@@ -3038,10 +3056,13 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 			}
 		}
 		
-		if (pKillerPlayer)
-			pKillerPlayer->IncreaseNumberKills();
-		if (pKillerChar)
-			pKillerChar->CheckSuperWeaponAccess();
+		if (!(GetClass() == PLAYERCLASS_UNDEAD) || g_Config.m_InfUndeadIncNumKills)
+		{
+			if (pKillerPlayer)
+				pKillerPlayer->IncreaseNumberKills();
+			if (pKillerChar)
+				pKillerChar->CheckSuperWeaponAccess();
+		}
 		
 		return false;
 	}

@@ -20,6 +20,12 @@ CLooperWall::CLooperWall(CGameWorld *pGameWorld, vec2 Pos1, vec2 Pos2, int Owner
 	m_LifeSpan = Server()->TickSpeed()*g_Config.m_InfLooperBarrierLifeSpan;
 	GameWorld()->InsertEntity(this);
 	
+	m_IDs.set_size(NUM_IDS);
+	for(int i=0; i<NUM_IDS; i++)
+	{
+		m_IDs[i] = Server()->SnapNewID();
+	}
+	
 	m_EndPointIDs.set_size(2);
 	for(int i=0; i<2; i++)
 	{
@@ -40,6 +46,10 @@ CLooperWall::~CLooperWall()
 	for(int i=0; i<NUM_PARTICLES; i++)
 	{
 		Server()->SnapFreeID(m_ParticleIDs[i]);
+	}
+	for(int i=0; i<NUM_IDS; i++)
+	{
+		Server()->SnapFreeID(m_IDs[i]);
 	}
 }
 

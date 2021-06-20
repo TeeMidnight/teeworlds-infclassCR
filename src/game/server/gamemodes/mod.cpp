@@ -128,8 +128,10 @@ void CGameControllerMOD::SetFirstInfectedNumber()
 		m_NumFirstInfected = 0;
 	else if(NumHumans + NumInfected <= 3)
 		m_NumFirstInfected = 1;
-	else
+	else if(NumHumans + NumInfected <= 8)
 		m_NumFirstInfected = 2;
+	else
+		m_NumFirstInfected = 3;
 
 	if(g_Config.m_InfIgnoreSpec)
 		m_NumFirstInfected += NumSpec;

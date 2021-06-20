@@ -2254,7 +2254,7 @@ int CServer::Run()
 			// snap game
 			if(NewTicks)
 			{
-				if(g_Config.m_SvHighBandwidth || (m_CurrentGameTick%2) == 0)
+				if(g_Config.m_SvHighBandwidth || (m_CurrentGameTick%g_Config.m_SvHighBandwidthMult) == 0)
 					DoSnapshot();
 
 				UpdateClientRconCommands();
