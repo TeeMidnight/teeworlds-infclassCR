@@ -76,16 +76,27 @@ void CSuperWeaponIndicator::Tick()
 		if ( m_warmUpCounter > 0 ) 
 		{
 			m_warmUpCounter--;
-		} else {
+		} else if(m_OwnerChar->GetClass() == PLAYERCLASS_SCIENTIST){
 			m_IsWarmingUp = false;
 			m_OwnerChar->m_HasWhiteHole = true;
 			m_OwnerChar->m_BroadcastWhiteHoleReady = Server()->Tick();
 			GameServer()->SendChatTarget_Localization(m_Owner, CHATCATEGORY_SCORE, _("white hole ready, your laser rifle now disrupts space time"), NULL);	
+		} else
+		{
+			m_IsWarmingUp = false;
+			m_OwnerChar->m_HasElasticHole = true;
+			m_OwnerChar->m_BroadcastElasticHoleReady = Server()->Tick();
+			GameServer()->SendChatTarget_Localization(m_Owner, CHATCATEGORY_SCORE, _("elastic hole ready, your grenade now disrupts space time"), NULL);	
 		}
 	} 
 	else 	
 	{
 		if (m_OwnerChar->m_HasWhiteHole == false)
+		{
+			GameServer()->m_World.DestroyEntity(this);
+			return; // Do not proceed after destruction
+		} 
+		if (m_OwnerChar->m_HasElasticHole == false)
 		{
 			GameServer()->m_World.DestroyEntity(this);
 			return; // Do not proceed after destruction

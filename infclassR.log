@@ -1,0 +1,600 @@
+[62b7ef38][server]: starting...
+[62b7ef38][datafile]: loading. filename='maps/infc_Minecraft.map'
+[62b7ef38][datafile]: allocsize=3104
+[62b7ef38][datafile]: readsize=2888
+[62b7ef38][datafile]: swaplen=2908
+[62b7ef38][datafile]: item_size=2396
+[62b7ef38][datafile]: loading done. datafile='maps/infc_Minecraft.map'
+[62b7ef38][datafile]: loading. filename='maps/infc_Minecraft.map'
+[62b7ef38][datafile]: allocsize=3104
+[62b7ef38][datafile]: readsize=2888
+[62b7ef38][datafile]: swaplen=2908
+[62b7ef38][datafile]: item_size=2396
+[62b7ef38][datafile]: loading done. datafile='maps/infc_Minecraft.map'
+[62b7ef38][datafile]: loading data index=9 size=2092 uncompressed=135600
+[62b7ef38][datafile]: loading. filename='clientmaps/infc_Minecraft_cd69fbe4/tw06-highres.map'
+[62b7ef38][datafile]: allocsize=22120
+[62b7ef38][datafile]: readsize=21824
+[62b7ef38][datafile]: swaplen=21844
+[62b7ef38][datafile]: item_size=20944
+[62b7ef38][datafile]: loading done. datafile='clientmaps/infc_Minecraft_cd69fbe4/tw06-highres.map'
+[62b7ef38][server]: map crc is cd69fbe4, generated map crc is 77d949da
+[62b7ef38][server]: maps/infc_x_current.map loaded in memory
+[62b7ef38][server]: server name is 'infclassCR 服务器'
+[62b7ef38][datafile]: loading data index=18 size=199 uncompressed=1216
+[62b7ef38][datafile]: loading data index=19 size=983 uncompressed=6840
+[62b7ef38][datafile]: loading data index=20 size=1003 uncompressed=7144
+[62b7ef38][server]: version 0.6 868ccbe551010094
+[62b7ef38][engine/mastersrv]: refreshing master server addresses
+[62b7ef38][register]: refreshing ip addresses
+[62b7ef38][engine/mastersrv]: saving addresses
+[62b7ef38][register]: fetching server counts
+[62b7ef39][server]: player is ready. ClientID=0 addr=127.0.0.1:52871 secure=yes
+[62b7ef39][server]: player is ready. ClientID=1 addr=127.0.0.1:62197 secure=yes
+[62b7ef39][server]: player is ready. ClientID=2 addr=127.0.0.1:62199 secure=yes
+[62b7ef3a][game]: Active Players: 0
+[62b7ef3a][game]: Spectators: 0
+[62b7ef3a][game]: Active Players: 0
+[62b7ef3a][game]: Spectators: 0
+[62b7ef3a][game]: Active Players: 0
+[62b7ef3a][game]: Spectators: 0
+[62b7ef3a][server]: player has entered the game. ClientID=0 addr=127.0.0.1:52871
+[62b7ef3a][game]: team_join player='0:暴鸡鸡' team=0
+[62b7ef3a][game]: Active Players: 1
+[62b7ef3a][game]: Spectators: 0
+[62b7ef3a][datafile]: loading data index=16 size=252 uncompressed=135600
+[62b7ef3a][server]: player has entered the game. ClientID=1 addr=127.0.0.1:62197
+[62b7ef3a][game]: team_join player='1:火锅Dio' team=0
+[62b7ef3a][game]: Active Players: 2
+[62b7ef3a][game]: Spectators: 0
+[62b7ef3a][server]: player has entered the game. ClientID=2 addr=127.0.0.1:62199
+[62b7ef3a][game]: team_join player='2:3' team=0
+[62b7ef3a][game]: Active Players: 3
+[62b7ef3a][game]: Spectators: 0
+[62b7ef3c][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62b7ef3c][server]: player is ready. ClientID=3 addr=172.23.80.1:10139 secure=yes
+[62b7ef3d][game]: choose_class player='火锅Dio' class='7'
+[62b7ef3d][game]: Active Players: 3
+[62b7ef3d][game]: Spectators: 0
+[62b7ef3d][server]: player has entered the game. ClientID=3 addr=172.23.80.1:10139
+[62b7ef3d][game]: team_join player='3:EDreemurr' team=0
+[62b7ef3d][game]: Active Players: 4
+[62b7ef3d][game]: Spectators: 0
+[62b7ef3e][game]: choose_class player='暴鸡鸡' class='12'
+[62b7ef3f][game]: choose_class player='EDreemurr' class='12'
+[62b7ef44][datafile]: loading data index=17 size=224 uncompressed=135600
+[62b7ef44][game]: choose_class player='3' class='3'
+[62b7ef44][game]: infected victim='3' duration='10'
+[62b7ef44][game]: choose_class player='3' class='15'
+[62b7ef44][game]: infected victim='暴鸡鸡' duration='10'
+[62b7ef44][game]: choose_class player='暴鸡鸡' class='17'
+[62b7ef4a][game]: score player='火锅Dio' amount='10'
+[62b7ef4a][game]: score player='火锅Dio' amount='20'
+[62b7ef4a][game]: kill killer='火锅Dio' victim='3' weapon=5
+[62b7ef4b][chat]: 3:-2:EDreemurr: 无敌的融合学家（
+[62b7ef4f][chat]: 1:-2:火锅Dio: awa
+[62b7ef57][game]: score player='EDreemurr' amount='10'
+[62b7ef57][game]: kill killer='EDreemurr' victim='3' weapon=0
+[62b7ef5a][game]: infected victim='EDreemurr' duration='31'
+[62b7ef5a][game]: choose_class player='EDreemurr' class='15'
+[62b7ef5a][game]: score player='暴鸡鸡' amount='30'
+[62b7ef5a][game]: kill killer='暴鸡鸡' victim='EDreemurr' weapon=0
+[62b7ef5b][game]: score player='火锅Dio' amount='10'
+[62b7ef5b][game]: kill killer='火锅Dio' victim='暴鸡鸡' weapon=5
+[62b7ef5c][game]: score player='火锅Dio' amount='10'
+[62b7ef5c][game]: kill killer='火锅Dio' victim='EDreemurr' weapon=5
+[62b7ef62][chat]: 1:-2:火锅Dio: 乱杀
+[62b7ef64][chat]: 1:-2:火锅Dio: ninja！
+[62b7ef68][chat]: 3:-2:EDreemurr: 这是最后测试
+[62b7ef6d][chat]: 3:-2:EDreemurr: 如果没问题直接上限
+[62b7ef6e][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7ef6e][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7ef70][chat]: 1:-2:火锅Dio: yeeeeeeeeeees
+[62b7ef75][game]: score player='火锅Dio' amount='10'
+[62b7ef75][game]: kill killer='火锅Dio' victim='EDreemurr' weapon=5
+[62b7ef75][game]: score player='火锅Dio' amount='10'
+[62b7ef75][game]: kill killer='火锅Dio' victim='暴鸡鸡' weapon=5
+[62b7ef75][game]: score player='火锅Dio' amount='10'
+[62b7ef75][game]: kill killer='火锅Dio' victim='3' weapon=5
+[62b7ef78][register]: WARNING: Master server is not responding, switching master
+[62b7ef78][engine/mastersrv]: refreshing master server addresses
+[62b7ef78][register]: refreshing ip addresses
+[62b7ef78][engine/mastersrv]: saving addresses
+[62b7ef78][register]: fetching server counts
+[62b7ef7b][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62b7ef7e][game]: score player='火锅Dio' amount='10'
+[62b7ef7e][game]: score player='火锅Dio' amount='20'
+[62b7ef7e][game]: kill killer='火锅Dio' victim='暴鸡鸡' weapon=5
+[62b7ef80][game]: infected victim='火锅Dio' duration='69'
+[62b7ef80][game]: choose_class player='火锅Dio' class='15'
+[62b7ef80][game]: score player='EDreemurr' amount='30'
+[62b7ef80][game]: kill killer='EDreemurr' victim='火锅Dio' weapon=0
+[62b7ef80][game]: round_end winner='zombies' survivors='0' duration='69' round='1 of 8'
+[62b7ef81][chat]: 0:-2:暴鸡鸡: awa
+[62b7ef82][chat]: 1:-2:火锅Dio: >:(
+[62b7ef83][game]: choose_class player='暴鸡鸡' class='0'
+[62b7ef83][game]: choose_class player='火锅Dio' class='0'
+[62b7ef83][game]: choose_class player='3' class='0'
+[62b7ef83][game]: choose_class player='EDreemurr' class='0'
+[62b7ef83][game]: start round type='InfClassR' teamplay='0' id='41'
+[62b7ef84][game]: choose_class player='EDreemurr' class='12'
+[62b7ef85][game]: choose_class player='火锅Dio' class='7'
+[62b7ef85][game]: choose_class player='暴鸡鸡' class='12'
+[62b7ef8c][server]: ClientID=3 authed (admin)
+[62b7ef8c][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7ef8c][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7ef8d][chat]: 2:-2:3: EDreemurr: 这么强的绝色不削弱？“
+[62b7ef8d][game]: choose_class player='3' class='6'
+[62b7ef8d][game]: infected victim='EDreemurr' duration='10'
+[62b7ef8d][game]: choose_class player='EDreemurr' class='22'
+[62b7ef8d][game]: infected victim='火锅Dio' duration='10'
+[62b7ef8d][game]: choose_class player='火锅Dio' class='17'
+[62b7ef97][server]: ClientID=3 rcon='inf_set_class 0 sciogist'
+[62b7ef97][chat]: *** The admin change the class of 暴鸡鸡 to sciogist
+[62b7ef97][chat]: 0:-2:暴鸡鸡: 限制数量
+[62b7ef99][chat]: 0:-2:暴鸡鸡: 可以把
+[62b7ef9b][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7ef9b][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7ef9d][server]: ClientID=3 rcon='inf_set_class 3 sciogist'
+[62b7ef9d][game]: choose_class player='EDreemurr' class='12'
+[62b7ef9d][chat]: *** The admin change the class of EDreemurr to sciogist
+[62b7efa5][game]: score player='EDreemurr' amount='10'
+[62b7efa5][game]: kill killer='EDreemurr' victim='火锅Dio' weapon=4
+[62b7efaa][game]: score player='暴鸡鸡' amount='10'
+[62b7efaa][game]: kill killer='暴鸡鸡' victim='火锅Dio' weapon=0
+[62b7efaa][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7efaa][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7efab][chat]: 0:-2:暴鸡鸡: EDreemurr: 限制数量？
+[62b7efaf][game]: score player='EDreemurr' amount='10'
+[62b7efaf][game]: kill killer='EDreemurr' victim='火锅Dio' weapon=3
+[62b7efb3][game]: score player='EDreemurr' amount='10'
+[62b7efb3][game]: kill killer='EDreemurr' victim='火锅Dio' weapon=3
+[62b7efb7][register]: WARNING: Master server is not responding, switching master
+[62b7efb7][engine/mastersrv]: refreshing master server addresses
+[62b7efb7][register]: refreshing ip addresses
+[62b7efb7][engine/mastersrv]: saving addresses
+[62b7efb7][register]: fetching server counts
+[62b7efb8][game]: score player='EDreemurr' amount='10'
+[62b7efb8][game]: kill killer='EDreemurr' victim='火锅Dio' weapon=3
+[62b7efba][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62b7efbc][game]: score player='3' amount='-10'
+[62b7efbc][game]: kill killer='3' victim='3' weapon=0
+[62b7efbc][game]: infected victim='3' duration='57'
+[62b7efbc][game]: choose_class player='3' class='18'
+[62b7efbc][game]: infected victim='EDreemurr' duration='57'
+[62b7efbc][game]: choose_class player='EDreemurr' class='17'
+[62b7efbc][game]: score player='火锅Dio' amount='30'
+[62b7efbc][game]: kill killer='火锅Dio' victim='EDreemurr' weapon=0
+[62b7efbe][game]: score player='暴鸡鸡' amount='10'
+[62b7efbe][game]: kill killer='暴鸡鸡' victim='火锅Dio' weapon=0
+[62b7efbe][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7efbe][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7efbe][server]: ClientID=3 rcon='inf_set_class 3 sciogist'
+[62b7efbe][game]: choose_class player='EDreemurr' class='12'
+[62b7efbe][chat]: *** The admin change the class of EDreemurr to sciogist
+[62b7efc3][chat]: 0:-2:暴鸡鸡: hhh
+[62b7efc9][chat]: 1:-2:火锅Dio: EDreemurr: 限制最多只能有一个生物学家
+[62b7efcc][game]: score player='EDreemurr' amount='10'
+[62b7efcc][game]: kill killer='EDreemurr' victim='火锅Dio' weapon=4
+[62b7efce][game]: score player='EDreemurr' amount='10'
+[62b7efce][game]: kill killer='EDreemurr' victim='火锅Dio' weapon=3
+[62b7efcf][game]: score player='暴鸡鸡' amount='10'
+[62b7efcf][game]: kill killer='暴鸡鸡' victim='3' weapon=3
+[62b7efd5][game]: infected victim='EDreemurr' duration='82'
+[62b7efd5][game]: choose_class player='EDreemurr' class='15'
+[62b7efd6][chat]: 0:-2:暴鸡鸡: 3个吧
+[62b7efd7][server]: ClientID=3 rcon='inf_set_class 3 sciogist'
+[62b7efd7][game]: choose_class player='EDreemurr' class='12'
+[62b7efd7][chat]: *** The admin change the class of EDreemurr to sciogist
+[62b7efdb][game]: score player='EDreemurr' amount='10'
+[62b7efdb][game]: kill killer='EDreemurr' victim='火锅Dio' weapon=2
+[62b7efdb][game]: score player='暴鸡鸡' amount='10'
+[62b7efdb][game]: kill killer='暴鸡鸡' victim='3' weapon=3
+[62b7efdc][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7efdc][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7efe0][chat]: 1:-2:火锅Dio: 太强了
+[62b7efe1][game]: score player='EDreemurr' amount='10'
+[62b7efe1][game]: kill killer='EDreemurr' victim='火锅Dio' weapon=2
+[62b7efe4][chat]: 1:-2:火锅Dio: 3个服务器就bomb了
+[62b7efe5][chat]: 1:-2:火锅Dio: awa
+[62b7efe6][game]: infected victim='EDreemurr' duration='99'
+[62b7efe6][game]: choose_class player='EDreemurr' class='15'
+[62b7efe8][server]: ClientID=3 rcon='inf_set_class 3 sciogist'
+[62b7efe8][game]: choose_class player='EDreemurr' class='12'
+[62b7efe8][chat]: *** The admin change the class of EDreemurr to sciogist
+[62b7efe9][game]: infected victim='EDreemurr' duration='102'
+[62b7efe9][game]: choose_class player='EDreemurr' class='16'
+[62b7efea][Console]: No such command: r.
+[62b7efee][game]: score player='暴鸡鸡' amount='10'
+[62b7efee][game]: kill killer='暴鸡鸡' victim='3' weapon=0
+[62b7efee][chat]: 3:-2:EDreemurr: 让我测试白洞啊
+[62b7efef][server]: ClientID=3 rcon='inf_set_class 3 sciogist'
+[62b7efef][game]: choose_class player='EDreemurr' class='12'
+[62b7efef][chat]: *** The admin change the class of EDreemurr to sciogist
+[62b7eff3][game]: infected victim='EDreemurr' duration='112'
+[62b7eff3][game]: choose_class player='EDreemurr' class='16'
+[62b7eff3][game]: kill killer='EDreemurr' victim='EDreemurr' weapon=-2
+[62b7eff5][chat]: 3:-2:EDreemurr: 让我测试白洞啊
+[62b7eff6][register]: WARNING: Master server is not responding, switching master
+[62b7eff6][engine/mastersrv]: refreshing master server addresses
+[62b7eff6][register]: refreshing ip addresses
+[62b7eff6][engine/mastersrv]: saving addresses
+[62b7eff6][register]: fetching server counts
+[62b7eff7][chat]: 1:-2:火锅Dio: awa
+[62b7eff8][server]: ClientID=3 rcon='inf_set_class 3 sciogist'
+[62b7eff8][game]: choose_class player='EDreemurr' class='12'
+[62b7eff8][chat]: *** The admin change the class of EDreemurr to sciogist
+[62b7eff9][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62b7effa][game]: score player='EDreemurr' amount='10'
+[62b7effa][game]: kill killer='EDreemurr' victim='3' weapon=3
+[62b7effa][game]: score player='EDreemurr' amount='10'
+[62b7effa][game]: kill killer='EDreemurr' victim='火锅Dio' weapon=3
+[62b7effc][game]: score player='EDreemurr' amount='10'
+[62b7effc][game]: kill killer='EDreemurr' victim='3' weapon=3
+[62b7effd][game]: score player='EDreemurr' amount='10'
+[62b7effd][game]: kill killer='EDreemurr' victim='火锅Dio' weapon=3
+[62b7efff][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7efff][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7efff][game]: score player='EDreemurr' amount='10'
+[62b7efff][game]: kill killer='EDreemurr' victim='3' weapon=3
+[62b7efff][game]: score player='EDreemurr' amount='10'
+[62b7efff][game]: kill killer='EDreemurr' victim='火锅Dio' weapon=3
+[62b7f002][game]: score player='EDreemurr' amount='10'
+[62b7f002][game]: kill killer='EDreemurr' victim='3' weapon=3
+[62b7f002][game]: score player='EDreemurr' amount='10'
+[62b7f002][game]: kill killer='EDreemurr' victim='火锅Dio' weapon=3
+[62b7f005][game]: score player='EDreemurr' amount='10'
+[62b7f005][game]: kill killer='EDreemurr' victim='3' weapon=3
+[62b7f005][game]: score player='暴鸡鸡' amount='10'
+[62b7f005][game]: kill killer='暴鸡鸡' victim='火锅Dio' weapon=3
+[62b7f009][game]: score player='EDreemurr' amount='10'
+[62b7f009][game]: kill killer='EDreemurr' victim='3' weapon=4
+[62b7f00a][chat]: 2:-2:3: 还没好？
+[62b7f00a][game]: score player='暴鸡鸡' amount='10'
+[62b7f00a][game]: kill killer='暴鸡鸡' victim='火锅Dio' weapon=0
+[62b7f00c][game]: score player='EDreemurr' amount='10'
+[62b7f00c][game]: kill killer='EDreemurr' victim='3' weapon=3
+[62b7f00e][chat]: 0:-2:暴鸡鸡: 我可以了
+[62b7f00e][game]: infected victim='暴鸡鸡' duration='139'
+[62b7f00e][game]: choose_class player='暴鸡鸡' class='22'
+[62b7f00e][game]: score player='火锅Dio' amount='30'
+[62b7f00e][game]: kill killer='火锅Dio' victim='暴鸡鸡' weapon=0
+[62b7f00e][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7f00e][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7f012][game]: score player='EDreemurr' amount='10'
+[62b7f012][game]: kill killer='EDreemurr' victim='暴鸡鸡' weapon=3
+[62b7f012][chat]: 0:-2:暴鸡鸡: c
+[62b7f016][chat]: 0:-2:暴鸡鸡: 打我
+[62b7f017][game]: score player='EDreemurr' amount='10'
+[62b7f017][game]: kill killer='EDreemurr' victim='3' weapon=3
+[62b7f017][game]: score player='EDreemurr' amount='10'
+[62b7f017][game]: kill killer='EDreemurr' victim='火锅Dio' weapon=3
+[62b7f018][chat]: 0:-2:暴鸡鸡: 打我qwq
+[62b7f019][chat]: 3:-2:EDreemurr: ？？？？
+[62b7f01b][chat]: 0:-2:暴鸡鸡: 我都可以了
+[62b7f01d][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7f01d][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7f01e][chat]: 2:-2:3: EDreemurr: 多少个？
+[62b7f020][chat]: 3:-2:EDreemurr: 我有点非
+[62b7f021][game]: score player='EDreemurr' amount='10'
+[62b7f021][game]: kill killer='EDreemurr' victim='火锅Dio' weapon=3
+[62b7f021][game]: score player='EDreemurr' amount='10'
+[62b7f021][game]: kill killer='EDreemurr' victim='3' weapon=3
+[62b7f023][chat]: 3:-2:EDreemurr: OK
+[62b7f025][game]: score player='EDreemurr' amount='10'
+[62b7f025][game]: kill killer='EDreemurr' victim='暴鸡鸡' weapon=3
+[62b7f029][chat]: 3:-2:EDreemurr: nice
+[62b7f02c][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7f02c][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7f033][game]: infected victim='EDreemurr' duration='176'
+[62b7f033][game]: choose_class player='EDreemurr' class='22'
+[62b7f033][game]: score player='暴鸡鸡' amount='30'
+[62b7f033][game]: kill killer='暴鸡鸡' victim='EDreemurr' weapon=0
+[62b7f034][game]: round_end winner='zombies' survivors='0' duration='176' round='2 of 8'
+[62b7f034][chat]: 2:-2:3: 有什么用
+[62b7f035][register]: WARNING: Master server is not responding, switching master
+[62b7f035][engine/mastersrv]: refreshing master server addresses
+[62b7f035][register]: refreshing ip addresses
+[62b7f035][engine/mastersrv]: saving addresses
+[62b7f035][register]: fetching server counts
+[62b7f035][chat]: 0:-2:暴鸡鸡: awa
+[62b7f037][game]: choose_class player='暴鸡鸡' class='0'
+[62b7f037][game]: choose_class player='火锅Dio' class='0'
+[62b7f037][game]: choose_class player='3' class='0'
+[62b7f037][game]: choose_class player='EDreemurr' class='0'
+[62b7f037][game]: start round type='InfClassR' teamplay='0' id='18467'
+[62b7f037][chat]: 2:-2:3: 抨击吗
+[62b7f038][chat]: 3:-2:EDreemurr: 我TM
+[62b7f038][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62b7f039][game]: choose_class player='3' class='10'
+[62b7f039][game]: choose_class player='火锅Dio' class='4'
+[62b7f03a][game]: choose_class player='暴鸡鸡' class='12'
+[62b7f03b][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7f03b][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7f03c][chat]: 3:-2:EDreemurr: 我要等他爆炸啊
+[62b7f040][chat]: 3:-2:EDreemurr: 我看看能不能炸死我
+[62b7f041][game]: choose_class player='EDreemurr' class='8'
+[62b7f041][game]: infected victim='3' duration='10'
+[62b7f041][game]: choose_class player='3' class='23'
+[62b7f041][game]: infected victim='暴鸡鸡' duration='10'
+[62b7f041][game]: choose_class player='暴鸡鸡' class='17'
+[62b7f044][server]: ClientID=3 rcon='inf_set_class 3 sciogist'
+[62b7f044][game]: choose_class player='EDreemurr' class='12'
+[62b7f044][chat]: *** The admin change the class of EDreemurr to sciogist
+[62b7f047][game]: score player='EDreemurr' amount='10'
+[62b7f047][game]: kill killer='EDreemurr' victim='暴鸡鸡' weapon=3
+[62b7f048][chat]: 2:-2:3: EDreemurr: 给我也试一下
+[62b7f04a][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7f04a][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7f04d][server]: ClientID=3 rcon='inf_set_class 2 sciogist'
+[62b7f04d][game]: choose_class player='3' class='12'
+[62b7f04d][chat]: *** The admin change the class of 3 to sciogist
+[62b7f04f][chat]: 0:-2:暴鸡鸡: 范围调了没有
+[62b7f052][game]: score player='火锅Dio' amount='10'
+[62b7f053][game]: score player='3' amount='10'
+[62b7f053][game]: kill killer='3' victim='暴鸡鸡' weapon=0
+[62b7f054][server]: ClientID=3 rcon='inf_set_class 1 hunter'
+[62b7f054][game]: choose_class player='火锅Dio' class='17'
+[62b7f054][chat]: *** The admin change the class of 火锅Dio to hunter
+[62b7f057][game]: infected victim='3' duration='32'
+[62b7f057][game]: choose_class player='3' class='23'
+[62b7f057][game]: score player='火锅Dio' amount='30'
+[62b7f057][game]: kill killer='火锅Dio' victim='3' weapon=0
+[62b7f059][chat]: 3:-2:EDreemurr: 调了
+[62b7f059][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7f059][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7f05b][game]: score player='EDreemurr' amount='10'
+[62b7f05b][game]: kill killer='EDreemurr' victim='火锅Dio' weapon=2
+[62b7f05c][game]: score player='EDreemurr' amount='10'
+[62b7f05c][game]: kill killer='EDreemurr' victim='暴鸡鸡' weapon=2
+[62b7f060][game]: score player='EDreemurr' amount='10'
+[62b7f060][game]: kill killer='EDreemurr' victim='3' weapon=2
+[62b7f061][game]: score player='EDreemurr' amount='10'
+[62b7f061][game]: kill killer='EDreemurr' victim='暴鸡鸡' weapon=3
+[62b7f064][game]: score player='EDreemurr' amount='10'
+[62b7f064][game]: kill killer='EDreemurr' victim='3' weapon=3
+[62b7f064][game]: score player='EDreemurr' amount='10'
+[62b7f064][game]: kill killer='EDreemurr' victim='火锅Dio' weapon=3
+[62b7f067][game]: score player='EDreemurr' amount='10'
+[62b7f067][game]: kill killer='EDreemurr' victim='暴鸡鸡' weapon=3
+[62b7f06d][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7f06d][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7f074][register]: WARNING: Master server is not responding, switching master
+[62b7f074][engine/mastersrv]: refreshing master server addresses
+[62b7f074][register]: refreshing ip addresses
+[62b7f074][engine/mastersrv]: saving addresses
+[62b7f074][register]: fetching server counts
+[62b7f077][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62b7f077][game]: score player='EDreemurr' amount='10'
+[62b7f077][game]: kill killer='EDreemurr' victim='暴鸡鸡' weapon=4
+[62b7f078][game]: infected victim='EDreemurr' duration='65'
+[62b7f078][game]: choose_class player='EDreemurr' class='16'
+[62b7f078][game]: score player='火锅Dio' amount='30'
+[62b7f078][game]: kill killer='火锅Dio' victim='EDreemurr' weapon=0
+[62b7f078][game]: round_end winner='zombies' survivors='0' duration='65' round='3 of 8'
+[62b7f07a][chat]: 0:-2:暴鸡鸡: e
+[62b7f07b][chat]: 2:-2:3: 所以这个击杀奖励有什么用
+[62b7f07b][chat]: 3:-2:EDreemurr: 别打我啊
+[62b7f07b][game]: choose_class player='暴鸡鸡' class='0'
+[62b7f07b][game]: choose_class player='火锅Dio' class='0'
+[62b7f07b][game]: choose_class player='3' class='0'
+[62b7f07b][game]: choose_class player='EDreemurr' class='0'
+[62b7f07b][game]: start round type='InfClassR' teamplay='0' id='6334'
+[62b7f07c][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7f07c][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7f07c][chat]: 0:-2:暴鸡鸡: 别打
+[62b7f07d][game]: choose_class player='暴鸡鸡' class='12'
+[62b7f07d][chat]: 1:-2:火锅Dio: ;3
+[62b7f07d][game]: choose_class player='3' class='12'
+[62b7f07f][game]: choose_class player='火锅Dio' class='7'
+[62b7f084][chat]: 3:-2:EDreemurr: 我在测试能不能炸死所有人
+[62b7f085][game]: choose_class player='EDreemurr' class='12'
+[62b7f085][game]: infected victim='EDreemurr' duration='10'
+[62b7f085][game]: choose_class player='EDreemurr' class='20'
+[62b7f085][game]: infected victim='火锅Dio' duration='10'
+[62b7f085][game]: choose_class player='火锅Dio' class='15'
+[62b7f088][game]: kill killer='火锅Dio' victim='火锅Dio' weapon=-2
+[62b7f08b][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7f08b][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7f090][game]: score player='暴鸡鸡' amount='10'
+[62b7f090][game]: kill killer='暴鸡鸡' victim='EDreemurr' weapon=0
+[62b7f091][game]: score player='3' amount='10'
+[62b7f091][game]: kill killer='3' victim='火锅Dio' weapon=3
+[62b7f093][game]: score player='暴鸡鸡' amount='10'
+[62b7f093][game]: kill killer='暴鸡鸡' victim='EDreemurr' weapon=0
+[62b7f096][game]: score player='3' amount='10'
+[62b7f096][game]: kill killer='3' victim='火锅Dio' weapon=0
+[62b7f097][game]: score player='3' amount='10'
+[62b7f097][game]: kill killer='3' victim='EDreemurr' weapon=0
+[62b7f09a][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7f09a][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7f09a][game]: score player='3' amount='10'
+[62b7f09a][game]: kill killer='3' victim='EDreemurr' weapon=0
+[62b7f09a][game]: score player='3' amount='10'
+[62b7f09a][game]: kill killer='3' victim='火锅Dio' weapon=0
+[62b7f09e][game]: score player='暴鸡鸡' amount='10'
+[62b7f09e][game]: kill killer='暴鸡鸡' victim='EDreemurr' weapon=0
+[62b7f09e][game]: score player='暴鸡鸡' amount='10'
+[62b7f09e][game]: kill killer='暴鸡鸡' victim='火锅Dio' weapon=0
+[62b7f0a1][game]: score player='暴鸡鸡' amount='10'
+[62b7f0a1][game]: kill killer='暴鸡鸡' victim='EDreemurr' weapon=0
+[62b7f0a4][chat]: 1:-2:火锅Dio: EDreemurr: 最多一个
+[62b7f0a5][game]: score player='3' amount='10'
+[62b7f0a5][game]: kill killer='3' victim='EDreemurr' weapon=0
+[62b7f0a7][chat]: 1:-2:火锅Dio: 不能再多了
+[62b7f0a9][game]: score player='暴鸡鸡' amount='10'
+[62b7f0a9][game]: kill killer='暴鸡鸡' victim='EDreemurr' weapon=0
+[62b7f0aa][chat]: 1:-2:火锅Dio: >;o
+[62b7f0ac][game]: score player='暴鸡鸡' amount='10'
+[62b7f0ac][game]: kill killer='暴鸡鸡' victim='EDreemurr' weapon=0
+[62b7f0ad][game]: score player='3' amount='10'
+[62b7f0ad][game]: kill killer='3' victim='火锅Dio' weapon=0
+[62b7f0ae][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7f0ae][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7f0b0][game]: score player='暴鸡鸡' amount='10'
+[62b7f0b0][game]: kill killer='暴鸡鸡' victim='EDreemurr' weapon=0
+[62b7f0b0][chat]: 2:-2:3: EDreemurr: 这个角色的击杀奖励可以炸死所有人？
+[62b7f0b2][game]: score player='暴鸡鸡' amount='10'
+[62b7f0b2][game]: kill killer='暴鸡鸡' victim='火锅Dio' weapon=0
+[62b7f0b3][register]: WARNING: Master server is not responding, switching master
+[62b7f0b3][engine/mastersrv]: refreshing master server addresses
+[62b7f0b3][register]: refreshing ip addresses
+[62b7f0b3][engine/mastersrv]: saving addresses
+[62b7f0b3][register]: fetching server counts
+[62b7f0b3][game]: score player='3' amount='10'
+[62b7f0b3][game]: kill killer='3' victim='EDreemurr' weapon=0
+[62b7f0b5][chat]: 3:-2:EDreemurr: yes
+[62b7f0b6][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62b7f0ba][game]: score player='暴鸡鸡' amount='10'
+[62b7f0ba][game]: kill killer='暴鸡鸡' victim='火锅Dio' weapon=0
+[62b7f0bb][chat]: 3:-2:EDreemurr: 别打
+[62b7f0bc][game]: score player='暴鸡鸡' amount='10'
+[62b7f0bc][game]: kill killer='暴鸡鸡' victim='EDreemurr' weapon=4
+[62b7f0bd][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7f0bd][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7f0bf][chat]: 3:-2:EDreemurr: 别打
+[62b7f0c0][chat]: 2:-2:3: 这么离谱？
+[62b7f0c4][game]: score player='3' amount='10'
+[62b7f0c4][game]: kill killer='3' victim='火锅Dio' weapon=0
+[62b7f0c8][chat]: 2:-2:3: 这厮所有僵尸吗
+[62b7f0c9][game]: score player='3' amount='10'
+[62b7f0c9][game]: kill killer='3' victim='EDreemurr' weapon=0
+[62b7f0cb][chat]: 3:-2:EDreemurr: az
+[62b7f0cc][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7f0cc][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7f0ce][chat]: 3:-2:EDreemurr: 等下
+[62b7f0d1][chat]: 0:-2:暴鸡鸡: 6滴
+[62b7f0d3][chat]: 0:-2:暴鸡鸡: 好像
+[62b7f0d4][chat]: 3:-2:EDreemurr: 爆炸范围笑了
+[62b7f0d7][chat]: 1:-2:火锅Dio: awa
+[62b7f0db][chat]: 1:-2:火锅Dio: 我在塔顶没炸到我
+[62b7f0db][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7f0db][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7f0db][chat]: 2:-2:3: EDreemurr: 阿
+[62b7f0e4][game]: score player='暴鸡鸡' amount='10'
+[62b7f0e4][game]: kill killer='暴鸡鸡' victim='EDreemurr' weapon=0
+[62b7f0e7][chat]: 3:-2:EDreemurr: 不是
+[62b7f0ea][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7f0ea][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7f0eb][chat]: 2:-2:3: 如果炸死所有然后又刷了漆不是无敌
+[62b7f0ee][chat]: 3:-2:EDreemurr: 这个范围居然只有直径（
+[62b7f0ef][game]: score player='暴鸡鸡' amount='10'
+[62b7f0ef][game]: kill killer='暴鸡鸡' victim='火锅Dio' weapon=3
+[62b7f0f2][register]: WARNING: Master server is not responding, switching master
+[62b7f0f2][engine/mastersrv]: refreshing master server addresses
+[62b7f0f2][register]: refreshing ip addresses
+[62b7f0f2][engine/mastersrv]: saving addresses
+[62b7f0f2][register]: fetching server counts
+[62b7f0f4][chat]: 3:-2:EDreemurr: 刷了漆是啥
+[62b7f0f5][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62b7f0f9][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7f0f9][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7f0fb][chat]: 2:-2:3: 刷了岂不是
+[62b7f102][chat]: 3:-2:EDreemurr: 刷了是啥
+[62b7f103][game]: score player='暴鸡鸡' amount='10'
+[62b7f103][game]: kill killer='暴鸡鸡' victim='火锅Dio' weapon=3
+[62b7f104][game]: score player='3' amount='10'
+[62b7f104][game]: kill killer='3' victim='EDreemurr' weapon=0
+[62b7f108][game]: score player='暴鸡鸡' amount='10'
+[62b7f108][game]: kill killer='暴鸡鸡' victim='EDreemurr' weapon=0
+[62b7f108][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7f108][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7f108][game]: score player='3' amount='10'
+[62b7f108][game]: kill killer='3' victim='火锅Dio' weapon=0
+[62b7f10e][chat]: 2:-2:3: 急啥奖励啊
+[62b7f10f][game]: score player='暴鸡鸡' amount='10'
+[62b7f10f][game]: kill killer='暴鸡鸡' victim='EDreemurr' weapon=0
+[62b7f111][chat]: 2:-2:3: 击杀
+[62b7f115][game]: score player='暴鸡鸡' amount='10'
+[62b7f115][game]: kill killer='暴鸡鸡' victim='火锅Dio' weapon=3
+[62b7f117][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7f117][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7f122][chat]: 3:-2:EDreemurr: 发布版的这个会有一个区块那么大的爆炸范围
+[62b7f125][game]: score player='暴鸡鸡' amount='10'
+[62b7f125][game]: kill killer='暴鸡鸡' victim='EDreemurr' weapon=0
+[62b7f129][game]: score player='3' amount='10'
+[62b7f129][game]: kill killer='3' victim='EDreemurr' weapon=0
+[62b7f12b][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7f12b][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7f12c][game]: score player='暴鸡鸡' amount='10'
+[62b7f12c][game]: kill killer='暴鸡鸡' victim='火锅Dio' weapon=0
+[62b7f12d][game]: score player='3' amount='10'
+[62b7f12d][game]: kill killer='3' victim='EDreemurr' weapon=0
+[62b7f12e][chat]: 2:-2:3: EDreemurr: 和科学一样吗
+[62b7f130][game]: score player='暴鸡鸡' amount='10'
+[62b7f130][game]: kill killer='暴鸡鸡' victim='火锅Dio' weapon=0
+[62b7f131][register]: WARNING: Master server is not responding, switching master
+[62b7f131][engine/mastersrv]: refreshing master server addresses
+[62b7f131][register]: refreshing ip addresses
+[62b7f131][engine/mastersrv]: saving addresses
+[62b7f131][register]: fetching server counts
+[62b7f134][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62b7f135][game]: score player='3' amount='10'
+[62b7f135][game]: kill killer='3' victim='火锅Dio' weapon=0
+[62b7f13a][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7f13a][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7f13b][game]: score player='3' amount='10'
+[62b7f13b][game]: kill killer='3' victim='火锅Dio' weapon=0
+[62b7f13e][game]: score player='3' amount='10'
+[62b7f13e][game]: kill killer='3' victim='火锅Dio' weapon=0
+[62b7f13f][chat]: 3:-2:EDreemurr: 你们放了技能就进圈子里去
+[62b7f142][game]: score player='3' amount='10'
+[62b7f142][game]: kill killer='3' victim='火锅Dio' weapon=0
+[62b7f145][chat]: 3:-2:EDreemurr: 这样好看看能不能炸死
+[62b7f147][game]: score player='3' amount='10'
+[62b7f147][game]: kill killer='3' victim='EDreemurr' weapon=0
+[62b7f149][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7f149][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7f14e][game]: score player='EDreemurr' amount='30'
+[62b7f14e][game]: kill killer='EDreemurr' victim='3' weapon=5
+[62b7f14e][game]: infected victim='3' duration='210'
+[62b7f14e][game]: choose_class player='3' class='16'
+[62b7f150][chat]: 2:-2:3: 可以
+[62b7f151][chat]: 0:-2:暴鸡鸡: 掉4滴
+[62b7f154][game]: score player='暴鸡鸡' amount='10'
+[62b7f154][game]: kill killer='暴鸡鸡' victim='EDreemurr' weapon=0
+[62b7f157][chat]: 3:-2:EDreemurr: 谢谢
+[62b7f158][game]: kill killer='3' victim='3' weapon=-2
+[62b7f158][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7f158][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7f15a][chat]: 3:-2:EDreemurr: 好了
+[62b7f15c][game]: score player='暴鸡鸡' amount='10'
+[62b7f15c][game]: kill killer='暴鸡鸡' victim='火锅Dio' weapon=0
+[62b7f15d][chat]: 3:-2:EDreemurr: 各位退吧
+[62b7f15f][chat]: 0:-2:暴鸡鸡: 我刚4滴
+[62b7f15f][chat]: 3:-2:EDreemurr: 马上发布
+[62b7f160][server]: client dropped. cid=2 addr=127.0.0.1:62199 reason=''
+[62b7f160][game]: kill killer='3' victim='3' weapon=-3
+[62b7f160][server]: leave player='2:3'
+[62b7f160][game]: Active Players: 3
+[62b7f160][game]: Spectators: 0
+[62b7f160][infclass]: session created for the client 2
+[62b7f160][infclass]: accusation created for the client 2
+[62b7f160][server]: client dropped. cid=3 addr=172.23.80.1:10139 reason=''
+[62b7f160][game]: kill killer='EDreemurr' victim='EDreemurr' weapon=-3
+[62b7f160][server]: leave player='3:EDreemurr'
+[62b7f160][game]: Active Players: 2
+[62b7f160][game]: Spectators: 0
+[62b7f160][infclass]: session created for the client 3
+[62b7f160][infclass]: accusation created for the client 3
+[62b7f162][chat]: 1:-2:火锅Dio: yeeeees
+[62b7f163][chat]: 0:-2:暴鸡鸡: 0滴了
+[62b7f163][server]: client dropped. cid=1 addr=127.0.0.1:62197 reason=''
+[62b7f163][net_ban]: ban failed (localhost)
+[62b7f163][game]: kill killer='火锅Dio' victim='火锅Dio' weapon=-3
+[62b7f163][server]: leave player='1:火锅Dio'
+[62b7f163][game]: Active Players: 1
+[62b7f163][game]: Spectators: 0
+[62b7f163][infclass]: session created for the client 1
+[62b7f163][infclass]: accusation created for the client 1
+[62b7f167][register]: ERROR: the master server reports that clients can not connect to this server.
+[62b7f167][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62b7f16e][server]: client dropped. cid=0 addr=127.0.0.1:52871 reason=''
+[62b7f16e][game]: kill killer='暴鸡鸡' victim='暴鸡鸡' weapon=-3
+[62b7f16e][game]: infected victim='暴鸡鸡' duration='0'
+[62b7f16e][game]: choose_class player='暴鸡鸡' class='17'
+[62b7f16e][server]: leave player='0:暴鸡鸡'
+[62b7f16e][game]: Active Players: 0
+[62b7f16e][game]: Spectators: 0
+[62b7f16e][infclass]: session created for the client 0
+[62b7f16e][infclass]: accusation created for the client 0

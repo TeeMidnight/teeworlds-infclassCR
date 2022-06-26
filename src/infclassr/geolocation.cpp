@@ -1,5 +1,6 @@
 #include <infclassr/geolocation.h>
 
+#ifdef CONF_NOGEOLOCATION
 Geolocation::Geolocation(const char* path_to_mmdb) {
 	db = new GeoLite2PP::DB(path_to_mmdb);
 }
@@ -274,3 +275,4 @@ int Geolocation::get_iso_numeric_code(GeoLite2PP::MStr& m) {
 	};
 	return iso_numeric[m["country_iso_code"]];
 }
+#endif

@@ -32,6 +32,7 @@ enum
 	TAKEDAMAGEMODE_NOINFECTION=0,
 	TAKEDAMAGEMODE_INFECTION,
 	TAKEDAMAGEMODE_SELFHARM, // works like NOINFECTION but also harms the owner of the damage with 50%
+	TAKEDAMAGEMODE_ALL,
 };
 
 enum
@@ -211,9 +212,11 @@ public:
 	bool m_PositionLocked;
 	bool m_PositionLockAvailable;
 	bool m_HasWhiteHole;
+	bool m_HasElasticHole;
 	bool m_HasIndicator;
 	bool m_HasStunGrenade;
-	int m_BroadcastWhiteHoleReady; // used to broadcast "WhiteHole ready" for a short period of time
+	int m_BroadcastWhiteHoleReady;
+	int m_BroadcastElasticHoleReady;// used to broadcast "WhiteHole ready" for a short period of time
 	int m_LoveTick;
 	int m_HallucinationTick;
 	int m_SlipperyTick;
@@ -234,6 +237,9 @@ public:
 	
 
 public:
+	CCharacterCore GetCore() { return m_Core; }
+	vec2 GetVel() { return m_Core.m_Vel;}
+	void SetVel(vec2 Vel) { m_Core.m_Vel = Vel;}
 	void DestroyChildEntities();
 	void ClassSpawnAttributes();
 	void GiveArmorIfLonely();

@@ -11,7 +11,7 @@ config:Add(OptTestCompileC("minmacosxsdk", "int main(){return 0;}", "-mmacosx-ve
 config:Add(OptTestCompileC("macosxppc", "int main(){return 0;}", "-arch ppc"))
 config:Add(OptLibrary("zlib", "zlib.h", false))
 config:Add(Mysql.OptFind("mysql", false))
-config:Add(OptToggle("nogeolocation", false))
+config:Add(OptToggle("geolocation", true))
 config:Finalize("config.lua")
 
 -- data compiler
@@ -203,7 +203,7 @@ function build(settings)
 			settings.link.flags:Add("`pkg-config --libs icu-uc icu-i18n`")
 		end
 		
-		if not config.nogeolocation.value then
+		if not config.geolocation.value then
 			settings.link.libs:Add("maxminddb")  -- for ip geolocation
 		end
 
@@ -292,7 +292,7 @@ function build(settings)
 	masterserver = Compile(settings, Collect("src/mastersrv/*.cpp"))
 	game_shared = Compile(settings, Collect("src/game/*.cpp"), nethash, network_source)
 	game_server = Compile(settings, CollectRecursive("src/game/server/*.cpp"), server_content_source)
-	if not config.nogeolocation.value then
+	if config.geolocation.value then
 		infclassr = Compile(settings, Collect("src/infclassr/*.cpp", "src/infclassr/GeoLite2PP/*.cpp"))
 	end
 
@@ -312,7 +312,7 @@ function build(settings)
 	end
 
 	-- build server, version server and master server
-	server_exe = Link(server_settings, "bin/server", engine, server,
+	server_exe = Link(server_settings, "server", engine, server,
 		game_shared, game_server, infclassr, teeuniverses, zlib, server_link_other, md5, json)
 
 	serverlaunch = {}
@@ -373,11 +373,11 @@ release_sql_settings.cc.defines:Add("CONF_RELEASE", "CONF_SQL")
 config.mysql:Apply(debug_sql_settings)
 config.mysql:Apply(release_sql_settings)
 
-if config.nogeolocation.value then
-	debug_settings.cc.defines:Add("CONF_NOGEOLOCATION")
-	debug_sql_settings.cc.defines:Add("CONF_NOGEOLOCATION")
-	release_settings.cc.defines:Add("CONF_NOGEOLOCATION")
-	release_sql_settings.cc.defines:Add("CONF_NOGEOLOCATION")
+if config.geolocation.value then
+	debug_settings.cc.defines:Add("CONF_GEOLOCATION")
+	debug_sql_settings.cc.defines:Add("CONF_GEOLOCATION")
+	release_settings.cc.defines:Add("CONF_GEOLOCATION")
+	release_sql_settings.cc.defines:Add("CONF_GEOLOCATION")
 end
 
 if platform == "macosx" then

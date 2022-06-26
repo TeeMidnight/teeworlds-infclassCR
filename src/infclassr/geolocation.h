@@ -1,6 +1,8 @@
 #ifndef INFCLASSR_GEOLOCATION_H
 #define INFCLASSR_GEOLOCATION_H
 
+#ifdef CONF_NOGEOLOCATION
+
 #include <infclassr/GeoLite2PP/GeoLite2PP.hpp>
 #include <iostream>
 
@@ -13,5 +15,5 @@ public:
     ~Geolocation();
     int get_country_iso_numeric_code(std::string& ip);
 };
-
+#endif
 #endif

@@ -26,6 +26,7 @@
 #include "biologist-mine.h"
 #include "bouncing-bullet.h"
 #include "scatter-grenade.h"
+#include "sciogist-grenade.h"
 #include "merc-bomb.h"
 #include "medic-grenade.h"
 #include "hero-flag.h"
@@ -33,6 +34,7 @@
 #include "plasma.h"
 #include "growingexplosion.h"
 #include "white-hole.h"
+#include "elastic-hole.h"
 #include "superweapon-indicator.h"
 #include "laser-teleport.h"
 
@@ -115,6 +117,7 @@ m_pConsole(pConsole)
 	m_VoodooTimeAlive = Server()->TickSpeed()*g_Config.m_InfVoodooAliveTime;
 	m_VoodooAboutToDie = false;
 	m_BroadcastWhiteHoleReady = -100;
+	m_BroadcastElasticHoleReady = -100;
 	m_pHeroFlag = nullptr;
 	m_ResetKillsTime = 0;
 /* INFECTION MODIFICATION END *****************************************/
@@ -796,7 +799,7 @@ void CCharacter::FireWeapon()
 				
 				m_ReloadTimer = Server()->TickSpeed()/4;
 			}
-			else if(GetClass() == PLAYERCLASS_SCIENTIST)
+			else if(GetClass() == PLAYERCLASS_SCIENTIST || GetClass() == PLAYERCLASS_SCIOGIST)
 			{
 				bool FreeSpace = true;
 				int NbMine = 0;
@@ -1123,7 +1126,7 @@ void CCharacter::FireWeapon()
 			Msg.AddInt(ShotSpread*2+1);
 
 			float Force = 2.0f;
-			if(GetClass() == PLAYERCLASS_MEDIC)
+			if(GetClass() == PLAYERCLASS_MEDIC || GetClass() == PLAYERCLASS_SCIOGIST)
 				Force = 10.0f;
 				
 			for(int i = -ShotSpread; i <= ShotSpread; ++i)
@@ -1282,6 +1285,17 @@ void CCharacter::FireWeapon()
 					new CLaserTeleport(GameWorld(), PortalPos, OldPos);
 				}
 			}
+			else if(GetClass() == PLAYERCLASS_SCIOGIST)
+			{
+				for(int i = 1;i <= 3;i++)
+				{
+					float Spreading[] = {-0.42f, -0.21f, 0.21f};
+					float angle = GetAngle(Direction);
+					angle += Spreading[i] * 2.0f*(0.25f + 0.75f*static_cast<float>(10-3)/10.0f);
+					CSciogistGrenade *pProj = new CSciogistGrenade(GameWorld(), m_pPlayer->GetCID(), ProjStartPos, vec2(cosf(angle), sinf(angle)));
+				}
+				GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
+			}
 			else
 			{
 				if(m_HasStunGrenade) 
@@ -1326,7 +1340,7 @@ void CCharacter::FireWeapon()
 														 ProjStartPos,
 										  Direction,
 										  (int)(Server()->TickSpeed()*GameServer()->Tuning()->m_GrenadeLifetime),
-														 1, true, 0, SOUND_GRENADE_EXPLODE, WEAPON_GRENADE);
+														 1, true, 0, SOUND_GRENADE_EXPLODE, WEAPON_GRENADE,0);
 					
 					if(GetClass() == PLAYERCLASS_NINJA)
 					{
@@ -1394,6 +1408,11 @@ void CCharacter::FireWeapon()
 					new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach*0.7f, m_pPlayer->GetCID(), Damage);
 					GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
 				}
+				else if (GetClass() == PLAYERCLASS_SCIOGIST) {
+					Damage = 5;
+					new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach*0.7f, m_pPlayer->GetCID(), Damage);
+					GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+				}
 				else
 				{
 					new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID(), Damage);
@@ -1441,6 +1460,29 @@ void CCharacter::CheckSuperWeaponAccess()
 						new CSuperWeaponIndicator(GameWorld(), m_Pos, m_pPlayer->GetCID());
 					}
 				} 
+			} 
+		}
+	}
+
+	if(GetClass() == PLAYERCLASS_SCIOGIST)
+	{
+		
+		if (!m_HasElasticHole) // Can't receive a white hole while having one available
+		{
+			// enable white hole probabilities
+			if (kills > g_Config.m_InfElasticHoleMinimalKills) 
+			{
+				if (random_int(0,100) < g_Config.m_InfElasticHoleProbability) 
+				{
+					//Scientist-laser.cpp will make it unavailable after usage and reset player kills
+					
+					//create an indicator object
+					if (m_HasIndicator == false) {
+						m_HasIndicator = true;
+						GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_SCORE, _("elastic hole found, adjusting scientific parameters..."), NULL);
+						new CSuperWeaponIndicator(GameWorld(), m_Pos, m_pPlayer->GetCID());
+					}
+				}
 			} 
 		}
 	}
@@ -2188,6 +2230,13 @@ void CCharacter::Tick()
 							Broadcast = true;
 						}
 						break;
+					case CMapConverter::MENUCLASS_SCIOGIST:
+						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_SCIOGIST))
+						{
+							GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Sciogist"), NULL);
+							Broadcast = true;
+						}
+						break;
 					case CMapConverter::MENUCLASS_MEDIC:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_MEDIC))
 						{
@@ -2272,6 +2321,9 @@ void CCharacter::Tick()
 						break;
 					case CMapConverter::MENUCLASS_LOOPER:
 						NewClass = PLAYERCLASS_LOOPER;
+						break;
+					case CMapConverter::MENUCLASS_SCIOGIST:
+						NewClass = PLAYERCLASS_SCIOGIST;
 						break;
 				}
 				
@@ -2436,6 +2488,77 @@ void CCharacter::Tick()
 			);
 		}
 	}
+	else if(GetClass() == PLAYERCLASS_SCIOGIST)
+	{
+		int NumMines = 0;
+		for(CScientistMine *pMine = (CScientistMine*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SCIENTIST_MINE); pMine; pMine = (CScientistMine*) pMine->TypeNext())
+		{
+			if(pMine->m_Owner == m_pPlayer->GetCID())
+				NumMines++;
+		}
+		
+		CElasticHole* pCurrentElasticHole = NULL;
+		for(CElasticHole *pElasticHole = (CElasticHole*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_WHITE_HOLE); pElasticHole; pElasticHole = (CElasticHole*) pElasticHole->TypeNext())
+		{
+			if(pElasticHole->m_Owner == m_pPlayer->GetCID())
+			{
+				pCurrentElasticHole = pElasticHole;
+				break;
+			}
+		}
+		
+		//Reset superweapon kill counter, two seconds after whiteHole explosion
+		if (pCurrentElasticHole && 1+pCurrentElasticHole->GetTick()/Server()->TickSpeed() == 1)
+			m_ResetKillsTime = Server()->TickSpeed()*3;
+		
+		if (m_ResetKillsTime)
+		{
+			m_ResetKillsTime--;
+			if(!m_ResetKillsTime)
+				GetPlayer()->ResetNumberKills();
+		}
+
+		
+		if(m_BroadcastElasticHoleReady+(2*Server()->TickSpeed()) > Server()->Tick())
+		{
+			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+				_("ElasticHole ready !"),
+				NULL
+			);
+		}
+		
+		//else 
+		if(NumMines > 0 )//&& !pCurrentWhiteHole
+		{
+			GameServer()->SendBroadcast_Localization_P(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, NumMines,
+				_P("One mine is active", "{int:NumMines} mines are active"),
+				"NumMines", &NumMines,
+				NULL
+			);
+		}
+		
+		else if(NumMines <= 0 && pCurrentElasticHole)
+		{
+			int Seconds = 1+pCurrentElasticHole->GetTick()/Server()->TickSpeed();
+			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+				_("Elastic hole: {sec:RemainingTime}"),
+				"RemainingTime", &Seconds,
+				NULL
+			);
+		}
+		
+		else if(NumMines > 0 && pCurrentElasticHole)
+		{
+			int Seconds = 1+pCurrentElasticHole->GetTick()/Server()->TickSpeed();
+			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+				_("{int:NumMines} mines are active\nElastic hole: {sec:RemainingTime}"),
+				"NumMines", &NumMines,
+				"RemainingTime", &Seconds,
+				NULL
+			);
+		}
+		
+	}
 	else if(GetClass() == PLAYERCLASS_NINJA)
 	{
 		int TargetID = GameServer()->GetTargetToKill();
@@ -2561,6 +2684,11 @@ void CCharacter::GiveGift(int GiftType)
 			break;
 		case PLAYERCLASS_LOOPER:
 			GiveWeapon(WEAPON_RIFLE, -1);
+			break;
+		case PLAYERCLASS_SCIOGIST:
+			GiveWeapon(WEAPON_GRENADE, -1);
+			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_SHOTGUN, -1);
 			break;
 		case PLAYERCLASS_MEDIC:
 			GiveWeapon(WEAPON_SHOTGUN, -1);
@@ -2871,6 +2999,32 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	if (pKillerPlayer)
 		pKillerChar = pKillerPlayer->GetCharacter();
 
+
+	if(Mode == TAKEDAMAGEMODE_ALL)
+	{
+		if(m_Armor)
+		{
+			if(Dmg <= m_Armor)
+			{
+				m_Armor -= Dmg;
+				Dmg = 0;
+			}
+			else
+			{
+				Dmg -= m_Armor;
+				m_Armor = 0;
+			}
+		}
+
+		m_Health -= Dmg;
+	
+		if(From != m_pPlayer->GetCID() && pKillerPlayer)
+			m_NeedFullHeal = true;
+			
+		if(From >= 0 && From != m_pPlayer->GetCID())
+			GameServer()->SendHitSound(From);
+	}
+
 	if(Mode == TAKEDAMAGEMODE_INFECTION)
 	{
 	        if (!pKillerPlayer || !pKillerPlayer->IsZombie() || !IsHuman())
@@ -2914,7 +3068,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		Dmg = 0;
 	}
 
-	if(From != m_pPlayer->GetCID() && pKillerPlayer)
+	if(From != m_pPlayer->GetCID() && pKillerPlayer )
 	{
 		if(IsZombie())
 		{
@@ -3556,6 +3710,24 @@ void CCharacter::ClassSpawnAttributes()
 				m_pPlayer->m_knownClass[PLAYERCLASS_BIOLOGIST] = true;
 			}
 			break;
+		case PLAYERCLASS_SCIOGIST:
+			RemoveAllGun();
+			m_pPlayer->m_InfectionTick = -1;
+			m_Health = 10;
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			GiveWeapon(WEAPON_GRENADE, -1);
+			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_SHOTGUN, -1);
+			m_ActiveWeapon = WEAPON_RIFLE;
+			
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_SCIOGIST);
+			if(!m_pPlayer->IsKnownClass(PLAYERCLASS_SCIOGIST))
+			{
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "Sciogist", NULL);
+				m_pPlayer->m_knownClass[PLAYERCLASS_SCIOGIST] = true;
+			}
+			break;
 		case PLAYERCLASS_LOOPER:
 			RemoveAllGun();
 			m_pPlayer->m_InfectionTick = -1;
@@ -4050,6 +4222,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_HERO_SHOTGUN;
 			case PLAYERCLASS_BIOLOGIST:
 				return INFWEAPON_BIOLOGIST_SHOTGUN;
+			case PLAYERCLASS_SCIOGIST:
+				return INFWEAPON_SCIOGIST_SHOTGUN;
 			default:
 				return INFWEAPON_SHOTGUN;
 		}
@@ -4068,6 +4242,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_NINJA_GRENADE;
 			case PLAYERCLASS_SCIENTIST:
 				return INFWEAPON_SCIENTIST_GRENADE;
+			case PLAYERCLASS_SCIOGIST:
+				return INFWEAPON_SCIOGIST_GRENADE;
 			case PLAYERCLASS_HERO:
 				return INFWEAPON_HERO_GRENADE;
 			case PLAYERCLASS_LOOPER:
@@ -4092,6 +4268,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_HERO_RIFLE;
 			case PLAYERCLASS_BIOLOGIST:
 				return INFWEAPON_BIOLOGIST_RIFLE;
+			case PLAYERCLASS_SCIOGIST:
+				return INFWEAPON_SCIOGIST_RIFLE;
 			case PLAYERCLASS_MEDIC:
 				return INFWEAPON_MEDIC_RIFLE;
 			default:

@@ -69,6 +69,7 @@ MACRO_CONFIG_INT(InfShockwaveAffectHumans, inf_shock_wave_affect_humans, 1, 0, 1
 MACRO_CONFIG_INT(InfSpawnProtectionTime, inf_spawn_protection_time, 1, 0, 10000, CFGFLAG_SERVER, "Time zombies stay invincible while in spawn (in seconds)")
 
 MACRO_CONFIG_INT(InfDefenderLimit, inf_defender_limit, 40, 0, 64, CFGFLAG_SERVER, "Maximum number of defenders in game")
+MACRO_CONFIG_INT(InfSciogistLimit, inf_defender_limit, 1, 0, 4, CFGFLAG_SERVER, "Maximum number of Sciogists in game")
 MACRO_CONFIG_INT(InfMedicLimit, inf_medic_limit, 20, 0, 64, CFGFLAG_SERVER, "Maximum number of medics in game")
 MACRO_CONFIG_INT(InfHeroLimit, inf_hero_limit, 10, 0, 64, CFGFLAG_SERVER, "Maximum number of heros in game")
 MACRO_CONFIG_INT(InfSupportLimit, inf_support_limit, 40, 0, 64, CFGFLAG_SERVER, "Maximum number of supports in game")
@@ -76,6 +77,8 @@ MACRO_CONFIG_INT(InfSoldierBombs, inf_soldier_bombs, 3, 1, 16, CFGFLAG_SERVER, "
 MACRO_CONFIG_INT(InfMercBombs, inf_merc_bombs, 15, 1, 100, CFGFLAG_SERVER, "Number of poison grenades for the mercenary")
 MACRO_CONFIG_INT(InfMercLove, inf_merc_love, 1, 0, 1, CFGFLAG_SERVER, "Enables love bombs for the mercenary (hammer)")
 MACRO_CONFIG_INT(InfBarrierLifeSpan, inf_barrier_lifespan, 30, 0, 100, CFGFLAG_SERVER, "Barrier lifespan")
+
+
 MACRO_CONFIG_INT(InfVoodooAliveTime, inf_voodoo_alive_time, 550, 0, 10000, CFGFLAG_SERVER, "How long a voodoo keeps staying alive after being killed (in ms)")
 MACRO_CONFIG_INT(InfBarrierTimeReduce, inf_barrier_timereduce, 150, 0, 10000, CFGFLAG_SERVER, "Time to remove from a barrier lifespan when an infected dies (centisec)")
 MACRO_CONFIG_INT(InfLooperBarrierTimeReduce, inf_looper_barrier_timereduce, 350, 0, 10000, CFGFLAG_SERVER, "Time to remove from a barrier lifespan when an infected dies (centisec)")
@@ -121,6 +124,7 @@ MACRO_CONFIG_INT(InfEnableSoldier, inf_enable_soldier, 1, 0, 1, CFGFLAG_SERVER, 
 MACRO_CONFIG_INT(InfEnableScientist, inf_enable_scientist, 1, 0, 1, CFGFLAG_SERVER, "Makes the scientist class available")
 MACRO_CONFIG_INT(InfEnableBiologist, inf_enable_biologist, 1, 0, 1, CFGFLAG_SERVER, "Makes the biologist class available")
 MACRO_CONFIG_INT(InfEnableLooper, inf_enable_looper, 1, 0, 1, CFGFLAG_SERVER, "Makes the looper class available")
+MACRO_CONFIG_INT(InfEnableSciogist, inf_enable_sciogist, 1, 0, 1, CFGFLAG_SERVER, "Makes the sciogist class available")
 MACRO_CONFIG_INT(InfEnableMercenary, inf_enable_mercenary, 1, 0, 1, CFGFLAG_SERVER, "Makes the mercenary class available")
 MACRO_CONFIG_INT(InfEnableSniper, inf_enable_sniper, 1, 0, 1, CFGFLAG_SERVER, "Makes the sniper class available")
 MACRO_CONFIG_INT(InfEnableNinja, inf_enable_ninja, 1, 0, 1, CFGFLAG_SERVER, "Makes the ninja class available")
@@ -171,6 +175,11 @@ MACRO_CONFIG_INT(InfWhiteHoleRadius, inf_white_hole_radius, 430, 0, 500, CFGFLAG
 MACRO_CONFIG_INT(InfWhiteHoleAffectsHumans, inf_white_hole_affects_humans, 0, 0, 1, CFGFLAG_SERVER, "Makes white holes suck in humans")
 MACRO_CONFIG_INT(InfWhiteHoleNumParticles, inf_white_hole_num_particles, 100, 20, 500, CFGFLAG_SERVER, "Number of particles that will be used for a white hole animation")
 MACRO_CONFIG_INT(InfWhiteHolePullStrength, inf_white_hole_pull_strength, 40, 0, 1000, CFGFLAG_SERVER, "How strong a white hole sucks players in")
+
+MACRO_CONFIG_INT(InfElasticHoleMinimalKills, inf_elastic_hole_minimal_kills, 6, 0, 30, CFGFLAG_SERVER, "Minimal number of kills before elastic hole become available")
+MACRO_CONFIG_INT(InfElasticHoleRadius, inf_elastic_hole_radius, 150, 0, 200, CFGFLAG_SERVER, "Radius of elastic holes")
+MACRO_CONFIG_INT(InfElasticHoleLifeSpan, inf_elastic_hole_life_span, 20, 0, 100, CFGFLAG_SERVER, "Elastic hole life span")
+MACRO_CONFIG_INT(InfElasticHoleProbability, inf_Elastic_hole_probability, 20, 0, 100, CFGFLAG_SERVER, "Probability of super weapon being available after MinimalKill requirement")
 
 MACRO_CONFIG_INT(InfStunGrenadeMinimalKills, inf_stun_grenade_minimal_kills, 2, 0, 30, CFGFLAG_SERVER, "Minimal number of kills before grenade stun ammunition can be found")
 MACRO_CONFIG_INT(InfStunGrenadeProbability, inf_stun_grenade_probability, 30, 0, 100, CFGFLAG_SERVER, "Probability of super weapon being available after MinimalKill requirement")

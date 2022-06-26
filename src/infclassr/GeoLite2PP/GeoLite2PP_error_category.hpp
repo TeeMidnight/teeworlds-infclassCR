@@ -2,6 +2,7 @@
  * $Id: GeoLite2PP_error_category.hpp 2549 2018-06-08 18:48:31Z stephane $
  */
 
+#ifdef CONF_NOGEOLOCATION
 #pragma once
 
 #include <string>
@@ -60,3 +61,4 @@ namespace std
 	template <>
 	struct is_error_code_enum<GeoLite2PP::MMDBStatus> : public true_type {};
 }
+#endif

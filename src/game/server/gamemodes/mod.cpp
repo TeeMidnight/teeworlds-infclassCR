@@ -521,6 +521,7 @@ void CGameControllerMOD::Snap(int SnappingClient)
 		int Medic = 0;
 		int Hero = 0;
 		int Support = 0;
+		int Sciogist = 0;
 		
 		CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
 		while(Iter.Next())
@@ -547,7 +548,9 @@ void CGameControllerMOD::Snap(int SnappingClient)
 				case PLAYERCLASS_LOOPER:
 					Defender++;
 					break;
-					
+				case PLAYERCLASS_SCIOGIST:
+					Sciogist++;
+					break;
 			}
 		}
 		
@@ -559,6 +562,8 @@ void CGameControllerMOD::Snap(int SnappingClient)
 			ClassMask |= CMapConverter::MASK_HERO;
 		if(Support < g_Config.m_InfSupportLimit)
 			ClassMask |= CMapConverter::MASK_SUPPORT;
+		if(Support < g_Config.m_InfSciogistLimit)
+			ClassMask |= CMapConverter::MASK_DEFENDER;
 	}
 	
 	if(SnappingClient != -1)
@@ -827,6 +832,7 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 	int nbHero = 0;
 	int nbMedic = 0;
 	int nbDefender = 0;
+	int nbSciogist = 0;
 	CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);	
 	
 	while(Iter.Next())
@@ -853,6 +859,9 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 			case PLAYERCLASS_LOOPER:
 				nbDefender++;
 				break;
+			case PLAYERCLASS_SCIOGIST:
+				nbSciogist++;
+				break;
 		}
 	}
 	
@@ -869,6 +878,9 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 		1.0f : 0.0f;
 	Probability[PLAYERCLASS_BIOLOGIST - START_HUMANCLASS - 1] =
 		(nbDefender < g_Config.m_InfDefenderLimit && g_Config.m_InfEnableBiologist) ?
+		1.0f : 0.0f;
+	Probability[PLAYERCLASS_SCIOGIST - START_HUMANCLASS - 1] =
+		(nbDefender < g_Config.m_InfDefenderLimit && g_Config.m_InfEnableSciogist) ?
 		1.0f : 0.0f;
 
 	Probability[PLAYERCLASS_MERCENARY - START_HUMANCLASS - 1] =
@@ -979,6 +991,8 @@ bool CGameControllerMOD::IsEnabledClass(int PlayerClass) {
 			return g_Config.m_InfEnableScientist;
 		case PLAYERCLASS_BIOLOGIST:
 			return g_Config.m_InfEnableBiologist;
+		case PLAYERCLASS_SCIOGIST:
+			return g_Config.m_InfEnableSciogist;
 		case PLAYERCLASS_MEDIC:
 			return g_Config.m_InfEnableMedic;
 		case PLAYERCLASS_HERO:
@@ -1002,6 +1016,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 		return false;
 
 	int nbDefender = 0;
+	int nbSciogist = 0;
 	int nbMedic = 0;
 	int nbHero = 0;
 	int nbSupport = 0;
@@ -1031,6 +1046,9 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			case PLAYERCLASS_LOOPER:
 				nbDefender++;
 				break;
+			case PLAYERCLASS_SCIOGIST:
+				nbSciogist++;
+				break;
 		}
 	}
 	
@@ -1051,6 +1069,8 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			return (nbSupport < g_Config.m_InfSupportLimit);
 		case PLAYERCLASS_LOOPER:
 			return (nbDefender < g_Config.m_InfDefenderLimit);
+		case PLAYERCLASS_SCIOGIST:
+			return (nbSciogist < g_Config.m_InfSciogistLimit);
 	}
 	
 	return false;

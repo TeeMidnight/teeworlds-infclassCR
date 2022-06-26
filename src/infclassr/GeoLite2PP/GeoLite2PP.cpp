@@ -1,7 +1,7 @@
 /* GeoLite2++ (C) 2016-2018 Stephane Charette <stephanecharette@gmail.com>
  * $Id: GeoLite2PP.cpp 2549 2018-06-08 18:48:31Z stephane $
  */
-
+#ifdef CONF_NOGEOLOCATION
 
 #include "GeoLite2PP.hpp"
 #include "GeoLite2PP_error_category.hpp"
@@ -357,3 +357,4 @@ void GeoLite2PP::DB::add_to_map( GeoLite2PP::MStr &m, MMDB_lookup_result_s *node
 
 	return;
 }
+#endif

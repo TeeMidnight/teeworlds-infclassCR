@@ -3,7 +3,7 @@
  */
 
 #pragma once
-
+#ifdef CONF_NOGEOLOCATION
 #include <map>
 #include <vector>
 #include <string>
@@ -237,3 +237,4 @@ namespace GeoLite2PP
 			void add_to_map( GeoLite2PP::MStr &m, MMDB_lookup_result_s *node, const std::string &name, const std::string &language, const VCStr &v );
 	};
 }
+#endif

@@ -73,11 +73,9 @@ void CMercenaryBomb::Explode()
 	
 	if(m_Damage > 1)
 	{
-		//GameServer()->CreateSound(m_Pos, SOUND_GRENADE_EXPLODE);
-		//new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, 16.0f * Factor, GROWINGEXPLOSIONEFFECT_MERC_INFECTED);
-		new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, 16.0f * Factor, GROWINGEXPLOSIONEFFECT_LOVE_INFECTED);
+		new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, 16.0f * Factor, GROWINGEXPLOSIONEFFECT_MERC_INFECTED);
+		GameServer()->CreateSound(m_Pos, SOUND_GRENADE_EXPLODE);
 	}
-				
 	GameServer()->m_World.DestroyEntity(this);
 }
 
@@ -92,11 +90,6 @@ void CMercenaryBomb::Snap(int SnappingClient)
 		return;
 
 	CPlayer* pClient = GameServer()->m_apPlayers[SnappingClient];
-	if(SnappingClient >= 0)
-	{
-		if(pClient->IsZombie()) // invisible for zombies
-			return;
-	}
 
 	float AngleStart = (2.0f * pi * Server()->Tick()/static_cast<float>(Server()->TickSpeed()))/10.0f;
 	float AngleStep = 2.0f * pi / CMercenaryBomb::NUM_SIDE;

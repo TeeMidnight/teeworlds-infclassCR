@@ -25,8 +25,8 @@
 #endif
 
 
-#ifndef CONF_NOGEOLOCATION
-#include <infclassr/geolocation.h>
+#ifdef CONF_NOGEOLOCATION
+	#include <infclassr/geolocation.h>
 #endif
 
 #ifdef _MSC_VER
@@ -85,7 +85,7 @@ class CGameContext : public IGameServer
 	int m_TargetToKillCoolDown;
 	int m_HeroGiftCooldown;
 
-	#ifndef CONF_NOGEOLOCATION
+	#ifdef CONF_NOGEOLOCATION
 	Geolocation* geolocation;
 	#endif
 

@@ -77,7 +77,7 @@ void CGameContext::Construct(int Resetting)
 		m_pMeasure = new CMeasureTicks(10,"GameServerTick");
 	#endif
 	
-	#ifndef CONF_NOGEOLOCATION
+	#ifdef CONF_NOGEOLOCATION
 	geolocation = new Geolocation("GeoLite2-Country.mmdb");
 	#endif
 }
@@ -104,7 +104,7 @@ CGameContext::~CGameContext()
 	if(!m_Resetting)
 		delete m_pVoteOptionHeap;
 	
-	#ifndef CONF_NOGEOLOCATION
+	#ifdef CONF_NOGEOLOCATION
 	delete geolocation;
 	geolocation = nullptr;
 	#endif
@@ -257,7 +257,7 @@ int CGameContext::RandomZombieToWitch()
 
 void CGameContext::SetAvailabilities(std::vector<int> value) { // todo: should be order-independent, e.g with std map
 	if (value.empty())
-		value = std::vector<int>(10); //increased by 1 human class from 9 to 10
+		value = std::vector<int>(11); //increased by 1 human class from 9 to 10
 	g_Config.m_InfEnableBiologist = value[0];
 	g_Config.m_InfEnableEngineer = value[1];
 	g_Config.m_InfEnableHero = value[2];
@@ -268,6 +268,7 @@ void CGameContext::SetAvailabilities(std::vector<int> value) { // todo: should b
 	g_Config.m_InfEnableSniper = value[7];
 	g_Config.m_InfEnableSoldier = value[8];
 	g_Config.m_InfEnableLooper = value[9];
+	g_Config.m_InfEnableSciogist = value[10];
 }
 
 void CGameContext::SetProbabilities(std::vector<int> value) { // todo: should be order-independent, e.g with std map
@@ -785,6 +786,9 @@ void CGameContext::SendBroadcast_ClassIntro(int ClientID, int Class)
 			break;
 		case PLAYERCLASS_BIOLOGIST:
 			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Biologist"));
+			break;
+		case PLAYERCLASS_SCIOGIST:
+			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Sciogist"));
 			break;
 		case PLAYERCLASS_LOOPER:
 			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Looper"));
@@ -2097,7 +2101,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			Server()->SetClientCountry(ClientID, pMsg->m_Country);
 
 			// IP geolocation start
-			#ifndef CONF_NOGEOLOCATION
+			#ifdef CONF_NOGEOLOCATION
 			std::string ip = Server()->GetClientIP(ClientID);
 			Server()->SetClientCountry(ClientID, geolocation->get_country_iso_numeric_code(ip));
 			#endif
@@ -2853,7 +2857,8 @@ bool CGameContext::ConStartFunRound(IConsole::IResult *pResult, void *pUserData)
 		g_Config.m_InfEnableScientist,
 		g_Config.m_InfEnableSniper,
 		g_Config.m_InfEnableSoldier,
-		g_Config.m_InfEnableLooper
+		g_Config.m_InfEnableLooper,
+		g_Config.m_InfEnableSciogist
 	};
 
 	std::vector<const char*> phrases = {
@@ -2966,6 +2971,7 @@ bool CGameContext::ConSetClass(IConsole::IResult *pResult, void *pUserData)
 	else if(str_comp(pClassName, "soldier") == 0) pPlayer->SetClass(PLAYERCLASS_SOLDIER);
 	else if(str_comp(pClassName, "scientist") == 0) pPlayer->SetClass(PLAYERCLASS_SCIENTIST);
 	else if(str_comp(pClassName, "biologist") == 0) pPlayer->SetClass(PLAYERCLASS_BIOLOGIST);
+	else if(str_comp(pClassName, "sciogist") == 0) pPlayer->SetClass(PLAYERCLASS_SCIOGIST);
 	else if(str_comp(pClassName, "looper") == 0) pPlayer->SetClass(PLAYERCLASS_LOOPER);
 	else if(str_comp(pClassName, "medic") == 0) pPlayer->SetClass(PLAYERCLASS_MEDIC);
 	else if(str_comp(pClassName, "hero") == 0) pPlayer->SetClass(PLAYERCLASS_HERO);
@@ -3139,6 +3145,11 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 			{
 				CheckClass = PLAYERCLASS_BIOLOGIST;
 				str_copy(aChatTitle, "biologist", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "!sciogist") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_SCIOGIST;
+				str_copy(aChatTitle, "sciogist", sizeof(aChatTitle));
 			}
 			else if(str_comp(aNameFound, "!looper") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
@@ -3432,6 +3443,8 @@ bool CGameContext::ConTop10(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_SCIENTIST_SCORE);
 		else if(str_comp_nocase(pArg, "biologist") == 0)
 			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_BIOLOGIST_SCORE);
+		else if(str_comp_nocase(pArg, "sciogist") == 0)
+			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_BIOLOGIST_SCORE);
 		else if(str_comp_nocase(pArg, "looper") == 0)
 			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_LOOPER_SCORE);
 		else if(str_comp_nocase(pArg, "medic") == 0)
@@ -3485,6 +3498,8 @@ bool CGameContext::ConRank(IConsole::IResult *pResult, void *pUserData)
 		else if(str_comp_nocase(pArg, "scientist") == 0)
 			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_SCIENTIST_SCORE);
 		else if(str_comp_nocase(pArg, "biologist") == 0)
+			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_BIOLOGIST_SCORE);
+		else if(str_comp_nocase(pArg, "sciogist") == 0)
 			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_BIOLOGIST_SCORE);
 		else if(str_comp_nocase(pArg, "looper") == 0)
 			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_LOOPER_SCORE);
@@ -3540,6 +3555,8 @@ bool CGameContext::ConGoal(IConsole::IResult *pResult, void *pUserData)
 		else if(str_comp_nocase(pArg, "scientist") == 0)
 			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_SCIENTIST_SCORE);
 		else if(str_comp_nocase(pArg, "biologist") == 0)
+			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_BIOLOGIST_SCORE);
+		else if(str_comp_nocase(pArg, "sciogist") == 0)
 			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_BIOLOGIST_SCORE);
 		else if(str_comp_nocase(pArg, "looper") == 0)
 			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_LOOPER_SCORE);
@@ -3689,6 +3706,26 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He has also grenades that teleport him."), NULL);
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Additionally he can place white holes with the laser rifle. Further information on /help whitehole"), NULL);
+			
+			pSelf->SendMOTD(ClientID, Buffer.buffer());
+		}
+		else if(str_comp_nocase(pHelpPage, "sciogist") == 0)
+		{
+			Buffer.append("~~ ");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Sciogist"), NULL); 
+			Buffer.append(" ~~\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Sciogist can pose floating mines with his hammer."), NULL); 
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_LP(
+				Buffer, pLanguage, g_Config.m_InfMineLimit,
+				_P("Mines are limited to one per player at the same time.", "Mines are limited to {int:NumMines} per player at the same time."),
+				"NumMines", &g_Config.m_InfMineLimit,
+				NULL
+			);
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He has also fire 3 time grenades . And he has a shotgun with bouncing bullets"), NULL);
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Additionally he can place black holes with the grenades. Further information on /help blackhole"), NULL);
 			
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
@@ -4050,7 +4087,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 		);
 		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", Buffer.buffer());
 		
-		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", "engineer, soldier, scientist, medic, hero, ninja, mercenary, sniper, whiteHole");		
+		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", "engineer, soldier, scientist, sciogist , medic, hero, ninja, mercenary, sniper, whiteHole");		
 		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", "smoker, hunter, bat, boomer, ghost, spider, ghoul, voodoo, undead, witch.");		
 	}
 	

@@ -10,7 +10,7 @@ MACRO_CONFIG_STR(SvMotd, sv_motd, 900, "", CFGFLAG_SERVER, "Message of the day t
 MACRO_CONFIG_STR(SvMaprotation, sv_maprotation, 768, "infc_lunaroutpost infc_skull infc_warehouse infc_damascus infc_eidalfitr infc_newdust infc_hardcorepit infc_normandie infc_deathdealer infc_bamboo3 infc_halfdust infc_warehouse2 infc_headquarter", CFGFLAG_SERVER, "Maps to rotate between")
 MACRO_CONFIG_INT(SvRoundsPerMap, sv_rounds_per_map, 8, 1, 100, CFGFLAG_SERVER, "Number of rounds on each map before rotating")
 MACRO_CONFIG_INT(SvScorelimit, sv_scorelimit, 0, 0, 1000, CFGFLAG_SERVER, "Score limit (0 disables)")
-MACRO_CONFIG_INT(SvTimelimit, sv_timelimit, 0, 0, 1000, CFGFLAG_SERVER, "Time limit in minutes (0 disables)")
+MACRO_CONFIG_INT(SvTimelimit, sv_timelimit, 3, 0, 1000, CFGFLAG_SERVER, "Time limit in minutes (0 disables)")
 MACRO_CONFIG_STR(SvGametype, sv_gametype, 32, "mod", CFGFLAG_SERVER, "Game type (dm, tdm, ctf)")
 MACRO_CONFIG_INT(SvTournamentMode, sv_tournament_mode, 0, 0, 1, CFGFLAG_SERVER, "Tournament mode. When enabled, players join the server as spectators")
 MACRO_CONFIG_INT(SvSpamprotection, sv_spamprotection, 1, 0, 1, CFGFLAG_SERVER, "Spam protection")
