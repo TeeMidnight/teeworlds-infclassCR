@@ -4,23 +4,21 @@
 #include <engine/shared/config.h>
 #include <base/vmath.h>
 
+#include "elastic-entity.h"
 #include "elastic-hole.h"
-#include "growingexplosion.h"
 
-CElasticHole::CElasticHole(CGameWorld *pGameWorld, vec2 CenterPos, int OwnerClientID, bool IsExplode, float MaxRadius)
-: CEntity(pGameWorld, CGameWorld::ENTTYPE_ELASTIC_HOLE)
+CElasticEntity::CElasticEntity(CGameWorld *pGameWorld, vec2 CenterPos, vec2 Dir,int OwnerClientID)
+: CEntity(pGameWorld, CGameWorld::ENTTYPE_ELASTIC_ENTITY)
 {
 	m_Pos = CenterPos;
 	GameWorld()->InsertEntity(this);
 	m_DetectionRadius = 60.0f;
 	m_StartTick = Server()->Tick();
 	m_Owner = OwnerClientID;
-	m_Damage = 0;
-	m_MaxRadius = MaxRadius;
-	m_IsExplode = IsExplode;
-	m_Radius = 0;
-	m_LifeSpan = g_Config.m_InfElasticHoleLifeSpan * Server()->TickSpeed();
-	m_Growing = GROW_GROWING;
+    m_Direction = Dir;
+	m_Damage = 3;
+    m_Radius = g_Config.m_InfElasticEntityRadius;
+	m_LifeSpan = g_Config.m_InfElasticEntityLifeSpan * Server()->TickSpeed();
 	m_StartGrowingTick = Server()->Tick();
 	
 	
@@ -35,7 +33,7 @@ CElasticHole::CElasticHole(CGameWorld *pGameWorld, vec2 CenterPos, int OwnerClie
 	}
 }
 
-CElasticHole::~CElasticHole()
+CElasticEntity::~CElasticEntity()
 {
 	for(int i=0; i<NUM_PARTICLES; i++)
 	{
@@ -47,66 +45,71 @@ CElasticHole::~CElasticHole()
 	}
 }
 
-void CElasticHole::Explode()
+void CElasticEntity::Explode()
 {
-	new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, m_MaxRadius/32*10, GROWINGEXPLOSIONEFFECT_BOOM_ALL);
+    GameServer()->CreateExplosion(m_Pos, m_Owner, WEAPON_HAMMER, false, TAKEDAMAGEMODE_NOINFECTION);
+
+	new CElasticHole(GameWorld(), m_Pos, m_Owner, false, 46);
+
 	GameServer()->CreateSound(m_Pos, SOUND_GRENADE_EXPLODE);
 
 	GameServer()->m_World.DestroyEntity(this);
 }
 
-void CElasticHole::Tick()
+vec2 CElasticEntity::GetPos(float Time)
 {
-	
-	if(m_Radius > m_MaxRadius)
+	float Curvature = 0;
+	float Speed = 0;
+
+	Curvature = 1.25f;
+	Speed = 64.0f;
+
+	return CalcPos(m_Pos, m_Direction, Curvature, Speed, Time);
+}
+
+void CElasticEntity::TickPaused()
+{
+	m_StartTick++;
+}
+
+
+
+void CElasticEntity::Tick()
+{
+    float Pt = (Server()->Tick()-m_StartTick-1)/(float)Server()->TickSpeed();
+	float Ct = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
+	vec2 PrevPos = GetPos(Pt);
+	vec2 CurPos = GetPos(Ct);
+
+	m_Pos = CurPos;
+
+	if(GameLayerClipped(CurPos))
 	{
-		m_Growing = GROW_STOPING;
-		m_Radius = m_MaxRadius;
+		GameServer()->m_World.DestroyEntity(this);
+		return;
 	}
-	else if(m_Growing == GROW_GROWING)
-		m_Radius += 2;
-	else if(m_Growing == GROW_ZOOMING)
-		m_Radius -= 2;
-	
+
 	if(m_LifeSpan <= 0)
 	{
-		m_Growing = GROW_ZOOMING;
+		Explode();
 	}else
 	{
 		m_LifeSpan--;
 	}
-	for(CCharacter *pChr = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); pChr; pChr = (CCharacter *)pChr->TypeNext())
-	{
-		if(pChr->IsHuman()) continue;
-		float Len = distance(pChr->m_Pos, m_Pos);
-		if(Len < pChr->m_ProximityRadius+m_Radius)
-		{
-			vec2 Vel = pChr->GetVel();
-			pChr->SetVel(vec2(Vel.x*-1.25, Vel.y*-1.25));
-		}
-	}
-	bool boom = false;
-	if(m_Radius < 0)
-	{
-		if(!boom && m_IsExplode)
-		{
-			Explode();
-			boom = true;
-		}
-		else
-		{
-			GameServer()->CreateSound(m_Pos, SOUND_GRENADE_EXPLODE);
-			GameServer()->m_World.DestroyEntity(this);
-		}
-	}
+
+   
+	int Collide = GameServer()->Collision()->IntersectLine(PrevPos, CurPos, &CurPos, 0);
+
+    if(Collide)
+        Explode();
 }
 
-void CElasticHole::Reset()
+void CElasticEntity::Reset()
 {
 	GameServer()->m_World.DestroyEntity(this);
 }
 
-void CElasticHole::Snap(int SnappingClient)
+void CElasticEntity::Snap(int SnappingClient)
 {
 
 	if(NetworkClipped(SnappingClient))
@@ -114,7 +117,7 @@ void CElasticHole::Snap(int SnappingClient)
 
 	int Degres = 0;
 
-	for(int i=0;i < CElasticHole::NUM_IDS;i++)
+	for(int i=0;i < CElasticEntity::NUM_IDS;i++)
 	{
 		CNetObj_Pickup *pP = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_IDs[i], sizeof(CNetObj_Pickup)));
 		if(!pP)
@@ -127,7 +130,9 @@ void CElasticHole::Snap(int SnappingClient)
 		pP->m_Subtype = 0;
 
 		Degres += 360 / NUM_IDS;
-
+	}
+	for(int i=0;i < CElasticEntity::NUM_PARTICLES;i++)
+	{
 		float RandomRadius = random_float()*(m_Radius-4.0f);
 		float RandomAngle = 2.0f * pi * random_float();
 		vec2 ParticlePos = m_Pos + vec2(RandomRadius * cos(RandomAngle), RandomRadius * sin(RandomAngle));

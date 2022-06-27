@@ -603,6 +603,10 @@ int CServer::Init()
 	SetFireDelay(INFWEAPON_SCIOGIST_GRENADE, 500);
 	SetFireDelay(INFWEAPON_SCIOGIST_SHOTGUN, 250);
 
+	SetFireDelay(INFWEAPON_CATAPULT_RIFLE, 275);
+	SetFireDelay(INFWEAPON_CATAPULT_GRENADE, 500);
+	SetFireDelay(INFWEAPON_CATAPULT_GUN, 125);
+
 	SetFireDelay(INFWEAPON_LOOPER_RIFLE, 250);
 	SetFireDelay(INFWEAPON_LOOPER_GRENADE, GetFireDelay(INFWEAPON_GRENADE));
 	SetFireDelay(INFWEAPON_HERO_RIFLE, GetFireDelay(INFWEAPON_RIFLE));
@@ -644,6 +648,10 @@ int CServer::Init()
 	SetAmmoRegenTime(INFWEAPON_SCIOGIST_RIFLE, 750);
 	SetAmmoRegenTime(INFWEAPON_SCIOGIST_GRENADE, 5000);
 	SetAmmoRegenTime(INFWEAPON_SCIOGIST_SHOTGUN, 600);
+
+	SetAmmoRegenTime(INFWEAPON_CATAPULT_RIFLE, 3000);
+	SetAmmoRegenTime(INFWEAPON_CATAPULT_GRENADE, 500);
+	SetAmmoRegenTime(INFWEAPON_CATAPULT_GUN, 125);
 	
 	SetMaxAmmo(INFWEAPON_NONE, -1);
 	SetMaxAmmo(INFWEAPON_HAMMER, -1);
@@ -659,6 +667,10 @@ int CServer::Init()
 	SetMaxAmmo(INFWEAPON_SCIOGIST_RIFLE, 8);
 	SetMaxAmmo(INFWEAPON_SCIOGIST_GRENADE, 3);
 	SetMaxAmmo(INFWEAPON_SCIOGIST_SHOTGUN, 10);
+
+	SetMaxAmmo(INFWEAPON_CATAPULT_RIFLE, 10);
+	SetMaxAmmo(INFWEAPON_CATAPULT_GRENADE, 6);
+	SetMaxAmmo(INFWEAPON_CATAPULT_GUN, 10);
 
 	SetMaxAmmo(INFWEAPON_SOLDIER_GRENADE, 10);
 	SetMaxAmmo(INFWEAPON_MEDIC_GRENADE, 10);
@@ -687,6 +699,7 @@ int CServer::Init()
 	SetClassAvailability(PLAYERCLASS_SCIENTIST, 2);
 	SetClassAvailability(PLAYERCLASS_BIOLOGIST, 2);
 	SetClassAvailability(PLAYERCLASS_SCIOGIST, 2);
+	SetClassAvailability(PLAYERCLASS_CATAPULT, 2);
 	SetClassAvailability(PLAYERCLASS_LOOPER, 2);
 	
 	SetClassAvailability(PLAYERCLASS_SMOKER, 1);
@@ -1846,33 +1859,26 @@ int CServer::LoadMap(const char *pMapName)
 		m_TimeShiftUnit = MapConverter.GetTimeShiftUnit();
 		
 		CDataFileReader dfClientMap;
-		//The map is already converted
-		if(dfClientMap.Open(Storage(), aClientMapName, IStorage::TYPE_ALL))
-		{
-			m_CurrentMapCrc = dfClientMap.Crc();
-			dfClientMap.Close();
-		}
 		//The map must be converted
-		else
+		
+		char aClientMapDir[256];
+		str_format(aClientMapDir, sizeof(aClientMapDir), "clientmaps/%s_%08x", pMapName, ServerMapCrc);
+			
+		char aFullPath[512];
+		Storage()->GetCompletePath(IStorage::TYPE_SAVE, aClientMapDir, aFullPath, sizeof(aFullPath));
+		if(fs_makedir(aFullPath) != 0)
 		{
-			char aClientMapDir[256];
-			str_format(aClientMapDir, sizeof(aClientMapDir), "clientmaps/%s_%08x", pMapName, ServerMapCrc);
-			
-			char aFullPath[512];
-			Storage()->GetCompletePath(IStorage::TYPE_SAVE, aClientMapDir, aFullPath, sizeof(aFullPath));
-			if(fs_makedir(aFullPath) != 0)
-			{
-				dbg_msg("infclass", "Can't create the directory '%s'", aClientMapDir);
-			}
-				
-			if(!MapConverter.CreateMap(aClientMapName))
-				return 0;
-			
-			CDataFileReader dfGeneratedMap;
-			dfGeneratedMap.Open(Storage(), aClientMapName, IStorage::TYPE_ALL);
-			m_CurrentMapCrc = dfGeneratedMap.Crc();
-			dfGeneratedMap.Close();
+			dbg_msg("infclass", "Can't create the directory '%s'", aClientMapDir);
 		}
+				
+		if(!MapConverter.CreateMap(aClientMapName))
+			return 0;
+			
+		CDataFileReader dfGeneratedMap;
+		dfGeneratedMap.Open(Storage(), aClientMapName, IStorage::TYPE_ALL);
+		m_CurrentMapCrc = dfGeneratedMap.Crc();
+		dfGeneratedMap.Close();
+		
 	
 		char aBufMsg[128];
 		str_format(aBufMsg, sizeof(aBufMsg), "map crc is %08x, generated map crc is %08x", ServerMapCrc, m_CurrentMapCrc);

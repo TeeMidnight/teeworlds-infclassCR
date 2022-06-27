@@ -30,7 +30,7 @@ void CSciogistGrenade::Explode()
 	if(m_OwnerChar && m_OwnerChar->m_HasElasticHole)
 	{
 		new CGrowingExplosion(GameWorld(), m_ActualPos, vec2(0.0, -1.0), m_Owner, 5, GROWINGEXPLOSIONEFFECT_BOOM_INFECTED);
-		new CElasticHole(GameWorld(), m_ActualPos, m_Owner);
+		new CElasticHole(GameWorld(), m_ActualPos, m_Owner, true);
 		
 		//Make it unavailable
 		m_OwnerChar->m_HasElasticHole = false;

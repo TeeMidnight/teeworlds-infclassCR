@@ -537,6 +537,7 @@ void CGameControllerMOD::Snap(int SnappingClient)
 				case PLAYERCLASS_SOLDIER:
 				case PLAYERCLASS_SCIENTIST:
 				case PLAYERCLASS_BIOLOGIST:
+				case PLAYERCLASS_CATAPULT:
 					Defender++;
 					break;
 				case PLAYERCLASS_MEDIC:
@@ -854,6 +855,7 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 			case PLAYERCLASS_SOLDIER:
 			case PLAYERCLASS_SCIENTIST:
 			case PLAYERCLASS_BIOLOGIST:
+			case PLAYERCLASS_CATAPULT:
 				nbDefender++;
 				break;
 			case PLAYERCLASS_LOOPER:
@@ -879,8 +881,11 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 	Probability[PLAYERCLASS_BIOLOGIST - START_HUMANCLASS - 1] =
 		(nbDefender < g_Config.m_InfDefenderLimit && g_Config.m_InfEnableBiologist) ?
 		1.0f : 0.0f;
+	Probability[PLAYERCLASS_CATAPULT - START_HUMANCLASS - 1] =
+		(nbDefender < g_Config.m_InfDefenderLimit && g_Config.m_InfEnableCatapult) ?
+		1.0f : 0.0f;
 	Probability[PLAYERCLASS_SCIOGIST - START_HUMANCLASS - 1] =
-		(nbDefender < g_Config.m_InfDefenderLimit && g_Config.m_InfEnableSciogist) ?
+		(nbDefender < g_Config.m_InfSciogistLimit && g_Config.m_InfEnableSciogist) ?
 		1.0f : 0.0f;
 
 	Probability[PLAYERCLASS_MERCENARY - START_HUMANCLASS - 1] =
@@ -991,6 +996,8 @@ bool CGameControllerMOD::IsEnabledClass(int PlayerClass) {
 			return g_Config.m_InfEnableScientist;
 		case PLAYERCLASS_BIOLOGIST:
 			return g_Config.m_InfEnableBiologist;
+		case PLAYERCLASS_CATAPULT:
+			return g_Config.m_InfEnableCatapult;
 		case PLAYERCLASS_SCIOGIST:
 			return g_Config.m_InfEnableSciogist;
 		case PLAYERCLASS_MEDIC:
@@ -1041,6 +1048,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			case PLAYERCLASS_SOLDIER:
 			case PLAYERCLASS_SCIENTIST:
 			case PLAYERCLASS_BIOLOGIST:
+			case PLAYERCLASS_CATAPULT:
 				nbDefender++;
 				break;
 			case PLAYERCLASS_LOOPER:
@@ -1058,6 +1066,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 		case PLAYERCLASS_SOLDIER:
 		case PLAYERCLASS_SCIENTIST:
 		case PLAYERCLASS_BIOLOGIST:
+		case PLAYERCLASS_CATAPULT:
 			return (nbDefender < g_Config.m_InfDefenderLimit);
 		case PLAYERCLASS_MEDIC:
 			return (nbMedic < g_Config.m_InfMedicLimit);

@@ -156,6 +156,10 @@
 		"value": "循环者"
 	},
 	{
+		"key": "Catapult",
+		"value": "弹射者"
+	},
+	{
 		"key": "Smoker",
 		"value": "\u5438\u70df\u8005"
 	},
@@ -330,6 +334,18 @@
 	{
 		"key": "He has also grenades that teleport him.",
 		"value": "\u4e5f\u53ef\u4ee5\u7528\u69b4\u5f39\u67aa\u77ac\u79fb\u3002"
+	},
+	{
+		"key": "The Sciogist can pose floating mines with his hammer.",
+		"value": "融合学家可以使用他的锤子安置地雷"
+	},
+	{
+		"key":"He has also fire 3 time grenades . And he has a shotgun with bouncing bullets",
+		"value": "他也拥有3重榴弹 . 他可以使用猎枪击退感染者"
+	},
+	{
+		"key": "Additionally he can place elastic holes with the grenades.",
+		"value": "他还可以通过榴弹放置弹射洞"
 	},
 	{
 		"key": "The Biologist has a shotgun with bouncing bullets and can create a flower-like-laser-trap by shooting with his rifle.",

@@ -567,6 +567,7 @@ void CMapConverter::Finalize()
 	int NinjaImageID = AddExternalImage("../skins/x_ninja", 256, 128);
 	int MercenaryImageID = AddExternalImage("../skins/bluestripe", 256, 128);
 	int SniperImageID = AddExternalImage("../skins/warpaint", 256, 128);
+	int CatapultImageID = AddExternalImage("../skins/coala", 256, 128);
 	
 	//Menu
 	
@@ -647,6 +648,7 @@ void CMapConverter::Finalize()
 						case MENUCLASS_SCIENTIST:
 						case MENUCLASS_BIOLOGIST:
 						case MENUCLASS_SCIOGIST:
+						case MENUCLASS_CATAPULT:
 							ClassMask = MASK_DEFENDER;
 							break;
 						case MENUCLASS_LOOPER:
@@ -804,6 +806,9 @@ void CMapConverter::Finalize()
 								break;
 							case MENUCLASS_SCIOGIST:
 								AddTeeLayer("Sciogist", SciogistImageID, Pos, 64.0f, m_NumEnvs-1);
+								break;
+							case MENUCLASS_CATAPULT:
+								AddTeeLayer("Catapult", CatapultImageID, Pos, 64.0f, m_NumEnvs-1);
 								break;
 							case MENUCLASS_LOOPER:
 								AddTeeLayer("Looper", LooperImageID, Pos, 64.0f, m_NumEnvs-1);
