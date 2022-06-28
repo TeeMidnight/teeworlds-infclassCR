@@ -617,8 +617,11 @@ int CServer::Init()
 	SetFireDelay(INFWEAPON_MERCENARY_GRENADE, GetFireDelay(INFWEAPON_GRENADE));
 	SetFireDelay(INFWEAPON_MERCENARY_GUN, 50);
 	
+	SetFireDelay(INFWEAPON_SLIME_HAMMER, 3000);
+
 	SetAmmoRegenTime(INFWEAPON_NONE, 0);
 	SetAmmoRegenTime(INFWEAPON_HAMMER, 0);
+	SetAmmoRegenTime(INFWEAPON_SLIME_HAMMER, 0);
 	SetAmmoRegenTime(INFWEAPON_GUN, 500);
 	SetAmmoRegenTime(INFWEAPON_SHOTGUN, 0);
 	SetAmmoRegenTime(INFWEAPON_GRENADE, 0);
@@ -649,7 +652,7 @@ int CServer::Init()
 	SetAmmoRegenTime(INFWEAPON_SCIOGIST_GRENADE, 5000);
 	SetAmmoRegenTime(INFWEAPON_SCIOGIST_SHOTGUN, 600);
 
-	SetAmmoRegenTime(INFWEAPON_CATAPULT_RIFLE, 3000);
+	SetAmmoRegenTime(INFWEAPON_CATAPULT_RIFLE, 2250);
 	SetAmmoRegenTime(INFWEAPON_CATAPULT_GRENADE, 500);
 	SetAmmoRegenTime(INFWEAPON_CATAPULT_GUN, 125);
 	
@@ -663,6 +666,8 @@ int CServer::Init()
 	SetMaxAmmo(INFWEAPON_ENGINEER_RIFLE, 10);
 	SetMaxAmmo(INFWEAPON_SCIENTIST_RIFLE, 10);
 	SetMaxAmmo(INFWEAPON_SCIENTIST_GRENADE, 3);
+
+	SetMaxAmmo(INFWEAPON_SLIME_HAMMER, -1);
 
 	SetMaxAmmo(INFWEAPON_SCIOGIST_RIFLE, 8);
 	SetMaxAmmo(INFWEAPON_SCIOGIST_GRENADE, 3);
@@ -713,6 +718,7 @@ int CServer::Init()
 	SetClassAvailability(PLAYERCLASS_VOODOO, 1);
 	SetClassAvailability(PLAYERCLASS_UNDEAD, 1);
 	SetClassAvailability(PLAYERCLASS_WITCH, 1);
+	SetClassAvailability(PLAYERCLASS_SLIME, 1);
 	
 	m_InfClassChooser = 1;
 /* INFECTION MODIFICATION END *****************************************/

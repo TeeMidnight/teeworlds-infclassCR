@@ -47,7 +47,7 @@ CElasticEntity::~CElasticEntity()
 
 void CElasticEntity::Explode()
 {
-    GameServer()->CreateExplosion(m_Pos, m_Owner, WEAPON_HAMMER, false, TAKEDAMAGEMODE_NOINFECTION);
+    GameServer()->CreateExplosion(m_Pos, m_Owner, WEAPON_HAMMER, true, TAKEDAMAGEMODE_NOINFECTION);
 
 	new CElasticHole(GameWorld(), m_Pos, m_Owner, false, 46);
 
@@ -126,7 +126,7 @@ void CElasticEntity::Snap(int SnappingClient)
 		pP->m_X = (int)m_Pos.x + (GetDir(Degres*pi/180) * m_Radius).x;;
 		pP->m_Y = (int)m_Pos.y + (GetDir(Degres*pi/180) * m_Radius).y;
 
-		pP->m_Type = POWERUP_ARMOR;
+		pP->m_Type = (i%2) ? POWERUP_ARMOR : POWERUP_HEALTH;
 		pP->m_Subtype = 0;
 
 		Degres += 360 / NUM_IDS;

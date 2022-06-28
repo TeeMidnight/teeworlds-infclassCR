@@ -337,6 +337,9 @@ void CPlayer::Snap(int SnappingClient)
 				case PLAYERCLASS_SLUG:
 					str_format(aClanName, sizeof(aClanName), "%sSlug", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
+				case PLAYERCLASS_SLIME:
+					str_format(aClanName, sizeof(aClanName), "%sSlime", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					break;
 				case PLAYERCLASS_VOODOO:
 					str_format(aClanName, sizeof(aClanName), "%sVoodoo", Server()->IsClientLogged(GetCID()) ? "@" : " ");
 					break;
@@ -714,6 +717,12 @@ void CPlayer::SetClassSkin(int newClass, int State)
 		case PLAYERCLASS_SLUG:
 			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_SkinName, "coala", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 3866368;
+			m_TeeInfos.m_ColorFeet = 65414;
+			break;
+		case PLAYERCLASS_SLIME:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "coala_cammo", sizeof(m_TeeInfos.m_SkinName));
 			m_TeeInfos.m_ColorBody = 3866368;
 			m_TeeInfos.m_ColorFeet = 65414;
 			break;

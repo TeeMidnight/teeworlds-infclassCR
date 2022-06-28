@@ -28,6 +28,7 @@
 #include "scatter-grenade.h"
 #include "sciogist-grenade.h"
 #include "merc-bomb.h"
+#include "slime-entity.h"
 #include "medic-grenade.h"
 #include "hero-flag.h"
 #include "slug-slime.h"
@@ -656,6 +657,18 @@ void CCharacter::FireWeapon()
 		return;
 	}
 
+	if(GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_CATAPULT_RIFLE && m_aWeapons[m_ActiveWeapon].m_Ammo < 5)
+	{
+		// 125ms is a magical limit of how fast a human can click
+		m_ReloadTimer = 125 * Server()->TickSpeed() / 1000;
+		if(m_LastNoAmmoSound+Server()->TickSpeed() <= Server()->Tick())
+		{
+			GameServer()->CreateSound(m_Pos, SOUND_WEAPON_NOAMMO);
+			m_LastNoAmmoSound = Server()->Tick();
+		}
+		return;
+	}
+
 	vec2 ProjStartPos = m_Pos+Direction*m_ProximityRadius*0.75f;
 
 	switch(m_ActiveWeapon)
@@ -1056,6 +1069,11 @@ void CCharacter::FireWeapon()
 						}
 					}
 				}
+				else if(GetClass() == PLAYERCLASS_SLIME)
+				{
+					new CSlimeEntity(GameWorld(), m_pPlayer->GetCID(), m_Pos, Direction);
+					GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
+				}
 				
 				if(!ShowAttackAnimation)
 					return;
@@ -1414,14 +1432,9 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_CATAPULT)
 			{
-				if(m_aWeapons[WEAPON_RIFLE].m_Ammo >= 10)
-				{
-					new CElasticEntity(GameWorld(), m_Pos, Direction, m_pPlayer->GetCID());
-					GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
-					m_aWeapons[WEAPON_RIFLE].m_Ammo = 0;
-				}
-				else
-					return;
+				new CElasticEntity(GameWorld(), m_Pos, Direction, m_pPlayer->GetCID());
+				GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+				m_aWeapons[WEAPON_RIFLE].m_Ammo -= 5;
 			}
 			else
 			{
@@ -1473,6 +1486,7 @@ void CCharacter::FireWeapon()
 	{
 		m_ReloadTimer = Server()->GetFireDelay(GetInfWeaponID(m_ActiveWeapon)) * Server()->TickSpeed() / 1000;
 	}
+
 }
 
 void CCharacter::CheckSuperWeaponAccess()
@@ -3079,6 +3093,31 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 			
 		if(From >= 0 && From != m_pPlayer->GetCID())
 			GameServer()->SendHitSound(From);
+		
+		if(m_Health <= 0)
+		{
+			Die(From, Weapon);
+
+			// set attacker's face to happy (taunt!)
+			if (From >= 0 && From != m_pPlayer->GetCID() && pKillerPlayer)
+			{
+				if (pKillerChar)
+				{
+					pKillerChar->m_EmoteType = EMOTE_HAPPY;
+					pKillerChar->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
+				}
+			}
+			
+			if (!(GetClass() == PLAYERCLASS_UNDEAD) || g_Config.m_InfUndeadIncNumKills)
+			{
+				if (pKillerPlayer)
+					pKillerPlayer->IncreaseNumberKills();
+				if (pKillerChar)
+					pKillerChar->CheckSuperWeaponAccess();
+			}
+			
+			return false;
+		}
 	}
 
 	if(Mode == TAKEDAMAGEMODE_INFECTION)
@@ -4015,6 +4054,21 @@ void CCharacter::ClassSpawnAttributes()
 				m_pPlayer->m_knownClass[PLAYERCLASS_SLUG] = true;
 			}
 			break;
+		case PLAYERCLASS_SLIME:
+			m_Health = 5;
+			m_Armor = 5;
+			RemoveAllGun();
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			m_ActiveWeapon = WEAPON_HAMMER;
+			
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_SLIME);
+			if(!m_pPlayer->IsKnownClass(PLAYERCLASS_SLIME))
+			{
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "slime", NULL);
+				m_pPlayer->m_knownClass[PLAYERCLASS_SLIME] = true;
+			}
+			break;
 		case PLAYERCLASS_UNDEAD:
 			m_Health = 10;
 			m_Armor = 0;
@@ -4280,6 +4334,8 @@ int CCharacter::GetInfWeaponID(int WID)
 		{
 			case PLAYERCLASS_NINJA:
 				return INFWEAPON_NINJA_HAMMER;
+			case PLAYERCLASS_SLIME:
+				return INFWEAPON_SLIME_HAMMER;
 			default:
 				return INFWEAPON_HAMMER;
 		}

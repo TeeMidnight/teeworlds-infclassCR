@@ -95,6 +95,7 @@ void CElasticHole::Tick()
 		}
 		else
 		{
+			GameServer()->CreateExplosion(m_Pos, m_Owner, WEAPON_HAMMER, true, TAKEDAMAGEMODE_NOINFECTION);
 			GameServer()->CreateSound(m_Pos, SOUND_GRENADE_EXPLODE);
 			GameServer()->m_World.DestroyEntity(this);
 		}
