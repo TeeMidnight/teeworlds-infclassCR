@@ -14,7 +14,7 @@
 CGameControllerMOD::CGameControllerMOD(class CGameContext *pGameServer)
 : IGameController(pGameServer)
 {
-	m_pGameType = "InfClassR";
+	m_pGameType = "InfClassCR";
 	
 	m_GrowingMap = 0;
 	
@@ -538,6 +538,7 @@ void CGameControllerMOD::Snap(int SnappingClient)
 				case PLAYERCLASS_SCIENTIST:
 				case PLAYERCLASS_BIOLOGIST:
 				case PLAYERCLASS_CATAPULT:
+				case PLAYERCLASS_POLICE:
 					Defender++;
 					break;
 				case PLAYERCLASS_MEDIC:
@@ -856,6 +857,7 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 			case PLAYERCLASS_SCIENTIST:
 			case PLAYERCLASS_BIOLOGIST:
 			case PLAYERCLASS_CATAPULT:
+			case PLAYERCLASS_POLICE:
 				nbDefender++;
 				break;
 			case PLAYERCLASS_LOOPER:
@@ -885,7 +887,7 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 		(nbDefender < g_Config.m_InfDefenderLimit && g_Config.m_InfEnableCatapult) ?
 		1.0f : 0.0f;
 	Probability[PLAYERCLASS_SCIOGIST - START_HUMANCLASS - 1] =
-		(nbDefender < g_Config.m_InfSciogistLimit && g_Config.m_InfEnableSciogist) ?
+		(nbSciogist < g_Config.m_InfSciogistLimit && g_Config.m_InfEnableSciogist) ?
 		1.0f : 0.0f;
 
 	Probability[PLAYERCLASS_MERCENARY - START_HUMANCLASS - 1] =
@@ -905,6 +907,9 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 		(nbHero < g_Config.m_InfHeroLimit && g_Config.m_InfEnableHero) ?
 		1.0f : 0.0f;
 	Probability[PLAYERCLASS_LOOPER - START_HUMANCLASS - 1] =
+		(nbDefender < g_Config.m_InfDefenderLimit && g_Config.m_InfEnableLooper) ?
+		1.0f : 0.0f;
+	Probability[PLAYERCLASS_POLICE - START_HUMANCLASS - 1] =
 		(nbDefender < g_Config.m_InfDefenderLimit && g_Config.m_InfEnableLooper) ?
 		1.0f : 0.0f;
 	
@@ -1015,6 +1020,8 @@ bool CGameControllerMOD::IsEnabledClass(int PlayerClass) {
 			return g_Config.m_InfEnableSniper;
 		case PLAYERCLASS_LOOPER:
 			return g_Config.m_InfEnableLooper;
+		case PLAYERCLASS_POLICE:
+			return g_Config.m_InfEnablePolice;
 		default:
 			return false;
 	}
@@ -1050,6 +1057,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			case PLAYERCLASS_ENGINEER:
 			case PLAYERCLASS_SOLDIER:
 			case PLAYERCLASS_SCIENTIST:
+			case PLAYERCLASS_POLICE:
 			case PLAYERCLASS_BIOLOGIST:
 			case PLAYERCLASS_CATAPULT:
 				nbDefender++;
@@ -1069,6 +1077,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 		case PLAYERCLASS_SOLDIER:
 		case PLAYERCLASS_SCIENTIST:
 		case PLAYERCLASS_BIOLOGIST:
+		case PLAYERCLASS_POLICE:
 		case PLAYERCLASS_CATAPULT:
 			return (nbDefender < g_Config.m_InfDefenderLimit);
 		case PLAYERCLASS_MEDIC:

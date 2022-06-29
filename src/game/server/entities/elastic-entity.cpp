@@ -123,7 +123,7 @@ void CElasticEntity::Snap(int SnappingClient)
 		if(!pP)
 			return;
 
-		pP->m_X = (int)m_Pos.x + (GetDir(Degres*pi/180) * m_Radius).x;;
+		pP->m_X = (int)m_Pos.x + (GetDir(Degres*pi/180) * m_Radius).x;
 		pP->m_Y = (int)m_Pos.y + (GetDir(Degres*pi/180) * m_Radius).y;
 
 		pP->m_Type = (i%2) ? POWERUP_ARMOR : POWERUP_HEALTH;

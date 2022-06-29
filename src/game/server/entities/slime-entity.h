@@ -21,9 +21,9 @@ public:
 	virtual void TickPaused();
 	virtual void Explode();
 	virtual void Snap(int SnappingClient);
+	vec2 m_ActualPos;
 
 private:
-	vec2 m_ActualPos;
 	vec2 m_LastPos;
 	vec2 m_ActualDir;
 	vec2 m_Direction;

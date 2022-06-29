@@ -160,6 +160,10 @@
 		"value": "弹射者"
 	},
 	{
+		"key": "Police",
+		"value": "防暴警察"
+	},
+	{
 		"key": "Smoker",
 		"value": "\u5438\u70df\u8005"
 	},
@@ -650,5 +654,9 @@
 	{
 		"key": "The Hero found the flag!",
 		"value": "\u82f1\u96c4\u627e\u5230\u4e86\u65d7\u5e1c \uff01"
+	},
+	{
+		"key": "Use hammer to defend",
+		"value": "使用锤子来防御"
 	},
 ]}

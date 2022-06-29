@@ -9,7 +9,7 @@
 #include "elastic-grenade.h"
 
 CElasticGrenade::CElasticGrenade(CGameWorld *pGameWorld, int Owner, int Weapon, vec2 Pos, vec2 Dir)
-: CEntity(pGameWorld, CGameWorld::ENTTYPE_SCATTER_GRENADE)
+: CEntity(pGameWorld, CGameWorld::ENTTYPE_ELASTIC_GRENADE)
 {
 	m_Pos = Pos;
 	m_ActualPos = Pos;

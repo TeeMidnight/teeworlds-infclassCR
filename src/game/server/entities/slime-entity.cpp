@@ -9,7 +9,7 @@
 #include "growingexplosion.h"
 
 CSlimeEntity::CSlimeEntity(CGameWorld *pGameWorld, int Owner, vec2 Pos, vec2 Dir)
-: CEntity(pGameWorld, CGameWorld::ENTTYPE_SCATTER_GRENADE)
+: CEntity(pGameWorld, CGameWorld::ENTTYPE_SLIME_ENTITY)
 {
 	m_Pos = Pos;
 	m_ActualPos = Pos;
@@ -86,9 +86,10 @@ void CSlimeEntity::Snap(int SnappingClient)
 	
 void CSlimeEntity::Explode()
 {
+	float t = (Server()->Tick()-m_StartTick-3)/(float)Server()->TickSpeed();
 	new CSlugSlime(GameWorld(), m_ActualPos, m_Owner);
 
-	GameServer()->CreateSound(m_LastPos, SOUND_GRENADE_EXPLODE);
+	GameServer()->CreateSound(GetPos(t), SOUND_GRENADE_EXPLODE);
 	
 	GameServer()->m_World.DestroyEntity(this);
 	

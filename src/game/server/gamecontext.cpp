@@ -257,7 +257,7 @@ int CGameContext::RandomZombieToWitch()
 
 void CGameContext::SetAvailabilities(std::vector<int> value) { // todo: should be order-independent, e.g with std map
 	if (value.empty())
-		value = std::vector<int>(12); //increased by 1 human class from 9 to 10
+		value = std::vector<int>(13); //increased by 1 human class from 9 to 10
 	g_Config.m_InfEnableBiologist = value[0];
 	g_Config.m_InfEnableEngineer = value[1];
 	g_Config.m_InfEnableHero = value[2];
@@ -270,6 +270,7 @@ void CGameContext::SetAvailabilities(std::vector<int> value) { // todo: should b
 	g_Config.m_InfEnableLooper = value[9];
 	g_Config.m_InfEnableSciogist = value[10];
 	g_Config.m_InfEnableCatapult = value[11];
+	g_Config.m_InfEnablePolice = value[12];
 }
 
 void CGameContext::SetProbabilities(std::vector<int> value) { // todo: should be order-independent, e.g with std map
@@ -794,6 +795,9 @@ void CGameContext::SendBroadcast_ClassIntro(int ClientID, int Class)
 			break;
 		case PLAYERCLASS_SCIOGIST:
 			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Sciogist"));
+			break;
+		case PLAYERCLASS_POLICE:
+			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Police"));
 			break;
 		case PLAYERCLASS_LOOPER:
 			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Looper"));
@@ -2868,7 +2872,8 @@ bool CGameContext::ConStartFunRound(IConsole::IResult *pResult, void *pUserData)
 		g_Config.m_InfEnableSoldier,
 		g_Config.m_InfEnableLooper,
 		g_Config.m_InfEnableSciogist,
-		g_Config.m_InfEnableCatapult
+		g_Config.m_InfEnableCatapult,
+		g_Config.m_InfEnablePolice
 	};
 
 	std::vector<const char*> phrases = {
@@ -2984,6 +2989,7 @@ bool CGameContext::ConSetClass(IConsole::IResult *pResult, void *pUserData)
 	else if(str_comp(pClassName, "catapult") == 0) pPlayer->SetClass(PLAYERCLASS_CATAPULT);
 	else if(str_comp(pClassName, "sciogist") == 0) pPlayer->SetClass(PLAYERCLASS_SCIOGIST);
 	else if(str_comp(pClassName, "looper") == 0) pPlayer->SetClass(PLAYERCLASS_LOOPER);
+	else if(str_comp(pClassName, "police") == 0) pPlayer->SetClass(PLAYERCLASS_POLICE);
 	else if(str_comp(pClassName, "medic") == 0) pPlayer->SetClass(PLAYERCLASS_MEDIC);
 	else if(str_comp(pClassName, "hero") == 0) pPlayer->SetClass(PLAYERCLASS_HERO);
 	else if(str_comp(pClassName, "ninja") == 0) pPlayer->SetClass(PLAYERCLASS_NINJA);
@@ -3167,6 +3173,11 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 			{
 				CheckClass = PLAYERCLASS_SCIOGIST;
 				str_copy(aChatTitle, "sciogist", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "!police") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_SCIOGIST;
+				str_copy(aChatTitle, "police", sizeof(aChatTitle));
 			}
 			else if(str_comp(aNameFound, "!looper") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
@@ -3749,6 +3760,12 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 		{
 			Buffer.append("~~ ");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Catapult"), NULL); 
+			Buffer.append(" ~~\n\n");
+		}
+		else if(str_comp_nocase(pHelpPage, "police") == 0)
+		{
+			Buffer.append("~~ ");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Police"), NULL); 
 			Buffer.append(" ~~\n\n");
 		}
 		else if(str_comp_nocase(pHelpPage, "biologist") == 0)

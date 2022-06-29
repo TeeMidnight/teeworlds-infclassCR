@@ -40,6 +40,7 @@
 #include "elastic-grenade.h"
 #include "superweapon-indicator.h"
 #include "laser-teleport.h"
+#include "police-shield.h"
 
 //input count
 struct CInputCount
@@ -657,7 +658,24 @@ void CCharacter::FireWeapon()
 		return;
 	}
 
-	if(GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_CATAPULT_RIFLE && m_aWeapons[m_ActiveWeapon].m_Ammo < 5)
+	if(GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_CATAPULT_RIFLE && m_aWeapons[m_ActiveWeapon].m_Ammo < 10)
+	{
+		// 125ms is a magical limit of how fast a human can click
+		m_ReloadTimer = 125 * Server()->TickSpeed() / 1000;
+		if(m_LastNoAmmoSound+Server()->TickSpeed() <= Server()->Tick())
+		{
+			GameServer()->CreateSound(m_Pos, SOUND_WEAPON_NOAMMO);
+			m_LastNoAmmoSound = Server()->Tick();
+		}
+		return;
+	}
+
+	if(GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_POLICE_HAMMER)
+	{
+		return;
+	}
+
+	if(GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_POLICE_RIFLE && m_aWeapons[m_ActiveWeapon].m_Ammo < 5)
 	{
 		// 125ms is a magical limit of how fast a human can click
 		m_ReloadTimer = 125 * Server()->TickSpeed() / 1000;
@@ -1330,7 +1348,6 @@ void CCharacter::FireWeapon()
 			{
 				new CElasticGrenade(GameWorld(), m_pPlayer->GetCID(), m_ActiveWeapon, m_Pos, Direction);
 				GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
-				m_aWeapons[WEAPON_RIFLE].m_Ammo -= 3;
 			}
 			else if(GetClass() == PLAYERCLASS_SCIOGIST)
 			{
@@ -1434,7 +1451,13 @@ void CCharacter::FireWeapon()
 			{
 				new CElasticEntity(GameWorld(), m_Pos, Direction, m_pPlayer->GetCID());
 				GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
-				m_aWeapons[WEAPON_RIFLE].m_Ammo -= 5;
+				m_aWeapons[WEAPON_RIFLE].m_Ammo = 0;
+			}
+			else if(GetClass() == PLAYERCLASS_POLICE)
+			{
+				new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID(), 2);
+				GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+				m_aWeapons[WEAPON_RIFLE].m_Ammo = 0;
 			}
 			else
 			{
@@ -2277,6 +2300,13 @@ void CCharacter::Tick()
 							Broadcast = true;
 						}
 						break;
+					case CMapConverter::MENUCLASS_POLICE:
+						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_POLICE))
+						{
+							GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Police"), NULL);
+							Broadcast = true;
+						}
+						break;
 					case CMapConverter::MENUCLASS_BIOLOGIST:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_BIOLOGIST))
 						{
@@ -2389,6 +2419,9 @@ void CCharacter::Tick()
 					case CMapConverter::MENUCLASS_SCIOGIST:
 						NewClass = PLAYERCLASS_SCIOGIST;
 						break;
+					case CMapConverter::MENUCLASS_POLICE:
+						NewClass = PLAYERCLASS_POLICE;
+						break;
 				}
 				
 				if(NewClass >= 0 && GameServer()->m_pController->IsChoosableClass(NewClass))
@@ -2448,6 +2481,30 @@ void CCharacter::Tick()
 				"RemainingTime", &Seconds,
 				NULL
 			);
+		}
+	}
+	else if(GetClass() == PLAYERCLASS_POLICE)
+	{
+		CPoliceShield* pCurrentShield = NULL;
+
+		for(CPoliceShield *pShield = (CPoliceShield*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_POLICE_SHIELD); pShield; pShield = (CPoliceShield*) pShield->TypeNext())
+		{
+			if(pShield->m_Owner == m_pPlayer->GetCID())
+			{
+				pCurrentShield = pShield;
+				break;
+			}
+		}
+		if(GetInfWeaponID(m_ActiveWeapon) != INFWEAPON_POLICE_HAMMER)
+		{
+			GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), 
+			BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+			 _("Use hammer to defend"), NULL);
+			if(pCurrentShield)
+				GameServer()->m_World.DestroyEntity(pCurrentShield);
+		}else if(!pCurrentShield)
+		{
+			new CPoliceShield(GameWorld(), m_pPlayer->GetCID());
 		}
 	}
 	else if(GetClass() == PLAYERCLASS_SOLDIER)
@@ -2562,7 +2619,7 @@ void CCharacter::Tick()
 		}
 		
 		CElasticHole* pCurrentElasticHole = NULL;
-		for(CElasticHole *pElasticHole = (CElasticHole*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_WHITE_HOLE); pElasticHole; pElasticHole = (CElasticHole*) pElasticHole->TypeNext())
+		for(CElasticHole *pElasticHole = (CElasticHole*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_ELASTIC_HOLE); pElasticHole; pElasticHole = (CElasticHole*) pElasticHole->TypeNext())
 		{
 			if(pElasticHole->m_Owner == m_pPlayer->GetCID())
 			{
@@ -2758,6 +2815,10 @@ void CCharacter::GiveGift(int GiftType)
 			GiveWeapon(WEAPON_GRENADE, -1);
 			GiveWeapon(WEAPON_RIFLE, -1);
 			GiveWeapon(WEAPON_SHOTGUN, -1);
+			break;
+		case PLAYERCLASS_POLICE:
+			GiveWeapon(WEAPON_GUN, -1);
+			GiveWeapon(WEAPON_RIFLE, -1);
 			break;
 		case PLAYERCLASS_MEDIC:
 			GiveWeapon(WEAPON_SHOTGUN, -1);
@@ -3840,6 +3901,23 @@ void CCharacter::ClassSpawnAttributes()
 				m_pPlayer->m_knownClass[PLAYERCLASS_SCIOGIST] = true;
 			}
 			break;
+		case PLAYERCLASS_POLICE:
+			RemoveAllGun();
+			m_pPlayer->m_InfectionTick = -1;
+			m_Health = 10;
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_GUN, -1);
+			m_ActiveWeapon = WEAPON_GUN;
+			
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_POLICE);
+			if(!m_pPlayer->IsKnownClass(PLAYERCLASS_POLICE))
+			{
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "Police", NULL);
+				m_pPlayer->m_knownClass[PLAYERCLASS_POLICE] = true;
+			}
+			break;
 		case PLAYERCLASS_LOOPER:
 			RemoveAllGun();
 			m_pPlayer->m_InfectionTick = -1;
@@ -4122,6 +4200,11 @@ void CCharacter::DestroyChildEntities()
 		if(pProjectile->GetOwner() != m_pPlayer->GetCID()) continue;
 			GameServer()->m_World.DestroyEntity(pProjectile);
 	}
+	for(CPoliceShield *pShield = (CPoliceShield*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_POLICE_SHIELD); pShield; pShield = (CPoliceShield*) pShield->TypeNext())
+	{
+		if(pShield->m_Owner != m_pPlayer->GetCID()) continue;
+			GameServer()->m_World.DestroyEntity(pShield);
+	}
 	for(CEngineerWall *pWall = (CEngineerWall*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_ENGINEER_WALL); pWall; pWall = (CEngineerWall*) pWall->TypeNext())
 	{
 		if(pWall->m_Owner != m_pPlayer->GetCID()) continue;
@@ -4165,6 +4248,11 @@ void CCharacter::DestroyChildEntities()
 	for(CSlugSlime* pSlime = (CSlugSlime*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SLUG_SLIME); pSlime; pSlime = (CSlugSlime*) pSlime->TypeNext())
 	{
 		if(pSlime->GetOwner() != m_pPlayer->GetCID()) continue;
+			GameServer()->m_World.DestroyEntity(pSlime);
+	}
+	for(CSlimeEntity* pSlime = (CSlimeEntity*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SLIME_ENTITY); pSlime; pSlime = (CSlimeEntity*) pSlime->TypeNext())
+	{
+		if(pSlime->m_Owner != m_pPlayer->GetCID()) continue;
 			GameServer()->m_World.DestroyEntity(pSlime);
 	}
 	for(CGrowingExplosion* pGrowiExpl = (CGrowingExplosion*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_GROWINGEXPLOSION); pGrowiExpl; pGrowiExpl = (CGrowingExplosion*) pGrowiExpl->TypeNext())
@@ -4334,7 +4422,9 @@ int CCharacter::GetInfWeaponID(int WID)
 		{
 			case PLAYERCLASS_NINJA:
 				return INFWEAPON_NINJA_HAMMER;
-			case PLAYERCLASS_SLIME:
+			case PLAYERCLASS_POLICE:
+				return INFWEAPON_POLICE_HAMMER;
+			case PLAYERCLASS_SLIME://infect class
 				return INFWEAPON_SLIME_HAMMER;
 			default:
 				return INFWEAPON_HAMMER;
@@ -4348,6 +4438,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_MERCENARY_GUN;
 			case PLAYERCLASS_CATAPULT:
 				return INFWEAPON_CATAPULT_GUN;
+			case PLAYERCLASS_POLICE:
+				return INFWEAPON_POLICE_GUN;
 			default:
 				return INFWEAPON_GUN;
 		}
@@ -4417,6 +4509,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_MEDIC_RIFLE;
 			case PLAYERCLASS_CATAPULT:
 				return INFWEAPON_CATAPULT_RIFLE;
+			case PLAYERCLASS_POLICE:
+				return INFWEAPON_POLICE_RIFLE;
 			default:
 				return INFWEAPON_RIFLE;
 		}
