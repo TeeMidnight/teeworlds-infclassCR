@@ -1151,6 +1151,28 @@ void CCharacter::FireWeapon()
 				}
 				GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
 			}
+			else if(GetClass() == PLAYERCLASS_POLICE)
+			{
+				CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_GUN,
+					m_pPlayer->GetCID(),
+					ProjStartPos,
+					Direction,
+					(int)(Server()->TickSpeed()*GameServer()->Tuning()->m_GunLifetime),
+					2, 1, 0, -1, WEAPON_GUN);
+
+				// pack the Projectile and send it to the client Directly
+				CNetObj_Projectile p;
+				pProj->FillInfo(&p);
+
+				CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
+				Msg.AddInt(1);
+				for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
+					Msg.AddInt(((int *)&p)[i]);
+
+				Server()->SendMsg(&Msg, MSGFLAG_VITAL, m_pPlayer->GetCID());
+
+				GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
+			}
 			else
 			{
 				CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_GUN,

@@ -38,7 +38,7 @@ void CPoliceShield::Reset()
 
 void CPoliceShield::Tick()
 {
-	if(!GameServer()->GetPlayerChar(m_Owner))
+	if(!GameServer()->GetPlayerChar(m_Owner) || GameServer()->GetPlayerChar(m_Owner)->IsZombie())
 	{
 		GameServer()->m_World.DestroyEntity(this);
 	}else
@@ -84,7 +84,7 @@ void CPoliceShield::Snap(int SnappingClient)
 	if(NetworkClipped(SnappingClient))
 		return;
 
-	int Degres = int((m_OwnerChrCore.m_Angle + 400) / 4.5);
+	int Degres = int((m_OwnerChrCore.m_Angle + 200) / 4.5);
 
 	for(int i=0;i < CPoliceShield::NUM_IDS;i++)
 	{
@@ -100,6 +100,6 @@ void CPoliceShield::Snap(int SnappingClient)
 		pP->m_Type = POWERUP_ARMOR;
 		pP->m_Subtype = 0;
 
-		Degres -= 180 / NUM_IDS;
+		Degres -= 90 / NUM_IDS;
 	}
 }
