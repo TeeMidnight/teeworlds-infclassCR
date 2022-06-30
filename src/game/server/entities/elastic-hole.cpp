@@ -22,8 +22,7 @@ CElasticHole::CElasticHole(CGameWorld *pGameWorld, vec2 CenterPos, int OwnerClie
 	m_LifeSpan = g_Config.m_InfElasticHoleLifeSpan * Server()->TickSpeed();
 	m_Growing = GROW_GROWING;
 	m_StartGrowingTick = Server()->Tick();
-	
-	
+
 	m_IDs.set_size(NUM_IDS);
 	for(int i=0; i<NUM_IDS; i++)
 	{
@@ -32,6 +31,10 @@ CElasticHole::CElasticHole(CGameWorld *pGameWorld, vec2 CenterPos, int OwnerClie
 	for(int i=0; i<NUM_PARTICLES; i++)
 	{
 		m_ParticleIDs[i] = Server()->SnapNewID();
+	}
+	for(int i=0; i<NUM_AMMO; i++)
+	{
+		m_AmmoIDs[i] = Server()->SnapNewID();
 	}
 }
 
@@ -44,6 +47,10 @@ CElasticHole::~CElasticHole()
 	for(int i=0; i<NUM_IDS; i++)
 	{
 		Server()->SnapFreeID(m_IDs[i]);
+	}
+	for(int i=0; i<NUM_AMMO; i++)
+	{
+		Server()->SnapFreeID(m_AmmoIDs[i]);
 	}
 }
 
@@ -110,29 +117,34 @@ void CElasticHole::Reset()
 void CElasticHole::Snap(int SnappingClient)
 {
 
-	if(NetworkClipped(SnappingClient))
+	if(NetworkClipped(SnappingClient, m_Pos))
 		return;
 
 	int Degres = 0;
 
 	for(int i=0;i < CElasticHole::NUM_IDS;i++)
 	{
-		CNetObj_Pickup *pP = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_IDs[i], sizeof(CNetObj_Pickup)));
-		if(!pP)
+		vec2 StartPos = m_Pos + (GetDir(Degres*pi/180) * m_Radius);
+		Degres += 360 / NUM_IDS;
+		vec2 EndPos = m_Pos + (GetDir(Degres*pi/180) * m_Radius);
+		CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_IDs[i], sizeof(CNetObj_Laser)));
+		if(!pObj)
 			return;
 
-		pP->m_X = (int)m_Pos.x + (GetDir(Degres*pi/180) * m_Radius).x;;
-		pP->m_Y = (int)m_Pos.y + (GetDir(Degres*pi/180) * m_Radius).y;
+		pObj->m_FromX = (int)StartPos.x;
+		pObj->m_FromY = (int)StartPos.y;
+		pObj->m_X = (int)EndPos.x;
+		pObj->m_Y = (int)EndPos.y;
+		pObj->m_StartTick = Server()->Tick();
 
-		pP->m_Type = POWERUP_ARMOR;
-		pP->m_Subtype = 0;
-
-		Degres += 360 / NUM_IDS;
-
+			
+	}
+	for(int i=0;i < CElasticHole::NUM_PARTICLES;i++)
+	{
 		float RandomRadius = random_float()*(m_Radius-4.0f);
 		float RandomAngle = 2.0f * pi * random_float();
 		vec2 ParticlePos = m_Pos + vec2(RandomRadius * cos(RandomAngle), RandomRadius * sin(RandomAngle));
-			
+
 		CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_ParticleIDs[i], sizeof(CNetObj_Projectile)));
 		if(pObj)
 		{
@@ -143,5 +155,44 @@ void CElasticHole::Snap(int SnappingClient)
 			pObj->m_StartTick = Server()->Tick();
 			pObj->m_Type = WEAPON_HAMMER;
 		}
+	}
+
+	for(int i = 0 ; i < 2; i ++)
+	{
+		CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_AmmoIDs[i], sizeof(CNetObj_Projectile)));
+		if(pObj)
+		{
+			pObj->m_X = (int)m_Pos.x + m_Radius * (i%2 ? 1 : -1);
+			pObj->m_Y = (int)m_Pos.y;
+			pObj->m_VelX = 0;
+			pObj->m_VelY = 0;
+			pObj->m_StartTick = Server()->Tick();
+			pObj->m_Type = WEAPON_GRENADE;
+		}
+	}
+
+	for(int i = 0 ; i < 2; i ++)
+	{
+		CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_AmmoIDs[i+2], sizeof(CNetObj_Projectile)));
+		if(pObj)
+		{
+			pObj->m_X = (int)m_Pos.x;
+			pObj->m_Y = (int)m_Pos.y + m_Radius * (i%2 ? 1 : -1);
+			pObj->m_VelX = 0;
+			pObj->m_VelY = 0;
+			pObj->m_StartTick = Server()->Tick();
+			pObj->m_Type = WEAPON_GRENADE;
+		}
+	}
+
+	CNetObj_Projectile *pObj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_AmmoIDs[4], sizeof(CNetObj_Projectile)));
+	if(pObj)
+	{
+		pObj->m_X = (int)m_Pos.x;
+		pObj->m_Y = (int)m_Pos.y;
+		pObj->m_VelX = 0;
+		pObj->m_VelY = 0;
+		pObj->m_StartTick = Server()->Tick();
+		pObj->m_Type = WEAPON_GRENADE;
 	}
 }

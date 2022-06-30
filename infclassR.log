@@ -1,128 +1,91 @@
-[62bc3120][server]: starting...
-[62bc3120][datafile]: loading. filename='maps/infc_Minecraft.map'
-[62bc3120][datafile]: allocsize=3300
-[62bc3120][datafile]: readsize=3072
-[62bc3120][datafile]: swaplen=3092
-[62bc3120][datafile]: item_size=2544
-[62bc3120][datafile]: loading done. datafile='maps/infc_Minecraft.map'
-[62bc3120][datafile]: loading. filename='maps/infc_Minecraft.map'
-[62bc3120][datafile]: allocsize=3300
-[62bc3120][datafile]: readsize=3072
-[62bc3120][datafile]: swaplen=3092
-[62bc3120][datafile]: item_size=2544
-[62bc3120][datafile]: loading done. datafile='maps/infc_Minecraft.map'
-[62bc3120][datafile]: loading data index=10 size=2226 uncompressed=135600
-[62bc3120][datafile]: loading data index=22 size=12 uncompressed=4
-[62bc3120][datafile]: loading data index=23 size=13 uncompressed=5
-[62bc3120][datafile]: loading data index=24 size=141332 uncompressed=4194304
-[62bc3120][datafile]: loading data index=25 size=26 uncompressed=18
-[62bc3120][datafile]: loading data index=26 size=134365 uncompressed=4194304
-[62bc3120][datafile]: loading data index=27 size=17 uncompressed=9
-[62bc3120][datafile]: loading data index=28 size=29868 uncompressed=4194304
-[62bc3120][datafile]: loading data index=29 size=28 uncompressed=20
-[62bc3120][datafile]: loading data index=30 size=97466 uncompressed=490000
-[62bc3120][datafile]: loading data index=31 size=14 uncompressed=6
-[62bc3120][datafile]: loading data index=32 size=214299 uncompressed=4017372
-[62bc3121][datafile]: loading data index=33 size=14 uncompressed=6
-[62bc3121][datafile]: loading data index=34 size=13903 uncompressed=262144
-[62bc3121][datafile]: loading data index=35 size=15 uncompressed=7
-[62bc3121][datafile]: loading data index=36 size=59732 uncompressed=4194304
-[62bc3121][datafile]: loading data index=4 size=78 uncompressed=152
-[62bc3121][datafile]: loading data index=5 size=60 uncompressed=152
-[62bc3121][datafile]: loading data index=6 size=54 uncompressed=152
-[62bc3121][datafile]: loading data index=7 size=2533 uncompressed=135600
-[62bc3121][datafile]: loading data index=8 size=3359 uncompressed=21432
-[62bc3121][datafile]: loading data index=9 size=63 uncompressed=152
-[62bc3121][datafile]: loading data index=11 size=57 uncompressed=152
-[62bc3121][datafile]: loading data index=12 size=58 uncompressed=152
-[62bc3121][datafile]: loading data index=13 size=239 uncompressed=135600
-[62bc3121][datafile]: loading data index=14 size=3319 uncompressed=135600
-[62bc3121][datafile]: loading data index=15 size=631 uncompressed=3496
-[62bc3121][datafile]: loading data index=16 size=202 uncompressed=135600
-[62bc3121][datafile]: loading data index=17 size=268 uncompressed=135600
-[62bc3121][datafile]: loading data index=18 size=224 uncompressed=135600
-[62bc3121][datafile]: loading data index=19 size=662 uncompressed=4712
-[62bc3121][datafile]: loading data index=20 size=1034 uncompressed=7296
-[62bc3121][datafile]: loading data index=21 size=1857 uncompressed=13680
-[62bc3121][infclass]: highres map created
-[62bc3121][datafile]: loading. filename='clientmaps/infc_Minecraft_2df60025/tw06-highres.map'
-[62bc3121][datafile]: allocsize=25484
-[62bc3121][datafile]: readsize=25160
-[62bc3121][datafile]: swaplen=25180
-[62bc3121][datafile]: item_size=24180
-[62bc3121][datafile]: loading done. datafile='clientmaps/infc_Minecraft_2df60025/tw06-highres.map'
-[62bc3121][server]: map crc is 2df60025, generated map crc is 00f0ce52
-[62bc3121][server]: maps/infc_x_current.map loaded in memory
-[62bc3121][server]: server name is 'infclassCR 服务器'
-[62bc3121][datafile]: loading data index=19 size=662 uncompressed=4712
-[62bc3121][datafile]: loading data index=20 size=1034 uncompressed=7296
-[62bc3121][datafile]: loading data index=21 size=1857 uncompressed=13680
-[62bc3121][server]: version 0.6 868ccbe551010094
-[62bc3121][engine/mastersrv]: refreshing master server addresses
-[62bc3121][register]: refreshing ip addresses
-[62bc3121][engine/mastersrv]: saving addresses
-[62bc3121][register]: fetching server counts
-[62bc3121][server]: player is ready. ClientID=0 addr=127.0.0.1:51585 secure=yes
-[62bc3122][game]: Active Players: 0
-[62bc3122][game]: Spectators: 0
-[62bc3123][server]: player has entered the game. ClientID=0 addr=127.0.0.1:51585
-[62bc3123][game]: team_join player='0:墨鱼排骨汤' team=0
-[62bc3123][game]: Active Players: 1
-[62bc3123][game]: Spectators: 0
-[62bc3123][datafile]: loading data index=17 size=268 uncompressed=135600
-[62bc3124][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bc3126][server]: player is ready. ClientID=1 addr=172.23.80.1:2667 secure=yes
-[62bc3127][game]: Active Players: 1
-[62bc3127][game]: Spectators: 0
-[62bc3128][server]: player has entered the game. ClientID=1 addr=172.23.80.1:2667
-[62bc3128][game]: team_join player='1:EDreemurr' team=0
-[62bc3128][game]: Active Players: 2
-[62bc3128][game]: Spectators: 0
-[62bc3128][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bc3128][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bc3129][game]: choose_class player='EDreemurr' class='14'
-[62bc3132][chat]: 1:-2:EDreemurr: 修正了下角度
-[62bc3132][datafile]: loading data index=18 size=224 uncompressed=135600
-[62bc3132][game]: choose_class player='墨鱼排骨汤' class='13'
-[62bc3132][game]: infected victim='墨鱼排骨汤' duration='10'
-[62bc3132][game]: choose_class player='墨鱼排骨汤' class='24'
-[62bc3137][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bc3137][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bc315a][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bc315a][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bc3160][register]: WARNING: Master server is not responding, switching master
-[62bc3160][engine/mastersrv]: refreshing master server addresses
-[62bc3160][register]: refreshing ip addresses
-[62bc3160][engine/mastersrv]: saving addresses
-[62bc3160][register]: fetching server counts
-[62bc3163][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bc3169][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bc3169][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bc316b][server]: client dropped. cid=1 addr=172.23.80.1:2667 reason=''
-[62bc316b][game]: kill killer='EDreemurr' victim='EDreemurr' weapon=-3
-[62bc316b][game]: infected victim='EDreemurr' duration='67'
-[62bc316b][game]: choose_class player='EDreemurr' class='17'
-[62bc316b][server]: leave player='1:EDreemurr'
-[62bc316b][game]: Active Players: 1
-[62bc316b][game]: Spectators: 0
-[62bc316b][infclass]: session created for the client 1
-[62bc316b][infclass]: accusation created for the client 1
-[62bc316b][game]: round_end too few players round='1 of 8'
-[62bc316e][chat]: 0:-2:墨鱼排骨汤: 呃呃呃
-[62bc316e][game]: choose_class player='墨鱼排骨汤' class='0'
-[62bc316e][game]: start round type='InfClassCR' teamplay='0' id='41'
-[62bc3170][game]: choose_class player='墨鱼排骨汤' class='14'
-[62bc3178][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bc3178][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bc3187][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bc3187][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bc3196][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bc3196][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bc319f][register]: WARNING: Master server is not responding, switching master
-[62bc319f][engine/mastersrv]: refreshing master server addresses
-[62bc319f][register]: refreshing ip addresses
-[62bc319f][engine/mastersrv]: saving addresses
-[62bc319f][register]: fetching server counts
-[62bc31a2][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bc31a5][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bc31a5][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bcdcdf][server]: starting...
+[62bcdcdf][datafile]: loading. filename='maps/infc_Minecraft.map'
+[62bcdcdf][datafile]: allocsize=3300
+[62bcdcdf][datafile]: readsize=3072
+[62bcdcdf][datafile]: swaplen=3092
+[62bcdcdf][datafile]: item_size=2544
+[62bcdcdf][datafile]: loading done. datafile='maps/infc_Minecraft.map'
+[62bcdcdf][datafile]: loading. filename='maps/infc_Minecraft.map'
+[62bcdcdf][datafile]: allocsize=3300
+[62bcdcdf][datafile]: readsize=3072
+[62bcdcdf][datafile]: swaplen=3092
+[62bcdcdf][datafile]: item_size=2544
+[62bcdcdf][datafile]: loading done. datafile='maps/infc_Minecraft.map'
+[62bcdcdf][datafile]: loading data index=10 size=2226 uncompressed=135600
+[62bcdcdf][datafile]: loading data index=22 size=12 uncompressed=4
+[62bcdcdf][datafile]: loading data index=23 size=13 uncompressed=5
+[62bcdcdf][datafile]: loading data index=24 size=141332 uncompressed=4194304
+[62bcdcdf][datafile]: loading data index=25 size=26 uncompressed=18
+[62bcdcdf][datafile]: loading data index=26 size=134365 uncompressed=4194304
+[62bcdcdf][datafile]: loading data index=27 size=17 uncompressed=9
+[62bcdcdf][datafile]: loading data index=28 size=29868 uncompressed=4194304
+[62bcdcdf][datafile]: loading data index=29 size=28 uncompressed=20
+[62bcdcdf][datafile]: loading data index=30 size=97466 uncompressed=490000
+[62bcdcdf][datafile]: loading data index=31 size=14 uncompressed=6
+[62bcdcdf][datafile]: loading data index=32 size=214299 uncompressed=4017372
+[62bcdce0][datafile]: loading data index=33 size=14 uncompressed=6
+[62bcdce0][datafile]: loading data index=34 size=13903 uncompressed=262144
+[62bcdce0][datafile]: loading data index=35 size=15 uncompressed=7
+[62bcdce0][datafile]: loading data index=36 size=59732 uncompressed=4194304
+[62bcdce0][datafile]: loading data index=4 size=78 uncompressed=152
+[62bcdce0][datafile]: loading data index=5 size=60 uncompressed=152
+[62bcdce0][datafile]: loading data index=6 size=54 uncompressed=152
+[62bcdce0][datafile]: loading data index=7 size=2533 uncompressed=135600
+[62bcdce0][datafile]: loading data index=8 size=3359 uncompressed=21432
+[62bcdce0][datafile]: loading data index=9 size=63 uncompressed=152
+[62bcdce0][datafile]: loading data index=11 size=57 uncompressed=152
+[62bcdce0][datafile]: loading data index=12 size=58 uncompressed=152
+[62bcdce0][datafile]: loading data index=13 size=239 uncompressed=135600
+[62bcdce0][datafile]: loading data index=14 size=3319 uncompressed=135600
+[62bcdce0][datafile]: loading data index=15 size=631 uncompressed=3496
+[62bcdce0][datafile]: loading data index=16 size=202 uncompressed=135600
+[62bcdce0][datafile]: loading data index=17 size=268 uncompressed=135600
+[62bcdce0][datafile]: loading data index=18 size=224 uncompressed=135600
+[62bcdce0][datafile]: loading data index=19 size=662 uncompressed=4712
+[62bcdce0][datafile]: loading data index=20 size=1034 uncompressed=7296
+[62bcdce0][datafile]: loading data index=21 size=1857 uncompressed=13680
+[62bcdce0][infclass]: highres map created
+[62bcdce0][datafile]: loading. filename='clientmaps/infc_Minecraft_2df60025/tw06-highres.map'
+[62bcdce0][datafile]: allocsize=25484
+[62bcdce0][datafile]: readsize=25160
+[62bcdce0][datafile]: swaplen=25180
+[62bcdce0][datafile]: item_size=24180
+[62bcdce0][datafile]: loading done. datafile='clientmaps/infc_Minecraft_2df60025/tw06-highres.map'
+[62bcdce0][server]: map crc is 2df60025, generated map crc is 00f0ce52
+[62bcdce0][server]: maps/infc_x_current.map loaded in memory
+[62bcdce0][server]: server name is 'infclassCR 服务器'
+[62bcdce0][datafile]: loading data index=19 size=662 uncompressed=4712
+[62bcdce0][datafile]: loading data index=20 size=1034 uncompressed=7296
+[62bcdce0][datafile]: loading data index=21 size=1857 uncompressed=13680
+[62bcdce0][server]: version 0.6 868ccbe551010094
+[62bcdce0][engine/mastersrv]: refreshing master server addresses
+[62bcdce0][register]: refreshing ip addresses
+[62bcdce0][engine/mastersrv]: saving addresses
+[62bcdce0][register]: fetching server counts
+[62bcdce3][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62bcdce4][server]: player is ready. ClientID=0 addr=172.23.80.1:6692 secure=yes
+[62bcdce5][game]: Active Players: 0
+[62bcdce5][game]: Spectators: 0
+[62bcdce5][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bcdce5][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bcdce5][server]: player has entered the game. ClientID=0 addr=172.23.80.1:6692
+[62bcdce5][game]: team_join player='0:EDreemurr' team=0
+[62bcdce5][game]: Active Players: 1
+[62bcdce5][game]: Spectators: 0
+[62bcdce5][datafile]: loading data index=17 size=268 uncompressed=135600
+[62bcdce7][game]: choose_class player='EDreemurr' class='14'
+[62bcdcf0][server]: ClientID=0 authed (admin)
+[62bcdcf4][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bcdcf4][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bcdcf7][server]: ClientID=0 rcon='inf_set_class 0 slime'
+[62bcdcf7][game]: choose_class player='EDreemurr' class='28'
+[62bcdcf7][chat]: *** The admin change the class of EDreemurr to slime
+[62bcdd03][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bcdd03][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bcdd0b][server]: client dropped. cid=0 addr=172.23.80.1:6692 reason=''
+[62bcdd0b][game]: kill killer='EDreemurr' victim='EDreemurr' weapon=-3
+[62bcdd0b][server]: leave player='0:EDreemurr'
+[62bcdd0b][game]: Active Players: 0
+[62bcdd0b][game]: Spectators: 0
+[62bcdd0b][infclass]: session created for the client 0
+[62bcdd0b][infclass]: accusation created for the client 0

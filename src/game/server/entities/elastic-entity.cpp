@@ -119,17 +119,18 @@ void CElasticEntity::Snap(int SnappingClient)
 
 	for(int i=0;i < CElasticEntity::NUM_IDS;i++)
 	{
-		CNetObj_Pickup *pP = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_IDs[i], sizeof(CNetObj_Pickup)));
-		if(!pP)
+		vec2 StartPos = m_Pos + (GetDir(Degres*pi/180) * m_Radius);
+		Degres += 360 / NUM_IDS;
+		vec2 EndPos = m_Pos + (GetDir(Degres*pi/180) * m_Radius);
+		CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_IDs[i], sizeof(CNetObj_Laser)));
+		if(!pObj)
 			return;
 
-		pP->m_X = (int)m_Pos.x + (GetDir(Degres*pi/180) * m_Radius).x;
-		pP->m_Y = (int)m_Pos.y + (GetDir(Degres*pi/180) * m_Radius).y;
-
-		pP->m_Type = (i%2) ? POWERUP_ARMOR : POWERUP_HEALTH;
-		pP->m_Subtype = 0;
-
-		Degres += 360 / NUM_IDS;
+		pObj->m_FromX = (int)StartPos.x;
+		pObj->m_FromY = (int)StartPos.y;
+		pObj->m_X = (int)EndPos.x;
+		pObj->m_Y = (int)EndPos.y;
+		pObj->m_StartTick = Server()->Tick();
 	}
 	for(int i=0;i < CElasticEntity::NUM_PARTICLES;i++)
 	{

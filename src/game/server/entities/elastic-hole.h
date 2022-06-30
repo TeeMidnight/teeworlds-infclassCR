@@ -13,7 +13,8 @@ class CElasticHole : public CEntity
 public:
 	enum
 	{
-		NUM_PARTICLES = 24,
+		NUM_PARTICLES = 14,
+		NUM_AMMO = 5,
 		NUM_IDS =24,
 	};
 	enum
@@ -34,6 +35,7 @@ public:
 
 private:
 	int m_ParticleIDs[NUM_PARTICLES];
+	int m_AmmoIDs[NUM_AMMO];
 	array<int> m_IDs;
 	void Explode();
 

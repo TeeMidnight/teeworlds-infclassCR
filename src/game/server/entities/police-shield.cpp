@@ -56,10 +56,18 @@ void CPoliceShield::Tick()
 	    {
 		    float Len = distance(pChr->m_Pos, m_SnapIDsPos[i]);
 
-		    if(Len < pChr->m_ProximityRadius + 32)
+		    if(Len < pChr->m_ProximityRadius + 4)
 		    {
-			    pChr->SetVel(vec2(m_OwnerChrCore.m_Vel.x, m_OwnerChrCore.m_Vel.y));
-		    }
+				if( abs(m_OwnerChrCore.m_Vel.x) > 4)
+				{
+			    	pChr->SetVel(vec2(m_OwnerChrCore.m_Vel.x, pChr->GetCore().m_Vel.y));
+				}
+
+				if( abs(m_OwnerChrCore.m_Vel.y) > 4)
+				{
+			    	pChr->SetVel(vec2(pChr->GetCore().m_Vel.x, m_OwnerChrCore.m_Vel.y));
+				}
+			}
         }
 	}
 
@@ -69,7 +77,7 @@ void CPoliceShield::Tick()
 	    {
 		    float Len = distance(pSlime->m_ActualPos, m_SnapIDsPos[i]);
 
-		    if(Len < pSlime->m_ProximityRadius + 32)
+		    if(Len < pSlime->m_ProximityRadius + 8)
 		    {
 			    GameServer()->m_World.DestroyEntity(pSlime);
                 GameServer()->CreatePlayerSpawn(m_SnapIDsPos[i]);
@@ -88,18 +96,19 @@ void CPoliceShield::Snap(int SnappingClient)
 
 	for(int i=0;i < CPoliceShield::NUM_IDS;i++)
 	{
-		CNetObj_Pickup *pP = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_IDs[i], sizeof(CNetObj_Pickup)));
-		if(!pP)
+		vec2 StartPos = m_Pos + (GetDir(Degres*pi/180) * m_Radius);
+		Degres -= 90 / NUM_IDS;
+		vec2 EndPos = m_Pos + (GetDir(Degres*pi/180) * m_Radius);
+		CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_IDs[i], sizeof(CNetObj_Laser)));
+		if(!pObj)
 			return;
 
-		pP->m_X = (int)m_Pos.x + (GetDir(Degres*pi/180) * m_Radius).x;
-		pP->m_Y = (int)m_Pos.y + (GetDir(Degres*pi/180) * m_Radius).y;
+		pObj->m_FromX = (int)StartPos.x;
+		pObj->m_FromY = (int)StartPos.y;
+		pObj->m_X = (int)EndPos.x;
+		pObj->m_Y = (int)EndPos.y;
+		pObj->m_StartTick = Server()->Tick();
 
-        m_SnapIDsPos[i] = vec2(pP->m_X, pP->m_Y);
-
-		pP->m_Type = POWERUP_ARMOR;
-		pP->m_Subtype = 0;
-
-		Degres -= 90 / NUM_IDS;
+        m_SnapIDsPos[i] = vec2(pObj->m_FromX, pObj->m_FromY);
 	}
 }

@@ -14,7 +14,7 @@ public:
 	CSlimeEntity(CGameWorld *pGameWorld, int Owner, vec2 Pos, vec2 Dir);
 
 	vec2 GetPos(float Time);
-	void FillInfo(CNetObj_Pickup *pProj);
+	void FillInfo(CNetObj_Laser *pProj);
 
 	virtual void Reset();
 	virtual void Tick();

@@ -65,11 +65,13 @@ void CSlimeEntity::Tick()
 	
 }
 
-void CSlimeEntity::FillInfo(CNetObj_Pickup *pProj)
+void CSlimeEntity::FillInfo(CNetObj_Laser *pProj)
 {
 	pProj->m_X = (int)m_ActualPos.x;
 	pProj->m_Y = (int)m_ActualPos.y;
-    pProj->m_Type = POWERUP_HEALTH;
+	pProj->m_FromX = (int)m_ActualPos.x;
+	pProj->m_FromY = (int)m_ActualPos.y;
+	pProj->m_StartTick = Server()->Tick();
 }
 
 void CSlimeEntity::Snap(int SnappingClient)
@@ -79,15 +81,15 @@ void CSlimeEntity::Snap(int SnappingClient)
 	if(NetworkClipped(SnappingClient, GetPos(Ct)))
 		return;
 	
-	CNetObj_Pickup *pP = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_ID, sizeof(CNetObj_Pickup)));
-    if(pP)
-		FillInfo(pP);
+	CNetObj_Laser *pL = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_ID, sizeof(CNetObj_Laser)));
+    if(pL)
+		FillInfo(pL);
 }
 	
 void CSlimeEntity::Explode()
 {
-	float t = (Server()->Tick()-m_StartTick-3)/(float)Server()->TickSpeed();
-	new CSlugSlime(GameWorld(), m_ActualPos, m_Owner);
+	float t = (Server()->Tick()-m_StartTick-1.5)/(float)Server()->TickSpeed();
+	new CSlugSlime(GameWorld(), GetPos(t), m_Owner);
 
 	GameServer()->CreateSound(GetPos(t), SOUND_GRENADE_EXPLODE);
 	
