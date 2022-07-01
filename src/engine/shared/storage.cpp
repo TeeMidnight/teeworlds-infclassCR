@@ -2,7 +2,7 @@
 /* If you are missing that file, acquire a complete release at teeworlds.com.                */
 #include <base/system.h>
 #include <engine/storage.h>
-#include "linereader.h"s
+#include "linereader.h"
 
 // compiled-in data-dir path
 #define DATA_DIR "data"
