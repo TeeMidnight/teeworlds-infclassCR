@@ -61,6 +61,11 @@ enum
 	INFWEAPON_POLICE_RIFLE,
 	INFWEAPON_POLICE_GUN,
 	
+	INFWEAPON_REVIVER_HAMMER,
+	INFWEAPON_REVIVER_RIFLE,
+	INFWEAPON_REVIVER_GRENADE,
+	INFWEAPON_REVIVER_SHOTGUN,
+
 	INFWEAPON_SLIME_HAMMER,
 
 	NB_INFWEAPON
@@ -161,7 +166,7 @@ public:
 		const char *m_pDesc; // name of the vote
 		const char *m_pReason;
 	};
-	
+
 	virtual ~IServer() {};
 	
 	inline class CLocalization* Localization() { return m_pLocalization; }

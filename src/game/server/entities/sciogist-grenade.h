@@ -15,6 +15,7 @@ public:
 	virtual void TickPaused();
 	virtual void Snap(int SnappingClient);
 	void Explode();	
+	int m_Owner;
 	
 protected:
 	bool HitCharacter(vec2 From, vec2 To);
@@ -25,7 +26,6 @@ private:
 	vec2 m_Direction;
 	vec2 m_ActualDir;
 	int m_StartTick;
-	int m_Owner;
 	vec2 m_ActualPos;
 
 	CCharacter *m_OwnerChar;

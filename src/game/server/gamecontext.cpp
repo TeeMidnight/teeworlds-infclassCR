@@ -257,7 +257,7 @@ int CGameContext::RandomZombieToWitch()
 
 void CGameContext::SetAvailabilities(std::vector<int> value) { // todo: should be order-independent, e.g with std map
 	if (value.empty())
-		value = std::vector<int>(13); //increased by 1 human class from 9 to 10
+		value = std::vector<int>(14); //increased by 1 human class from 9 to 14
 	g_Config.m_InfEnableBiologist = value[0];
 	g_Config.m_InfEnableEngineer = value[1];
 	g_Config.m_InfEnableHero = value[2];
@@ -271,6 +271,7 @@ void CGameContext::SetAvailabilities(std::vector<int> value) { // todo: should b
 	g_Config.m_InfEnableSciogist = value[10];
 	g_Config.m_InfEnableCatapult = value[11];
 	g_Config.m_InfEnablePolice = value[12];
+	g_Config.m_InfEnableReviver = value[13];
 }
 
 void CGameContext::SetProbabilities(std::vector<int> value) { // todo: should be order-independent, e.g with std map
@@ -795,6 +796,9 @@ void CGameContext::SendBroadcast_ClassIntro(int ClientID, int Class)
 			break;
 		case PLAYERCLASS_SCIOGIST:
 			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Sciogist"));
+			break;
+		case PLAYERCLASS_REVIVER:
+			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Reviver"));
 			break;
 		case PLAYERCLASS_POLICE:
 			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Police"));
@@ -2873,7 +2877,8 @@ bool CGameContext::ConStartFunRound(IConsole::IResult *pResult, void *pUserData)
 		g_Config.m_InfEnableLooper,
 		g_Config.m_InfEnableSciogist,
 		g_Config.m_InfEnableCatapult,
-		g_Config.m_InfEnablePolice
+		g_Config.m_InfEnablePolice,
+		g_Config.m_InfEnableReviver
 	};
 
 	std::vector<const char*> phrases = {
@@ -2988,6 +2993,7 @@ bool CGameContext::ConSetClass(IConsole::IResult *pResult, void *pUserData)
 	else if(str_comp(pClassName, "biologist") == 0) pPlayer->SetClass(PLAYERCLASS_BIOLOGIST);
 	else if(str_comp(pClassName, "catapult") == 0) pPlayer->SetClass(PLAYERCLASS_CATAPULT);
 	else if(str_comp(pClassName, "sciogist") == 0) pPlayer->SetClass(PLAYERCLASS_SCIOGIST);
+	else if(str_comp(pClassName, "reviver") == 0) pPlayer->SetClass(PLAYERCLASS_REVIVER);
 	else if(str_comp(pClassName, "looper") == 0) pPlayer->SetClass(PLAYERCLASS_LOOPER);
 	else if(str_comp(pClassName, "police") == 0) pPlayer->SetClass(PLAYERCLASS_POLICE);
 	else if(str_comp(pClassName, "medic") == 0) pPlayer->SetClass(PLAYERCLASS_MEDIC);
@@ -3176,8 +3182,13 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 			}
 			else if(str_comp(aNameFound, "!police") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
-				CheckClass = PLAYERCLASS_SCIOGIST;
+				CheckClass = PLAYERCLASS_POLICE;
 				str_copy(aChatTitle, "police", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "!reviver") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_REVIVER;
+				str_copy(aChatTitle, "reviver", sizeof(aChatTitle));
 			}
 			else if(str_comp(aNameFound, "!looper") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
@@ -3761,12 +3772,14 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			Buffer.append("~~ ");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Catapult"), NULL); 
 			Buffer.append(" ~~\n\n");
+			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
 		else if(str_comp_nocase(pHelpPage, "police") == 0)
 		{
 			Buffer.append("~~ ");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Police"), NULL); 
 			Buffer.append(" ~~\n\n");
+			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
 		else if(str_comp_nocase(pHelpPage, "biologist") == 0)
 		{
@@ -3973,6 +3986,19 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Slug can infect humans and heal infected with his hammer."), NULL);
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He can make the ground and walls toxic by spreading slime with his hammer."), NULL);
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Touching the slime inflicts three damage points in three seconds on a human."), NULL);
+			
+			pSelf->SendMOTD(ClientID, Buffer.buffer());
+		}
+		else if(str_comp_nocase(pHelpPage, "slime") == 0)
+		{
+			Buffer.append("~~ ");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Slime"), NULL);
+			Buffer.append(" ~~\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Slime can infect humans and heal infected with his hammer."), NULL);
+			Buffer.append("\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He can make slime entity by his hammer."), NULL);
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Touching the slime inflicts three damage points in three seconds on a human."), NULL);
 			

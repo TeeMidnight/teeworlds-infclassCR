@@ -81,12 +81,18 @@ void CSuperWeaponIndicator::Tick()
 			m_OwnerChar->m_HasWhiteHole = true;
 			m_OwnerChar->m_BroadcastWhiteHoleReady = Server()->Tick();
 			GameServer()->SendChatTarget_Localization(m_Owner, CHATCATEGORY_SCORE, _("white hole ready, your laser rifle now disrupts space time"), NULL);	
-		} else
+		} else if(m_OwnerChar->GetClass() == PLAYERCLASS_SCIOGIST)
 		{
 			m_IsWarmingUp = false;
 			m_OwnerChar->m_HasElasticHole = true;
 			m_OwnerChar->m_BroadcastElasticHoleReady = Server()->Tick();
 			GameServer()->SendChatTarget_Localization(m_Owner, CHATCATEGORY_SCORE, _("elastic hole ready, your grenade now disrupts space time"), NULL);	
+		} else
+		{
+			m_IsWarmingUp = false;
+			m_OwnerChar->m_HasHealBoom = true;
+			m_OwnerChar->m_BroadcastHealBoomReady = Server()->Tick();
+			GameServer()->SendChatTarget_Localization(m_Owner, CHATCATEGORY_SCORE, _("heal boom ready, your laser rifle now disrupts space time"), NULL);	
 		}
 	} 
 	else 	

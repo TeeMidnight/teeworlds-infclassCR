@@ -3,6 +3,7 @@
 #include <game/generated/protocol.h>
 #include <game/server/gamecontext.h>
 #include "laser.h"
+#include "heal-boom.h"
 #include <engine/server/roundstatistics.h>
 
 CLaser::CLaser(CGameWorld *pGameWorld, vec2 Pos, vec2 Direction, float StartEnergy, int Owner, int Dmg)
@@ -68,6 +69,25 @@ bool CLaser::HitCharacter(vec2 From, vec2 To)
 		pHit->Freeze(5, m_Owner, FREEZEREASON_FLASH);
 		GameServer()->CreateSound(pHit->m_Pos, SOUND_PLAYER_PAIN_LONG);
 		GameServer()->CreatePlayerSpawn(pHit->m_Pos);
+	}
+	else if(pOwnerChar && pOwnerChar->GetClass() == PLAYERCLASS_REVIVER)
+	{
+		if(pOwnerChar->m_HasHealBoom && GameServer()->GetZombieCount() > 5)
+		{
+			new CHealBoom(GameWorld(), pHit->m_Pos, m_Owner);
+			GameServer()->CreateSound(pHit->m_Pos, SOUND_GRENADE_EXPLODE);
+			
+			//Make it unavailable
+			pOwnerChar->m_HasHealBoom = false;
+			pOwnerChar->m_HasIndicator = false;
+			pOwnerChar->GetPlayer()->ResetNumberKills();
+		}else
+		{
+			pHit->TakeDamage(vec2(0.f, 0.f), m_Dmg, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
+			pHit->Freeze(3, m_Owner, FREEZEREASON_FLASH);
+			GameServer()->CreateSound(pHit->m_Pos, SOUND_PLAYER_PAIN_LONG);
+			GameServer()->CreatePlayerSpawn(pHit->m_Pos);
+		}
 	}
 	else {
 		pHit->TakeDamage(vec2(0.f, 0.f), m_Dmg, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);

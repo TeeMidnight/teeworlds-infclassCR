@@ -63,7 +63,6 @@ void CGameControllerMOD::OnClientDrop(int ClientID, int Type)
 		
 		if(GameServer()->GetZombieCount() <= GetFirstInfNb()) // quit client not deleted, so zombie number should subtract 1
 		{
-			Server()->Ban(ClientID, 60*g_Config.m_InfLeaverBanTime, "Leaver");
 			m_InfectedStarted = false;
 			m_InfectedQuit = true;
 		}
@@ -522,6 +521,7 @@ void CGameControllerMOD::Snap(int SnappingClient)
 		int Hero = 0;
 		int Support = 0;
 		int Sciogist = 0;
+		int Reviver = 0;
 		
 		CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
 		while(Iter.Next())
@@ -553,6 +553,9 @@ void CGameControllerMOD::Snap(int SnappingClient)
 				case PLAYERCLASS_SCIOGIST:
 					Sciogist++;
 					break;
+				case PLAYERCLASS_REVIVER:
+					Reviver++;
+					break;
 			}
 		}
 		
@@ -564,8 +567,10 @@ void CGameControllerMOD::Snap(int SnappingClient)
 			ClassMask |= CMapConverter::MASK_HERO;
 		if(Support < g_Config.m_InfSupportLimit)
 			ClassMask |= CMapConverter::MASK_SUPPORT;
-		if(Support < g_Config.m_InfSciogistLimit)
-			ClassMask |= CMapConverter::MASK_DEFENDER;
+		if(Sciogist < g_Config.m_InfSciogistLimit)
+			ClassMask |= CMapConverter::MASK_SCIOGIST;
+		if(Reviver < g_Config.m_InfReviverLimit)
+			ClassMask |= CMapConverter::MASK_REVIVER;
 	}
 	
 	if(SnappingClient != -1)
@@ -835,6 +840,7 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 	int nbMedic = 0;
 	int nbDefender = 0;
 	int nbSciogist = 0;
+	int nbReviver = 0;
 	CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);	
 	
 	while(Iter.Next())
@@ -865,6 +871,9 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 				break;
 			case PLAYERCLASS_SCIOGIST:
 				nbSciogist++;
+				break;
+			case PLAYERCLASS_REVIVER:
+				nbReviver++;
 				break;
 		}
 	}
@@ -912,7 +921,9 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 	Probability[PLAYERCLASS_POLICE - START_HUMANCLASS - 1] =
 		(nbDefender < g_Config.m_InfDefenderLimit && g_Config.m_InfEnableLooper) ?
 		1.0f : 0.0f;
-	
+	Probability[PLAYERCLASS_REVIVER - START_HUMANCLASS - 1] =
+		(nbReviver < g_Config.m_InfReviverLimit && g_Config.m_InfEnableReviver) ?
+		1.0f : 0.0f;
 
 	//Random is not fair enough. We keep the last two classes took by the player, and avoid to give him those again
 	if(!GameServer()->m_FunRound) { // if normal round is being played
@@ -1022,6 +1033,8 @@ bool CGameControllerMOD::IsEnabledClass(int PlayerClass) {
 			return g_Config.m_InfEnableLooper;
 		case PLAYERCLASS_POLICE:
 			return g_Config.m_InfEnablePolice;
+		case PLAYERCLASS_REVIVER:
+			return g_Config.m_InfEnableReviver;
 		default:
 			return false;
 	}
@@ -1037,6 +1050,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 	int nbMedic = 0;
 	int nbHero = 0;
 	int nbSupport = 0;
+	int nbReviver = 0;
 
 	CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
 	while(Iter.Next())
@@ -1068,6 +1082,9 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			case PLAYERCLASS_SCIOGIST:
 				nbSciogist++;
 				break;
+			case PLAYERCLASS_REVIVER:
+				nbReviver++;
+				break;
 		}
 	}
 	
@@ -1092,6 +1109,8 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			return (nbDefender < g_Config.m_InfDefenderLimit);
 		case PLAYERCLASS_SCIOGIST:
 			return (nbSciogist < g_Config.m_InfSciogistLimit);
+		case PLAYERCLASS_REVIVER:
+			return (nbReviver < g_Config.m_InfReviverLimit);
 	}
 	
 	return false;

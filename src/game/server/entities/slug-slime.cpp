@@ -43,7 +43,7 @@ void CSlugSlime::Tick()
 		
 		if(p->IsZombie()) 
 		{
-			if(p->GetClass() != PLAYERCLASS_SLUG)
+			if(p->GetClass() != PLAYERCLASS_SLUG && GameServer()->GetPlayerChar(m_Owner) != p)
 			{
 				p->SetEmote(EMOTE_HAPPY, Server()->Tick());
 				if(Server()->Tick() >= m_HealTick + (Server()->TickSpeed()/g_Config.m_InfSlimeHealRate))
@@ -53,7 +53,7 @@ void CSlugSlime::Tick()
 				}
 			}
 		} 
-		else // p->IsHuman()
+		else if(p->GetClass() != PLAYERCLASS_POLICE && p->GetClass() != PLAYERCLASS_REVIVER)// p->IsHuman()
 		{ 
 			p->Poison(g_Config.m_InfSlimePoisonDuration, m_Owner); 
 		}

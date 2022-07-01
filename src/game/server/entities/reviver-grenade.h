@@ -1,15 +1,15 @@
 /* (c) Magnus Auvinen. See licence.txt in the root of the distribution for more information. */
 /* If you are missing that file, acquire a complete release at teeworlds.com.                */
-#ifndef GAME_SERVER_ENTITIES_ELASTIC_GRENADE_H
-#define GAME_SERVER_ENTITIES_ELASTIC_GRENADE_H
+#ifndef GAME_SERVER_ENTITIES_REVIVER_GRENADE_H
+#define GAME_SERVER_ENTITIES_REVIVER_GRENADE_H
 
-class CElasticGrenade : public CEntity
+class CReviverGrenade : public CEntity
 {
 public:
 	int m_Owner;
 	
 public:
-	CElasticGrenade(CGameWorld *pGameWorld, int Owner, int Weapon, vec2 Pos, vec2 Dir);
+	CReviverGrenade(CGameWorld *pGameWorld, int Owner, vec2 Pos, vec2 Dir);
 
 	vec2 GetPos(float Time);
 	void FillInfo(CNetObj_Projectile *pProj);

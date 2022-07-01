@@ -38,6 +38,8 @@
 #include "elastic-hole.h"
 #include "elastic-entity.h"
 #include "elastic-grenade.h"
+#include "reviver-grenade.h"
+#include "heal-boom.h"
 #include "superweapon-indicator.h"
 #include "laser-teleport.h"
 #include "police-shield.h"
@@ -122,6 +124,7 @@ m_pConsole(pConsole)
 	m_VoodooAboutToDie = false;
 	m_BroadcastWhiteHoleReady = -100;
 	m_BroadcastElasticHoleReady = -100;
+	m_BroadcastHealBoomReady= -100;
 	m_pHeroFlag = nullptr;
 	m_ResetKillsTime = 0;
 /* INFECTION MODIFICATION END *****************************************/
@@ -1036,10 +1039,34 @@ void CCharacter::FireWeapon()
 							}
 							else
 							{
-								if(pTarget->GetClass() != PLAYERCLASS_HERO)
+								if(pTarget->GetClass() != PLAYERCLASS_HERO && pTarget->GetClass() != PLAYERCLASS_POLICE)
 								{
 									pTarget->IncreaseArmor(4);
 									if(pTarget->m_Armor == 10 && pTarget->m_NeedFullHeal)
+									{
+										Server()->RoundStatistics()->OnScoreEvent(GetPlayer()->GetCID(), SCOREEVENT_HUMAN_HEALING, GetClass(), Server()->ClientName(GetPlayer()->GetCID()), Console());
+										GameServer()->SendScoreSound(GetPlayer()->GetCID());
+										pTarget->m_NeedFullHeal = false;
+										m_aWeapons[WEAPON_GRENADE].m_Ammo++;
+									}
+									pTarget->m_EmoteType = EMOTE_HAPPY;
+									pTarget->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
+								}
+							}
+						}
+						else if(GetClass() == PLAYERCLASS_REVIVER)
+						{
+							if (pTarget->IsZombie())
+							{
+								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, 20, 
+										m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
+							}
+							else
+							{
+								if(pTarget->GetClass() != PLAYERCLASS_HERO)
+								{
+									pTarget->IncreaseHealth(4);
+									if(pTarget->m_Health == 10 && pTarget->m_NeedFullHeal)
 									{
 										Server()->RoundStatistics()->OnScoreEvent(GetPlayer()->GetCID(), SCOREEVENT_HUMAN_HEALING, GetClass(), Server()->ClientName(GetPlayer()->GetCID()), Console());
 										GameServer()->SendScoreSound(GetPlayer()->GetCID());
@@ -1156,9 +1183,9 @@ void CCharacter::FireWeapon()
 				CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_GUN,
 					m_pPlayer->GetCID(),
 					ProjStartPos,
-					Direction,
+					Direction, 
 					(int)(Server()->TickSpeed()*GameServer()->Tuning()->m_GunLifetime),
-					1, 0, 0, -1, WEAPON_GUN);
+					12, 0, 0, -1, WEAPON_GUN);
 
 				// pack the Projectile and send it to the client Directly
 				CNetObj_Projectile p;
@@ -1334,6 +1361,11 @@ void CCharacter::FireWeapon()
 				{
 					m_aWeapons[m_ActiveWeapon].m_Ammo++;
 				}
+			}
+			else if(GetClass() == PLAYERCLASS_REVIVER)
+			{
+				new CReviverGrenade(GameWorld(), m_pPlayer->GetCID(), m_Pos, Direction);
+				GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
 			}
 			else if(GetClass() == PLAYERCLASS_SCIENTIST)
 			{
@@ -1586,6 +1618,29 @@ void CCharacter::CheckSuperWeaponAccess()
 		}
 	}
 	
+	if(GetClass() == PLAYERCLASS_REVIVER)
+	{
+		
+		if (!m_HasHealBoom) // Can't receive a white hole while having one available
+		{
+			// enable white hole probabilities
+			if (kills > g_Config.m_InfHealBoomMinimalKills) 
+			{
+				if (random_int(0,100) < g_Config.m_InfElasticHoleProbability) 
+				{
+					//Scientist-laser.cpp will make it unavailable after usage and reset player kills
+					
+					//create an indicator object
+					if (m_HasIndicator == false) {
+						m_HasIndicator = true;
+						GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_SCORE, _("heal boom found..."), NULL);
+						new CSuperWeaponIndicator(GameWorld(), m_Pos, m_pPlayer->GetCID());
+					}
+				}
+			} 
+		}
+	}
+
 	//Only looper and soldier can receive stun grenades
 	if(GetClass() == PLAYERCLASS_LOOPER || GetClass() == PLAYERCLASS_SOLDIER)
 	{
@@ -2385,6 +2440,13 @@ void CCharacter::Tick()
 							Broadcast = true;
 						}
 						break;
+					case CMapConverter::MENUCLASS_REVIVER:
+						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_REVIVER))
+						{
+							GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Reviver"), NULL);
+							Broadcast = true;
+						}
+						break;
 				}
 			}
 			
@@ -2443,6 +2505,9 @@ void CCharacter::Tick()
 						break;
 					case CMapConverter::MENUCLASS_POLICE:
 						NewClass = PLAYERCLASS_POLICE;
+						break;
+					case CMapConverter::MENUCLASS_REVIVER:
+						NewClass = PLAYERCLASS_REVIVER;
 						break;
 				}
 				
@@ -2522,11 +2587,23 @@ void CCharacter::Tick()
 			GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), 
 			BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
 			 _("Use hammer to defend"), NULL);
+			m_Armor = 0;
 			if(pCurrentShield)
 				GameServer()->m_World.DestroyEntity(pCurrentShield);
-		}else if(!pCurrentShield)
+		}else if(!pCurrentShield && m_Pos.y > -20)
 		{
 			new CPoliceShield(GameWorld(), m_pPlayer->GetCID());
+		}
+		else if(pCurrentShield)
+		{
+			if(m_Pos.y < -20)
+			{
+				GameServer()->m_World.DestroyEntity(pCurrentShield);
+			}
+			else
+			{
+				m_Armor = 8;
+			}
 		}
 	}
 	else if(GetClass() == PLAYERCLASS_SOLDIER)
@@ -2671,7 +2748,7 @@ void CCharacter::Tick()
 		}
 		
 		//else 
-		if(NumMines > 0 )//&& !pCurrentWhiteHole
+		if(NumMines > 0 && !pCurrentElasticHole)
 		{
 			GameServer()->SendBroadcast_Localization_P(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, NumMines,
 				_P("One mine is active", "{int:NumMines} mines are active"),
@@ -2696,6 +2773,49 @@ void CCharacter::Tick()
 			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
 				_("{int:NumMines} mines are active\nElastic hole: {sec:RemainingTime}"),
 				"NumMines", &NumMines,
+				"RemainingTime", &Seconds,
+				NULL
+			);
+		}
+		
+	}else if(GetClass() == PLAYERCLASS_REVIVER)
+	{
+		CHealBoom* pCurrentHealBoom = NULL;
+		for(CHealBoom *pHealBoom = (CHealBoom*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_HEAL_BOOM); pHealBoom; pHealBoom = (CHealBoom*)pHealBoom->TypeNext())
+		{
+			if(pHealBoom->m_Owner == m_pPlayer->GetCID())
+			{
+				pCurrentHealBoom = pHealBoom;
+				break;
+			}
+		}
+		
+		//Reset superweapon kill counter, two seconds after whiteHole explosion
+		if (pCurrentHealBoom && 1+pCurrentHealBoom->GetTick()/Server()->TickSpeed() == 1)
+			m_ResetKillsTime = Server()->TickSpeed()*3;
+		
+		if (m_ResetKillsTime)
+		{
+			m_ResetKillsTime--;
+			if(!m_ResetKillsTime)
+				GetPlayer()->ResetNumberKills();
+		}
+
+		
+		if(m_BroadcastHealBoomReady+(2*Server()->TickSpeed()) > Server()->Tick())
+		{
+			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+				_("Heal boom ready !"),
+				NULL
+			);
+		}
+		
+		//else 
+		if(pCurrentHealBoom)
+		{
+			int Seconds = 1+pCurrentHealBoom->GetTick()/Server()->TickSpeed();
+			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+				_("Heal Boom: {sec:RemainingTime}"),
 				"RemainingTime", &Seconds,
 				NULL
 			);
@@ -2836,6 +2956,12 @@ void CCharacter::GiveGift(int GiftType)
 		case PLAYERCLASS_SCIOGIST:
 			GiveWeapon(WEAPON_GRENADE, -1);
 			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_SHOTGUN, -1);
+			break;
+		case PLAYERCLASS_REVIVER:
+			GiveWeapon(WEAPON_GRENADE, -1);
+			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_GUN, -1);
 			GiveWeapon(WEAPON_SHOTGUN, -1);
 			break;
 		case PLAYERCLASS_POLICE:
@@ -3212,13 +3338,20 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		}
 	}
 
-	if(GetClass() == PLAYERCLASS_HERO && Mode == TAKEDAMAGEMODE_INFECTION)
+	if(GetClass() == PLAYERCLASS_HERO  && Mode == TAKEDAMAGEMODE_INFECTION)
 	{
 		Dmg = 12;
 		// A zombie can't infect a hero
 		Mode = TAKEDAMAGEMODE_NOINFECTION;
 	}
 	
+	if(GetClass() == PLAYERCLASS_POLICE && GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_POLICE_HAMMER && Mode == TAKEDAMAGEMODE_INFECTION)
+	{
+		Dmg = 15;
+		// A zombie can't infect a use shield police
+		Mode = TAKEDAMAGEMODE_NOINFECTION;
+	}
+
 	if(pKillerChar && pKillerChar->IsInLove())
 	{
 		Dmg = 0;
@@ -3445,7 +3578,7 @@ void CCharacter::Snap(int SnappingClient)
 		if(!pClient->IsZombie() && m_IsInvisible) return;
 	}
 	
-	if(m_Armor < 10 && SnappingClient != m_pPlayer->GetCID() && IsHuman() && GetClass() != PLAYERCLASS_HERO)
+	if(m_Armor < 10 && SnappingClient != m_pPlayer->GetCID() && IsHuman() && GetClass() != PLAYERCLASS_HERO && GetClass() != PLAYERCLASS_POLICE)
 	{
 		if(pClient && pClient->GetClass() == PLAYERCLASS_MEDIC)
 		{
@@ -3459,6 +3592,20 @@ void CCharacter::Snap(int SnappingClient)
 				pP->m_Type = POWERUP_HEALTH;
 			else
 				pP->m_Type = POWERUP_ARMOR;
+			pP->m_Subtype = 0;
+		}
+	}
+	else if(m_Health < 10 && SnappingClient != m_pPlayer->GetCID() && IsHuman() && GetClass() != PLAYERCLASS_HERO)
+	{
+		if(pClient && pClient->GetClass() == PLAYERCLASS_REVIVER)
+		{
+			CNetObj_Pickup *pP = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_HeartID, sizeof(CNetObj_Pickup)));
+			if(!pP)
+				return;
+
+			pP->m_X = (int)m_Pos.x;
+			pP->m_Y = (int)m_Pos.y - 60.0;
+			pP->m_Type = POWERUP_HEALTH;
 			pP->m_Subtype = 0;
 		}
 	}
@@ -3977,6 +4124,24 @@ void CCharacter::ClassSpawnAttributes()
 				m_pPlayer->m_knownClass[PLAYERCLASS_MEDIC] = true;
 			}
 			break;
+		case PLAYERCLASS_REVIVER:
+			RemoveAllGun();
+			m_pPlayer->m_InfectionTick = -1;
+			m_Health = 10;
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			GiveWeapon(WEAPON_GRENADE, -1);
+			GiveWeapon(WEAPON_SHOTGUN, -1);
+			GiveWeapon(WEAPON_RIFLE, -1);
+			m_ActiveWeapon = WEAPON_HAMMER;
+			
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_REVIVER);
+			if(!m_pPlayer->IsKnownClass(PLAYERCLASS_REVIVER))
+			{
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "reviver", NULL);
+				m_pPlayer->m_knownClass[PLAYERCLASS_REVIVER] = true;
+			}
+			break;
 		case PLAYERCLASS_HERO:
 			RemoveAllGun();
 			m_pPlayer->m_InfectionTick = -1;
@@ -4252,6 +4417,21 @@ void CCharacter::DestroyChildEntities()
 		if(pGrenade->m_Owner != m_pPlayer->GetCID()) continue;
 			GameServer()->m_World.DestroyEntity(pGrenade);
 	}
+	for(CSciogistGrenade* pGrenade = (CSciogistGrenade*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SCIOGIST_GRENADE); pGrenade; pGrenade = (CSciogistGrenade*) pGrenade->TypeNext())
+	{
+		if(pGrenade->m_Owner != m_pPlayer->GetCID()) continue;
+			GameServer()->m_World.DestroyEntity(pGrenade);
+	}
+	for(CElasticGrenade* pGrenade = (CElasticGrenade*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_ELASTIC_GRENADE); pGrenade; pGrenade = (CElasticGrenade*) pGrenade->TypeNext())
+	{
+		if(pGrenade->m_Owner != m_pPlayer->GetCID()) continue;
+			GameServer()->m_World.DestroyEntity(pGrenade);
+	}
+	for(CReviverGrenade* pGrenade = (CReviverGrenade*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_REVIVER_GRENADE); pGrenade; pGrenade = (CReviverGrenade*) pGrenade->TypeNext())
+	{
+		if(pGrenade->m_Owner != m_pPlayer->GetCID()) continue;
+			GameServer()->m_World.DestroyEntity(pGrenade);
+	}
 	for(CMercenaryBomb *pBomb = (CMercenaryBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MERCENARY_BOMB); pBomb; pBomb = (CMercenaryBomb*) pBomb->TypeNext())
 	{
 		if(pBomb->m_Owner != m_pPlayer->GetCID()) continue;
@@ -4446,6 +4626,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_NINJA_HAMMER;
 			case PLAYERCLASS_POLICE:
 				return INFWEAPON_POLICE_HAMMER;
+			case PLAYERCLASS_REVIVER:
+				return INFWEAPON_REVIVER_HAMMER;
 			case PLAYERCLASS_SLIME://infect class
 				return INFWEAPON_SLIME_HAMMER;
 			default:
@@ -4479,6 +4661,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_BIOLOGIST_SHOTGUN;
 			case PLAYERCLASS_SCIOGIST:
 				return INFWEAPON_SCIOGIST_SHOTGUN;
+			case PLAYERCLASS_REVIVER:
+				return INFWEAPON_REVIVER_SHOTGUN;
 			default:
 				return INFWEAPON_SHOTGUN;
 		}
@@ -4505,6 +4689,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_LOOPER_GRENADE;
 			case PLAYERCLASS_CATAPULT:
 				return INFWEAPON_CATAPULT_GRENADE;
+			case PLAYERCLASS_REVIVER:
+				return INFWEAPON_REVIVER_GRENADE;
 			default:
 				return INFWEAPON_GRENADE;
 		}
@@ -4533,6 +4719,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_CATAPULT_RIFLE;
 			case PLAYERCLASS_POLICE:
 				return INFWEAPON_POLICE_RIFLE;
+			case PLAYERCLASS_REVIVER:
+				return INFWEAPON_REVIVER_RIFLE;
 			default:
 				return INFWEAPON_RIFLE;
 		}

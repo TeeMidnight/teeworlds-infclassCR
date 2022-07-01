@@ -164,6 +164,10 @@
 		"value": "防暴警察"
 	},
 	{
+		"key": "Reviver",
+		"value": "归命师"
+	},
+	{
 		"key": "Smoker",
 		"value": "\u5438\u70df\u8005"
 	},
@@ -484,6 +488,14 @@
 		"value": "\u4ed6\u53ef\u4ee5\u7528\u9524\u5b50\u5411\u5730\u9762\u548c\u5899\u58c1\u6295\u6bd2\u3002"
 	},
 	{
+		"key": "The Slime can infect humans and heal infected with his hammer.",
+		"value": "粘液可以感染人类并且可以使用锤子治疗感染"
+	},
+	{
+		"key": "He can make slime entity by his hammer.",
+		"value": "他可以使用锤子来抛掷粘液体"
+	},
+	{
 		"key": "Touching the slime inflicts three damage points in three seconds on a human.",
 		"value": "\u6b63\u5e38\u4eba\u63a5\u89e6\u6bd2\u4f1a\u5728 3 \u79d2\u5185\u9020\u6210 3 \u70b9\u4f24\u5bb3\u503c\u3002"
 	},
@@ -654,6 +666,10 @@
 	{
 		"key": "The Hero found the flag!",
 		"value": "\u82f1\u96c4\u627e\u5230\u4e86\u65d7\u5e1c \uff01"
+	},
+	{
+		"key": "heal boom found...",
+		"value": "已经找到治愈爆炸..."
 	},
 	{
 		"key": "Use hammer to defend",

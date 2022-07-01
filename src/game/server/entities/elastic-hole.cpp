@@ -64,7 +64,11 @@ void CElasticHole::Explode()
 
 void CElasticHole::Tick()
 {
-	
+	if(!GameServer()->GetPlayerChar(m_Owner) || GameServer()->GetPlayerChar(m_Owner)->IsZombie())
+	{
+		GameServer()->m_World.DestroyEntity(this);
+	}
+
 	if(m_Radius > m_MaxRadius)
 	{
 		m_Growing = GROW_STOPING;

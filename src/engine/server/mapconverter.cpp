@@ -569,10 +569,11 @@ void CMapConverter::Finalize()
 	int SniperImageID = AddExternalImage("../skins/warpaint", 256, 128);
 	int CatapultImageID = AddExternalImage("../skins/coala", 256, 128);
 	int PoliceImageID = AddExternalImage("../skins/kitty_x_ninja", 256, 128);
+	int ReviverImageID = AddExternalImage("../skins/coala_limekitty", 256, 128);
 	
 	//Menu
 	
-	const float MenuRadius = 225.0f;
+	const float MenuRadius = 250.0f;
 	const float MenuAngleStart = -pi/2.0f;
 	
 	{
@@ -648,7 +649,6 @@ void CMapConverter::Finalize()
 						case MENUCLASS_SOLDIER:
 						case MENUCLASS_SCIENTIST:
 						case MENUCLASS_BIOLOGIST:
-						case MENUCLASS_SCIOGIST:
 						case MENUCLASS_CATAPULT:
 						case MENUCLASS_POLICE:
 							ClassMask = MASK_DEFENDER;
@@ -661,6 +661,12 @@ void CMapConverter::Finalize()
 							break;
 						case MENUCLASS_HERO:
 							ClassMask = MASK_HERO;
+							break;
+						case MENUCLASS_REVIVER:
+							ClassMask = MASK_REVIVER;
+							break;
+						case MENUCLASS_SCIOGIST:
+							ClassMask = MASK_SCIOGIST;
 							break;
 						default:
 							ClassMask = MASK_SUPPORT;
@@ -832,6 +838,9 @@ void CMapConverter::Finalize()
 								break;
 							case MENUCLASS_POLICE:
 								AddTeeLayer("Police", PoliceImageID, Pos, 64.0f, m_NumEnvs-1);
+								break;
+							case MENUCLASS_REVIVER:
+								AddTeeLayer("Reviver", ReviverImageID, Pos, 64.0f, m_NumEnvs-1);
 								break;
 						}
 					}

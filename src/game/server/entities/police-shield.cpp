@@ -77,7 +77,7 @@ void CPoliceShield::Tick()
 	    {
 		    float Len = distance(pSlime->m_ActualPos, m_SnapIDsPos[i]);
 
-		    if(Len < pSlime->m_ProximityRadius + 8)
+		    if(Len < pSlime->m_ProximityRadius + 16)
 		    {
 			    GameServer()->m_World.DestroyEntity(pSlime);
                 GameServer()->CreatePlayerSpawn(m_SnapIDsPos[i]);

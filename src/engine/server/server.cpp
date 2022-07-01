@@ -609,7 +609,12 @@ int CServer::Init()
 
 	SetFireDelay(INFWEAPON_POLICE_RIFLE, 250);
 	SetFireDelay(INFWEAPON_POLICE_HAMMER, 125);
-	SetFireDelay(INFWEAPON_POLICE_GUN, 100);	
+	SetFireDelay(INFWEAPON_POLICE_GUN, 300);	
+
+	SetFireDelay(INFWEAPON_REVIVER_GRENADE, 500);
+	SetFireDelay(INFWEAPON_REVIVER_HAMMER, 125);
+	SetFireDelay(INFWEAPON_REVIVER_RIFLE, 250);	
+	SetFireDelay(INFWEAPON_REVIVER_SHOTGUN, 250);	
 
 	SetFireDelay(INFWEAPON_LOOPER_RIFLE, 250);
 	SetFireDelay(INFWEAPON_LOOPER_GRENADE, GetFireDelay(INFWEAPON_GRENADE));
@@ -657,12 +662,17 @@ int CServer::Init()
 	SetAmmoRegenTime(INFWEAPON_SCIOGIST_SHOTGUN, 600);
 
 	SetAmmoRegenTime(INFWEAPON_CATAPULT_RIFLE, 2250);
-	SetAmmoRegenTime(INFWEAPON_CATAPULT_GRENADE, 500);
+	SetAmmoRegenTime(INFWEAPON_CATAPULT_GRENADE, 750);
 	SetAmmoRegenTime(INFWEAPON_CATAPULT_GUN, 125);
 	
 	SetAmmoRegenTime(INFWEAPON_POLICE_RIFLE, 1500);
 	SetAmmoRegenTime(INFWEAPON_POLICE_HAMMER, 0);
-	SetAmmoRegenTime(INFWEAPON_POLICE_GUN, 400);	
+	SetAmmoRegenTime(INFWEAPON_POLICE_GUN, 4000);	
+
+	SetAmmoRegenTime(INFWEAPON_REVIVER_GRENADE, 3000);
+	SetAmmoRegenTime(INFWEAPON_REVIVER_HAMMER, 0);
+	SetAmmoRegenTime(INFWEAPON_REVIVER_RIFLE, 1000);	
+	SetAmmoRegenTime(INFWEAPON_REVIVER_SHOTGUN, 1000);	
 
 	SetMaxAmmo(INFWEAPON_NONE, -1);
 	SetMaxAmmo(INFWEAPON_HAMMER, -1);
@@ -687,7 +697,7 @@ int CServer::Init()
 
 	SetMaxAmmo(INFWEAPON_POLICE_RIFLE, 5);
 	SetMaxAmmo(INFWEAPON_POLICE_HAMMER, -1);
-	SetMaxAmmo(INFWEAPON_POLICE_GUN, 10);
+	SetMaxAmmo(INFWEAPON_POLICE_GUN, 1);
 
 	SetMaxAmmo(INFWEAPON_SOLDIER_GRENADE, 10);
 	SetMaxAmmo(INFWEAPON_MEDIC_GRENADE, 10);
@@ -706,6 +716,11 @@ int CServer::Init()
 	SetMaxAmmo(INFWEAPON_LOOPER_RIFLE, 10);
 	SetMaxAmmo(INFWEAPON_LOOPER_GRENADE, 10);
 	
+	SetMaxAmmo(INFWEAPON_REVIVER_GRENADE, 8);
+	SetMaxAmmo(INFWEAPON_REVIVER_HAMMER, -1);
+	SetMaxAmmo(INFWEAPON_REVIVER_RIFLE, 8);
+	SetMaxAmmo(INFWEAPON_REVIVER_SHOTGUN, 8);	
+
 	SetClassAvailability(PLAYERCLASS_ENGINEER, 2);
 	SetClassAvailability(PLAYERCLASS_SOLDIER, 2);
 	SetClassAvailability(PLAYERCLASS_MERCENARY, 2);
@@ -718,6 +733,7 @@ int CServer::Init()
 	SetClassAvailability(PLAYERCLASS_SCIOGIST, 2);
 	SetClassAvailability(PLAYERCLASS_CATAPULT, 2);
 	SetClassAvailability(PLAYERCLASS_LOOPER, 2);
+	SetClassAvailability(PLAYERCLASS_REVIVER, 2);
 	
 	SetClassAvailability(PLAYERCLASS_SMOKER, 1);
 	SetClassAvailability(PLAYERCLASS_HUNTER, 1);
@@ -2856,7 +2872,7 @@ int main(int argc, const char **argv) // ignore_convention
 	IEngineMasterServer *pEngineMasterServer = CreateEngineMasterServer();
 	IStorage *pStorage = CreateStorage("Teeworlds", IStorage::STORAGETYPE_SERVER, argc, argv); // ignore_convention
 	IConfig *pConfig = CreateConfig();
-	
+
 	pServer->m_pLocalization = new CLocalization(pStorage);
 	pServer->m_pLocalization->InitConfig(0, NULL);
 	if(!pServer->m_pLocalization->Init())

@@ -5,30 +5,29 @@
 #include <game/generated/protocol.h>
 #include <game/server/gamecontext.h>
 #include <game/server/entities/growingexplosion.h>
+#include "growingexplosion.h"
+#include "reviver-grenade.h"
 
-#include "elastic-grenade.h"
-
-CElasticGrenade::CElasticGrenade(CGameWorld *pGameWorld, int Owner, int Weapon, vec2 Pos, vec2 Dir)
-: CEntity(pGameWorld, CGameWorld::ENTTYPE_ELASTIC_GRENADE)
+CReviverGrenade::CReviverGrenade(CGameWorld *pGameWorld, int Owner, vec2 Pos, vec2 Dir)
+: CEntity(pGameWorld, CGameWorld::ENTTYPE_REVIVER_GRENADE)
 {
 	m_Pos = Pos;
 	m_ActualPos = Pos;
 	m_ActualDir = Dir;
 	m_Direction = Dir;
 	m_Owner = Owner;
-	m_Weapon = Weapon;
 	m_LifeSpan =  g_Config.m_InfElasticGrenadeLifeSpan * Server()->TickSpeed();
 	m_StartTick = Server()->Tick();
 
 	GameWorld()->InsertEntity(this);
 }
 
-void CElasticGrenade::Reset()
+void CReviverGrenade::Reset()
 {
 	GameServer()->m_World.DestroyEntity(this);
 }
 
-vec2 CElasticGrenade::GetPos(float Time)
+vec2 CReviverGrenade::GetPos(float Time)
 {
 	float Curvature = GameServer()->Tuning()->m_GrenadeCurvature;
 	float Speed = GameServer()->Tuning()->m_GrenadeSpeed;
@@ -36,12 +35,12 @@ vec2 CElasticGrenade::GetPos(float Time)
 	return CalcPos(m_Pos, m_Direction, Curvature, Speed, Time);
 }
 
-void CElasticGrenade::TickPaused()
+void CReviverGrenade::TickPaused()
 {
 	m_StartTick++;
 }
 
-void CElasticGrenade::Tick()
+void CReviverGrenade::Tick()
 {
 	if(!GameServer()->GetPlayerChar(m_Owner) || GameServer()->GetPlayerChar(m_Owner)->IsZombie())
 	{
@@ -61,7 +60,7 @@ void CElasticGrenade::Tick()
 	{
 		if(pChr->IsHuman()) continue;
 		float Len = distance(pChr->m_Pos, m_Pos);
-		if(Len < pChr->m_ProximityRadius + 27)
+		if(Len < pChr->m_ProximityRadius)
 		{
 			Explode();
 		}
@@ -76,54 +75,14 @@ void CElasticGrenade::Tick()
 	
 	vec2 LastPos;
 	int Collide = GameServer()->Collision()->IntersectLine(PrevPos, CurPos, NULL, &LastPos);
-	if(Collide)
-	{
-		//Thanks to TeeBall 0.6
-		vec2 CollisionPos;
-		CollisionPos.x = LastPos.x;
-		CollisionPos.y = CurPos.y;
-		int CollideY = GameServer()->Collision()->IntersectLine(PrevPos, CollisionPos, NULL, NULL);
-		CollisionPos.x = CurPos.x;
-		CollisionPos.y = LastPos.y;
-		int CollideX = GameServer()->Collision()->IntersectLine(PrevPos, CollisionPos, NULL, NULL);
-		
-		m_Pos = LastPos;
-		m_ActualPos = m_Pos;
-		vec2 vel;
-		vel.x = m_Direction.x;
-		vel.y = m_Direction.y + 2*GameServer()->Tuning()->m_GrenadeCurvature/10000*Ct*GameServer()->Tuning()->m_GrenadeSpeed;
-		
-		if (CollideX && !CollideY)
-		{
-			m_Direction.x = -vel.x;
-			m_Direction.y = vel.y;
-		}
-		else if (!CollideX && CollideY)
-		{
-			m_Direction.x = vel.x;
-			m_Direction.y = -vel.y;
-		}
-		else
-		{
-			m_Direction.x = -vel.x;
-			m_Direction.y = -vel.y;
-		}
-		
-		m_Direction.x *= (100 - 50) / 100.0;
-		m_Direction.y *= (100 - 50) / 100.0;
-		m_StartTick = Server()->Tick();
-		
-		m_ActualDir = normalize(m_Direction);
-	}
-
-	if(m_LifeSpan <= 0)
+	if(Collide || m_LifeSpan <= 0)
 	{
 		Explode();
 	}
 	
 }
 
-void CElasticGrenade::FillInfo(CNetObj_Projectile *pProj)
+void CReviverGrenade::FillInfo(CNetObj_Projectile *pProj)
 {
 	pProj->m_X = (int)m_Pos.x;
 	pProj->m_Y = (int)m_Pos.y;
@@ -133,7 +92,7 @@ void CElasticGrenade::FillInfo(CNetObj_Projectile *pProj)
 	pProj->m_Type = WEAPON_GRENADE;
 }
 
-void CElasticGrenade::Snap(int SnappingClient)
+void CReviverGrenade::Snap(int SnappingClient)
 {
 	float Ct = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
 	
@@ -145,11 +104,12 @@ void CElasticGrenade::Snap(int SnappingClient)
 		FillInfo(pProj);
 }
 	
-void CElasticGrenade::Explode()
+void CReviverGrenade::Explode()
 {
-	GameServer()->CreateExplosion(m_ActualPos, m_Owner, m_Weapon, false, TAKEDAMAGEMODE_NOINFECTION);
+	new CGrowingExplosion(GameWorld(), m_ActualPos, m_Direction, m_Owner, 8, GROWINGEXPLOSIONEFFECT_LOVE_INFECTED);
+
+	GameServer()->CreateExplosion(m_ActualPos, m_Owner, WEAPON_GRENADE, true, TAKEDAMAGEMODE_NOINFECTION);
 	GameServer()->CreateSound(m_ActualPos, SOUND_GRENADE_EXPLODE);
 	
 	GameServer()->m_World.DestroyEntity(this);
-	
 }

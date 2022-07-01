@@ -12,7 +12,7 @@
 #include "growingexplosion.h"
 
 CSciogistGrenade::CSciogistGrenade(CGameWorld *pGameWorld, int Owner, vec2 Pos, vec2 Dir)
-: CEntity(pGameWorld, CGameWorld::ENTTYPE_GRENADE)
+: CEntity(pGameWorld, CGameWorld::ENTTYPE_SCIOGIST_GRENADE)
 {
 	m_Pos = Pos;
 	m_Owner = Owner;

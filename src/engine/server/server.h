@@ -87,7 +87,7 @@ public:
 	class IGameServer *GameServer() { return m_pGameServer; }
 	class IConsole *Console() { return m_pConsole; }
 	class IStorage *Storage() { return m_pStorage; }
-
+	
 	enum
 	{
 		MAX_RCONCMD_SEND=16,

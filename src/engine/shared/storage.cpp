@@ -3,6 +3,8 @@
 #include <base/system.h>
 #include <engine/storage.h>
 #include "linereader.h"
+#include <io.h>
+#include <direct.h>
 
 // compiled-in data-dir path
 #define DATA_DIR "data"
@@ -241,6 +243,8 @@ public:
 			fs_listdir(GetPath(Type, pPath, aBuffer, sizeof(aBuffer)), pfnCallback, Type, pUser);
 		}
 	}
+
+	
 
 	const char *GetPath(int Type, const char *pDir, char *pBuffer, unsigned BufferSize)
 	{
