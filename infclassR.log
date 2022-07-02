@@ -1,301 +1,78 @@
-[62bfee8e][server]: starting...
-[62bfee8e][datafile]: loading. filename='maps/infc_nether.map'
-[62bfee8e][datafile]: allocsize=5260
-[62bfee8e][datafile]: readsize=4940
-[62bfee8e][datafile]: swaplen=4960
-[62bfee8e][datafile]: item_size=4116
-[62bfee8e][datafile]: loading done. datafile='maps/infc_nether.map'
-[62bfee8e][datafile]: loading. filename='maps/infc_nether.map'
-[62bfee8e][datafile]: allocsize=5260
-[62bfee8e][datafile]: readsize=4940
-[62bfee8e][datafile]: swaplen=4960
-[62bfee8e][datafile]: item_size=4116
-[62bfee8e][datafile]: loading done. datafile='maps/infc_nether.map'
-[62bfee8e][datafile]: loading data index=24 size=10553 uncompressed=1000000
-[62bfee8e][datafile]: loading data index=33 size=21 uncompressed=13
-[62bfee8e][datafile]: loading data index=34 size=4915 uncompressed=3514368
-[62bfee8e][datafile]: loading data index=35 size=21 uncompressed=13
-[62bfee8e][datafile]: loading data index=36 size=17045 uncompressed=2580480
-[62bfee8e][datafile]: loading data index=37 size=21 uncompressed=13
-[62bfee8e][datafile]: loading data index=38 size=22762 uncompressed=3514368
-[62bfee8e][datafile]: loading data index=39 size=12 uncompressed=4
-[62bfee8e][datafile]: loading data index=40 size=17 uncompressed=9
-[62bfee8e][datafile]: loading data index=41 size=29868 uncompressed=4194304
-[62bfee8e][datafile]: loading data index=42 size=15 uncompressed=7
-[62bfee8e][datafile]: loading data index=43 size=449 uncompressed=16560
-[62bfee8e][datafile]: loading data index=44 size=15 uncompressed=7
-[62bfee8e][datafile]: loading data index=45 size=427 uncompressed=16560
-[62bfee8e][datafile]: loading data index=46 size=15 uncompressed=7
-[62bfee8e][datafile]: loading data index=47 size=621 uncompressed=16560
-[62bfee8e][datafile]: loading data index=48 size=16 uncompressed=8
-[62bfee8e][datafile]: loading data index=49 size=18825 uncompressed=1260240
-[62bfee8e][datafile]: loading data index=50 size=26 uncompressed=18
-[62bfee8e][datafile]: loading data index=51 size=153598 uncompressed=4194304
-[62bfee8e][datafile]: loading data index=52 size=16 uncompressed=8
-[62bfee8e][datafile]: loading data index=53 size=347 uncompressed=10208
-[62bfee8e][datafile]: loading data index=54 size=20 uncompressed=12
-[62bfee8e][datafile]: loading data index=55 size=9509 uncompressed=319200
-[62bfee8e][datafile]: loading data index=56 size=16 uncompressed=8
-[62bfee8e][datafile]: loading data index=57 size=3611 uncompressed=71552
-[62bfee8e][datafile]: loading data index=58 size=14 uncompressed=6
-[62bfee8e][datafile]: loading data index=59 size=13903 uncompressed=262144
-[62bfee8e][datafile]: loading data index=4 size=87 uncompressed=152
-[62bfee8e][datafile]: loading data index=5 size=58 uncompressed=152
-[62bfee8e][datafile]: loading data index=6 size=63 uncompressed=152
-[62bfee8e][datafile]: loading data index=7 size=61 uncompressed=152
-[62bfee8e][datafile]: loading data index=8 size=2636 uncompressed=15960
-[62bfee8e][datafile]: loading data index=9 size=72 uncompressed=152
-[62bfee8e][datafile]: loading data index=10 size=2793 uncompressed=11856
-[62bfee8e][datafile]: loading data index=11 size=72 uncompressed=152
-[62bfee8e][datafile]: loading data index=12 size=72 uncompressed=152
-[62bfee8e][datafile]: loading data index=13 size=5618 uncompressed=1000000
-[62bfee8e][datafile]: loading data index=14 size=1280 uncompressed=8208
-[62bfee8e][datafile]: loading data index=15 size=12193 uncompressed=79800
-[62bfee8e][datafile]: loading data index=16 size=1193 uncompressed=1000000
-[62bfee8e][datafile]: loading data index=17 size=1199 uncompressed=1000000
-[62bfee8e][datafile]: loading data index=18 size=1050 uncompressed=1000000
-[62bfee8e][datafile]: loading data index=19 size=393 uncompressed=1368
-[62bfee8e][datafile]: loading data index=20 size=2004 uncompressed=1000000
-[62bfee8e][datafile]: loading data index=21 size=150 uncompressed=456
-[62bfee8e][datafile]: loading data index=22 size=813 uncompressed=3040
-[62bfee8e][datafile]: loading data index=23 size=159 uncompressed=456
-[62bfee8e][datafile]: loading data index=25 size=83 uncompressed=152
-[62bfee8e][datafile]: loading data index=26 size=15758 uncompressed=1000000
-[62bfee8e][datafile]: loading data index=27 size=753 uncompressed=4104
-[62bfee8e][datafile]: loading data index=28 size=2290 uncompressed=1000000
-[62bfee8e][datafile]: loading data index=29 size=1238 uncompressed=1000000
-[62bfee8e][datafile]: loading data index=30 size=6477 uncompressed=50616
-[62bfee8e][datafile]: loading data index=31 size=2715 uncompressed=20824
-[62bfee8e][datafile]: loading data index=32 size=7100 uncompressed=55480
-[62bfee8e][infclass]: highres map created
-[62bfee8e][datafile]: loading. filename='clientmaps/infc_nether_0960c83c/tw06-highres.map'
-[62bfee8e][datafile]: allocsize=80828
-[62bfee8e][datafile]: readsize=80404
-[62bfee8e][datafile]: swaplen=80424
-[62bfee8e][datafile]: item_size=79096
-[62bfee8e][datafile]: loading done. datafile='clientmaps/infc_nether_0960c83c/tw06-highres.map'
-[62bfee8e][server]: map crc is 0960c83c, generated map crc is 2243f024
-[62bfee8e][server]: maps/infc_x_current.map loaded in memory
-[62bfee8e][server]: server name is 'infclassCR 服务器'
-[62bfee8e][datafile]: loading data index=30 size=6477 uncompressed=50616
-[62bfee8e][datafile]: loading data index=31 size=2715 uncompressed=20824
-[62bfee8e][datafile]: loading data index=32 size=7100 uncompressed=55480
-[62bfee8e][server]: version 0.6 868ccbe551010094
-[62bfee8e][engine/mastersrv]: refreshing master server addresses
-[62bfee8e][register]: refreshing ip addresses
-[62bfee8f][engine/mastersrv]: saving addresses
-[62bfee8f][register]: fetching server counts
-[62bfee92][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bfee98][server]: player is ready. ClientID=0 addr=192.168.1.4:19120 secure=yes
-[62bfee99][game]: Active Players: 0
-[62bfee99][game]: Spectators: 0
-[62bfee99][server]: player has entered the game. ClientID=0 addr=192.168.1.4:19120
-[62bfee99][game]: team_join player='0:EDreemurr' team=0
-[62bfee99][game]: Active Players: 1
-[62bfee99][game]: Spectators: 0
-[62bfee99][datafile]: loading data index=28 size=2290 uncompressed=1000000
-[62bfee9d][game]: choose_class player='EDreemurr' class='15'
-[62bfeebc][help]: 使用 /help <page> 查看帮助。
-[62bfeebc][help]: 可用的帮助页面︰game, helpUsTranslate, msg, taxi, endlessHook
-[62bfeebc][help]: engineer, soldier, scientist, sciogist , catapult, police, reviver ,medic, hero, ninja, mercenary, sniper, whiteHole
-[62bfeebc][help]: smoker, hunter, bat, boomer, ghost, spider, slug, slime , ghoul, voodoo, undead, witch.
-[62bfeec7][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bfeec7][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bfeece][register]: WARNING: Master server is not responding, switching master
-[62bfeece][engine/mastersrv]: refreshing master server addresses
-[62bfeece][register]: refreshing ip addresses
-[62bfeece][engine/mastersrv]: saving addresses
-[62bfeece][register]: fetching server counts
-[62bfeed1][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bfeed6][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bfeed6][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bfeee5][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bfeee5][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bfeef4][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bfeef4][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bfef02][game]: kill killer='EDreemurr' victim='EDreemurr' weapon=-3
-[62bfef02][game]: infected victim='EDreemurr' duration='0'
-[62bfef02][game]: choose_class player='EDreemurr' class='29'
-[62bfef02][game]: team_join player='0:EDreemurr' m_Team=-1
-[62bfef02][game]: Active Players: 0
-[62bfef02][game]: Spectators: 1
-[62bfef08][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bfef08][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bfef0d][register]: WARNING: Master server is not responding, switching master
-[62bfef0d][engine/mastersrv]: refreshing master server addresses
-[62bfef0d][register]: refreshing ip addresses
-[62bfef0d][engine/mastersrv]: saving addresses
-[62bfef0d][register]: fetching server counts
-[62bfef10][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bfef17][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bfef17][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bfef26][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bfef26][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bfef35][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bfef35][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bfef38][server]: client dropped. cid=0 addr=192.168.1.4:19120 reason=''
-[62bfef38][server]: leave player='0:EDreemurr'
-[62bfef38][game]: Active Players: 0
-[62bfef38][game]: Spectators: 0
-[62bfef38][infclass]: session created for the client 0
-[62bfef38][infclass]: accusation created for the client 0
-[62bfef44][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bfef44][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bfef4c][register]: WARNING: Master server is not responding, switching master
-[62bfef4c][engine/mastersrv]: refreshing master server addresses
-[62bfef4c][register]: refreshing ip addresses
-[62bfef4c][engine/mastersrv]: saving addresses
-[62bfef4c][register]: fetching server counts
-[62bfef4f][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bfef53][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bfef53][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bfef62][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bfef62][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bfef85][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bfef85][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bfef8b][register]: WARNING: Master server is not responding, switching master
-[62bfef8b][engine/mastersrv]: refreshing master server addresses
-[62bfef8b][register]: refreshing ip addresses
-[62bfef8b][engine/mastersrv]: saving addresses
-[62bfef8b][register]: fetching server counts
-[62bfef8e][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bfef94][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bfef94][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bfefa3][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bfefa3][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bfefb2][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bfefb2][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bfefc1][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bfefc1][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bfefca][register]: WARNING: Master server is not responding, switching master
-[62bfefca][engine/mastersrv]: refreshing master server addresses
-[62bfefca][register]: refreshing ip addresses
-[62bfefcb][engine/mastersrv]: saving addresses
-[62bfefcb][register]: fetching server counts
-[62bfefce][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bfefd0][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bfefd0][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bfefdf][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bfefdf][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bfefee][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bfefee][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff002][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff002][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff00a][register]: WARNING: Master server is not responding, switching master
-[62bff00a][engine/mastersrv]: refreshing master server addresses
-[62bff00a][register]: refreshing ip addresses
-[62bff00a][engine/mastersrv]: saving addresses
-[62bff00a][register]: fetching server counts
-[62bff00d][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bff011][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff011][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff020][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff020][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff02f][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff02f][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff043][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff043][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff049][register]: WARNING: Master server is not responding, switching master
-[62bff049][engine/mastersrv]: refreshing master server addresses
-[62bff049][register]: refreshing ip addresses
-[62bff049][engine/mastersrv]: saving addresses
-[62bff049][register]: fetching server counts
-[62bff04c][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bff052][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff052][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff061][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff061][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff070][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff070][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff07f][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff07f][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff088][register]: WARNING: Master server is not responding, switching master
-[62bff088][engine/mastersrv]: refreshing master server addresses
-[62bff088][register]: refreshing ip addresses
-[62bff088][engine/mastersrv]: saving addresses
-[62bff088][register]: fetching server counts
-[62bff08b][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bff08e][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff08e][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff09d][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff09d][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff0ac][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff0ac][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff0c0][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff0c0][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff0c7][register]: WARNING: Master server is not responding, switching master
-[62bff0c7][engine/mastersrv]: refreshing master server addresses
-[62bff0c7][register]: refreshing ip addresses
-[62bff0c7][engine/mastersrv]: saving addresses
-[62bff0c7][register]: fetching server counts
-[62bff0ca][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bff0cf][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff0cf][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff0de][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff0de][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff0ed][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff0ed][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff101][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff101][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff106][register]: WARNING: Master server is not responding, switching master
-[62bff106][engine/mastersrv]: refreshing master server addresses
-[62bff106][register]: refreshing ip addresses
-[62bff106][engine/mastersrv]: saving addresses
-[62bff106][register]: fetching server counts
-[62bff109][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bff110][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff110][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff11f][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff11f][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff12e][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff12e][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff13d][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff13d][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff145][register]: WARNING: Master server is not responding, switching master
-[62bff145][engine/mastersrv]: refreshing master server addresses
-[62bff145][register]: refreshing ip addresses
-[62bff146][engine/mastersrv]: saving addresses
-[62bff146][register]: fetching server counts
-[62bff149][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bff14c][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff14c][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff16a][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff16a][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff17e][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff17e][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff185][register]: WARNING: Master server is not responding, switching master
-[62bff185][engine/mastersrv]: refreshing master server addresses
-[62bff185][register]: refreshing ip addresses
-[62bff185][engine/mastersrv]: saving addresses
-[62bff185][register]: fetching server counts
-[62bff188][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bff18d][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff18d][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff19c][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff19c][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff1ab][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff1ab][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff1bf][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff1bf][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff1c4][register]: WARNING: Master server is not responding, switching master
-[62bff1c4][engine/mastersrv]: refreshing master server addresses
-[62bff1c4][register]: refreshing ip addresses
-[62bff1c4][engine/mastersrv]: saving addresses
-[62bff1c4][register]: fetching server counts
-[62bff1c7][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bff1ce][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff1ce][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff1dd][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff1dd][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff1ec][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff1ec][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff1fb][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff1fb][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bff203][register]: WARNING: Master server is not responding, switching master
-[62bff203][engine/mastersrv]: refreshing master server addresses
-[62bff203][register]: refreshing ip addresses
-[62bff203][engine/mastersrv]: saving addresses
-[62bff203][register]: fetching server counts
-[62bff206][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bff20a][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bff20a][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62c00195][server]: starting...
+[62c00195][datafile]: loading. filename='maps/infc_land.map'
+[62c00195][datafile]: allocsize=3192
+[62c00195][datafile]: readsize=2992
+[62c00195][datafile]: swaplen=3012
+[62c00195][datafile]: item_size=2536
+[62c00195][datafile]: loading done. datafile='maps/infc_land.map'
+[62c00195][datafile]: loading. filename='maps/infc_land.map'
+[62c00195][datafile]: allocsize=3192
+[62c00195][datafile]: readsize=2992
+[62c00195][datafile]: swaplen=3012
+[62c00195][datafile]: item_size=2536
+[62c00195][datafile]: loading done. datafile='maps/infc_land.map'
+[62c00195][datafile]: loading data index=6 size=571 uncompressed=25600
+[62c00195][datafile]: loading data index=21 size=19 uncompressed=11
+[62c00195][datafile]: loading data index=22 size=14 uncompressed=6
+[62c00195][datafile]: loading data index=23 size=4935 uncompressed=4194304
+[62c00196][datafile]: loading data index=24 size=27 uncompressed=19
+[62c00196][datafile]: loading data index=25 size=17 uncompressed=9
+[62c00196][datafile]: loading data index=26 size=29868 uncompressed=4194304
+[62c00196][datafile]: loading data index=27 size=18 uncompressed=10
+[62c00196][datafile]: loading data index=28 size=27 uncompressed=19
+[62c00196][datafile]: loading data index=29 size=22 uncompressed=14
+[62c00196][datafile]: loading data index=4 size=67 uncompressed=152
+[62c00196][datafile]: loading data index=5 size=440 uncompressed=25600
+[62c00196][datafile]: loading data index=7 size=69 uncompressed=25600
+[62c00196][datafile]: loading data index=8 size=107 uncompressed=25600
+[62c00196][datafile]: loading data index=9 size=61 uncompressed=25600
+[62c00196][datafile]: loading data index=10 size=136 uncompressed=25600
+[62c00196][datafile]: loading data index=11 size=148 uncompressed=760
+[62c00196][datafile]: loading data index=12 size=827 uncompressed=25600
+[62c00196][datafile]: loading data index=13 size=340 uncompressed=25600
+[62c00196][datafile]: loading data index=14 size=350 uncompressed=25600
+[62c00196][datafile]: loading data index=15 size=68 uncompressed=25600
+[62c00196][datafile]: loading data index=16 size=96 uncompressed=25600
+[62c00196][datafile]: loading data index=17 size=192 uncompressed=1064
+[62c00196][datafile]: loading data index=18 size=718 uncompressed=5016
+[62c00196][datafile]: loading data index=19 size=405 uncompressed=2432
+[62c00196][datafile]: loading data index=20 size=790 uncompressed=5472
+[62c00196][infclass]: highres map created
+[62c00196][datafile]: loading. filename='clientmaps/infc_land_03fdbdc4/tw06-highres.map'
+[62c00196][datafile]: allocsize=78720
+[62c00196][datafile]: readsize=78416
+[62c00196][datafile]: swaplen=78436
+[62c00196][datafile]: item_size=77476
+[62c00196][datafile]: loading done. datafile='clientmaps/infc_land_03fdbdc4/tw06-highres.map'
+[62c00196][server]: map crc is 03fdbdc4, generated map crc is f6a4c23c
+[62c00196][server]: maps/infc_x_current.map loaded in memory
+[62c00196][server]: server name is 'infclassCR 服务器'
+[62c00196][datafile]: loading data index=17 size=192 uncompressed=1064
+[62c00196][datafile]: loading data index=18 size=718 uncompressed=5016
+[62c00196][datafile]: loading data index=19 size=405 uncompressed=2432
+[62c00196][datafile]: loading data index=20 size=790 uncompressed=5472
+[62c00196][server]: version 0.6 868ccbe551010094
+[62c00196][engine/mastersrv]: refreshing master server addresses
+[62c00196][register]: refreshing ip addresses
+[62c00196][engine/mastersrv]: saving addresses
+[62c00196][register]: fetching server counts
+[62c00199][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62c0019d][server]: player is ready. ClientID=0 addr=192.168.1.4:33476 secure=yes
+[62c0019e][game]: Active Players: 0
+[62c0019e][game]: Spectators: 0
+[62c0019e][server]: player has entered the game. ClientID=0 addr=192.168.1.4:33476
+[62c0019e][game]: team_join player='0:EDreemurr' team=0
+[62c0019e][game]: Active Players: 1
+[62c0019e][game]: Spectators: 0
+[62c0019e][datafile]: loading data index=15 size=68 uncompressed=25600
+[62c001a5][game]: choose_class player='EDreemurr' class='6'
+[62c001af][game]: infected victim='EDreemurr' duration='0'
+[62c001af][game]: choose_class player='EDreemurr' class='18'
+[62c001b1][game]: kill killer='EDreemurr' victim='EDreemurr' weapon=-2
+[62c001b9][server]: client dropped. cid=0 addr=192.168.1.4:33476 reason=''
+[62c001b9][game]: kill killer='EDreemurr' victim='EDreemurr' weapon=-3
+[62c001b9][server]: leave player='0:EDreemurr'
+[62c001b9][game]: Active Players: 0
+[62c001b9][game]: Spectators: 0
+[62c001b9][infclass]: session created for the client 0
+[62c001b9][infclass]: accusation created for the client 0
