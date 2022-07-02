@@ -57,7 +57,7 @@ void CGameControllerMOD::OnClientDrop(int ClientID, int Type)
 	
 	CPlayer* pPlayer = GameServer()->m_apPlayers[ClientID];
 	GameServer()->CountInfPlayers();
-	if(pPlayer && pPlayer->IsZombie() && m_InfectedStarted && GameServer()->m_NbHumans + GameServer()->m_NbZombies > 1)
+	if(pPlayer && pPlayer->IsZombie() && m_InfectedStarted && GameServer()->m_NbZombies == 1 && GameServer()->m_NbHumans > 0 )
 	{
 		SetFirstInfectedNumber();
 		Server()->Ban(ClientID, 60*g_Config.m_InfLeaverBanTime, "leaver");
