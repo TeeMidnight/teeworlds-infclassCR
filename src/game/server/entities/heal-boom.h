@@ -13,7 +13,6 @@ class CHealBoom : public CEntity
 public:
 	enum
 	{
-		START_BOOM_NUM=2,
 		GROW_GROWING=0,
 		GROW_STOPING,
 		GROW_ZOOMING,

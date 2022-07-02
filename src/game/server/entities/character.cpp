@@ -1063,7 +1063,7 @@ void CCharacter::FireWeapon()
 							}
 							else
 							{
-								if(pTarget->GetClass() != PLAYERCLASS_HERO)
+								if(pTarget->GetClass() != PLAYERCLASS_HERO && pTarget->GetClass() != PLAYERCLASS_MEDIC)
 								{
 									pTarget->IncreaseHealth(4);
 									if(pTarget->m_Health == 10 && pTarget->m_NeedFullHeal)
@@ -3595,7 +3595,7 @@ void CCharacter::Snap(int SnappingClient)
 			pP->m_Subtype = 0;
 		}
 	}
-	else if(m_Health < 10 && SnappingClient != m_pPlayer->GetCID() && IsHuman() && GetClass() != PLAYERCLASS_HERO)
+	else if(m_Health < 10 && SnappingClient != m_pPlayer->GetCID() && IsHuman() && GetClass() != PLAYERCLASS_HERO && GetClass() != PLAYERCLASS_MEDIC)
 	{
 		if(pClient && pClient->GetClass() == PLAYERCLASS_REVIVER)
 		{

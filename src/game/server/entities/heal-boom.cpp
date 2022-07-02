@@ -99,7 +99,7 @@ void CHealBoom::Snap(int SnappingClient)
 {
 	if(NetworkClipped(SnappingClient))
 		return;
-	for(int i=0;i < int(m_Radius);i++)
+	for(int i=0;i < int(m_Radius)/2;i++)
 	{
 		float RandomRadius = random_float()*(m_Radius-4.0f);
 		float RandomAngle = 2.0f * pi * random_float();

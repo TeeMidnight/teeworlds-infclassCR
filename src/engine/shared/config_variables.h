@@ -179,7 +179,7 @@ MACRO_CONFIG_INT(InfWhiteHoleProbability, inf_white_hole_probability, 20, 0, 100
 MACRO_CONFIG_INT(InfWhiteHoleLifeSpan, inf_white_hole_life_span, 20, 0, 100, CFGFLAG_SERVER, "White hole life span")
 MACRO_CONFIG_INT(InfWhiteHoleRadius, inf_white_hole_radius, 430, 0, 500, CFGFLAG_SERVER, "Radius of white holes")
 MACRO_CONFIG_INT(InfWhiteHoleAffectsHumans, inf_white_hole_affects_humans, 0, 0, 1, CFGFLAG_SERVER, "Makes white holes suck in humans")
-MACRO_CONFIG_INT(InfWhiteHoleNumParticles, inf_white_hole_num_particles, 100, 20, 500, CFGFLAG_SERVER, "Number of particles that will be used for a white hole animation")
+MACRO_CONFIG_INT(InfWhiteHoleNumParticles, inf_white_hole_num_particles, 50, 20, 500, CFGFLAG_SERVER, "Number of particles that will be used for a white hole animation")
 MACRO_CONFIG_INT(InfWhiteHolePullStrength, inf_white_hole_pull_strength, 40, 0, 1000, CFGFLAG_SERVER, "How strong a white hole sucks players in")
 
 MACRO_CONFIG_INT(InfElasticHoleMinimalKills, inf_elastic_hole_minimal_kills, 6, 0, 30, CFGFLAG_SERVER, "Minimal number of kills before elastic hole become available")
@@ -187,11 +187,11 @@ MACRO_CONFIG_INT(InfElasticHoleRadius, inf_elastic_hole_radius, 150, 0, 200, CFG
 MACRO_CONFIG_INT(InfElasticHoleLifeSpan, inf_elastic_hole_life_span, 20, 0, 100, CFGFLAG_SERVER, "Elastic hole life span")
 MACRO_CONFIG_INT(InfElasticHoleProbability, inf_elastic_hole_probability, 20, 0, 100, CFGFLAG_SERVER, "Probability of super weapon being available after MinimalKill requirement")
 
-MACRO_CONFIG_INT(InfHealBoomMinimalKills, inf_heal_boom_minimal_kills, 6, 0, 30, CFGFLAG_SERVER, "Minimal number of kills before elastic hole become available")
+MACRO_CONFIG_INT(InfHealBoomMinimalKills, inf_heal_boom_minimal_kills, 8, 0, 30, CFGFLAG_SERVER, "Minimal number of kills before elastic hole become available")
 MACRO_CONFIG_INT(InfHealBoomRadius, inf_heal_boom_radius, 64, 0, 200, CFGFLAG_SERVER, "Radius of heal booms")
-MACRO_CONFIG_INT(InfHealBoomLifeSpan, inf_heal_boom_life_span, 5, 0, 100, CFGFLAG_SERVER, "Heal boom life span")
-MACRO_CONFIG_INT(InfHealBoomMaxHeal, inf_heal_boom_maxheal, 4, 4, 10, CFGFLAG_SERVER, "Max heal of heal booms")
-MACRO_CONFIG_INT(InfHealBoomProbability, inf_heal_boom_probability, 20, 0, 100, CFGFLAG_SERVER, "Probability of super weapon being available after MinimalKill requirement")
+MACRO_CONFIG_INT(InfHealBoomLifeSpan, inf_heal_boom_life_span, 10, 0, 100, CFGFLAG_SERVER, "Heal boom life span")
+MACRO_CONFIG_INT(InfHealBoomMaxHeal, inf_heal_boom_maxheal, 5, 4, 10, CFGFLAG_SERVER, "Max heal of heal booms")
+MACRO_CONFIG_INT(InfHealBoomProbability, inf_heal_boom_probability, 10, 0, 100, CFGFLAG_SERVER, "Probability of super weapon being available after MinimalKill requirement")
 
 MACRO_CONFIG_INT(InfElasticEntityRadius, inf_elastic_entity_radius, 50, 0, 200, CFGFLAG_SERVER, "Radius of elastic entitys")
 MACRO_CONFIG_INT(InfElasticEntityLifeSpan, inf_elastic_entity_life_span, 15, 0, 100, CFGFLAG_SERVER, "Elastic entity life span")

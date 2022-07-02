@@ -1,846 +1,301 @@
-[62bee6b3][server]: starting...
-[62bee6b3][datafile]: loading. filename='maps/infc_Minecraft.map'
-[62bee6b3][datafile]: allocsize=3300
-[62bee6b3][datafile]: readsize=3072
-[62bee6b3][datafile]: swaplen=3092
-[62bee6b3][datafile]: item_size=2544
-[62bee6b3][datafile]: loading done. datafile='maps/infc_Minecraft.map'
-[62bee6b3][datafile]: loading. filename='maps/infc_Minecraft.map'
-[62bee6b3][datafile]: allocsize=3300
-[62bee6b3][datafile]: readsize=3072
-[62bee6b3][datafile]: swaplen=3092
-[62bee6b3][datafile]: item_size=2544
-[62bee6b3][datafile]: loading done. datafile='maps/infc_Minecraft.map'
-[62bee6b3][datafile]: loading data index=10 size=2226 uncompressed=135600
-[62bee6b3][datafile]: loading data index=22 size=12 uncompressed=4
-[62bee6b3][datafile]: loading data index=23 size=13 uncompressed=5
-[62bee6b3][datafile]: loading data index=24 size=141332 uncompressed=4194304
-[62bee6b3][datafile]: loading data index=25 size=26 uncompressed=18
-[62bee6b3][datafile]: loading data index=26 size=134365 uncompressed=4194304
-[62bee6b3][datafile]: loading data index=27 size=17 uncompressed=9
-[62bee6b3][datafile]: loading data index=28 size=29868 uncompressed=4194304
-[62bee6b4][datafile]: loading data index=29 size=28 uncompressed=20
-[62bee6b4][datafile]: loading data index=30 size=97466 uncompressed=490000
-[62bee6b4][datafile]: loading data index=31 size=14 uncompressed=6
-[62bee6b4][datafile]: loading data index=32 size=214299 uncompressed=4017372
-[62bee6b4][datafile]: loading data index=33 size=14 uncompressed=6
-[62bee6b4][datafile]: loading data index=34 size=13903 uncompressed=262144
-[62bee6b4][datafile]: loading data index=35 size=15 uncompressed=7
-[62bee6b4][datafile]: loading data index=36 size=59732 uncompressed=4194304
-[62bee6b4][datafile]: loading data index=4 size=78 uncompressed=152
-[62bee6b4][datafile]: loading data index=5 size=60 uncompressed=152
-[62bee6b4][datafile]: loading data index=6 size=54 uncompressed=152
-[62bee6b4][datafile]: loading data index=7 size=2533 uncompressed=135600
-[62bee6b4][datafile]: loading data index=8 size=3359 uncompressed=21432
-[62bee6b4][datafile]: loading data index=9 size=63 uncompressed=152
-[62bee6b4][datafile]: loading data index=11 size=57 uncompressed=152
-[62bee6b4][datafile]: loading data index=12 size=58 uncompressed=152
-[62bee6b4][datafile]: loading data index=13 size=239 uncompressed=135600
-[62bee6b4][datafile]: loading data index=14 size=3319 uncompressed=135600
-[62bee6b4][datafile]: loading data index=15 size=631 uncompressed=3496
-[62bee6b4][datafile]: loading data index=16 size=202 uncompressed=135600
-[62bee6b4][datafile]: loading data index=17 size=268 uncompressed=135600
-[62bee6b4][datafile]: loading data index=18 size=224 uncompressed=135600
-[62bee6b4][datafile]: loading data index=19 size=662 uncompressed=4712
-[62bee6b4][datafile]: loading data index=20 size=1034 uncompressed=7296
-[62bee6b4][datafile]: loading data index=21 size=1857 uncompressed=13680
-[62bee6b4][infclass]: highres map created
-[62bee6b4][datafile]: loading. filename='clientmaps/infc_Minecraft_2df60025/tw06-highres.map'
-[62bee6b4][datafile]: allocsize=78908
-[62bee6b4][datafile]: readsize=78576
-[62bee6b4][datafile]: swaplen=78596
-[62bee6b4][datafile]: item_size=77564
-[62bee6b4][datafile]: loading done. datafile='clientmaps/infc_Minecraft_2df60025/tw06-highres.map'
-[62bee6b4][server]: map crc is 2df60025, generated map crc is 472a9554
-[62bee6b4][server]: maps/infc_x_current.map loaded in memory
-[62bee6b4][server]: server name is 'infclassCR 服务器'
-[62bee6b4][datafile]: loading data index=19 size=662 uncompressed=4712
-[62bee6b4][datafile]: loading data index=20 size=1034 uncompressed=7296
-[62bee6b4][datafile]: loading data index=21 size=1857 uncompressed=13680
-[62bee6b4][server]: version 0.6 868ccbe551010094
-[62bee6b4][engine/mastersrv]: refreshing master server addresses
-[62bee6b4][register]: refreshing ip addresses
-[62bee6b4][engine/mastersrv]: saving addresses
-[62bee6b4][register]: fetching server counts
-[62bee6b4][server]: player is ready. ClientID=0 addr=127.0.0.1:59093 secure=yes
-[62bee6b4][server]: player is ready. ClientID=1 addr=192.168.1.4:3417 secure=yes
-[62bee6b5][game]: Active Players: 0
-[62bee6b5][game]: Spectators: 0
-[62bee6b5][game]: Active Players: 0
-[62bee6b5][game]: Spectators: 0
-[62bee6b6][server]: player has entered the game. ClientID=0 addr=127.0.0.1:59093
-[62bee6b6][game]: team_join player='0:FlowerFell-Sans' team=0
-[62bee6b6][game]: Active Players: 1
-[62bee6b6][game]: Spectators: 0
-[62bee6b6][server]: player has entered the game. ClientID=1 addr=192.168.1.4:3417
-[62bee6b6][game]: team_join player='1:EDreemurr' team=0
-[62bee6b6][game]: Active Players: 2
-[62bee6b6][game]: Spectators: 0
-[62bee6b6][datafile]: loading data index=17 size=268 uncompressed=135600
-[62bee6b7][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bee6b8][game]: choose_class player='EDreemurr' class='15'
-[62bee6c0][datafile]: loading data index=18 size=224 uncompressed=135600
-[62bee6c0][game]: choose_class player='FlowerFell-Sans' class='13'
-[62bee6c0][game]: infected victim='FlowerFell-Sans' duration='10'
-[62bee6c0][game]: choose_class player='FlowerFell-Sans' class='29'
-[62bee6ca][game]: score player='EDreemurr' amount='10'
-[62bee6ca][game]: kill killer='EDreemurr' victim='FlowerFell-Sans' weapon=0
-[62bee6d2][chat]: 0:-2:FlowerFell-Sans: 刚拉完刚出来
-[62bee6d9][game]: score player='EDreemurr' amount='10'
-[62bee6d9][game]: kill killer='EDreemurr' victim='FlowerFell-Sans' weapon=0
-[62bee6e6][server]: player is ready. ClientID=2 addr=127.0.0.1:61662 secure=yes
-[62bee6e7][game]: infected victim='(connecting)' duration='48'
-[62bee6e7][game]: choose_class player='(connecting)' class='29'
-[62bee6e7][game]: Active Players: 2
-[62bee6e7][game]: Spectators: 0
-[62bee6e7][server]: player has entered the game. ClientID=2 addr=127.0.0.1:61662
-[62bee6e7][game]: team_join player='2:墨鱼排骨汤' team=0
-[62bee6e7][game]: Active Players: 3
-[62bee6e7][game]: Spectators: 0
-[62bee6e8][game]: score player='EDreemurr' amount='10'
-[62bee6e8][game]: kill killer='EDreemurr' victim='FlowerFell-Sans' weapon=0
-[62bee6ea][game]: score player='EDreemurr' amount='10'
-[62bee6ea][game]: kill killer='EDreemurr' victim='墨鱼排骨汤' weapon=0
-[62bee6ea][game]: score player='EDreemurr' amount='10'
-[62bee6ea][game]: kill killer='EDreemurr' victim='FlowerFell-Sans' weapon=0
-[62bee6ec][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee6ec][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee6ec][game]: score player='EDreemurr' amount='10'
-[62bee6ec][game]: kill killer='EDreemurr' victim='FlowerFell-Sans' weapon=0
-[62bee6ed][game]: score player='EDreemurr' amount='10'
-[62bee6ed][game]: kill killer='EDreemurr' victim='墨鱼排骨汤' weapon=0
-[62bee6ef][game]: score player='EDreemurr' amount='10'
-[62bee6ef][game]: kill killer='EDreemurr' victim='FlowerFell-Sans' weapon=0
-[62bee6f0][game]: score player='EDreemurr' amount='10'
-[62bee6f0][game]: kill killer='EDreemurr' victim='墨鱼排骨汤' weapon=0
-[62bee6f2][game]: score player='EDreemurr' amount='10'
-[62bee6f2][game]: kill killer='EDreemurr' victim='墨鱼排骨汤' weapon=0
-[62bee6f3][register]: WARNING: Master server is not responding, switching master
-[62bee6f3][engine/mastersrv]: refreshing master server addresses
-[62bee6f3][register]: refreshing ip addresses
-[62bee6f3][engine/mastersrv]: saving addresses
-[62bee6f3][register]: fetching server counts
-[62bee6f4][chat]: 1:-2:EDreemurr: （
-[62bee6f6][game]: score player='EDreemurr' amount='10'
-[62bee6f6][game]: kill killer='EDreemurr' victim='墨鱼排骨汤' weapon=0
-[62bee6f6][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bee6f8][game]: score player='EDreemurr' amount='10'
-[62bee6f8][game]: kill killer='EDreemurr' victim='墨鱼排骨汤' weapon=0
-[62bee6f8][game]: score player='EDreemurr' amount='10'
-[62bee6f8][game]: kill killer='EDreemurr' victim='FlowerFell-Sans' weapon=0
-[62bee6fb][game]: score player='EDreemurr' amount='10'
-[62bee6fb][game]: kill killer='EDreemurr' victim='墨鱼排骨汤' weapon=0
-[62bee6fb][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee6fb][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee6fe][game]: score player='EDreemurr' amount='10'
-[62bee6fe][game]: kill killer='EDreemurr' victim='墨鱼排骨汤' weapon=0
-[62bee6fe][game]: score player='EDreemurr' amount='10'
-[62bee6fe][game]: kill killer='EDreemurr' victim='FlowerFell-Sans' weapon=0
-[62bee700][game]: score player='EDreemurr' amount='10'
-[62bee700][game]: kill killer='EDreemurr' victim='墨鱼排骨汤' weapon=0
-[62bee701][game]: score player='EDreemurr' amount='10'
-[62bee701][game]: kill killer='EDreemurr' victim='FlowerFell-Sans' weapon=0
-[62bee706][chat]: 1:-2:EDreemurr: 我的运气发生了什么
-[62bee708][game]: score player='EDreemurr' amount='10'
-[62bee708][game]: kill killer='EDreemurr' victim='FlowerFell-Sans' weapon=0
-[62bee70a][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee70a][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee70b][chat]: 2:-2:墨鱼排骨汤: 怄   气
-[62bee70c][game]: score player='EDreemurr' amount='10'
-[62bee70c][game]: kill killer='EDreemurr' victim='FlowerFell-Sans' weapon=0
-[62bee711][server]: ClientID=1 authed (admin)
-[62bee712][game]: score player='EDreemurr' amount='10'
-[62bee712][game]: kill killer='EDreemurr' victim='FlowerFell-Sans' weapon=0
-[62bee712][game]: score player='EDreemurr' amount='10'
-[62bee712][game]: kill killer='EDreemurr' victim='墨鱼排骨汤' weapon=0
-[62bee719][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee719][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee71c][server]: ClientID=1 rcon='inf_heal_boom_probability 100'
-[62bee71c][game]: score player='EDreemurr' amount='10'
-[62bee71c][game]: kill killer='EDreemurr' victim='墨鱼排骨汤' weapon=0
-[62bee71c][game]: score player='EDreemurr' amount='10'
-[62bee71c][game]: kill killer='EDreemurr' victim='FlowerFell-Sans' weapon=0
-[62bee720][chat]: 1:-2:EDreemurr: e1
-[62bee726][chat]: 2:-2:墨鱼排骨汤: 。。。。。。。
-[62bee727][chat]: 1:-2:EDreemurr: 好像出BUG了
-[62bee728][game]: score player='EDreemurr' amount='10'
-[62bee728][game]: kill killer='EDreemurr' victim='墨鱼排骨汤' weapon=4
-[62bee72d][game]: score player='EDreemurr' amount='10'
-[62bee72d][game]: kill killer='EDreemurr' victim='墨鱼排骨汤' weapon=4
-[62bee72d][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee72d][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee72d][game]: score player='EDreemurr' amount='10'
-[62bee72d][game]: kill killer='EDreemurr' victim='FlowerFell-Sans' weapon=4
-[62bee72f][chat]: 1:-2:EDreemurr: ？？？？
-[62bee732][register]: WARNING: Master server is not responding, switching master
-[62bee732][engine/mastersrv]: refreshing master server addresses
-[62bee732][register]: refreshing ip addresses
-[62bee732][engine/mastersrv]: saving addresses
-[62bee732][register]: fetching server counts
-[62bee735][game]: choose_class player='FlowerFell-Sans' class='3'
-[62bee735][game]: score player='EDreemurr' amount='50'
-[62bee735][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bee736][game]: infected victim='FlowerFell-Sans' duration='128'
-[62bee736][game]: choose_class player='FlowerFell-Sans' class='29'
-[62bee737][game]: choose_class player='FlowerFell-Sans' class='3'
-[62bee737][game]: score player='EDreemurr' amount='50'
-[62bee737][chat]: 2:-2:墨鱼排骨汤: ？？？？
-[62bee73c][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee73c][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee73d][chat]: 1:-2:EDreemurr: （
-[62bee73d][chat]: 2:-2:墨鱼排骨汤: 你做的bug真好玩
-[62bee73f][game]: choose_class player='墨鱼排骨汤' class='3'
-[62bee73f][game]: score player='EDreemurr' amount='50'
-[62bee744][chat]: 2:-2:墨鱼排骨汤: 啊！
-[62bee746][chat]: 1:-2:EDreemurr: （）
-[62bee749][chat]: 2:-2:墨鱼排骨汤: 我升华了
-[62bee74b][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee74b][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee74f][chat]: 2:-2:墨鱼排骨汤: 不过为什么是医生
-[62bee752][game]: score player='墨鱼排骨汤' amount='10'
-[62bee759][chat]: 1:-2:EDreemurr: 你没职业默认是医疗
-[62bee75a][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee75a][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee762][chat]: 1:-2:EDreemurr: 42分
-[62bee764][chat]: 1:-2:EDreemurr: 离谱
-[62bee765][game]: infected victim='EDreemurr' duration='175'
-[62bee765][game]: choose_class player='EDreemurr' class='20'
-[62bee766][chat]: 2:-2:墨鱼排骨汤: 。。。
-[62bee768][game]: score player='墨鱼排骨汤' amount='10'
-[62bee768][game]: kill killer='墨鱼排骨汤' victim='EDreemurr' weapon=0
-[62bee769][chat]: 0:-2:FlowerFell-Sans: 如果没有LastClass就默认为Medic
-[62bee769][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee769][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee76a][game]: infected victim='墨鱼排骨汤' duration='180'
-[62bee76a][game]: choose_class player='墨鱼排骨汤' class='29'
-[62bee76a][game]: score player='EDreemurr' amount='30'
-[62bee76a][game]: kill killer='EDreemurr' victim='墨鱼排骨汤' weapon=0
-[62bee76a][game]: infected victim='FlowerFell-Sans' duration='180'
-[62bee76a][game]: choose_class player='FlowerFell-Sans' class='21'
-[62bee76a][game]: score player='EDreemurr' amount='30'
-[62bee76a][game]: kill killer='EDreemurr' victim='FlowerFell-Sans' weapon=0
-[62bee76a][game]: round_end winner='zombies' survivors='0' duration='180' round='1 of 8'
-[62bee76c][chat]: 1:-2:EDreemurr: yes
-[62bee76d][game]: choose_class player='FlowerFell-Sans' class='0'
-[62bee76d][game]: choose_class player='EDreemurr' class='0'
-[62bee76d][game]: choose_class player='墨鱼排骨汤' class='0'
-[62bee76d][game]: start round type='InfClassCR' teamplay='0' id='41'
-[62bee770][game]: choose_class player='FlowerFell-Sans' class='15'
-[62bee771][game]: choose_class player='墨鱼排骨汤' class='10'
-[62bee771][register]: WARNING: Master server is not responding, switching master
-[62bee771][engine/mastersrv]: refreshing master server addresses
-[62bee771][register]: refreshing ip addresses
-[62bee771][engine/mastersrv]: saving addresses
-[62bee771][register]: fetching server counts
-[62bee772][chat]: 1:-2:EDreemurr: 不是LastClass
-[62bee774][chat]: 0:-2:FlowerFell-Sans: 让我试试
-[62bee774][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bee776][chat]: 1:-2:EDreemurr: 是OldClass
-[62bee777][game]: choose_class player='EDreemurr' class='8'
-[62bee777][game]: infected victim='墨鱼排骨汤' duration='10'
-[62bee777][game]: choose_class player='墨鱼排骨汤' class='20'
-[62bee778][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee778][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee779][chat]: 0:-2:FlowerFell-Sans: m_oldClass
-[62bee787][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee787][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee789][chat]: 1:-2:EDreemurr: 不是
-[62bee78c][game]: score player='FlowerFell-Sans' amount='10'
-[62bee78c][game]: kill killer='FlowerFell-Sans' victim='墨鱼排骨汤' weapon=4
-[62bee78f][chat]: 1:-2:EDreemurr: 是m_classOld
-[62bee791][game]: score player='FlowerFell-Sans' amount='10'
-[62bee791][game]: kill killer='FlowerFell-Sans' victim='墨鱼排骨汤' weapon=4
-[62bee794][game]: score player='FlowerFell-Sans' amount='10'
-[62bee794][game]: kill killer='FlowerFell-Sans' victim='墨鱼排骨汤' weapon=0
-[62bee795][game]: infected victim='EDreemurr' duration='39'
-[62bee795][game]: choose_class player='EDreemurr' class='19'
-[62bee795][game]: score player='FlowerFell-Sans' amount='10'
-[62bee795][game]: kill killer='FlowerFell-Sans' victim='EDreemurr' weapon=0
-[62bee795][game]: infected victim='FlowerFell-Sans' duration='40'
-[62bee795][game]: choose_class player='FlowerFell-Sans' class='19'
-[62bee795][game]: score player='EDreemurr' amount='30'
-[62bee795][game]: kill killer='EDreemurr' victim='FlowerFell-Sans' weapon=0
-[62bee796][game]: round_end winner='zombies' survivors='0' duration='40' round='2 of 8'
-[62bee796][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee796][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee797][chat]: 0:-2:FlowerFell-Sans: CCC
-[62bee797][chat]: 1:-2:EDreemurr: az
-[62bee799][game]: choose_class player='FlowerFell-Sans' class='0'
-[62bee799][game]: choose_class player='EDreemurr' class='0'
-[62bee799][game]: choose_class player='墨鱼排骨汤' class='0'
-[62bee799][game]: start round type='InfClassCR' teamplay='0' id='18467'
-[62bee799][chat]: 1:-2:EDreemurr: ccccc
-[62bee799][chat]: 2:-2:墨鱼排骨汤: 笑死了
-[62bee79e][chat]: 1:-2:EDreemurr: FFS你来
-[62bee79f][game]: choose_class player='FlowerFell-Sans' class='15'
-[62bee7a0][chat]: 2:-2:墨鱼排骨汤: 我看到ED是自爆的那一幕
-[62bee7a1][chat]: 1:-2:EDreemurr: c
-[62bee7a3][game]: choose_class player='EDreemurr' class='7'
-[62bee7a3][game]: choose_class player='墨鱼排骨汤' class='8'
-[62bee7a3][game]: infected victim='EDreemurr' duration='10'
-[62bee7a3][game]: choose_class player='EDreemurr' class='29'
-[62bee7a6][chat]: 2:-2:墨鱼排骨汤: 我就看出来会发生什么了
-[62bee7a9][game]: score player='FlowerFell-Sans' amount='10'
-[62bee7a9][game]: kill killer='FlowerFell-Sans' victim='EDreemurr' weapon=0
-[62bee7aa][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee7aa][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee7ab][game]: score player='FlowerFell-Sans' amount='10'
-[62bee7ab][game]: kill killer='FlowerFell-Sans' victim='EDreemurr' weapon=0
-[62bee7ab][game]: infected victim='墨鱼排骨汤' duration='18'
-[62bee7ab][game]: choose_class player='墨鱼排骨汤' class='26'
-[62bee7ad][game]: score player='FlowerFell-Sans' amount='10'
-[62bee7ad][game]: kill killer='FlowerFell-Sans' victim='EDreemurr' weapon=0
-[62bee7ad][game]: score player='FlowerFell-Sans' amount='10'
-[62bee7ad][game]: kill killer='FlowerFell-Sans' victim='墨鱼排骨汤' weapon=0
-[62bee7af][game]: score player='FlowerFell-Sans' amount='10'
-[62bee7af][game]: kill killer='FlowerFell-Sans' victim='EDreemurr' weapon=0
-[62bee7b0][game]: infected victim='FlowerFell-Sans' duration='23'
-[62bee7b0][game]: choose_class player='FlowerFell-Sans' class='21'
-[62bee7b0][game]: score player='墨鱼排骨汤' amount='30'
-[62bee7b0][game]: kill killer='墨鱼排骨汤' victim='FlowerFell-Sans' weapon=0
-[62bee7b0][game]: round_end winner='zombies' survivors='0' duration='23' round='3 of 8'
-[62bee7b0][register]: WARNING: Master server is not responding, switching master
-[62bee7b0][engine/mastersrv]: refreshing master server addresses
-[62bee7b0][register]: refreshing ip addresses
-[62bee7b1][engine/mastersrv]: saving addresses
-[62bee7b1][register]: fetching server counts
-[62bee7b2][chat]: 0:-2:FlowerFell-Sans: c
-[62bee7b2][chat]: 1:-2:EDreemurr: ???
-[62bee7b3][game]: choose_class player='FlowerFell-Sans' class='0'
-[62bee7b3][game]: choose_class player='EDreemurr' class='0'
-[62bee7b3][game]: choose_class player='墨鱼排骨汤' class='0'
-[62bee7b3][game]: start round type='InfClassCR' teamplay='0' id='6334'
-[62bee7b4][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bee7b5][game]: choose_class player='FlowerFell-Sans' class='15'
-[62bee7b8][game]: choose_class player='EDreemurr' class='12'
-[62bee7b9][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee7b9][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee7bc][chat]: 2:-2:墨鱼排骨汤: 手残
-[62bee7bd][game]: choose_class player='墨鱼排骨汤' class='9'
-[62bee7bd][game]: infected victim='墨鱼排骨汤' duration='10'
-[62bee7bd][game]: choose_class player='墨鱼排骨汤' class='26'
-[62bee7c0][chat]: 2:-2:墨鱼排骨汤: 不过我是背对着你哈
-[62bee7c0][game]: score player='FlowerFell-Sans' amount='10'
-[62bee7c0][game]: kill killer='FlowerFell-Sans' victim='墨鱼排骨汤' weapon=0
-[62bee7c5][game]: infected victim='EDreemurr' duration='17'
-[62bee7c5][game]: choose_class player='EDreemurr' class='19'
-[62bee7c5][game]: score player='FlowerFell-Sans' amount='10'
-[62bee7c5][game]: kill killer='FlowerFell-Sans' victim='EDreemurr' weapon=0
-[62bee7c5][game]: infected victim='FlowerFell-Sans' duration='18'
-[62bee7c5][game]: choose_class player='FlowerFell-Sans' class='20'
-[62bee7c5][game]: score player='EDreemurr' amount='30'
-[62bee7c5][game]: kill killer='EDreemurr' victim='FlowerFell-Sans' weapon=0
-[62bee7c5][game]: round_end winner='zombies' survivors='0' duration='18' round='4 of 8'
-[62bee7c6][Console]: No such command: rank.
-[62bee7c7][chat]: 1:-2:EDreemurr: ((((
-[62bee7c8][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee7c8][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee7c8][chat]: 0:-2:FlowerFell-Sans: JADS
-[62bee7c8][game]: choose_class player='FlowerFell-Sans' class='0'
-[62bee7c8][game]: choose_class player='EDreemurr' class='0'
-[62bee7c8][game]: choose_class player='墨鱼排骨汤' class='0'
-[62bee7c8][game]: start round type='InfClassCR' teamplay='0' id='26500'
-[62bee7c9][chat]: 2:-2:墨鱼排骨汤: hhhhc
-[62bee7c9][chat]: 1:-2:EDreemurr: woc
-[62bee7c9][chat]: 0:-2:FlowerFell-Sans: AAAAAAAAAAA
-[62bee7c9][game]: choose_class player='墨鱼排骨汤' class='11'
-[62bee7ca][game]: choose_class player='FlowerFell-Sans' class='15'
-[62bee7ca][game]: infected victim='EDreemurr' duration='1'
-[62bee7ca][game]: choose_class player='EDreemurr' class='19'
-[62bee7ce][game]: infected victim='墨鱼排骨汤' duration='5'
-[62bee7ce][game]: choose_class player='墨鱼排骨汤' class='29'
-[62bee7d3][chat]: 2:-2:墨鱼排骨汤: 你又是自爆
-[62bee7d3][server]: ClientID=1 rcon='inf_set_class 1 slime'
-[62bee7d3][game]: choose_class player='EDreemurr' class='29'
-[62bee7d3][chat]: *** The admin change the class of EDreemurr to slime
-[62bee7d7][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee7d7][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee7d7][game]: score player='FlowerFell-Sans' amount='10'
-[62bee7d7][game]: kill killer='FlowerFell-Sans' victim='EDreemurr' weapon=0
-[62bee7d8][game]: score player='FlowerFell-Sans' amount='10'
-[62bee7d8][game]: kill killer='FlowerFell-Sans' victim='墨鱼排骨汤' weapon=0
-[62bee7d9][game]: score player='FlowerFell-Sans' amount='10'
-[62bee7d9][game]: kill killer='FlowerFell-Sans' victim='EDreemurr' weapon=0
-[62bee7da][game]: score player='FlowerFell-Sans' amount='10'
-[62bee7da][game]: kill killer='FlowerFell-Sans' victim='墨鱼排骨汤' weapon=0
-[62bee7db][game]: score player='FlowerFell-Sans' amount='10'
-[62bee7db][game]: kill killer='FlowerFell-Sans' victim='EDreemurr' weapon=0
-[62bee7de][game]: score player='FlowerFell-Sans' amount='10'
-[62bee7de][game]: kill killer='FlowerFell-Sans' victim='EDreemurr' weapon=0
-[62bee7de][game]: score player='FlowerFell-Sans' amount='10'
-[62bee7de][game]: kill killer='FlowerFell-Sans' victim='墨鱼排骨汤' weapon=0
-[62bee7df][game]: score player='FlowerFell-Sans' amount='10'
-[62bee7df][game]: kill killer='FlowerFell-Sans' victim='EDreemurr' weapon=0
-[62bee7e0][game]: score player='FlowerFell-Sans' amount='10'
-[62bee7e0][game]: kill killer='FlowerFell-Sans' victim='EDreemurr' weapon=0
-[62bee7e1][game]: score player='FlowerFell-Sans' amount='10'
-[62bee7e1][game]: kill killer='FlowerFell-Sans' victim='EDreemurr' weapon=0
-[62bee7e2][game]: score player='FlowerFell-Sans' amount='10'
-[62bee7e2][game]: kill killer='FlowerFell-Sans' victim='墨鱼排骨汤' weapon=0
-[62bee7e6][game]: choose_class player='EDreemurr' class='12'
-[62bee7e6][game]: score player='FlowerFell-Sans' amount='50'
-[62bee7e6][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee7e6][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee7e6][game]: choose_class player='墨鱼排骨汤' class='11'
-[62bee7e6][game]: score player='FlowerFell-Sans' amount='50'
-[62bee7f0][register]: WARNING: Master server is not responding, switching master
-[62bee7f0][engine/mastersrv]: refreshing master server addresses
-[62bee7f0][register]: refreshing ip addresses
-[62bee7f0][engine/mastersrv]: saving addresses
-[62bee7f0][register]: fetching server counts
-[62bee7f3][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bee7f5][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee7f5][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee7fc][game]: infected victim='FlowerFell-Sans' duration='51'
-[62bee7fc][game]: choose_class player='FlowerFell-Sans' class='29'
-[62bee7fd][game]: infected victim='墨鱼排骨汤' duration='52'
-[62bee7fd][game]: choose_class player='墨鱼排骨汤' class='19'
-[62bee7fd][game]: score player='FlowerFell-Sans' amount='30'
-[62bee7fd][game]: kill killer='FlowerFell-Sans' victim='墨鱼排骨汤' weapon=0
-[62bee7fd][chat]: 2:-2:墨鱼排骨汤: 进这个烟雾可以变成人类！
-[62bee7fd][game]: infected victim='EDreemurr' duration='52'
-[62bee7fd][game]: choose_class player='EDreemurr' class='29'
-[62bee7fd][game]: score player='FlowerFell-Sans' amount='30'
-[62bee7fd][game]: kill killer='FlowerFell-Sans' victim='EDreemurr' weapon=0
-[62bee7fd][game]: round_end winner='zombies' survivors='0' duration='52' round='5 of 8'
-[62bee7ff][chat]: 2:-2:墨鱼排骨汤: nb！
-[62bee800][game]: choose_class player='FlowerFell-Sans' class='0'
-[62bee800][game]: choose_class player='EDreemurr' class='0'
-[62bee800][game]: choose_class player='墨鱼排骨汤' class='0'
-[62bee800][game]: start round type='InfClassCR' teamplay='0' id='19169'
-[62bee802][game]: choose_class player='墨鱼排骨汤' class='15'
-[62bee804][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee804][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee804][game]: choose_class player='FlowerFell-Sans' class='13'
-[62bee806][chat]: 1:-2:EDreemurr: 正式游戏这个boom只能在5个感染以上的时候放
-[62bee80a][chat]: 0:-2:FlowerFell-Sans: 实战来一局
-[62bee80a][game]: choose_class player='EDreemurr' class='11'
-[62bee80a][game]: infected victim='EDreemurr' duration='10'
-[62bee80a][game]: choose_class player='EDreemurr' class='20'
-[62bee80b][chat]: 1:-2:EDreemurr: 而且如果感染=5个了
-[62bee80e][chat]: 1:-2:EDreemurr: 那么直接炸
-[62bee813][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee813][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee81c][chat]: 1:-2:EDreemurr: 实战！！
-[62bee820][game]: infected victim='墨鱼排骨汤' duration='31'
-[62bee820][game]: choose_class player='墨鱼排骨汤' class='29'
-[62bee824][Console]: No such command: spawn.
-[62bee824][game]: score player='FlowerFell-Sans' amount='-10'
-[62bee824][game]: kill killer='FlowerFell-Sans' victim='FlowerFell-Sans' weapon=-2
-[62bee824][game]: infected victim='FlowerFell-Sans' duration='36'
-[62bee824][game]: choose_class player='FlowerFell-Sans' class='19'
-[62bee824][game]: round_end winner='zombies' survivors='0' duration='36' round='6 of 8'
-[62bee825][chat]: 1:-2:EDreemurr: 实战！！
-[62bee827][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee827][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee828][game]: choose_class player='FlowerFell-Sans' class='0'
-[62bee828][game]: choose_class player='EDreemurr' class='0'
-[62bee828][game]: choose_class player='墨鱼排骨汤' class='0'
-[62bee828][game]: start round type='InfClassCR' teamplay='0' id='15724'
-[62bee828][chat]: 2:-2:墨鱼排骨汤: 呃呃呃
-[62bee829][game]: choose_class player='EDreemurr' class='15'
-[62bee82a][game]: choose_class player='墨鱼排骨汤' class='14'
-[62bee82f][register]: WARNING: Master server is not responding, switching master
-[62bee82f][engine/mastersrv]: refreshing master server addresses
-[62bee82f][register]: refreshing ip addresses
-[62bee82f][engine/mastersrv]: saving addresses
-[62bee82f][register]: fetching server counts
-[62bee82f][game]: choose_class player='FlowerFell-Sans' class='12'
-[62bee832][game]: infected victim='FlowerFell-Sans' duration='10'
-[62bee832][game]: choose_class player='FlowerFell-Sans' class='20'
-[62bee832][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bee834][chat]: 1:-2:EDreemurr: 嗯
-[62bee836][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee836][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee838][chat]: 1:-2:EDreemurr: 我觉得吧。
-[62bee839][chat]: 0:-2:FlowerFell-Sans: EDreemurr: 你特么又搞错mask了
-[62bee83c][chat]: 1:-2:EDreemurr: ？
-[62bee840][chat]: 1:-2:EDreemurr: 咋搞错了
-[62bee845][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee845][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee84a][chat]: 0:-2:FlowerFell-Sans: 重来然后别选角色
-[62bee84d][server]: ClientID=1 rcon='inf_set_class none'
-[62bee84d][Console]: Invalid arguments.
-[62bee84d][Console]: Usage: inf_set_class number 
-[62bee851][chat]: 2:-2:墨鱼排骨汤: 呃呃呃
-[62bee852][server]: ClientID=1 rcon='inf_set_class none'
-[62bee852][Console]: Invalid arguments.
-[62bee852][Console]: Usage: inf_set_class number 
-[62bee853][chat]: 0:-2:FlowerFell-Sans: 让我选新的那个
-[62bee854][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee854][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee856][chat]: 1:-2:EDreemurr: OK
-[62bee858][game]: infected victim='墨鱼排骨汤' duration='48'
-[62bee858][game]: choose_class player='墨鱼排骨汤' class='18'
-[62bee858][game]: infected victim='EDreemurr' duration='48'
-[62bee858][game]: choose_class player='EDreemurr' class='23'
-[62bee858][game]: round_end winner='zombies' survivors='0' duration='48' round='7 of 8'
-[62bee85a][chat]: 0:-2:FlowerFell-Sans: 你会发现融合学家不见了
-[62bee85b][game]: choose_class player='FlowerFell-Sans' class='0'
-[62bee85b][game]: choose_class player='EDreemurr' class='0'
-[62bee85b][game]: choose_class player='墨鱼排骨汤' class='0'
-[62bee85b][game]: start round type='InfClassCR' teamplay='0' id='11478'
-[62bee85c][game]: choose_class player='FlowerFell-Sans' class='15'
-[62bee85f][chat]: 2:-2:墨鱼排骨汤: ！！！
-[62bee860][game]: choose_class player='EDreemurr' class='12'
-[62bee861][chat]: 1:-2:EDreemurr: az
-[62bee861][game]: choose_class player='墨鱼排骨汤' class='14'
-[62bee863][chat]: 1:-2:EDreemurr: 对不起
-[62bee864][chat]: 1:-2:EDreemurr: 我修改下
-[62bee865][chat]: 0:-2:FlowerFell-Sans: 但是任然可以选择
-[62bee865][game]: infected victim='EDreemurr' duration='10'
-[62bee865][game]: choose_class player='EDreemurr' class='18'
-[62bee868][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee868][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee86a][game]: score player='FlowerFell-Sans' amount='-10'
-[62bee86a][game]: kill killer='FlowerFell-Sans' victim='FlowerFell-Sans' weapon=-1
-[62bee86a][game]: infected victim='FlowerFell-Sans' duration='14'
-[62bee86a][game]: choose_class player='FlowerFell-Sans' class='18'
-[62bee86e][register]: WARNING: Master server is not responding, switching master
-[62bee86e][engine/mastersrv]: refreshing master server addresses
-[62bee86e][register]: refreshing ip addresses
-[62bee86e][engine/mastersrv]: saving addresses
-[62bee86e][register]: fetching server counts
-[62bee871][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bee871][chat]: 2:-2:墨鱼排骨汤: 以后就叫你柯南了
-[62bee877][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee877][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee87a][chat]: 1:-2:EDreemurr: 草
-[62bee87b][chat]: 1:-2:EDreemurr: 对不起
-[62bee87f][game]: score player='FlowerFell-Sans' amount='30'
-[62bee87f][game]: kill killer='FlowerFell-Sans' victim='墨鱼排骨汤' weapon=0
-[62bee87f][game]: infected victim='墨鱼排骨汤' duration='35'
-[62bee87f][game]: choose_class player='墨鱼排骨汤' class='21'
-[62bee87f][game]: round_end winner='zombies' survivors='0' duration='35' round='8 of 8'
-[62bee882][game]: infc_warehouse
-[62bee882][game]: choose_class player='FlowerFell-Sans' class='0'
-[62bee882][game]: choose_class player='EDreemurr' class='0'
-[62bee882][game]: choose_class player='墨鱼排骨汤' class='0'
-[62bee882][game]: start round type='InfClassCR' teamplay='0' id='29358'
-[62bee882][datafile]: loading. filename='maps/infc_warehouse.map'
-[62bee882][datafile]: allocsize=6504
-[62bee882][datafile]: readsize=6152
-[62bee882][datafile]: swaplen=6172
-[62bee882][datafile]: item_size=5200
-[62bee882][datafile]: loading done. datafile='maps/infc_warehouse.map'
-[62bee882][datafile]: loading. filename='maps/infc_warehouse.map'
-[62bee882][datafile]: allocsize=6504
-[62bee882][datafile]: readsize=6152
-[62bee882][datafile]: swaplen=6172
-[62bee882][datafile]: item_size=5200
-[62bee882][datafile]: loading done. datafile='maps/infc_warehouse.map'
-[62bee882][datafile]: loading data index=43 size=1298 uncompressed=70980
-[62bee882][datafile]: loading data index=57 size=14 uncompressed=6
-[62bee882][datafile]: loading data index=58 size=13 uncompressed=5
-[62bee882][datafile]: loading data index=59 size=14 uncompressed=6
-[62bee882][datafile]: loading data index=60 size=87168 uncompressed=4734976
-[62bee882][datafile]: loading data index=61 size=14 uncompressed=6
-[62bee882][datafile]: loading data index=62 size=138698 uncompressed=4194304
-[62bee882][datafile]: loading data index=63 size=23 uncompressed=15
-[62bee882][datafile]: loading data index=64 size=18 uncompressed=10
-[62bee882][datafile]: loading data index=65 size=38083 uncompressed=4194304
-[62bee882][datafile]: loading data index=66 size=22 uncompressed=14
-[62bee882][datafile]: loading data index=67 size=19 uncompressed=11
-[62bee882][datafile]: loading data index=4 size=66 uncompressed=152
-[62bee882][datafile]: loading data index=5 size=671 uncompressed=3344
-[62bee882][datafile]: loading data index=6 size=56 uncompressed=152
-[62bee882][datafile]: loading data index=7 size=501 uncompressed=2432
-[62bee882][datafile]: loading data index=8 size=453 uncompressed=2128
-[62bee882][datafile]: loading data index=9 size=530 uncompressed=2432
-[62bee882][datafile]: loading data index=10 size=408 uncompressed=1976
-[62bee882][datafile]: loading data index=11 size=631 uncompressed=3040
-[62bee882][datafile]: loading data index=12 size=525 uncompressed=2584
-[62bee882][datafile]: loading data index=13 size=929 uncompressed=4408
-[62bee882][datafile]: loading data index=14 size=761 uncompressed=3800
-[62bee882][datafile]: loading data index=15 size=596 uncompressed=2736
-[62bee882][datafile]: loading data index=16 size=474 uncompressed=2280
-[62bee882][datafile]: loading data index=17 size=597 uncompressed=2888
-[62bee882][datafile]: loading data index=18 size=499 uncompressed=2432
-[62bee882][datafile]: loading data index=19 size=806 uncompressed=4104
-[62bee882][datafile]: loading data index=20 size=700 uncompressed=3648
-[62bee882][datafile]: loading data index=21 size=803 uncompressed=4104
-[62bee882][datafile]: loading data index=22 size=705 uncompressed=3648
-[62bee882][datafile]: loading data index=23 size=599 uncompressed=2888
-[62bee882][datafile]: loading data index=24 size=502 uncompressed=2432
-[62bee882][datafile]: loading data index=25 size=813 uncompressed=4104
-[62bee882][datafile]: loading data index=26 size=691 uncompressed=3648
-[62bee882][datafile]: loading data index=27 size=857 uncompressed=4408
-[62bee882][datafile]: loading data index=28 size=753 uncompressed=3952
-[62bee882][datafile]: loading data index=29 size=753 uncompressed=3800
-[62bee882][datafile]: loading data index=30 size=641 uncompressed=3344
-[62bee882][datafile]: loading data index=31 size=81 uncompressed=152
-[62bee882][datafile]: loading data index=32 size=1651 uncompressed=67072
-[62bee882][datafile]: loading data index=33 size=2265 uncompressed=9120
-[62bee882][datafile]: loading data index=34 size=115 uncompressed=20992
-[62bee882][datafile]: loading data index=35 size=254 uncompressed=64000
-[62bee882][datafile]: loading data index=36 size=3691 uncompressed=19000
-[62bee882][datafile]: loading data index=37 size=164 uncompressed=608
-[62bee882][datafile]: loading data index=38 size=232 uncompressed=912
-[62bee882][datafile]: loading data index=39 size=116 uncompressed=54600
-[62bee882][datafile]: loading data index=40 size=392 uncompressed=54600
-[62bee882][datafile]: loading data index=41 size=163 uncompressed=456
-[62bee882][datafile]: loading data index=42 size=818 uncompressed=2888
-[62bee882][datafile]: loading data index=44 size=1143 uncompressed=62244
-[62bee882][datafile]: loading data index=45 size=1469 uncompressed=69048
-[62bee882][datafile]: loading data index=46 size=98 uncompressed=9504
-[62bee882][datafile]: loading data index=47 size=198 uncompressed=1064
-[62bee882][datafile]: loading data index=48 size=1465 uncompressed=70656
-[62bee882][datafile]: loading data index=49 size=892 uncompressed=70656
-[62bee882][datafile]: loading data index=50 size=514 uncompressed=69888
-[62bee882][datafile]: loading data index=51 size=4291 uncompressed=17632
-[62bee882][datafile]: loading data index=52 size=241 uncompressed=65000
-[62bee882][datafile]: loading data index=53 size=135 uncompressed=25600
-[62bee882][datafile]: loading data index=54 size=145 uncompressed=1368
-[62bee882][datafile]: loading data index=55 size=308 uncompressed=2888
-[62bee882][datafile]: loading data index=56 size=1471 uncompressed=14592
-[62bee882][infclass]: highres map created
-[62bee882][datafile]: loading. filename='clientmaps/infc_warehouse_3b35dc25/tw06-highres.map'
-[62bee882][datafile]: allocsize=81972
-[62bee882][datafile]: readsize=81516
-[62bee882][datafile]: swaplen=81536
-[62bee882][datafile]: item_size=80080
-[62bee882][datafile]: loading done. datafile='clientmaps/infc_warehouse_3b35dc25/tw06-highres.map'
-[62bee882][server]: map crc is 3b35dc25, generated map crc is bb3c122d
-[62bee882][server]: maps/infc_x_current.map loaded in memory
-[62bee882][datafile]: loading data index=54 size=145 uncompressed=1368
-[62bee882][datafile]: loading data index=55 size=308 uncompressed=2888
-[62bee882][datafile]: loading data index=56 size=1471 uncompressed=14592
-[62bee882][server]: player is ready. ClientID=1 addr=192.168.1.4:3417 secure=yes
-[62bee883][server]: player is ready. ClientID=0 addr=127.0.0.1:59093 secure=yes
-[62bee883][game]: Active Players: 0
-[62bee883][game]: Spectators: 0
-[62bee884][game]: Active Players: 0
-[62bee884][game]: Spectators: 0
-[62bee884][server]: player has entered the game. ClientID=1 addr=192.168.1.4:3417
-[62bee884][game]: team_join player='1:EDreemurr' team=0
-[62bee884][game]: Active Players: 1
-[62bee884][game]: Spectators: 0
-[62bee884][datafile]: loading data index=52 size=241 uncompressed=65000
-[62bee884][server]: player has entered the game. ClientID=0 addr=127.0.0.1:59093
-[62bee884][game]: team_join player='0:FlowerFell-Sans' team=0
-[62bee884][game]: Active Players: 2
-[62bee884][game]: Spectators: 0
-[62bee886][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee886][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee888][game]: choose_class player='FlowerFell-Sans' class='15'
-[62bee88e][datafile]: loading data index=53 size=135 uncompressed=25600
-[62bee88e][game]: choose_class player='EDreemurr' class='6'
-[62bee88e][game]: infected victim='FlowerFell-Sans' duration='10'
-[62bee88e][game]: choose_class player='FlowerFell-Sans' class='20'
-[62bee88f][chat]: 1:-2:EDreemurr: 我把融合学家的mask设置为了归命师的
-[62bee893][chat]: 1:-2:EDreemurr: （
-[62bee893][game]: infected victim='EDreemurr' duration='15'
-[62bee893][game]: choose_class player='EDreemurr' class='29'
-[62bee893][game]: score player='FlowerFell-Sans' amount='30'
-[62bee893][game]: kill killer='FlowerFell-Sans' victim='EDreemurr' weapon=0
-[62bee893][game]: round_end winner='zombies' survivors='0' duration='15' round='1 of 8'
-[62bee895][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee895][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee895][server]: player is ready. ClientID=2 addr=127.0.0.1:61662 secure=yes
-[62bee896][game]: Active Players: 2
-[62bee896][game]: Spectators: 0
-[62bee896][game]: choose_class player='FlowerFell-Sans' class='0'
-[62bee896][game]: choose_class player='EDreemurr' class='0'
-[62bee896][game]: start round type='InfClassCR' teamplay='0' id='26962'
-[62bee897][server]: player has entered the game. ClientID=2 addr=127.0.0.1:61662
-[62bee897][game]: team_join player='2:墨鱼排骨汤' team=0
-[62bee897][game]: Active Players: 3
-[62bee897][game]: Spectators: 0
-[62bee898][game]: choose_class player='EDreemurr' class='15'
-[62bee899][game]: choose_class player='FlowerFell-Sans' class='12'
-[62bee89a][chat]: 1:-2:EDreemurr: 我把融合学家的mask设置为了归命师的））
-[62bee89b][game]: choose_class player='墨鱼排骨汤' class='10'
-[62bee89b][chat]: 0:-2:FlowerFell-Sans: 猜到了
-[62bee89d][chat]: 1:-2:EDreemurr: 现在修改好了
-[62bee89f][chat]: 2:-2:墨鱼排骨汤: 2333
-[62bee8a0][game]: infected victim='墨鱼排骨汤' duration='10'
-[62bee8a0][game]: choose_class player='墨鱼排骨汤' class='29'
-[62bee8a4][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee8a4][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee8a4][game]: score player='EDreemurr' amount='10'
-[62bee8a4][game]: kill killer='EDreemurr' victim='墨鱼排骨汤' weapon=0
-[62bee8a9][chat]: 2:-2:墨鱼排骨汤: 可是刚才好像又没了
-[62bee8ac][chat]: 1:-2:EDreemurr: 不是
-[62bee8ad][chat]: 2:-2:墨鱼排骨汤: 不知道是不是我看错了
-[62bee8ad][register]: WARNING: Master server is not responding, switching master
-[62bee8ad][engine/mastersrv]: refreshing master server addresses
-[62bee8ad][register]: refreshing ip addresses
-[62bee8ad][engine/mastersrv]: saving addresses
-[62bee8ad][register]: fetching server counts
-[62bee8b0][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bee8b3][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee8b3][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee8b3][game]: score player='FlowerFell-Sans' amount='10'
-[62bee8b3][game]: kill killer='FlowerFell-Sans' victim='墨鱼排骨汤' weapon=0
-[62bee8b4][chat]: 1:-2:EDreemurr: 我修改代码之后得构建才能生效
-[62bee8b8][game]: infected victim='FlowerFell-Sans' duration='33'
-[62bee8b8][game]: choose_class player='FlowerFell-Sans' class='20'
-[62bee8ba][chat]: 0:-2:FlowerFell-Sans: 冲冲冲
-[62bee8bc][game]: score player='EDreemurr' amount='10'
-[62bee8bc][game]: kill killer='EDreemurr' victim='FlowerFell-Sans' weapon=0
-[62bee8c0][chat]: 2:-2:墨鱼排骨汤: 那没问题的话上限1吧
-[62bee8c2][game]: score player='EDreemurr' amount='10'
-[62bee8c2][game]: kill killer='EDreemurr' victim='FlowerFell-Sans' weapon=0
-[62bee8c2][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee8c2][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee8c6][game]: score player='EDreemurr' amount='10'
-[62bee8c6][game]: kill killer='EDreemurr' victim='FlowerFell-Sans' weapon=0
-[62bee8cd][game]: score player='EDreemurr' amount='10'
-[62bee8cd][game]: kill killer='EDreemurr' victim='FlowerFell-Sans' weapon=0
-[62bee8d1][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee8d1][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee8d1][chat]: 2:-2:墨鱼排骨汤: 你都放了半小时鸽子了
-[62bee8d5][game]: score player='EDreemurr' amount='10'
-[62bee8d5][game]: kill killer='EDreemurr' victim='FlowerFell-Sans' weapon=0
-[62bee8d6][game]: score player='EDreemurr' amount='10'
-[62bee8d6][game]: kill killer='EDreemurr' victim='墨鱼排骨汤' weapon=0
-[62bee8da][game]: choose_class player='墨鱼排骨汤' class='10'
-[62bee8da][game]: score player='EDreemurr' amount='50'
-[62bee8db][game]: choose_class player='FlowerFell-Sans' class='12'
-[62bee8db][game]: score player='EDreemurr' amount='50'
-[62bee8dd][chat]: 1:-2:EDreemurr: （
-[62bee8de][chat]: 2:-2:墨鱼排骨汤: 啊~
-[62bee8e0][chat]: 1:-2:EDreemurr: 好吵
-[62bee8e1][chat]: 1:-2:EDreemurr: 好吵！！！
-[62bee8e2][game]: infected victim='FlowerFell-Sans' duration='75'
-[62bee8e2][game]: choose_class player='FlowerFell-Sans' class='18'
-[62bee8e3][chat]: 2:-2:墨鱼排骨汤: 哼哼哼啊啊啊啊！
-[62bee8e5][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee8e5][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee8e6][game]: score player='FlowerFell-Sans' amount='30'
-[62bee8e6][game]: kill killer='FlowerFell-Sans' victim='墨鱼排骨汤' weapon=5
-[62bee8e6][game]: infected victim='墨鱼排骨汤' duration='79'
-[62bee8e6][game]: choose_class player='墨鱼排骨汤' class='26'
-[62bee8e8][game]: score player='FlowerFell-Sans' amount='30'
-[62bee8e8][game]: kill killer='FlowerFell-Sans' victim='EDreemurr' weapon=5
-[62bee8e8][game]: infected victim='EDreemurr' duration='81'
-[62bee8e8][game]: choose_class player='EDreemurr' class='20'
-[62bee8e8][game]: round_end winner='zombies' survivors='0' duration='81' round='2 of 8'
-[62bee8e9][chat]: 1:-2:EDreemurr: 好了
-[62bee8e9][chat]: 2:-2:墨鱼排骨汤: 这样挺好的
-[62bee8ea][chat]: 1:-2:EDreemurr: 测试完毕。
-[62bee8eb][game]: choose_class player='FlowerFell-Sans' class='0'
-[62bee8eb][game]: choose_class player='EDreemurr' class='0'
-[62bee8eb][game]: choose_class player='墨鱼排骨汤' class='0'
-[62bee8eb][game]: start round type='InfClassCR' teamplay='0' id='24464'
-[62bee8ec][chat]: 2:-2:墨鱼排骨汤: 我觉得
-[62bee8ec][register]: WARNING: Master server is not responding, switching master
-[62bee8ec][engine/mastersrv]: refreshing master server addresses
-[62bee8ec][register]: refreshing ip addresses
-[62bee8ec][engine/mastersrv]: saving addresses
-[62bee8ec][register]: fetching server counts
-[62bee8ee][game]: choose_class player='墨鱼排骨汤' class='15'
-[62bee8ee][chat]: 1:-2:EDreemurr: 马上上限
-[62bee8ef][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bee8f0][server]: client dropped. cid=1 addr=192.168.1.4:3417 reason=''
-[62bee8f0][game]: kill killer='EDreemurr' victim='EDreemurr' weapon=-3
-[62bee8f0][game]: infected victim='EDreemurr' duration='4'
-[62bee8f0][game]: choose_class player='EDreemurr' class='29'
-[62bee8f0][server]: leave player='1:EDreemurr'
-[62bee8f0][game]: Active Players: 2
-[62bee8f0][game]: Spectators: 0
-[62bee8f0][infclass]: session created for the client 1
-[62bee8f0][infclass]: accusation created for the client 1
-[62bee8f2][server]: client dropped. cid=2 addr=127.0.0.1:61662 reason=''
-[62bee8f2][game]: kill killer='墨鱼排骨汤' victim='墨鱼排骨汤' weapon=-3
-[62bee8f2][game]: infected victim='墨鱼排骨汤' duration='7'
-[62bee8f2][game]: choose_class player='墨鱼排骨汤' class='20'
-[62bee8f2][server]: leave player='2:墨鱼排骨汤'
-[62bee8f2][game]: Active Players: 1
-[62bee8f2][game]: Spectators: 0
-[62bee8f2][infclass]: session created for the client 2
-[62bee8f2][infclass]: accusation created for the client 2
-[62bee8f4][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee8f4][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee8fa][game]: choose_class player='FlowerFell-Sans' class='15'
-[62bee903][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee903][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee909][server]: client dropped. cid=0 addr=127.0.0.1:59093 reason=''
-[62bee909][game]: kill killer='FlowerFell-Sans' victim='FlowerFell-Sans' weapon=-3
-[62bee909][game]: infected victim='FlowerFell-Sans' duration='0'
-[62bee909][game]: choose_class player='FlowerFell-Sans' class='23'
-[62bee909][server]: leave player='0:FlowerFell-Sans'
-[62bee909][game]: Active Players: 0
-[62bee909][game]: Spectators: 0
-[62bee909][infclass]: session created for the client 0
-[62bee909][infclass]: accusation created for the client 0
-[62bee912][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee912][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee926][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee926][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee92b][register]: WARNING: Master server is not responding, switching master
-[62bee92b][engine/mastersrv]: refreshing master server addresses
-[62bee92b][register]: refreshing ip addresses
-[62bee92b][engine/mastersrv]: saving addresses
-[62bee92b][register]: fetching server counts
-[62bee92e][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bee935][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee935][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee944][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee944][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee953][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee953][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee962][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee962][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee96a][register]: WARNING: Master server is not responding, switching master
-[62bee96a][engine/mastersrv]: refreshing master server addresses
-[62bee96a][register]: refreshing ip addresses
-[62bee96a][engine/mastersrv]: saving addresses
-[62bee96a][register]: fetching server counts
-[62bee96d][register]: chose 'master4.teeworlds.com' as master, sending heartbeats
-[62bee971][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee971][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee980][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee980][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee98f][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee98f][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee9a4][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee9a4][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee9a9][register]: WARNING: Master server is not responding, switching master
-[62bee9a9][engine/mastersrv]: refreshing master server addresses
-[62bee9a9][register]: refreshing ip addresses
-[62bee9a9][engine/mastersrv]: saving addresses
-[62bee9a9][register]: fetching server counts
-[62bee9ac][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bee9b3][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee9b3][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee9c2][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee9c2][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee9d1][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee9d1][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee9df][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee9df][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee9e8][register]: WARNING: Master server is not responding, switching master
-[62bee9e8][engine/mastersrv]: refreshing master server addresses
-[62bee9e8][register]: refreshing ip addresses
-[62bee9e8][engine/mastersrv]: saving addresses
-[62bee9e8][register]: fetching server counts
-[62bee9eb][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62bee9ee][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee9ee][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62bee9fd][register]: ERROR: the master server reports that clients can not connect to this server.
-[62bee9fd][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62beea0c][register]: ERROR: the master server reports that clients can not connect to this server.
-[62beea0c][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62beea20][register]: ERROR: the master server reports that clients can not connect to this server.
-[62beea20][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62beea27][register]: WARNING: Master server is not responding, switching master
-[62beea28][engine/mastersrv]: refreshing master server addresses
-[62beea28][register]: refreshing ip addresses
-[62beea28][engine/mastersrv]: saving addresses
-[62beea28][register]: fetching server counts
-[62beea2b][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62beea2f][register]: ERROR: the master server reports that clients can not connect to this server.
-[62beea2f][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62beea3e][register]: ERROR: the master server reports that clients can not connect to this server.
-[62beea3e][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62beea4d][register]: ERROR: the master server reports that clients can not connect to this server.
-[62beea4d][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62beea61][register]: ERROR: the master server reports that clients can not connect to this server.
-[62beea61][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
-[62beea67][register]: WARNING: Master server is not responding, switching master
-[62beea67][engine/mastersrv]: refreshing master server addresses
-[62beea67][register]: refreshing ip addresses
-[62beea67][engine/mastersrv]: saving addresses
-[62beea67][register]: fetching server counts
-[62beea6a][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62bfee8e][server]: starting...
+[62bfee8e][datafile]: loading. filename='maps/infc_nether.map'
+[62bfee8e][datafile]: allocsize=5260
+[62bfee8e][datafile]: readsize=4940
+[62bfee8e][datafile]: swaplen=4960
+[62bfee8e][datafile]: item_size=4116
+[62bfee8e][datafile]: loading done. datafile='maps/infc_nether.map'
+[62bfee8e][datafile]: loading. filename='maps/infc_nether.map'
+[62bfee8e][datafile]: allocsize=5260
+[62bfee8e][datafile]: readsize=4940
+[62bfee8e][datafile]: swaplen=4960
+[62bfee8e][datafile]: item_size=4116
+[62bfee8e][datafile]: loading done. datafile='maps/infc_nether.map'
+[62bfee8e][datafile]: loading data index=24 size=10553 uncompressed=1000000
+[62bfee8e][datafile]: loading data index=33 size=21 uncompressed=13
+[62bfee8e][datafile]: loading data index=34 size=4915 uncompressed=3514368
+[62bfee8e][datafile]: loading data index=35 size=21 uncompressed=13
+[62bfee8e][datafile]: loading data index=36 size=17045 uncompressed=2580480
+[62bfee8e][datafile]: loading data index=37 size=21 uncompressed=13
+[62bfee8e][datafile]: loading data index=38 size=22762 uncompressed=3514368
+[62bfee8e][datafile]: loading data index=39 size=12 uncompressed=4
+[62bfee8e][datafile]: loading data index=40 size=17 uncompressed=9
+[62bfee8e][datafile]: loading data index=41 size=29868 uncompressed=4194304
+[62bfee8e][datafile]: loading data index=42 size=15 uncompressed=7
+[62bfee8e][datafile]: loading data index=43 size=449 uncompressed=16560
+[62bfee8e][datafile]: loading data index=44 size=15 uncompressed=7
+[62bfee8e][datafile]: loading data index=45 size=427 uncompressed=16560
+[62bfee8e][datafile]: loading data index=46 size=15 uncompressed=7
+[62bfee8e][datafile]: loading data index=47 size=621 uncompressed=16560
+[62bfee8e][datafile]: loading data index=48 size=16 uncompressed=8
+[62bfee8e][datafile]: loading data index=49 size=18825 uncompressed=1260240
+[62bfee8e][datafile]: loading data index=50 size=26 uncompressed=18
+[62bfee8e][datafile]: loading data index=51 size=153598 uncompressed=4194304
+[62bfee8e][datafile]: loading data index=52 size=16 uncompressed=8
+[62bfee8e][datafile]: loading data index=53 size=347 uncompressed=10208
+[62bfee8e][datafile]: loading data index=54 size=20 uncompressed=12
+[62bfee8e][datafile]: loading data index=55 size=9509 uncompressed=319200
+[62bfee8e][datafile]: loading data index=56 size=16 uncompressed=8
+[62bfee8e][datafile]: loading data index=57 size=3611 uncompressed=71552
+[62bfee8e][datafile]: loading data index=58 size=14 uncompressed=6
+[62bfee8e][datafile]: loading data index=59 size=13903 uncompressed=262144
+[62bfee8e][datafile]: loading data index=4 size=87 uncompressed=152
+[62bfee8e][datafile]: loading data index=5 size=58 uncompressed=152
+[62bfee8e][datafile]: loading data index=6 size=63 uncompressed=152
+[62bfee8e][datafile]: loading data index=7 size=61 uncompressed=152
+[62bfee8e][datafile]: loading data index=8 size=2636 uncompressed=15960
+[62bfee8e][datafile]: loading data index=9 size=72 uncompressed=152
+[62bfee8e][datafile]: loading data index=10 size=2793 uncompressed=11856
+[62bfee8e][datafile]: loading data index=11 size=72 uncompressed=152
+[62bfee8e][datafile]: loading data index=12 size=72 uncompressed=152
+[62bfee8e][datafile]: loading data index=13 size=5618 uncompressed=1000000
+[62bfee8e][datafile]: loading data index=14 size=1280 uncompressed=8208
+[62bfee8e][datafile]: loading data index=15 size=12193 uncompressed=79800
+[62bfee8e][datafile]: loading data index=16 size=1193 uncompressed=1000000
+[62bfee8e][datafile]: loading data index=17 size=1199 uncompressed=1000000
+[62bfee8e][datafile]: loading data index=18 size=1050 uncompressed=1000000
+[62bfee8e][datafile]: loading data index=19 size=393 uncompressed=1368
+[62bfee8e][datafile]: loading data index=20 size=2004 uncompressed=1000000
+[62bfee8e][datafile]: loading data index=21 size=150 uncompressed=456
+[62bfee8e][datafile]: loading data index=22 size=813 uncompressed=3040
+[62bfee8e][datafile]: loading data index=23 size=159 uncompressed=456
+[62bfee8e][datafile]: loading data index=25 size=83 uncompressed=152
+[62bfee8e][datafile]: loading data index=26 size=15758 uncompressed=1000000
+[62bfee8e][datafile]: loading data index=27 size=753 uncompressed=4104
+[62bfee8e][datafile]: loading data index=28 size=2290 uncompressed=1000000
+[62bfee8e][datafile]: loading data index=29 size=1238 uncompressed=1000000
+[62bfee8e][datafile]: loading data index=30 size=6477 uncompressed=50616
+[62bfee8e][datafile]: loading data index=31 size=2715 uncompressed=20824
+[62bfee8e][datafile]: loading data index=32 size=7100 uncompressed=55480
+[62bfee8e][infclass]: highres map created
+[62bfee8e][datafile]: loading. filename='clientmaps/infc_nether_0960c83c/tw06-highres.map'
+[62bfee8e][datafile]: allocsize=80828
+[62bfee8e][datafile]: readsize=80404
+[62bfee8e][datafile]: swaplen=80424
+[62bfee8e][datafile]: item_size=79096
+[62bfee8e][datafile]: loading done. datafile='clientmaps/infc_nether_0960c83c/tw06-highres.map'
+[62bfee8e][server]: map crc is 0960c83c, generated map crc is 2243f024
+[62bfee8e][server]: maps/infc_x_current.map loaded in memory
+[62bfee8e][server]: server name is 'infclassCR 服务器'
+[62bfee8e][datafile]: loading data index=30 size=6477 uncompressed=50616
+[62bfee8e][datafile]: loading data index=31 size=2715 uncompressed=20824
+[62bfee8e][datafile]: loading data index=32 size=7100 uncompressed=55480
+[62bfee8e][server]: version 0.6 868ccbe551010094
+[62bfee8e][engine/mastersrv]: refreshing master server addresses
+[62bfee8e][register]: refreshing ip addresses
+[62bfee8f][engine/mastersrv]: saving addresses
+[62bfee8f][register]: fetching server counts
+[62bfee92][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62bfee98][server]: player is ready. ClientID=0 addr=192.168.1.4:19120 secure=yes
+[62bfee99][game]: Active Players: 0
+[62bfee99][game]: Spectators: 0
+[62bfee99][server]: player has entered the game. ClientID=0 addr=192.168.1.4:19120
+[62bfee99][game]: team_join player='0:EDreemurr' team=0
+[62bfee99][game]: Active Players: 1
+[62bfee99][game]: Spectators: 0
+[62bfee99][datafile]: loading data index=28 size=2290 uncompressed=1000000
+[62bfee9d][game]: choose_class player='EDreemurr' class='15'
+[62bfeebc][help]: 使用 /help <page> 查看帮助。
+[62bfeebc][help]: 可用的帮助页面︰game, helpUsTranslate, msg, taxi, endlessHook
+[62bfeebc][help]: engineer, soldier, scientist, sciogist , catapult, police, reviver ,medic, hero, ninja, mercenary, sniper, whiteHole
+[62bfeebc][help]: smoker, hunter, bat, boomer, ghost, spider, slug, slime , ghoul, voodoo, undead, witch.
+[62bfeec7][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bfeec7][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bfeece][register]: WARNING: Master server is not responding, switching master
+[62bfeece][engine/mastersrv]: refreshing master server addresses
+[62bfeece][register]: refreshing ip addresses
+[62bfeece][engine/mastersrv]: saving addresses
+[62bfeece][register]: fetching server counts
+[62bfeed1][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62bfeed6][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bfeed6][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bfeee5][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bfeee5][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bfeef4][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bfeef4][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bfef02][game]: kill killer='EDreemurr' victim='EDreemurr' weapon=-3
+[62bfef02][game]: infected victim='EDreemurr' duration='0'
+[62bfef02][game]: choose_class player='EDreemurr' class='29'
+[62bfef02][game]: team_join player='0:EDreemurr' m_Team=-1
+[62bfef02][game]: Active Players: 0
+[62bfef02][game]: Spectators: 1
+[62bfef08][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bfef08][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bfef0d][register]: WARNING: Master server is not responding, switching master
+[62bfef0d][engine/mastersrv]: refreshing master server addresses
+[62bfef0d][register]: refreshing ip addresses
+[62bfef0d][engine/mastersrv]: saving addresses
+[62bfef0d][register]: fetching server counts
+[62bfef10][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62bfef17][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bfef17][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bfef26][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bfef26][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bfef35][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bfef35][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bfef38][server]: client dropped. cid=0 addr=192.168.1.4:19120 reason=''
+[62bfef38][server]: leave player='0:EDreemurr'
+[62bfef38][game]: Active Players: 0
+[62bfef38][game]: Spectators: 0
+[62bfef38][infclass]: session created for the client 0
+[62bfef38][infclass]: accusation created for the client 0
+[62bfef44][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bfef44][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bfef4c][register]: WARNING: Master server is not responding, switching master
+[62bfef4c][engine/mastersrv]: refreshing master server addresses
+[62bfef4c][register]: refreshing ip addresses
+[62bfef4c][engine/mastersrv]: saving addresses
+[62bfef4c][register]: fetching server counts
+[62bfef4f][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62bfef53][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bfef53][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bfef62][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bfef62][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bfef85][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bfef85][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bfef8b][register]: WARNING: Master server is not responding, switching master
+[62bfef8b][engine/mastersrv]: refreshing master server addresses
+[62bfef8b][register]: refreshing ip addresses
+[62bfef8b][engine/mastersrv]: saving addresses
+[62bfef8b][register]: fetching server counts
+[62bfef8e][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62bfef94][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bfef94][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bfefa3][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bfefa3][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bfefb2][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bfefb2][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bfefc1][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bfefc1][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bfefca][register]: WARNING: Master server is not responding, switching master
+[62bfefca][engine/mastersrv]: refreshing master server addresses
+[62bfefca][register]: refreshing ip addresses
+[62bfefcb][engine/mastersrv]: saving addresses
+[62bfefcb][register]: fetching server counts
+[62bfefce][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62bfefd0][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bfefd0][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bfefdf][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bfefdf][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bfefee][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bfefee][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff002][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff002][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff00a][register]: WARNING: Master server is not responding, switching master
+[62bff00a][engine/mastersrv]: refreshing master server addresses
+[62bff00a][register]: refreshing ip addresses
+[62bff00a][engine/mastersrv]: saving addresses
+[62bff00a][register]: fetching server counts
+[62bff00d][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62bff011][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff011][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff020][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff020][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff02f][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff02f][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff043][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff043][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff049][register]: WARNING: Master server is not responding, switching master
+[62bff049][engine/mastersrv]: refreshing master server addresses
+[62bff049][register]: refreshing ip addresses
+[62bff049][engine/mastersrv]: saving addresses
+[62bff049][register]: fetching server counts
+[62bff04c][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62bff052][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff052][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff061][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff061][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff070][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff070][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff07f][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff07f][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff088][register]: WARNING: Master server is not responding, switching master
+[62bff088][engine/mastersrv]: refreshing master server addresses
+[62bff088][register]: refreshing ip addresses
+[62bff088][engine/mastersrv]: saving addresses
+[62bff088][register]: fetching server counts
+[62bff08b][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62bff08e][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff08e][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff09d][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff09d][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff0ac][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff0ac][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff0c0][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff0c0][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff0c7][register]: WARNING: Master server is not responding, switching master
+[62bff0c7][engine/mastersrv]: refreshing master server addresses
+[62bff0c7][register]: refreshing ip addresses
+[62bff0c7][engine/mastersrv]: saving addresses
+[62bff0c7][register]: fetching server counts
+[62bff0ca][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62bff0cf][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff0cf][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff0de][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff0de][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff0ed][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff0ed][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff101][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff101][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff106][register]: WARNING: Master server is not responding, switching master
+[62bff106][engine/mastersrv]: refreshing master server addresses
+[62bff106][register]: refreshing ip addresses
+[62bff106][engine/mastersrv]: saving addresses
+[62bff106][register]: fetching server counts
+[62bff109][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62bff110][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff110][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff11f][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff11f][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff12e][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff12e][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff13d][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff13d][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff145][register]: WARNING: Master server is not responding, switching master
+[62bff145][engine/mastersrv]: refreshing master server addresses
+[62bff145][register]: refreshing ip addresses
+[62bff146][engine/mastersrv]: saving addresses
+[62bff146][register]: fetching server counts
+[62bff149][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62bff14c][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff14c][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff16a][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff16a][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff17e][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff17e][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff185][register]: WARNING: Master server is not responding, switching master
+[62bff185][engine/mastersrv]: refreshing master server addresses
+[62bff185][register]: refreshing ip addresses
+[62bff185][engine/mastersrv]: saving addresses
+[62bff185][register]: fetching server counts
+[62bff188][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62bff18d][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff18d][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff19c][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff19c][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff1ab][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff1ab][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff1bf][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff1bf][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff1c4][register]: WARNING: Master server is not responding, switching master
+[62bff1c4][engine/mastersrv]: refreshing master server addresses
+[62bff1c4][register]: refreshing ip addresses
+[62bff1c4][engine/mastersrv]: saving addresses
+[62bff1c4][register]: fetching server counts
+[62bff1c7][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62bff1ce][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff1ce][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff1dd][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff1dd][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff1ec][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff1ec][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff1fb][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff1fb][register]: ERROR: configure your firewall/nat to let through udp on port 8303.
+[62bff203][register]: WARNING: Master server is not responding, switching master
+[62bff203][engine/mastersrv]: refreshing master server addresses
+[62bff203][register]: refreshing ip addresses
+[62bff203][engine/mastersrv]: saving addresses
+[62bff203][register]: fetching server counts
+[62bff206][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62bff20a][register]: ERROR: the master server reports that clients can not connect to this server.
+[62bff20a][register]: ERROR: configure your firewall/nat to let through udp on port 8303.

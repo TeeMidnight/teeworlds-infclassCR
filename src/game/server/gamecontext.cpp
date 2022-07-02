@@ -3763,7 +3763,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He has also fire 3 time grenades . And he has a shotgun with bouncing bullets"), NULL);
 			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Additionally he can place black holes with the grenades."), NULL);
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Additionally he can place elastic holes with the grenades.\n that explode will damage anything."), NULL);
 			
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
@@ -3772,6 +3772,13 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			Buffer.append("~~ ");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Catapult"), NULL); 
 			Buffer.append(" ~~\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Catapult can use elastic grenades."), NULL); 
+			Buffer.append("\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He also has a laser-rifle that can fire a elastic entity."), NULL); 
+			Buffer.append("\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("If elatic entity collide wall, floor"), NULL); 
+			Buffer.append("\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("it will create a can't explode small elatic hole"), NULL); 
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
 		else if(str_comp_nocase(pHelpPage, "police") == 0)
@@ -3779,6 +3786,23 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			Buffer.append("~~ ");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Police"), NULL); 
 			Buffer.append(" ~~\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Police can use hammer to use shield."), NULL); 
+			Buffer.append("\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He also has a laser-rifle that can freeze zombies."), NULL); 
+			Buffer.append("\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("And he has a gun, damage is very high.But ammo is scarce"), NULL); 
+			pSelf->SendMOTD(ClientID, Buffer.buffer());
+		}
+		else if(str_comp_nocase(pHelpPage, "reviver") == 0)
+		{
+			Buffer.append("~~ ");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Reviver"), NULL); 
+			Buffer.append(" ~~\n\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Reviver can protect humans with his hammer by giving them health."), NULL); 
+			Buffer.append("\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He also has a laser-rifle that can freeze zombies."), NULL); 
+			Buffer.append("\n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("And he has a grenades that hinder infected from harming."), NULL); 
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
 		else if(str_comp_nocase(pHelpPage, "biologist") == 0)
@@ -3797,6 +3821,8 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Looper"), NULL); 
 			Buffer.append(" ~~\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Looper has a laser wall that slows down zombies and a fast shooting low-range-laser-rifle."), NULL);
+			Buffer.append(" \n");
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He also has a grenades."), NULL);
 			
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
@@ -4152,8 +4178,8 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 		);
 		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", Buffer.buffer());
 		
-		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", "engineer, soldier, scientist, sciogist , medic, hero, ninja, mercenary, sniper, whiteHole");		
-		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", "smoker, hunter, bat, boomer, ghost, spider, ghoul, voodoo, undead, witch.");		
+		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", "engineer, soldier, scientist, sciogist , catapult, police, reviver ,medic, hero, ninja, mercenary, sniper, whiteHole");		
+		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", "smoker, hunter, bat, boomer, ghost, spider, slug, slime , ghoul, voodoo, undead, witch.");		
 	}
 	
 	return true;

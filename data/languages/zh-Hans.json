@@ -356,8 +356,8 @@
 		"value": "他也拥有3重榴弹 . 他可以使用猎枪击退感染者"
 	},
 	{
-		"key": "Additionally he can place elastic holes with the grenades.",
-		"value": "他还可以通过榴弹放置弹射洞"
+		"key": "Additionally he can place elastic holes with the grenades.\n that explode will damage anything.",
+		"value": "他还可以通过榴弹放置弹射洞.\n爆炸会对所有人造成伤害."
 	},
 	{
 		"key": "The Biologist has a shotgun with bouncing bullets and can create a flower-like-laser-trap by shooting with his rifle.",
@@ -675,4 +675,52 @@
 		"key": "Use hammer to defend",
 		"value": "使用锤子来防御"
 	},
+	{
+		"key": "The Looper has a laser wall that slows down zombies and a fast shooting low-range-laser-rifle.",
+		"value": "循环者有激光墙，它可以降低僵尸的移动速度，以及一柄快速射击的低范围激光枪."
+	},
+	{
+		"key": "He also has a grenades.",
+		"value": "它还有一柄榴弹炮."
+	},
+	{
+		"key": "The Catapult can use elastic grenades.",
+		"value": "弹射者可以使用弹射榴弹炮."
+	},
+	{
+		"key": "He also has a laser-rifle that can fire a elastic entity.",
+		"value": "他还可以使用激光枪来发射一个弹射体,"
+	},
+	{
+		"key": "If elatic entity collide wall, floor",
+		"value": "如果弹射体碰到墙壁，地板"
+	},
+	{
+		"key": "it will create a can't explode small elatic hole",
+		"value": "它会创建一个不能爆炸的小弹射洞."
+	},
+	{
+		"key": "The Police can use hammer to use shield.",
+		"value": "防暴警察可以使用锤子来触发盾牌."
+	},
+	{
+		"key": "He also has a laser-rifle that can freeze zombies.",
+		"value": "他还有一把激光枪，可以冻结僵尸."
+	},
+	{
+		"key": "He also has a laser-rifle that can freeze zombies.",
+		"value": "他还有一把激光枪，可以冻结僵尸."
+	},
+	{
+		"key": "And he has a gun, damage is very high.But ammo is scarce",
+		"value": "以及他有一把手枪,伤害十分的高.但是子弹量很少."
+	},
+	{
+		"key": "The Reviver can protect humans with his hammer by giving them health.",
+		"value": "归命师可以用锤子治疗人类，给予他们血量."
+	},
+	{
+		"key": "And he has a grenades that hinder infected from harming.",
+		"value": "以及他有榴弹炮可以让感染者暂时无法造成伤害."
+	}
 ]}
