@@ -200,6 +200,8 @@ void CTurret::Tick()
 void CTurret::Snap(int SnappingClient)
 {
 	
+	if(NetworkClipped(SnappingClient))
+		return;
 	// Draw AntiPing  effect
 	if (Server()->GetClientAntiPing(SnappingClient)) {	
 		float time = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();

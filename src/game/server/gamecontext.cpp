@@ -3044,19 +3044,19 @@ bool CGameContext::ConChatInfo(IConsole::IResult *pResult, void *pUserData)
 	
 	dynamic_string Buffer;
 	
-	const char aThanks[] = "guenstig werben, Defeater, Orangus, BlinderHeld, Warpaint, Serena, FakeDeath, tee_to_F_U_UP!, Denis, NanoSlime_, tria, pinkieval…";
-	const char aContributors[] = "necropotame, Stitch626, yavl, Socialdarwinist,\nbretonium,duralakun,FluffyTee|Bro,ResamVi";
+	const char aThanks[] = "guenstig werben, Defeater, Orangus, BlinderHeld, Warpaint, Serena, FakeDeath, tee_to_F_U_UP!, Denis, NanoSlime_, tria, pinkieval\nFlowerFell-Sans…";
+	const char aContributors[] = "necropotame, Stitch626, yavl, Socialdarwinist,\nbretonium,duralakun,FluffyTee|Bro,ResamVi\nErrorDreemurr,NineCloud";
 	
 	
-	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("InfectionClass, by necropotame (version {str:VersionCode})"), "VersionCode", "OI2", NULL); 
+	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("InfectionClassChinaRank, by ErrorDreemurr"), NULL); 
 	Buffer.append("\n\n");
-	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Based on the concept of Infection mod by Gravity"), NULL); 
+	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Based on the concept of InfectionClass mod by necropotame"), NULL); 
 	Buffer.append("\n\n");
-	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Open source on \ngithub.com/yavl/teeworlds-infclassR"), NULL); 
+	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Open source on \ngithub.com/TeeDreamStudio/teeworlds-infclassCR"), NULL); 
 	Buffer.append("\n\n");
 	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Main contributors: {str:ListOfContributors}"), "ListOfContributors", aContributors, NULL); 
 	Buffer.append("\n\n");
-	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Thanks to {str:ListOfContributors}"), "ListOfContributors", aThanks, NULL); 
+	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Thanks to\n {str:ListOfContributors}"), "ListOfContributors", aThanks, NULL); 
 	Buffer.append("\n\n");
 	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Server version from {str:ServerCompileDate} "), "ServerCompileDate", LAST_COMPILE_DATE, NULL); 
 	Buffer.append("\n\n");	

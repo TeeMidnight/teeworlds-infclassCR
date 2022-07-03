@@ -13,7 +13,7 @@ class CHealBoom : public CEntity
 public:
 	enum
 	{
-		NUM_LASERS = 14,
+		NUM_LASERS = 28,
 	};
 	enum
 	{

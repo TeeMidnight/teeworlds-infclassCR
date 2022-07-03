@@ -660,10 +660,8 @@ void CPlayer::SetClassSkin(int newClass, int State)
 			str_copy(m_TeeInfos.m_SkinName, "kitty_x_ninja", sizeof(m_TeeInfos.m_SkinName));
 			break;
 		case PLAYERCLASS_REVIVER:
-			m_TeeInfos.m_UseCustomColor = 1;
+			m_TeeInfos.m_UseCustomColor = 0;
 			str_copy(m_TeeInfos.m_SkinName, "coala_limekitty", sizeof(m_TeeInfos.m_SkinName));
-			m_TeeInfos.m_ColorBody = 255;
-			m_TeeInfos.m_ColorFeet = 0;
 			break;
 		case PLAYERCLASS_LOOPER:
 			m_TeeInfos.m_UseCustomColor = 1;

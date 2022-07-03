@@ -252,20 +252,28 @@
 		"value": "\u5982\u679c\u60a8\u7684\u8bed\u8a00\u8fd8\u4e0d\u53ef\u7528\uff0c\u60a8\u53ef\u4ee5\u5e2e\u52a9\u7ffb\u8bd1 (\u8be6\u89c1 /help translate)\u3002"
 	},
 	{
-		"key": "InfectionClass, by necropotame (version {str:VersionCode})",
-		"value": "\u65b0\u751f\u5316\u5371\u673a InfectionClass\uff0c\u4f5c\u8005\uff1a necropotame (\u7248\u672c {str:VersionCode})"
+		"key": "InfectionClassChinaRank, by ErrorDreemurr",
+		"value": "InfectionClassChinaRank 模组由 ErrorDreemurr 制作"
 	},
 	{
-		"key": "Based on the concept of Infection mod by Gravity",
-		"value": "\u57fa\u4e8e Gravity \u6240\u505a\u7684\u539f\u751f\u5316\u5371\u673a (Infection) mod"
+		"key": "Open source on \ngithub.com/TeeDreamStudio/teeworlds-infclassCR",
+		"value": "开源在\ngithub.com/TeeDreamStudio/teeworlds-infclassCR"
+	},
+	{
+		"key": "Based on the concept of InfectionClass mod by necropotame",
+		"value": "源自 necropotame 所做的 InfectionClass mod"
 	},
 	{
 		"key": "Main contributors: {str:ListOfContributors}",
-		"value": "\u4e3b\u8981\u8d21\u732e\u8005\ufe30{str:ListOfContributors}"
+		"value": "主要贡献者: {str:ListOfContributors}"
 	},
 	{
-		"key": "Thanks to {str:ListOfContributors}",
-		"value": "\u611f\u8c22 {str:ListOfContributors}"
+		"key": "Thanks to\n {str:ListOfContributors}",
+		"value": "感谢:\n {str:ListOfContributors}"
+	},
+	{
+		"key": "Server version from {str:ServerCompileDate} ",
+		"value": "服务器构建版本: {str:ServerCompileDate} "
 	},
 	{
 		"key": "No player was found with this name",
