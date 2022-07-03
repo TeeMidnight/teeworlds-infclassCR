@@ -1,78 +1,82 @@
-[62c00195][server]: starting...
-[62c00195][datafile]: loading. filename='maps/infc_land.map'
-[62c00195][datafile]: allocsize=3192
-[62c00195][datafile]: readsize=2992
-[62c00195][datafile]: swaplen=3012
-[62c00195][datafile]: item_size=2536
-[62c00195][datafile]: loading done. datafile='maps/infc_land.map'
-[62c00195][datafile]: loading. filename='maps/infc_land.map'
-[62c00195][datafile]: allocsize=3192
-[62c00195][datafile]: readsize=2992
-[62c00195][datafile]: swaplen=3012
-[62c00195][datafile]: item_size=2536
-[62c00195][datafile]: loading done. datafile='maps/infc_land.map'
-[62c00195][datafile]: loading data index=6 size=571 uncompressed=25600
-[62c00195][datafile]: loading data index=21 size=19 uncompressed=11
-[62c00195][datafile]: loading data index=22 size=14 uncompressed=6
-[62c00195][datafile]: loading data index=23 size=4935 uncompressed=4194304
-[62c00196][datafile]: loading data index=24 size=27 uncompressed=19
-[62c00196][datafile]: loading data index=25 size=17 uncompressed=9
-[62c00196][datafile]: loading data index=26 size=29868 uncompressed=4194304
-[62c00196][datafile]: loading data index=27 size=18 uncompressed=10
-[62c00196][datafile]: loading data index=28 size=27 uncompressed=19
-[62c00196][datafile]: loading data index=29 size=22 uncompressed=14
-[62c00196][datafile]: loading data index=4 size=67 uncompressed=152
-[62c00196][datafile]: loading data index=5 size=440 uncompressed=25600
-[62c00196][datafile]: loading data index=7 size=69 uncompressed=25600
-[62c00196][datafile]: loading data index=8 size=107 uncompressed=25600
-[62c00196][datafile]: loading data index=9 size=61 uncompressed=25600
-[62c00196][datafile]: loading data index=10 size=136 uncompressed=25600
-[62c00196][datafile]: loading data index=11 size=148 uncompressed=760
-[62c00196][datafile]: loading data index=12 size=827 uncompressed=25600
-[62c00196][datafile]: loading data index=13 size=340 uncompressed=25600
-[62c00196][datafile]: loading data index=14 size=350 uncompressed=25600
-[62c00196][datafile]: loading data index=15 size=68 uncompressed=25600
-[62c00196][datafile]: loading data index=16 size=96 uncompressed=25600
-[62c00196][datafile]: loading data index=17 size=192 uncompressed=1064
-[62c00196][datafile]: loading data index=18 size=718 uncompressed=5016
-[62c00196][datafile]: loading data index=19 size=405 uncompressed=2432
-[62c00196][datafile]: loading data index=20 size=790 uncompressed=5472
-[62c00196][infclass]: highres map created
-[62c00196][datafile]: loading. filename='clientmaps/infc_land_03fdbdc4/tw06-highres.map'
-[62c00196][datafile]: allocsize=78720
-[62c00196][datafile]: readsize=78416
-[62c00196][datafile]: swaplen=78436
-[62c00196][datafile]: item_size=77476
-[62c00196][datafile]: loading done. datafile='clientmaps/infc_land_03fdbdc4/tw06-highres.map'
-[62c00196][server]: map crc is 03fdbdc4, generated map crc is f6a4c23c
-[62c00196][server]: maps/infc_x_current.map loaded in memory
-[62c00196][server]: server name is 'infclassCR 服务器'
-[62c00196][datafile]: loading data index=17 size=192 uncompressed=1064
-[62c00196][datafile]: loading data index=18 size=718 uncompressed=5016
-[62c00196][datafile]: loading data index=19 size=405 uncompressed=2432
-[62c00196][datafile]: loading data index=20 size=790 uncompressed=5472
-[62c00196][server]: version 0.6 868ccbe551010094
-[62c00196][engine/mastersrv]: refreshing master server addresses
-[62c00196][register]: refreshing ip addresses
-[62c00196][engine/mastersrv]: saving addresses
-[62c00196][register]: fetching server counts
-[62c00199][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
-[62c0019d][server]: player is ready. ClientID=0 addr=192.168.1.4:33476 secure=yes
-[62c0019e][game]: Active Players: 0
-[62c0019e][game]: Spectators: 0
-[62c0019e][server]: player has entered the game. ClientID=0 addr=192.168.1.4:33476
-[62c0019e][game]: team_join player='0:EDreemurr' team=0
-[62c0019e][game]: Active Players: 1
-[62c0019e][game]: Spectators: 0
-[62c0019e][datafile]: loading data index=15 size=68 uncompressed=25600
-[62c001a5][game]: choose_class player='EDreemurr' class='6'
-[62c001af][game]: infected victim='EDreemurr' duration='0'
-[62c001af][game]: choose_class player='EDreemurr' class='18'
-[62c001b1][game]: kill killer='EDreemurr' victim='EDreemurr' weapon=-2
-[62c001b9][server]: client dropped. cid=0 addr=192.168.1.4:33476 reason=''
-[62c001b9][game]: kill killer='EDreemurr' victim='EDreemurr' weapon=-3
-[62c001b9][server]: leave player='0:EDreemurr'
-[62c001b9][game]: Active Players: 0
-[62c001b9][game]: Spectators: 0
-[62c001b9][infclass]: session created for the client 0
-[62c001b9][infclass]: accusation created for the client 0
+[62c1134e][server]: starting...
+[62c1134e][datafile]: loading. filename='maps/infc_darkcave.map'
+[62c1134e][datafile]: allocsize=3432
+[62c1134e][datafile]: readsize=3228
+[62c1134e][datafile]: swaplen=3248
+[62c1134e][datafile]: item_size=2756
+[62c1134e][datafile]: loading done. datafile='maps/infc_darkcave.map'
+[62c1134e][datafile]: loading. filename='maps/infc_darkcave.map'
+[62c1134e][datafile]: allocsize=3432
+[62c1134e][datafile]: readsize=3228
+[62c1134e][datafile]: swaplen=3248
+[62c1134e][datafile]: item_size=2756
+[62c1134e][datafile]: loading done. datafile='maps/infc_darkcave.map'
+[62c1134e][datafile]: loading data index=11 size=1171 uncompressed=41984
+[62c1134e][datafile]: loading data index=22 size=19 uncompressed=11
+[62c1134e][datafile]: loading data index=23 size=22 uncompressed=14
+[62c1134e][datafile]: loading data index=24 size=23 uncompressed=15
+[62c1134e][datafile]: loading data index=25 size=14 uncompressed=6
+[62c1134e][datafile]: loading data index=26 size=4935 uncompressed=4194304
+[62c1134f][datafile]: loading data index=27 size=17 uncompressed=9
+[62c1134f][datafile]: loading data index=28 size=29868 uncompressed=4194304
+[62c1134f][datafile]: loading data index=29 size=27 uncompressed=19
+[62c1134f][datafile]: loading data index=30 size=26 uncompressed=18
+[62c1134f][datafile]: loading data index=4 size=67 uncompressed=152
+[62c1134f][datafile]: loading data index=5 size=1128 uncompressed=49152
+[62c1134f][datafile]: loading data index=6 size=416 uncompressed=41984
+[62c1134f][datafile]: loading data index=7 size=634 uncompressed=41984
+[62c1134f][datafile]: loading data index=8 size=160 uncompressed=41984
+[62c1134f][datafile]: loading data index=9 size=130 uncompressed=41984
+[62c1134f][datafile]: loading data index=10 size=225 uncompressed=41984
+[62c1134f][datafile]: loading data index=12 size=2016 uncompressed=41984
+[62c1134f][datafile]: loading data index=13 size=2598 uncompressed=41984
+[62c1134f][datafile]: loading data index=14 size=111 uncompressed=41984
+[62c1134f][datafile]: loading data index=15 size=62 uncompressed=152
+[62c1134f][datafile]: loading data index=16 size=126 uncompressed=41984
+[62c1134f][datafile]: loading data index=17 size=205 uncompressed=41984
+[62c1134f][datafile]: loading data index=18 size=132 uncompressed=41984
+[62c1134f][datafile]: loading data index=19 size=1669 uncompressed=11552
+[62c1134f][datafile]: loading data index=20 size=1593 uncompressed=11400
+[62c1134f][datafile]: loading data index=21 size=2229 uncompressed=15808
+[62c1134f][infclass]: highres map created
+[62c1134f][datafile]: loading. filename='clientmaps/infc_darkcave_4d54e22c/tw06-highres.map'
+[62c1134f][datafile]: allocsize=78920
+[62c1134f][datafile]: readsize=78612
+[62c1134f][datafile]: swaplen=78632
+[62c1134f][datafile]: item_size=77656
+[62c1134f][datafile]: loading done. datafile='clientmaps/infc_darkcave_4d54e22c/tw06-highres.map'
+[62c1134f][server]: map crc is 4d54e22c, generated map crc is 7e77d93a
+[62c1134f][server]: maps/infc_x_current.map loaded in memory
+[62c1134f][server]: server name is 'infclassCR 服务器'
+[62c1134f][datafile]: loading data index=19 size=1669 uncompressed=11552
+[62c1134f][datafile]: loading data index=20 size=1593 uncompressed=11400
+[62c1134f][datafile]: loading data index=21 size=2229 uncompressed=15808
+[62c1134f][server]: version 0.6 868ccbe551010094
+[62c1134f][engine/mastersrv]: refreshing master server addresses
+[62c1134f][register]: refreshing ip addresses
+[62c1134f][engine/mastersrv]: saving addresses
+[62c1134f][register]: fetching server counts
+[62c11352][register]: chose 'master3.teeworlds.com' as master, sending heartbeats
+[62c11354][server]: player is ready. ClientID=0 addr=192.168.1.4:4558 secure=yes
+[62c11355][game]: Active Players: 0
+[62c11355][game]: Spectators: 0
+[62c11355][server]: player has entered the game. ClientID=0 addr=192.168.1.4:4558
+[62c11355][game]: team_join player='0:EDreemurr' team=0
+[62c11355][game]: Active Players: 1
+[62c11355][game]: Spectators: 0
+[62c11355][datafile]: loading data index=16 size=126 uncompressed=41984
+[62c11355][datafile]: loading data index=17 size=205 uncompressed=41984
+[62c11357][game]: choose_class player='EDreemurr' class='15'
+[62c1135c][game]: score player='EDreemurr' amount='-10'
+[62c1135c][game]: kill killer='EDreemurr' victim='EDreemurr' weapon=-1
+[62c1135c][game]: infected victim='EDreemurr' duration='0'
+[62c1135c][game]: choose_class player='EDreemurr' class='20'
+[62c1137e][server]: client dropped. cid=0 addr=192.168.1.4:4558 reason=''
+[62c1137e][game]: kill killer='EDreemurr' victim='EDreemurr' weapon=-3
+[62c1137e][server]: leave player='0:EDreemurr'
+[62c1137e][game]: Active Players: 0
+[62c1137e][game]: Spectators: 0
+[62c1137e][infclass]: session created for the client 0
+[62c1137e][infclass]: accusation created for the client 0
+[62c11387][register]: ERROR: the master server reports that clients can not connect to this server.
+[62c11387][register]: ERROR: configure your firewall/nat to let through udp on port 8303.

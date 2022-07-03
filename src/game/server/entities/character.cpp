@@ -1763,7 +1763,11 @@ void CCharacter::HandleWeapons()
 				if(GetClass() == PLAYERCLASS_SMOKER)
 				{
 					Rate = 0.5f;
-					Damage = g_Config.m_InfSmokerHookDamage;
+					if(VictimChar->GetClass() == PLAYERCLASS_POLICE)
+					{
+						Damage = 3 * g_Config.m_InfSmokerHookDamage;
+					}
+					else Damage = g_Config.m_InfSmokerHookDamage;
 				}
 				else if(GetClass() == PLAYERCLASS_SPIDER)
 				{

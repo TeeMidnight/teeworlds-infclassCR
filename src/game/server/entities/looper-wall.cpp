@@ -112,6 +112,8 @@ void CLooperWall::TickPaused()
 
 void CLooperWall::Snap(int SnappingClient)
 {	
+	if(NetworkClipped(SnappingClient))
+		return;
 	// Laser dieing animation
 	int LifeDiff = 0;
 	if (m_LifeSpan < 1*Server()->TickSpeed())

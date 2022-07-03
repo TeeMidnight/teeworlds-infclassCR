@@ -203,7 +203,7 @@ function build(settings)
 			settings.link.flags:Add("`pkg-config --libs icu-uc icu-i18n`")
 		end
 		
-		if not config.geolocation.value then
+		if config.geolocation.value then
 			settings.link.libs:Add("maxminddb")  -- for ip geolocation
 		end
 

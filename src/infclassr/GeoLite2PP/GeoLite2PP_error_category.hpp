@@ -2,7 +2,7 @@
  * $Id: GeoLite2PP_error_category.hpp 2549 2018-06-08 18:48:31Z stephane $
  */
 
-#ifdef CONF_NOGEOLOCATION
+#ifdef CONF_GEOLOCATION
 #pragma once
 
 #include <string>

@@ -1,7 +1,7 @@
 /* GeoLite2++ (C) 2016-2018 Stephane Charette <stephanecharette@gmail.com>
  * $Id: GeoLite2PP.cpp 2549 2018-06-08 18:48:31Z stephane $
  */
-#ifdef CONF_NOGEOLOCATION
+#ifdef CONF_GEOLOCATION
 
 #include "GeoLite2PP.hpp"
 #include "GeoLite2PP_error_category.hpp"

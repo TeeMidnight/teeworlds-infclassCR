@@ -69,6 +69,9 @@ void CSoldierBomb::Explode()
 
 void CSoldierBomb::Snap(int SnappingClient)
 {
+	
+	if(NetworkClipped(SnappingClient))
+		return;
 	float time = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
 	float angle = fmodf(time*pi/2, 2.0f*pi);
 	

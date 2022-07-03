@@ -11,7 +11,7 @@ public:
 	enum
 	{
 		NUM_SIDE = 12,
-		NUM_PARTICLES = 12,
+		NUM_PARTICLES = 6,
 		NUM_IDS = NUM_SIDE + NUM_PARTICLES,
 	};
 	

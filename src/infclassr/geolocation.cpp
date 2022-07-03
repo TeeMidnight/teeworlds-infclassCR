@@ -1,6 +1,6 @@
 #include <infclassr/geolocation.h>
 
-#ifdef CONF_NOGEOLOCATION
+#ifdef CONF_GEOLOCATION
 Geolocation::Geolocation(const char* path_to_mmdb) {
 	db = new GeoLite2PP::DB(path_to_mmdb);
 }

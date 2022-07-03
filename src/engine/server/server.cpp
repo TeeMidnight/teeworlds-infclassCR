@@ -1709,21 +1709,10 @@ void CServer::SendServerInfo(const NETADDR *pAddr, int Token, bool Extended, boo
 #endif
 	}
 	
-	if (Extended)
-	{
-			p.AddString(aBuf, 256);
-	}
-	else
-	{
-		if (ClientCount < VANILLA_MAX_CLIENTS)
-			p.AddString(aBuf, 64);
-		else
-		{
-		   char bBuf[64];
-		   str_format(bBuf, sizeof(bBuf), "%s - %d/%d online", aBuf, ClientCount, m_NetServer.MaxClients());
-		   p.AddString(bBuf, 64);
-		}
-	}
+	
+	char bBuf[64];
+	str_format(bBuf, sizeof(bBuf), "%s - %d/%d 在线", aBuf, ClientCount, m_NetServer.MaxClients());
+	p.AddString(bBuf, 64);
 	p.AddString(GetMapName(), 32);
 
 	// gametype
