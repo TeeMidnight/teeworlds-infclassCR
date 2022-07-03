@@ -23,6 +23,18 @@ CHealBoom::CHealBoom(CGameWorld *pGameWorld, vec2 CenterPos, int OwnerClientID)
 	m_Growing = GROW_GROWING;
 	m_StartGrowingTick = Server()->Tick();
 	m_HealNum = 0;
+	for(int i = 0;i < NUM_LASERS; i ++)
+	{
+		m_IDs[i] = Server()->SnapNewID();
+	}
+}
+
+CHealBoom::~CHealBoom()
+{
+	for(int i = 0;i < NUM_LASERS; i ++)
+	{
+		Server()->SnapFreeID(m_IDs[i]);
+	}
 }
 
 void CHealBoom::Tick()
@@ -99,12 +111,18 @@ void CHealBoom::Snap(int SnappingClient)
 {
 	if(NetworkClipped(SnappingClient))
 		return;
-	for(int i=0;i < int(m_Radius)/2;i++)
+	for(int i=0;i < NUM_LASERS;i++)
 	{
 		float RandomRadius = random_float()*(m_Radius-4.0f);
 		float RandomAngle = 2.0f * pi * random_float();
-		vec2 BoomPos = m_Pos + vec2(RandomRadius * cos(RandomAngle), RandomRadius * sin(RandomAngle));
-		
-		GameServer()->CreateExplosion(BoomPos, m_Owner, WEAPON_RIFLE, 1, TAKEDAMAGEMODE_NOINFECTION);
+		vec2 LaserPos = m_Pos + vec2(RandomRadius * cos(RandomAngle), RandomRadius * sin(RandomAngle));
+		CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_IDs[i], sizeof(CNetObj_Laser)));
+		if(!pObj)
+			return;
+		pObj->m_FromX = (int)LaserPos.x;
+		pObj->m_FromY = (int)LaserPos.y;
+		pObj->m_X = (int)LaserPos.x;
+		pObj->m_Y = (int)LaserPos.y;
+		pObj->m_StartTick = Server()->Tick();
 	}
 }

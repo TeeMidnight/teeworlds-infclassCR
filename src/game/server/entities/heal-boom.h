@@ -13,12 +13,17 @@ class CHealBoom : public CEntity
 public:
 	enum
 	{
+		NUM_LASERS = 14,
+	};
+	enum
+	{
 		GROW_GROWING=0,
 		GROW_STOPING,
 		GROW_ZOOMING,
 	};
 public:
 	CHealBoom(CGameWorld *pGameWorld, vec2 CenterPos, int OwnerClientID);
+	~CHealBoom();
 	virtual void Tick();
 	virtual void Reset();
 	virtual void Snap(int SnappingClient);
@@ -39,6 +44,7 @@ public:
 	float m_MaxRadius;
 	int m_Growing;
 	int m_HealNum;
+	int m_IDs[NUM_LASERS];
 };
 
 #endif
