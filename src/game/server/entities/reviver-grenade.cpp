@@ -106,7 +106,9 @@ void CReviverGrenade::Snap(int SnappingClient)
 	
 void CReviverGrenade::Explode()
 {
-	new CGrowingExplosion(GameWorld(), m_ActualPos, m_Direction, m_Owner, 8, GROWINGEXPLOSIONEFFECT_LOVE_INFECTED);
+	new CGrowingExplosion(GameWorld(), m_ActualPos, m_Direction, m_Owner, 5, GROWINGEXPLOSIONEFFECT_LOVE_INFECTED);
+	new CGrowingExplosion(GameWorld(), m_ActualPos, m_Direction, m_Owner, 5, GROWINGEXPLOSIONEFFECT_LOVE_INFECTED);
+	new CGrowingExplosion(GameWorld(), m_ActualPos, m_Direction, m_Owner, 5, GROWINGEXPLOSIONEFFECT_LOVE_INFECTED);
 
 	GameServer()->CreateExplosion(m_ActualPos, m_Owner, WEAPON_GRENADE, true, TAKEDAMAGEMODE_NOINFECTION);
 	GameServer()->CreateSound(m_ActualPos, SOUND_GRENADE_EXPLODE);
