@@ -3,7 +3,7 @@
  */
 
 #pragma once
-#ifdef CONF_NOGEOLOCATION
+#ifdef CONF_GEOLOCATION
 #include <map>
 #include <vector>
 #include <string>

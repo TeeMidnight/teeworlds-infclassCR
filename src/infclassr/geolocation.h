@@ -1,7 +1,7 @@
 #ifndef INFCLASSR_GEOLOCATION_H
 #define INFCLASSR_GEOLOCATION_H
 
-#ifdef CONF_NOGEOLOCATION
+#ifdef CONF_GEOLOCATION
 
 #include <infclassr/GeoLite2PP/GeoLite2PP.hpp>
 #include <iostream>

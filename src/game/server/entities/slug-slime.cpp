@@ -43,7 +43,7 @@ void CSlugSlime::Tick()
 		
 		if(p->IsZombie()) 
 		{
-			if(p->GetClass() != PLAYERCLASS_SLUG && GameServer()->GetPlayerChar(m_Owner) != p)
+			if(GameServer()->GetPlayerChar(m_Owner) != p)
 			{
 				p->SetEmote(EMOTE_HAPPY, Server()->Tick());
 				if(Server()->Tick() >= m_HealTick + (Server()->TickSpeed()/g_Config.m_InfSlimeHealRate))

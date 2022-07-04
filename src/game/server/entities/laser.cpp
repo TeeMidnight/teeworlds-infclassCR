@@ -84,7 +84,7 @@ bool CLaser::HitCharacter(vec2 From, vec2 To)
 		}else
 		{
 			pHit->TakeDamage(vec2(0.f, 0.f), m_Dmg, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
-			pHit->Freeze(3, m_Owner, FREEZEREASON_FLASH);
+			pHit->Freeze(1, m_Owner, FREEZEREASON_FLASH);
 			GameServer()->CreateSound(pHit->m_Pos, SOUND_PLAYER_PAIN_LONG);
 			GameServer()->CreatePlayerSpawn(pHit->m_Pos);
 		}
