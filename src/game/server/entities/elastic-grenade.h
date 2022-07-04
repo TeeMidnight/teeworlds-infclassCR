@@ -30,6 +30,7 @@ private:
 	int m_Weapon;
 	int m_StartTick;
 	int m_LifeSpan;
+	int m_CollisionNum;
 };
 
 #endif

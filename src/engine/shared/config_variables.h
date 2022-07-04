@@ -104,6 +104,7 @@ MACRO_CONFIG_INT(InfBatDamage, inf_bat_damage, 3, 0, 10000, CFGFLAG_SERVER, "Dam
 MACRO_CONFIG_INT(InfBatHookTime, inf_bat_hook_time, 5, 1, 10000, CFGFLAG_SERVER, "For how long bat will be able to hook humans (in seconds)")
 MACRO_CONFIG_INT(InfSpiderHookTime, inf_spider_hook_time, 3, 1, 10000, CFGFLAG_SERVER, "For how long spiders will be able to hook humans (in seconds)")
 MACRO_CONFIG_INT(InfSpiderDamage, inf_spider_damage, 10, 1, 10000, CFGFLAG_SERVER, "Damage taken by spider")
+MACRO_CONFIG_INT(InfSlimeDamage, inf_slime_damage, 2, 1, 10000, CFGFLAG_SERVER, "Damage taken by slime")
 MACRO_CONFIG_INT(InfSpiderHookDamage, inf_spider_hook_damage, 1, 0, 10000, CFGFLAG_SERVER, "Damage taken by spider (hook)")
 MACRO_CONFIG_INT(InfSmokerHookDamage, inf_smoker_hook_damage, 3, 1, 10000, CFGFLAG_SERVER, "Damage taken by smoker (hook)")
 MACRO_CONFIG_INT(InfSpiderCatchHumans, inf_spider_catch_humans, 1, 0, 1, CFGFLAG_SERVER, "Spider always catch humans with hook")
@@ -197,6 +198,7 @@ MACRO_CONFIG_INT(InfElasticEntityRadius, inf_elastic_entity_radius, 50, 0, 200, 
 MACRO_CONFIG_INT(InfElasticEntityLifeSpan, inf_elastic_entity_life_span, 15, 0, 100, CFGFLAG_SERVER, "Elastic entity life span")
 
 MACRO_CONFIG_INT(InfElasticGrenadeLifeSpan, inf_elastic_grenade_life_span, 10, 0, 100, CFGFLAG_SERVER, "Elastic grenade life span")
+MACRO_CONFIG_INT(InfElasticGrenadeCollisionNum, inf_elastic_grenade_collision_num, 3, 0, 10, CFGFLAG_SERVER, "Elastic grenade life span")
 
 MACRO_CONFIG_INT(InfPoliceShieldRadius, inf_police_shield_Radius, 100, 0, 0, CFGFLAG_SERVER, "Police shield radius")
 

@@ -221,6 +221,7 @@ public:
 	int m_BroadcastHealBoomReady;
 	int m_LoveTick;
 	int m_HallucinationTick;
+	bool m_HasSlime;
 	int m_SlipperyTick;
 	int m_PoisonTick;
 	int m_Poison;

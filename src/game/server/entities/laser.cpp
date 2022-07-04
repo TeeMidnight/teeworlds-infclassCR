@@ -89,6 +89,12 @@ bool CLaser::HitCharacter(vec2 From, vec2 To)
 			GameServer()->CreatePlayerSpawn(pHit->m_Pos);
 		}
 	}
+	else if(pOwnerChar && pOwnerChar->GetClass() == PLAYERCLASS_NINJA)
+	{
+		pHit->Freeze(2, m_Owner, FREEZEREASON_FLASH);
+		GameServer()->CreateSound(pHit->m_Pos, SOUND_PLAYER_PAIN_LONG);
+		GameServer()->CreatePlayerSpawn(pHit->m_Pos);
+	}
 	else {
 		pHit->TakeDamage(vec2(0.f, 0.f), m_Dmg, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
 	}

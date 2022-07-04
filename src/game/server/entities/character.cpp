@@ -117,6 +117,9 @@ m_pConsole(pConsole)
 	m_NinjaStrengthBuff = 0;
 	m_NinjaAmmoBuff = 0;
 	m_HasWhiteHole = false;
+	m_HasElasticHole = false;
+	m_HasHealBoom = false;
+	m_HasSlime = true;
 	m_HasIndicator = false;
 	m_TurretCount = 0;
 	m_HasStunGrenade = false;
@@ -602,7 +605,7 @@ void CCharacter::FireWeapon()
 		return;
 /* INFECTION MODIFICATION END *****************************************/
 	
-	if(m_ReloadTimer != 0)
+	if(m_ReloadTimer != 0 && GetClass() != PLAYERCLASS_SLIME)
 		return;
 
 /* INFECTION MODIFICATION START ***************************************/
@@ -908,6 +911,11 @@ void CCharacter::FireWeapon()
 					Die(m_pPlayer->GetCID(), WEAPON_SELF);
 				}
 			}
+			else if(GetClass() == PLAYERCLASS_SLIME && m_HasSlime)
+			{
+				new CSlimeEntity(GameWorld(), m_pPlayer->GetCID(), m_Pos, Direction);
+				GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
+			}
 			else if(GetClass() == PLAYERCLASS_HERO)
 			{
 				if (g_Config.m_InfTurretEnable && !AutoFire)
@@ -1014,6 +1022,11 @@ void CCharacter::FireWeapon()
 								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_Config.m_InfSpiderDamage,
 									m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
 							}
+							else if(GetClass() == PLAYERCLASS_SLIME)
+							{
+								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_Config.m_InfSlimeDamage,
+									m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_INFECTION);
+							}
 							else if(GameServer()->m_pController->IsInfectionStarted())
 							{
 								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_pData->m_Weapons.m_Hammer.m_pBase->m_Damage,
@@ -1089,7 +1102,7 @@ void CCharacter::FireWeapon()
 				}
 				
 				// if we Hit anything, we have to wait for the reload
-				if(Hits)
+				if(Hits && GetClass() != PLAYERCLASS_SLIME)
 				{
 					m_ReloadTimer = Server()->TickSpeed()/3;
 				}
@@ -1113,11 +1126,6 @@ void CCharacter::FireWeapon()
 							new CSlugSlime(GameWorld(), CheckPos, m_pPlayer->GetCID());
 						}
 					}
-				}
-				else if(GetClass() == PLAYERCLASS_SLIME)
-				{
-					new CSlimeEntity(GameWorld(), m_pPlayer->GetCID(), m_Pos, Direction);
-					GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
 				}
 				
 				if(!ShowAttackAnimation)
@@ -1708,9 +1716,15 @@ void CCharacter::HandleWeapons()
 	if(m_ReloadTimer)
 	{
 		m_ReloadTimer--;
+		if(GetClass() == PLAYERCLASS_SLIME)
+		{
+			m_HasSlime = false;
+			FireWeapon();
+		}
 		return;
 	}
 
+	m_HasSlime = true;
 	// fire Weapon, if wanted
 	FireWeapon();
 
@@ -2984,6 +2998,7 @@ void CCharacter::GiveGift(int GiftType)
 			break;
 		case PLAYERCLASS_NINJA:
 			GiveWeapon(WEAPON_GRENADE, -1);
+			GiveWeapon(WEAPON_RIFLE, -1);
 			break;
 		case PLAYERCLASS_SNIPER:
 			GiveWeapon(WEAPON_RIFLE, -1);
@@ -4172,6 +4187,7 @@ void CCharacter::ClassSpawnAttributes()
 			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_GUN, -1);
 			GiveWeapon(WEAPON_GRENADE, -1);
+			GiveWeapon(WEAPON_RIFLE, 3);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_NINJA);
@@ -4707,6 +4723,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_ENGINEER_RIFLE;
 			case PLAYERCLASS_LOOPER:
 				return INFWEAPON_LOOPER_RIFLE;
+			case PLAYERCLASS_NINJA:
+				return INFWEAPON_NINJA_RIFLE;
 			case PLAYERCLASS_SCIENTIST:
 				return INFWEAPON_SCIENTIST_RIFLE;
 			case PLAYERCLASS_SNIPER:

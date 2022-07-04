@@ -17,6 +17,7 @@ CElasticGrenade::CElasticGrenade(CGameWorld *pGameWorld, int Owner, int Weapon, 
 	m_Direction = Dir;
 	m_Owner = Owner;
 	m_Weapon = Weapon;
+	m_CollisionNum = 0;
 	m_LifeSpan =  g_Config.m_InfElasticGrenadeLifeSpan * Server()->TickSpeed();
 	m_StartTick = Server()->Tick();
 
@@ -78,6 +79,7 @@ void CElasticGrenade::Tick()
 	int Collide = GameServer()->Collision()->IntersectLine(PrevPos, CurPos, NULL, &LastPos);
 	if(Collide)
 	{
+		m_CollisionNum++;
 		//Thanks to TeeBall 0.6
 		vec2 CollisionPos;
 		CollisionPos.x = LastPos.x;
@@ -116,7 +118,7 @@ void CElasticGrenade::Tick()
 		m_ActualDir = normalize(m_Direction);
 	}
 
-	if(m_LifeSpan <= 0)
+	if(m_LifeSpan <= 0 || m_CollisionNum >= g_Config.m_InfElasticGrenadeCollisionNum)
 	{
 		Explode();
 	}
