@@ -3299,7 +3299,6 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 
 	if(Mode == TAKEDAMAGEMODE_ALL)
 	{
-		Dmg *= 2;
 		if(m_Armor)
 		{
 			if(Dmg <= m_Armor)

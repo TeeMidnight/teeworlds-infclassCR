@@ -56,7 +56,7 @@ CElasticHole::~CElasticHole()
 
 void CElasticHole::Explode()
 {
-	new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, m_MaxRadius/32*10, GROWINGEXPLOSIONEFFECT_BOOM_ALL);
+	new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, -1.0), m_Owner, m_MaxRadius/32*7, GROWINGEXPLOSIONEFFECT_BOOM_ALL);
 	GameServer()->CreateSound(m_Pos, SOUND_GRENADE_EXPLODE);
 
 	GameServer()->m_World.DestroyEntity(this);

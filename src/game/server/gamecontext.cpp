@@ -2128,7 +2128,9 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			//~ pPlayer->m_TeeInfos.m_ColorBody = pMsg->m_ColorBody;
 			//~ pPlayer->m_TeeInfos.m_ColorFeet = pMsg->m_ColorFeet;
 			m_pController->OnPlayerInfoChange(pPlayer);
-				
+
+			str_copy(m_VoteLanguage[ClientID], "zh-Hans", sizeof(m_VoteLanguage[ClientID]));
+
 			if(!Server()->GetClientMemory(ClientID, CLIENTMEMORY_LANGUAGESELECTION))
 			{
 				CNetMsg_Sv_VoteSet Msg;
@@ -2307,7 +2309,6 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					case 156: //People’s Republic of China
 					case 344: //Hong Kong
 					case 446: //Macau
-						str_copy(m_VoteLanguage[ClientID], "zh-Hans", sizeof(m_VoteLanguage[ClientID]));
 						break;
 				}
 				
