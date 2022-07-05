@@ -61,8 +61,8 @@ void CElasticGrenade::Tick()
 	for(CCharacter *pChr = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); pChr; pChr = (CCharacter *)pChr->TypeNext())
 	{
 		if(pChr->IsHuman()) continue;
-		float Len = distance(pChr->m_Pos, m_Pos);
-		if(Len < pChr->m_ProximityRadius + 27)
+		float Len = distance(pChr->m_Pos, m_ActualPos);
+		if(Len < pChr->m_ProximityRadius)
 		{
 			Explode();
 		}
