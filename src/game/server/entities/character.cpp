@@ -1777,7 +1777,7 @@ void CCharacter::HandleWeapons()
 				if(GetClass() == PLAYERCLASS_SMOKER)
 				{
 					Rate = 0.5f;
-					if(VictimChar->GetClass() == PLAYERCLASS_POLICE)
+					if(VictimChar->GetClass() == PLAYERCLASS_POLICE && VictimChar->m_ActiveWeapon == WEAPON_HAMMER)
 					{
 						Damage = 3 * g_Config.m_InfSmokerHookDamage;
 					}
