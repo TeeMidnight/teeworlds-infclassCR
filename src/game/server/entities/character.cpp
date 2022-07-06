@@ -1991,6 +1991,7 @@ void CCharacter::Tick()
 			else
 			{
 				m_pPlayer->StartInfection();
+				Freeze(3, m_pPlayer->GetCID(), FREEZEREASON_INFECTION);
 			}
 		}
 		if(m_Alive && (Index0 != ZONE_DAMAGE_INFECTION))
@@ -2608,13 +2609,13 @@ void CCharacter::Tick()
 			m_Armor = 0;
 			if(pCurrentShield)
 				GameServer()->m_World.DestroyEntity(pCurrentShield);
-		}else if(!pCurrentShield && m_Pos.y > -20)
+		}else if(!pCurrentShield && m_Pos.y > -20 * 32)
 		{
 			new CPoliceShield(GameWorld(), m_pPlayer->GetCID());
 		}
 		else if(pCurrentShield)
 		{
-			if(m_Pos.y < -20)
+			if(m_Pos.y < -20 * 32)
 			{
 				GameServer()->m_World.DestroyEntity(pCurrentShield);
 			}
@@ -4581,7 +4582,11 @@ void CCharacter::Freeze(float Time, int Player, int Reason)
 {
 	if(m_IsFrozen && m_FreezeReason == FREEZEREASON_UNDEAD)
 		return;
-	
+	if(Reason == FREEZEREASON_INFECTION)
+	{
+		GameServer()->CreateSound(m_Pos, SOUND_PLAYER_PAIN_SHORT);
+		GameServer()->CreatePlayerSpawn(m_Pos);
+	}
 	m_IsFrozen = true;
 	m_FrozenTime = Server()->TickSpeed()*Time;
 	m_FreezeReason = Reason;
