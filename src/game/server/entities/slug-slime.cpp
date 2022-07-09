@@ -59,7 +59,7 @@ void CSlugSlime::Tick()
 		}
 	}
 	
-	if(random_prob(0.2f))
+	if(random_prob(0.2f) && m_LifeSpan % 2)
 	{
 		GameServer()->CreateDeath(m_Pos, m_Owner);
 	}

@@ -91,7 +91,7 @@ void CSlimeEntity::Explode()
 	float t = (Server()->Tick()-m_StartTick-1.5)/(float)Server()->TickSpeed();
 	new CSlugSlime(GameWorld(), GetPos(t), m_Owner);
 
-	GameServer()->CreateSound(GetPos(t), SOUND_GRENADE_EXPLODE);
+	GameServer()->SendHitSound(m_Owner);
 	
 	GameServer()->m_World.DestroyEntity(this);
 	
