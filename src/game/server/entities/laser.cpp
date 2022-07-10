@@ -98,6 +98,10 @@ bool CLaser::HitCharacter(vec2 From, vec2 To)
 	}
 	else {
 		pHit->TakeDamage(vec2(0.f, 0.f), m_Dmg, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
+		if(pOwnerChar->GetClass() == PLAYERCLASS_CATAPULT)
+		{
+			GameServer()->CreateExplosion(m_Pos, m_Owner, WEAPON_RIFLE, false, TAKEDAMAGEMODE_NOINFECTION);
+		}
 	}
 	return true;
 }

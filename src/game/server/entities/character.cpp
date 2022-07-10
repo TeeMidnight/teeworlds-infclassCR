@@ -2617,7 +2617,7 @@ void CCharacter::Tick()
 			}
 			else
 			{
-				m_Armor = 8;
+				m_Armor = 5;
 			}
 		}
 	}
@@ -3363,7 +3363,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	
 	if(GetClass() == PLAYERCLASS_POLICE && GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_POLICE_HAMMER && Mode == TAKEDAMAGEMODE_INFECTION)
 	{
-		Dmg = 15;
+		Dmg = 10;
 		// A zombie can't infect a use shield police
 		Mode = TAKEDAMAGEMODE_NOINFECTION;
 	}

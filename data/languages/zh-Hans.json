@@ -120,8 +120,8 @@
 		"value": "需要一名玩家"
 	},
 	{
-		"key": "Need {int:Num} players",
-		"other": "需要 {int:Num} 名玩家"
+		"key": "Need {int:MinPlayers} players",
+		"other": "需要 {int:MinPlayers} 名玩家"
 	},
 	{
 		"key": "Soldier",
