@@ -34,10 +34,14 @@ private:
 	vec2 GetPos(float Time);
 
 public:
-
+	
+	vec2 m_ActualPos;
+	vec2 m_LastPos;
+	vec2 m_ActualDir;
 	int m_StartTick;
 	float m_DetectionRadius;
 	vec2 m_Direction;
+	int m_CollisionNum;
 
 	int m_Owner;
 	int m_Damage;

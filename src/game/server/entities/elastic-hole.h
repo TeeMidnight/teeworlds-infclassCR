@@ -15,7 +15,7 @@ public:
 	{
 		NUM_PARTICLES = 14,
 		NUM_AMMO = 5,
-		NUM_IDS =24,
+		NUM_IDS = 16,
 	};
 	enum
 	{

@@ -17,7 +17,7 @@ public:
 	virtual void Reset();
 	virtual void Tick();
 	virtual void TickPaused();
-	virtual void Explode();
+	virtual void Explode(vec2 Pos);
 	virtual void Snap(int SnappingClient);
 	
 	int GetTick() { return m_LifeSpan; }

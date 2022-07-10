@@ -25,7 +25,7 @@ CSciogistGrenade::CSciogistGrenade(CGameWorld *pGameWorld, int Owner, vec2 Pos, 
 
 void CSciogistGrenade::Explode()
 {
-	GameServer()->CreateExplosion(m_ActualPos, m_Owner, WEAPON_GRENADE, false, TAKEDAMAGEMODE_INFECTION);
+	GameServer()->CreateExplosion(m_ActualPos, m_Owner, WEAPON_GRENADE, false, TAKEDAMAGEMODE_NOINFECTION);
 	GameServer()->CreateSound(m_ActualPos, SOUND_GRENADE_EXPLODE);
 	if(m_OwnerChar && m_OwnerChar->m_HasElasticHole)
 	{
@@ -51,26 +51,22 @@ void CSciogistGrenade::Tick()
 	m_ActualPos = CurPos;
 	m_ActualDir = normalize(CurPos - PrevPos);
 		
-	CCharacter *OwnerChar = GameServer()->GetPlayerChar(m_Owner);
-	CCharacter *TargetChr = GameServer()->m_World.IntersectCharacter(PrevPos, CurPos, 6.0f, CurPos, OwnerChar);
-		
-	if(TargetChr)
-	{
-		Explode();
-	}
-	
 	if(GameLayerClipped(CurPos))
 	{
 		GameServer()->m_World.DestroyEntity(this);
 		return;
 	}
-	
+
+	CCharacter *OwnerChar = GameServer()->GetPlayerChar(m_Owner);
+	CCharacter *TargetChr = GameServer()->m_World.IntersectCharacter(PrevPos, CurPos, 6.0f, CurPos, OwnerChar);
 	vec2 LastPos;
 	int Collide = GameServer()->Collision()->IntersectLine(PrevPos, CurPos, NULL, &LastPos);
-	if(Collide)
+	if(TargetChr || Collide)
 	{
 		Explode();
 	}
+	
+	
 }
 
 void CSciogistGrenade::TickPaused()

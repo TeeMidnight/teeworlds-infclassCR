@@ -61,7 +61,7 @@
 	},
 	{
 		"key": "{int:NumHumans} humans won the round",
-		"other": "Singular Form\n\u4e00\u540d\u4eba\u7c7b\u83b7\u5f97\u672c\u8f6e\u80dc\u5229\nPlural Form\n{int:NumHumans} \u540d\u4eba\u7c7b\u83b7\u5f97\u672c\u8f6e\u80dc\u5229",
+		"other": "{int:NumHumans} 名人类赢了这轮",
 	},
 	{
 		"key": "You have survived, +5 points",
@@ -114,6 +114,14 @@
 	{
 		"key": "Engineer",
 		"value": "\u5de5\u7a0b\u5e08"
+	},
+	{
+		"key": "Need one player",
+		"value": "需要一名玩家"
+	},
+	{
+		"key": "Need {int:Num} players",
+		"other": "需要 {int:Num} 名玩家"
 	},
 	{
 		"key": "Soldier",

@@ -58,14 +58,16 @@ void CPoliceShield::Tick()
 
 		    if(Len < pChr->m_ProximityRadius + 4)
 		    {
+				vec2 Vel = pChr->GetCore().m_Vel;
+
 				if( abs(m_OwnerChrCore.m_Vel.x) > 4)
 				{
-			    	pChr->SetVel(vec2(m_OwnerChrCore.m_Vel.x, pChr->GetCore().m_Vel.y));
+			    	pChr->SetVel(vec2(m_OwnerChrCore.m_Vel.x*2, pChr->GetCore().m_Vel.y));
 				}
 
 				if( abs(m_OwnerChrCore.m_Vel.y) > 4)
 				{
-			    	pChr->SetVel(vec2(pChr->GetCore().m_Vel.x, m_OwnerChrCore.m_Vel.y));
+			    	pChr->SetVel(vec2(pChr->GetCore().m_Vel.x, m_OwnerChrCore.m_Vel.y*2));
 				}
 			}
         }

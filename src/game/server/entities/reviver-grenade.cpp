@@ -62,7 +62,7 @@ void CReviverGrenade::Tick()
 		float Len = distance(pChr->m_Pos, m_Pos);
 		if(Len < pChr->m_ProximityRadius)
 		{
-			Explode();
+			Explode(pChr->m_Pos);
 		}
 	}
 
@@ -77,7 +77,7 @@ void CReviverGrenade::Tick()
 	int Collide = GameServer()->Collision()->IntersectLine(PrevPos, CurPos, NULL, &LastPos);
 	if(Collide || m_LifeSpan <= 0)
 	{
-		Explode();
+		Explode(LastPos);
 	}
 	
 }
@@ -104,14 +104,12 @@ void CReviverGrenade::Snap(int SnappingClient)
 		FillInfo(pProj);
 }
 	
-void CReviverGrenade::Explode()
+void CReviverGrenade::Explode(vec2 Pos)
 {
-	new CGrowingExplosion(GameWorld(), m_ActualPos, m_Direction, m_Owner, 5, GROWINGEXPLOSIONEFFECT_LOVE_INFECTED);
-	new CGrowingExplosion(GameWorld(), m_ActualPos, m_Direction, m_Owner, 5, GROWINGEXPLOSIONEFFECT_LOVE_INFECTED);
-	new CGrowingExplosion(GameWorld(), m_ActualPos, m_Direction, m_Owner, 5, GROWINGEXPLOSIONEFFECT_LOVE_INFECTED);
+	new CGrowingExplosion(GameWorld(), m_Pos, m_Direction, m_Owner, 5, GROWINGEXPLOSIONEFFECT_LOVE_INFECTED);
 
-	GameServer()->CreateExplosion(m_ActualPos, m_Owner, WEAPON_GRENADE, true, TAKEDAMAGEMODE_NOINFECTION);
-	GameServer()->CreateSound(m_ActualPos, SOUND_GRENADE_EXPLODE);
-	
+	GameServer()->CreateExplosion(m_Pos, m_Owner, WEAPON_GRENADE, true, TAKEDAMAGEMODE_NOINFECTION);
+	GameServer()->CreateSound(m_Pos, SOUND_GRENADE_EXPLODE);
+
 	GameServer()->m_World.DestroyEntity(this);
 }

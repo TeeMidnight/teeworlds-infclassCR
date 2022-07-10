@@ -3,6 +3,7 @@
 #include <game/generated/protocol.h>
 #include <game/server/gamecontext.h>
 #include "laser.h"
+#include "biologist-laser.h"
 #include "heal-boom.h"
 #include <engine/server/roundstatistics.h>
 
@@ -83,7 +84,7 @@ bool CLaser::HitCharacter(vec2 From, vec2 To)
 			pOwnerChar->GetPlayer()->ResetNumberKills();
 		}else
 		{
-			pHit->TakeDamage(vec2(0.f, 0.f), m_Dmg, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
+			pHit->TakeDamage(vec2(0.f, 0.f), 3, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
 			pHit->Freeze(1, m_Owner, FREEZEREASON_FLASH);
 			GameServer()->CreateSound(pHit->m_Pos, SOUND_PLAYER_PAIN_LONG);
 			GameServer()->CreatePlayerSpawn(pHit->m_Pos);
@@ -135,6 +136,10 @@ void CLaser::DoBounce()
 				m_Energy = -1;
 
 			GameServer()->CreateSound(m_Pos, SOUND_RIFLE_BOUNCE);
+			if(GameServer()->GetPlayerChar(m_Owner)->GetClass() == PLAYERCLASS_CATAPULT)
+			{
+				GameServer()->CreateExplosion(m_Pos, m_Owner, WEAPON_RIFLE, false, TAKEDAMAGEMODE_NOINFECTION);
+			}
 		}
 	}
 	else

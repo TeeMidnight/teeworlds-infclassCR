@@ -1073,6 +1073,7 @@ void CCharacter::FireWeapon()
 							{
 								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, 20, 
 										m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
+								GameServer()->CreateExplosion(m_Pos, m_pPlayer->GetCID(), WEAPON_HAMMER, false, TAKEDAMAGEMODE_NOINFECTION);
 							}
 							else
 							{
@@ -1167,23 +1168,7 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_CATAPULT)
 			{
-				for(int i = 1;i <= 3;i++)
-				{
-					float Spreading[] = {-0.21f, -0.105f, 0.105f};
-					float angle = GetAngle(Direction);
-
-					float Speed = mix((float)GameServer()->Tuning()->m_ShotgunSpeeddiff, 1.0f, 0);
-
-					angle += Spreading[i] * 2.0f*(0.25f + 0.75f*static_cast<float>(10-3)/10.0f);
-					float LifeTime = GameServer()->Tuning()->m_ShotgunLifetime + 0.1f*static_cast<float>(m_aWeapons[WEAPON_SHOTGUN].m_Ammo)/10.0f;
-				
-					CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_SHOTGUN,
-						m_pPlayer->GetCID(),
-						ProjStartPos,
-						vec2(cosf(angle), sinf(angle))*Speed,
-						(int)(Server()->TickSpeed()*LifeTime),
-						1, 0, 0, -1, WEAPON_SHOTGUN);	
-				}
+				new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach/2, m_pPlayer->GetCID(), 2);
 				GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
 			}
 			else if(GetClass() == PLAYERCLASS_POLICE)
@@ -1413,10 +1398,10 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_SCIOGIST)
 			{
+				float Spreading[] = {-0.42f, -0.21f, 0.21f};
+				float angle = GetAngle(Direction);
 				for(int i = 1;i <= 3;i++)
 				{
-					float Spreading[] = {-0.42f, -0.21f, 0.21f};
-					float angle = GetAngle(Direction);
 					angle += Spreading[i] * 2.0f*(0.25f + 0.75f*static_cast<float>(10-3)/10.0f);
 					CSciogistGrenade *pSciGre = new CSciogistGrenade(GameWorld(), m_pPlayer->GetCID(), ProjStartPos, vec2(cosf(angle), sinf(angle)));
 				}
@@ -2371,7 +2356,18 @@ void CCharacter::Tick()
 					case CMapConverter::MENUCLASS_ENGINEER:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_ENGINEER))
 						{
-							GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Engineer"), NULL);
+							if((GameServer()->GetActivePlayerCount() >= g_Config.m_InfMinEngineerPlayer))
+							{
+								GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Engineer"), NULL);
+							}
+							else
+							{
+								GameServer()->SendBroadcast_Localization_P(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, g_Config.m_InfMinEngineerPlayer,
+								_P("Need one player", "Need {int:MinPlayers} players"),
+								"MinPlayers", &g_Config.m_InfMinEngineerPlayer,
+								NULL
+								);	
+							}
 							Broadcast = true;
 						}
 						break;
@@ -2502,7 +2498,7 @@ void CCharacter::Tick()
 						Bonus = true;
 						break;
 					case CMapConverter::MENUCLASS_ENGINEER:
-						NewClass = PLAYERCLASS_ENGINEER;
+						if((GameServer()->GetActivePlayerCount() >= g_Config.m_InfMinEngineerPlayer))NewClass = PLAYERCLASS_ENGINEER;
 						break;
 					case CMapConverter::MENUCLASS_SOLDIER:
 						NewClass = PLAYERCLASS_SOLDIER;
@@ -3275,10 +3271,11 @@ void CCharacter::Die(int Killer, int Weapon)
 		GameServer()->SendBroadcast_Localization(-1, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("The undead is finally dead"), NULL);
 		GameServer()->CreateSoundGlobal(SOUND_CTF_RETURN);
 	}
-	else
+	else if(GameServer()->m_pController->IsInfectionStarted())
 	{
 		m_pPlayer->StartInfection(false);
 	}	
+
 	if (m_Core.m_Passenger) {
 		m_Core.m_Passenger->m_IsPassenger = false; // InfClassR taxi mode
 		m_Core.m_Passenger->m_ProbablyStucked = true;
