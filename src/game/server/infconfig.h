@@ -72,6 +72,8 @@ MACRO_CONFIG_INT(InfProbaVoodoo, inf_proba_voodoo, 6, 0, 100, CFGFLAG_SERVER, "P
 MACRO_CONFIG_INT(InfProbaSlime, inf_proba_slime, 5, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be a slime")
 MACRO_CONFIG_INT(InfProbaWitch, inf_proba_witch, 5, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be a witch")
 MACRO_CONFIG_INT(InfProbaUndead, inf_proba_undead, 6, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be an undead")
+//Slime
+MACRO_CONFIG_INT(InfSlimeReloadTime, inf_slime_reload_time, 180, 0, 60, CFGFLAG_SERVER, "Slime reload time")
 
 MACRO_CONFIG_INT(InfEnableEngineer, inf_enable_engineer, 1, 0, 1, CFGFLAG_SERVER, "Makes the engineer class available")
 MACRO_CONFIG_INT(InfEnableSoldier, inf_enable_soldier, 1, 0, 1, CFGFLAG_SERVER, "Makes the soldier class available")

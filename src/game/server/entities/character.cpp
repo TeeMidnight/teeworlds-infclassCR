@@ -112,6 +112,7 @@ m_pConsole(pConsole)
 	m_InAirTick = 0;
 	m_InWater = 0;
 	m_BonusTick = 0;
+	m_ReloadSlimeTick = 0;
 	m_WaterJumpLifeSpan = 0;
 	m_NinjaVelocityBuff = 0;
 	m_NinjaStrengthBuff = 0;
@@ -119,7 +120,6 @@ m_pConsole(pConsole)
 	m_HasWhiteHole = false;
 	m_HasElasticHole = false;
 	m_HasHealBoom = false;
-	m_HasSlime = true;
 	m_HasIndicator = false;
 	m_TurretCount = 0;
 	m_HasStunGrenade = false;
@@ -605,7 +605,7 @@ void CCharacter::FireWeapon()
 		return;
 /* INFECTION MODIFICATION END *****************************************/
 	
-	if(m_ReloadTimer != 0 && GetClass() != PLAYERCLASS_SLIME)
+	if(m_ReloadTimer != 0)
 		return;
 
 /* INFECTION MODIFICATION START ***************************************/
@@ -911,10 +911,11 @@ void CCharacter::FireWeapon()
 					Die(m_pPlayer->GetCID(), WEAPON_SELF);
 				}
 			}
-			else if(GetClass() == PLAYERCLASS_SLIME && m_HasSlime)
+			else if(GetClass() == PLAYERCLASS_SLIME && !m_ReloadSlimeTick)
 			{
 				new CSlimeEntity(GameWorld(), m_pPlayer->GetCID(), m_Pos, Direction);
 				GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
+				m_ReloadSlimeTick = g_Config.m_InfSlimeReloadTime;
 			}
 			else if(GetClass() == PLAYERCLASS_HERO)
 			{
@@ -1696,20 +1697,25 @@ void CCharacter::HandleWeapons()
 		
 	//ninja
 	HandleNinja();
+	if(m_ReloadSlimeTick)
+	{
+		m_ReloadSlimeTick--;
+		if(m_ReloadSlimeTick-1 == 0)
+		{
+			GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), 
+			CHATCATEGORY_DEFAULT, "Slime entity is ready!");
+			GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(),
+			BROADCAST_PRIORITY_WEAPONSTATE, 100, "Slime entity is ready!");
+		}
+	}
+
 
 	// check reload timer
 	if(m_ReloadTimer)
 	{
 		m_ReloadTimer--;
-		if(GetClass() == PLAYERCLASS_SLIME)
-		{
-			m_HasSlime = false;
-			FireWeapon();
-		}
 		return;
 	}
-
-	m_HasSlime = true;
 	// fire Weapon, if wanted
 	FireWeapon();
 

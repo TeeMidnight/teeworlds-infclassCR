@@ -54,13 +54,13 @@ void CElasticEntity::Explode()
     GameServer()->CreateExplosion(m_Pos, m_Owner, WEAPON_HAMMER, true, TAKEDAMAGEMODE_NOINFECTION);
 
 	int Degres = 0;
-	for(int i=0;i < CElasticEntity::NUM_IDS*2;i++)
+	for(int i=0;i < CElasticEntity::NUM_IDS;i++)
 	{
 		vec2 DirPos = m_ActualPos + (GetDir(Degres*pi/180) * 2);
 		vec2 Dir = normalize(DirPos - m_ActualPos);
 		vec2 StartPos = DirPos + Dir*-3.0f;
-		new CLaser(GameWorld(), StartPos, Dir, GameServer()->Tuning()->m_LaserReach/4, m_Owner, 5);
-		Degres += 360 / NUM_IDS / 2;
+		new CLaser(GameWorld(), StartPos, Dir, GameServer()->Tuning()->m_LaserReach/4, m_Owner, 8);
+		Degres += 360 / NUM_IDS;
 	}
 	
 	GameServer()->CreateSound(m_LastPos, SOUND_GRENADE_EXPLODE);
@@ -107,13 +107,15 @@ void CElasticEntity::Tick()
 		if(Len < pChr->m_ProximityRadius+m_Radius)
 		{
 			vec2 Vel = pChr->GetVel();
-			pChr->SetVel(vec2((int)(m_ActualDir.x*50.0f), (int)(m_ActualDir.y*50.0f)));
+			pChr->SetVel(vec2((int)(m_ActualDir.x*25.0f), (int)(m_ActualDir.y*25.0f)));
+			GameServer()->CreateExplosion(pChr->m_Pos, m_Owner, WEAPON_HAMMER, false, TAKEDAMAGEMODE_NOINFECTION);
 		}
 	}
 
 	int Collide = GameServer()->Collision()->IntersectLine(PrevPos, CurPos, NULL, &m_LastPos);
 	if(Collide)
 	{
+		GameServer()->CreateExplosion(m_LastPos, m_Owner, WEAPON_HAMMER, false, TAKEDAMAGEMODE_NOINFECTION);
 		m_CollisionNum++;
 		//Thanks to TeeBall 0.6
 		vec2 CollisionPos;

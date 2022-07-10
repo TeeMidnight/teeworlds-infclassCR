@@ -692,6 +692,10 @@
 		"value": "使用锤子来防御"
 	},
 	{
+		"key": "Slime entity is ready!",
+		"value": "粘液体已经就绪!"
+	},
+	{
 		"key": "The Looper has a laser wall that slows down zombies and a fast shooting low-range-laser-rifle.",
 		"value": "循环者有激光墙，它可以降低僵尸的移动速度，以及一柄快速射击的低范围激光枪."
 	},

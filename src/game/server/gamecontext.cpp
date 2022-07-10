@@ -3813,10 +3813,6 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Catapult can use elastic grenades."), NULL); 
 			Buffer.append("\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He also has a laser-rifle that can fire a elastic entity."), NULL); 
-			Buffer.append("\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("If elatic entity collide wall, floor"), NULL); 
-			Buffer.append("\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("it will create a can't explode small elatic hole"), NULL); 
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
 		else if(str_comp_nocase(pHelpPage, "police") == 0)
