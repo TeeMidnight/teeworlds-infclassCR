@@ -84,6 +84,54 @@ void CElasticEntity::TickPaused()
 	m_StartTick++;
 }
 
+void CElasticEntity::Collision()
+{
+	GameServer()->CreateExplosion(m_LastPos, m_Owner, WEAPON_HAMMER, false, TAKEDAMAGEMODE_NOINFECTION);
+
+	float Pt = (Server()->Tick()-m_StartTick-1)/(float)Server()->TickSpeed();
+	float Ct = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
+	vec2 PrevPos = GetPos(Pt);
+	vec2 CurPos = GetPos(Ct);
+
+	m_CollisionNum++;
+	//Thanks to TeeBall 0.6
+	vec2 CollisionPos;
+	CollisionPos.x = m_LastPos.x;
+	CollisionPos.y = CurPos.y;
+	int CollideY = GameServer()->Collision()->IntersectLine(PrevPos, CollisionPos, NULL, NULL);
+	CollisionPos.x = CurPos.x;
+	CollisionPos.y = m_LastPos.y;
+	int CollideX = GameServer()->Collision()->IntersectLine(PrevPos, CollisionPos, NULL, NULL);
+	
+	m_Pos = m_LastPos;
+	m_ActualPos = m_Pos;
+	vec2 vel;
+	vel.x = m_Direction.x;
+	vel.y = m_Direction.y + 2*3.25f/10000*Ct*1500.0f;
+	
+	if (CollideX && !CollideY)
+	{
+		m_Direction.x = -vel.x;
+		m_Direction.y = vel.y;
+	}
+	else if (!CollideX && CollideY)
+	{
+		m_Direction.x = vel.x;
+		m_Direction.y = -vel.y;
+	}
+	else
+	{
+		m_Direction.x = -vel.x;
+		m_Direction.y = -vel.y;
+	}
+	
+	m_Direction.x *= (100 - 50) / 100.0;
+	m_Direction.y *= (100 - 50) / 100.0;
+	m_StartTick = Server()->Tick();
+	
+	m_ActualDir = normalize(m_Direction);
+}
+
 void CElasticEntity::Tick()
 {
     float Pt = (Server()->Tick()-m_StartTick-1)/(float)Server()->TickSpeed();
@@ -108,51 +156,14 @@ void CElasticEntity::Tick()
 		{
 			vec2 Vel = pChr->GetVel();
 			pChr->SetVel(vec2((int)(m_ActualDir.x*25.0f), (int)(m_ActualDir.y*25.0f)));
-			GameServer()->CreateExplosion(pChr->m_Pos, m_Owner, WEAPON_HAMMER, false, TAKEDAMAGEMODE_NOINFECTION);
+			Collision();
 		}
 	}
 
 	int Collide = GameServer()->Collision()->IntersectLine(PrevPos, CurPos, NULL, &m_LastPos);
 	if(Collide)
 	{
-		GameServer()->CreateExplosion(m_LastPos, m_Owner, WEAPON_HAMMER, false, TAKEDAMAGEMODE_NOINFECTION);
-		m_CollisionNum++;
-		//Thanks to TeeBall 0.6
-		vec2 CollisionPos;
-		CollisionPos.x = m_LastPos.x;
-		CollisionPos.y = CurPos.y;
-		int CollideY = GameServer()->Collision()->IntersectLine(PrevPos, CollisionPos, NULL, NULL);
-		CollisionPos.x = CurPos.x;
-		CollisionPos.y = m_LastPos.y;
-		int CollideX = GameServer()->Collision()->IntersectLine(PrevPos, CollisionPos, NULL, NULL);
-		
-		m_Pos = m_LastPos;
-		m_ActualPos = m_Pos;
-		vec2 vel;
-		vel.x = m_Direction.x;
-		vel.y = m_Direction.y + 2*3.25f/10000*Ct*1500.0f;
-		
-		if (CollideX && !CollideY)
-		{
-			m_Direction.x = -vel.x;
-			m_Direction.y = vel.y;
-		}
-		else if (!CollideX && CollideY)
-		{
-			m_Direction.x = vel.x;
-			m_Direction.y = -vel.y;
-		}
-		else
-		{
-			m_Direction.x = -vel.x;
-			m_Direction.y = -vel.y;
-		}
-		
-		m_Direction.x *= (100 - 50) / 100.0;
-		m_Direction.y *= (100 - 50) / 100.0;
-		m_StartTick = Server()->Tick();
-		
-		m_ActualDir = normalize(m_Direction);
+		Collision();
 	}
 
 	if(m_LifeSpan <= 0 || m_CollisionNum >= g_Config.m_InfElasticEntityCollisionNum)

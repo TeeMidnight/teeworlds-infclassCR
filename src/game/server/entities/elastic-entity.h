@@ -30,6 +30,7 @@ private:
 	int m_ParticleIDs[NUM_PARTICLES];
 	array<int> m_IDs;
 	void Explode();
+	void Collision();
 	void TickPaused();
 	vec2 GetPos(float Time);
 

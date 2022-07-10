@@ -1,4 +1,99 @@
 #include <engine/server/mapconverter.h>
+#include <game/layers.h>
+
+enum class DDNET_TILE
+{
+	TILE_AIR = 0,
+	TILE_SOLID,
+	TILE_DEATH,
+	TILE_NOHOOK,
+	TILE_NOLASER,
+	TILE_THROUGH_CUT,
+	TILE_THROUGH,
+	TILE_JUMP,
+	TILE_FREEZE = 9,
+	TILE_TELEINEVIL,
+	TILE_UNFREEZE,
+	TILE_DFREEZE,
+	TILE_DUNFREEZE,
+	TILE_TELEINWEAPON,
+	TILE_TELEINHOOK,
+	TILE_WALLJUMP = 16,
+	TILE_EHOOK_ENABLE,
+	TILE_EHOOK_DISABLE,
+	TILE_HIT_ENABLE,
+	TILE_HIT_DISABLE,
+	TILE_SOLO_ENABLE,
+	TILE_SOLO_DISABLE,
+	//Switches
+	TILE_SWITCHTIMEDOPEN = 22,
+	TILE_SWITCHTIMEDCLOSE,
+	TILE_SWITCHOPEN,
+	TILE_SWITCHCLOSE,
+	TILE_TELEIN,
+	TILE_TELEOUT,
+	TILE_BOOST,
+	TILE_TELECHECK,
+	TILE_TELECHECKOUT,
+	TILE_TELECHECKIN,
+	TILE_REFILL_JUMPS = 32,
+	TILE_START,
+	TILE_FINISH,
+	TILE_CHECKPOINT_FIRST = 35,
+	TILE_CHECKPOINT_LAST = 59,
+	TILE_STOP = 60,
+	TILE_STOPS,
+	TILE_STOPA,
+
+	TILE_ENTITIES_OFF_1 = 190,
+	TILE_ENTITIES_OFF_2,
+};
+
+DDNET_TILE GetClientGameTileIndex(int PhysicalIndex, DDNET_TILE DDNetIndex, int icDamageIndex, int icBonusIndex)
+{
+	switch(PhysicalIndex)
+	{
+		case TILE_PHYSICS_SOLID:
+			return DDNET_TILE::TILE_SOLID;
+		case TILE_PHYSICS_NOHOOK:
+			return DDNET_TILE::TILE_NOHOOK;
+		default:
+			break;
+	}
+
+	switch(DDNetIndex)
+	{
+	case DDNET_TILE::TILE_ENTITIES_OFF_1:
+	case DDNET_TILE::TILE_ENTITIES_OFF_2:
+		return DDNetIndex;
+	default:
+		break;
+	}
+
+	switch(icDamageIndex)
+	{
+		case ZONE_DAMAGE_DEATH:
+			return DDNET_TILE::TILE_DEATH;
+		case ZONE_DAMAGE_DEATH_NOUNDEAD:
+			return DDNET_TILE::TILE_HIT_DISABLE;
+		case ZONE_DAMAGE_DEATH_INFECTED:
+			return DDNET_TILE::TILE_DUNFREEZE;
+		case ZONE_DAMAGE_INFECTION:
+			return DDNET_TILE::TILE_TELEINWEAPON;
+		default:
+			break;
+	}
+
+	switch(icBonusIndex)
+	{
+		case ZONE_BONUS_BONUS:
+			return DDNET_TILE::TILE_THROUGH_CUT;
+		default:
+			break;
+	}
+
+	return DDNET_TILE::TILE_AIR;
+}
 
 CMapConverter::CMapConverter(IStorage *pStorage, IEngineMap *pMap, IConsole* pConsole) :
 	m_pStorage(pStorage),
@@ -430,23 +525,33 @@ void CMapConverter::CopyGameLayer()
 	Item.m_Flags = 1;
 	Item.m_Image = -1;
 	
+	CLayers Layers;
+	Layers.Init(Map());
+
+	CCollision Collision;
+	Collision.Init(&Layers);
+
+	int ZoneHandle_icDamage = Collision.GetZoneHandle("icDamage");
+	int ZoneHandle_icBonus = Collision.GetZoneHandle("icBonus");
+
 	//Cleanup the game layer
 	//This will make maps no more usable by a server, but the original ones are in the repository
 	for(int j=0; j<m_Height; j++)
 	{
 		for(int i=0; i<m_Width; i++)
 		{
-			switch(m_pPhysicsLayerTiles[j*m_Width+i].m_Index)
-			{
-				case TILE_PHYSICS_SOLID:
-					m_pTiles[j*m_Width+i].m_Index = TILE_PHYSICS_SOLID;
-					break;
-				case TILE_PHYSICS_NOHOOK:
-					m_pTiles[j*m_Width+i].m_Index = TILE_PHYSICS_NOHOOK;
-					break;
-				default:
-					m_pTiles[j*m_Width+i].m_Index = TILE_PHYSICS_AIR;
-			}
+			float X = i * 32 + 16;
+			float Y = j * 32 + 16;
+
+			int PhysicalIndex = m_pPhysicsLayerTiles[j*m_Width+i].m_Index;
+			int icDamageIndex = Collision.GetZoneValueAt(ZoneHandle_icDamage, X, Y);
+			int icBonusIndex = Collision.GetZoneValueAt(ZoneHandle_icBonus, X, Y);
+
+			DDNET_TILE DDNetIndex = PhysicalIndex < TILE_PHYSICS_NOHOOK ? DDNET_TILE::TILE_AIR : static_cast<DDNET_TILE>(PhysicalIndex);
+
+			const DDNET_TILE Tile = GetClientGameTileIndex(PhysicalIndex, DDNetIndex, icDamageIndex, icBonusIndex);
+			m_pTiles[j*m_Width+i].m_Index = static_cast<int>(Tile);
+
 			i += m_pPhysicsLayerTiles[j*m_Width+i].m_Skip;
 		}
 	}

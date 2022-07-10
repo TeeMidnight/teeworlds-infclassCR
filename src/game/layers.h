@@ -21,6 +21,7 @@ class CLayers
 public:
 	CLayers();
 	void Init(class IKernel *pKernel);
+	void Init(IMap *pMap);
 	int NumGroups() const { return m_GroupsNum; };
 	class IMap *Map() const { return m_pMap; };
 	CMapItemGroup *GameGroup() const { return m_pGameGroup; };
@@ -29,6 +30,8 @@ public:
 	CMapItemLayerTilemap *PhysicsLayer() const { return m_pPhysicsLayer; };
 	CMapItemGroup *GetGroup(int Index) const;
 	CMapItemLayer *GetLayer(int Index) const;
+private:
+	CMapItemLayerTilemap *m_pTeleLayer = nullptr;
 };
 
 #endif

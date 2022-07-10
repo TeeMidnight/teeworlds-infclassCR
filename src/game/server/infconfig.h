@@ -101,7 +101,7 @@ MACRO_CONFIG_INT(FunRoundDuration, funround_duration, 3, 0, 100, CFGFLAG_SERVER,
 MACRO_CONFIG_INT(FunRoundGhoulStomachSize, funround_ghoul_stomach_size, 40, 0, 10000, CFGFLAG_SERVER, "Number of dead that the ghoul can eat")
 
 //weapon config
-MACRO_CONFIG_INT(InfElasticEntityRadius, inf_elastic_entity_radius, 50, 0, 200, CFGFLAG_SERVER, "Radius of elastic entitys")
+MACRO_CONFIG_INT(InfElasticEntityRadius, inf_elastic_entity_radius, 46, 0, 200, CFGFLAG_SERVER, "Radius of elastic entitys")
 MACRO_CONFIG_INT(InfElasticEntityLifeSpan, inf_elastic_entity_life_span, 5, 0, 100, CFGFLAG_SERVER, "Elastic entity life span")
 MACRO_CONFIG_INT(InfElasticEntityCollisionNum, inf_elastic_entity_collision_num, 5, 0, 10, CFGFLAG_SERVER, "Elastic entity life span")
 
