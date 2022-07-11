@@ -96,12 +96,13 @@ bool CLaser::HitCharacter(vec2 From, vec2 To)
 		GameServer()->CreateSound(pHit->m_Pos, SOUND_PLAYER_PAIN_LONG);
 		GameServer()->CreatePlayerSpawn(pHit->m_Pos);
 	}
+	else if(pOwnerChar && pOwnerChar->GetClass() == PLAYERCLASS_CATAPULT)
+	{
+		pHit->TakeDamage(vec2(0.f, 0.f), m_Dmg, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
+		GameServer()->CreateExplosion(m_Pos, m_Owner, WEAPON_RIFLE, false, TAKEDAMAGEMODE_NOINFECTION);
+	}
 	else {
 		pHit->TakeDamage(vec2(0.f, 0.f), m_Dmg, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
-		if(pOwnerChar->GetClass() == PLAYERCLASS_CATAPULT)
-		{
-			GameServer()->CreateExplosion(m_Pos, m_Owner, WEAPON_RIFLE, false, TAKEDAMAGEMODE_NOINFECTION);
-		}
 	}
 	return true;
 }
@@ -140,9 +141,11 @@ void CLaser::DoBounce()
 				m_Energy = -1;
 
 			GameServer()->CreateSound(m_Pos, SOUND_RIFLE_BOUNCE);
-			if(GameServer()->GetPlayerChar(m_Owner)->GetClass() == PLAYERCLASS_CATAPULT)
+			CCharacter* OwnerChr = GameServer()->GetPlayerChar(m_Owner);
+			if(OwnerChr)
 			{
-				GameServer()->CreateExplosion(m_Pos, m_Owner, WEAPON_RIFLE, false, TAKEDAMAGEMODE_NOINFECTION);
+				if(OwnerChr->GetClass() == PLAYERCLASS_CATAPULT)
+					GameServer()->CreateExplosion(m_Pos, m_Owner, WEAPON_RIFLE, false, TAKEDAMAGEMODE_NOINFECTION);
 			}
 		}
 	}
