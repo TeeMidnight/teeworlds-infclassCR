@@ -109,7 +109,8 @@ MACRO_CONFIG_INT(InfElasticGrenadeLifeSpan, inf_elastic_grenade_life_span, 10, 0
 MACRO_CONFIG_INT(InfElasticGrenadeCollisionNum, inf_elastic_grenade_collision_num, 3, 0, 10, CFGFLAG_SERVER, "Elastic grenade life span")
 
 MACRO_CONFIG_INT(InfPoliceShieldRadius, inf_police_shield_Radius, 100, 0, 0, CFGFLAG_SERVER, "Police shield radius")
-MACRO_CONFIG_INT(InfPoliceShieldExplodeTime, inf_police_shield_explode_time, 5, 0, 0, CFGFLAG_SERVER, "Police shield explode time")
+MACRO_CONFIG_INT(InfPoliceShieldExplodeTime, inf_police_shield_explode_time, 3, 0, 0, CFGFLAG_SERVER, "Police shield explode time")
+MACRO_CONFIG_INT(InfPoliceShieldDamage inf_police_shield_damage, 5, 0, 0, CFGFLAG_SERVER, "Police shield damage")
 
 //Looper class config
 MACRO_CONFIG_INT(InfSlowMotionWallDuration, inf_slow_motion_wall_duration, 30, 0, 1024, CFGFLAG_SERVER, "How long looper wall slow motion effect will slow down zombies (in centiSec)")
