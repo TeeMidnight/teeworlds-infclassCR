@@ -692,6 +692,22 @@
 		"value": "使用锤子来防御"
 	},
 	{
+		"key": "Use hammer to switch shield mode",
+		"value": "使用锤子来切换盾牌模式"
+	},
+	{
+		"key": "Explode",
+		"value": "爆炸"
+	},
+	{
+		"key": "Defend",
+		"value": "防御"
+	},
+	{
+		"key": "Your shield mode is: {str:Mode}",
+		"value": "你的盾牌模式为: {str:Mode}"
+	},
+	{
 		"key": "Slime entity is ready!",
 		"value": "粘液体已经就绪!"
 	},

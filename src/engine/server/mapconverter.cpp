@@ -49,7 +49,7 @@ enum class DDNET_TILE
 	TILE_ENTITIES_OFF_2,
 };
 
-DDNET_TILE GetClientGameTileIndex(int PhysicalIndex, DDNET_TILE DDNetIndex, int icDamageIndex, int icBonusIndex)
+DDNET_TILE GetClientGameTileIndex(int PhysicalIndex, DDNET_TILE DDNetIndex, int icDamageIndex,int icTeleIndex, int icBonusIndex)
 {
 	switch(PhysicalIndex)
 	{
@@ -80,6 +80,16 @@ DDNET_TILE GetClientGameTileIndex(int PhysicalIndex, DDNET_TILE DDNetIndex, int 
 			return DDNET_TILE::TILE_DUNFREEZE;
 		case ZONE_DAMAGE_INFECTION:
 			return DDNET_TILE::TILE_TELEINWEAPON;
+		default:
+			break;
+	}
+
+	switch(icTeleIndex)
+	{
+		case ZONE_TELE_NOSCIENTIST:
+			return DDNET_TILE::TILE_STOP;
+		case ZONE_TELE_NOWITCH:
+			return DDNET_TILE::TILE_STOPA;
 		default:
 			break;
 	}
@@ -532,6 +542,7 @@ void CMapConverter::CopyGameLayer()
 	Collision.Init(&Layers);
 
 	int ZoneHandle_icDamage = Collision.GetZoneHandle("icDamage");
+	int ZoneHandle_icTele = Collision.GetZoneHandle("icTele");
 	int ZoneHandle_icBonus = Collision.GetZoneHandle("icBonus");
 
 	//Cleanup the game layer
@@ -545,11 +556,12 @@ void CMapConverter::CopyGameLayer()
 
 			int PhysicalIndex = m_pPhysicsLayerTiles[j*m_Width+i].m_Index;
 			int icDamageIndex = Collision.GetZoneValueAt(ZoneHandle_icDamage, X, Y);
+			int icTeleIndex = Collision.GetZoneValueAt(ZoneHandle_icTele, X, Y);
 			int icBonusIndex = Collision.GetZoneValueAt(ZoneHandle_icBonus, X, Y);
 
 			DDNET_TILE DDNetIndex = PhysicalIndex < TILE_PHYSICS_NOHOOK ? DDNET_TILE::TILE_AIR : static_cast<DDNET_TILE>(PhysicalIndex);
 
-			const DDNET_TILE Tile = GetClientGameTileIndex(PhysicalIndex, DDNetIndex, icDamageIndex, icBonusIndex);
+			const DDNET_TILE Tile = GetClientGameTileIndex(PhysicalIndex, DDNetIndex, icDamageIndex, icTeleIndex, icBonusIndex);
 			m_pTiles[j*m_Width+i].m_Index = static_cast<int>(Tile);
 
 			i += m_pPhysicsLayerTiles[j*m_Width+i].m_Skip;

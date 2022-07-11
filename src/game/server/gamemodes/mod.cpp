@@ -669,7 +669,7 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 				Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_KILL_INFECTED, pKiller->GetClass(), Server()->ClientName(pKiller->GetCID()), GameServer()->Console());
 				GameServer()->SendScoreSound(pKiller->GetCID());
 			}
-		
+
 			if(pKiller->GetClass() == PLAYERCLASS_NINJA && pVictim->GetPlayer()->GetCID() == GameServer()->GetTargetToKill())
 			{
 				GameServer()->SendChatTarget_Localization(pKiller->GetCID(), CHATCATEGORY_SCORE, _("You have eliminated your target, +2 points"), NULL);
@@ -715,6 +715,26 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 		}
 	}
 	
+	//Add bonus point for ninja
+	if(pVictim->IsZombie() && pVictim->IsFrozen() && pVictim->m_LastFreezer >= 0 && pVictim->m_LastFreezer != pKiller->GetCID())
+	{
+		CPlayer* pFreezer = GameServer()->m_apPlayers[pVictim->m_LastFreezer];
+		if(pFreezer)
+		{
+			if (pFreezer->GetClass() == PLAYERCLASS_REVIVER)
+			{
+				Server()->RoundStatistics()->OnScoreEvent(pFreezer->GetCID(), SCOREEVENT_HELP_FREEZE, pFreezer->GetClass(), Server()->ClientName(pFreezer->GetCID()), GameServer()->Console());
+				GameServer()->SendScoreSound(pFreezer->GetCID());
+
+				if(pFreezer->GetCharacter())
+				{
+					pFreezer->GetCharacter()->SetEmote(EMOTE_HAPPY, Server()->Tick() + Server()->TickSpeed());
+					GameServer()->SendEmoticon(pFreezer->GetCID(), EMOTICON_MUSIC);
+				}
+			}
+		}
+	}
+
 	if(Weapon == WEAPON_SELF)
 		pVictim->GetPlayer()->m_RespawnTick = Server()->Tick()+Server()->TickSpeed()*3.0f;
 		

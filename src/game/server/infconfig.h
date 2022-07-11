@@ -105,6 +105,12 @@ MACRO_CONFIG_INT(InfElasticEntityRadius, inf_elastic_entity_radius, 46, 0, 200, 
 MACRO_CONFIG_INT(InfElasticEntityLifeSpan, inf_elastic_entity_life_span, 5, 0, 100, CFGFLAG_SERVER, "Elastic entity life span")
 MACRO_CONFIG_INT(InfElasticEntityCollisionNum, inf_elastic_entity_collision_num, 5, 0, 10, CFGFLAG_SERVER, "Elastic entity life span")
 
+MACRO_CONFIG_INT(InfElasticGrenadeLifeSpan, inf_elastic_grenade_life_span, 10, 0, 100, CFGFLAG_SERVER, "Elastic grenade life span")
+MACRO_CONFIG_INT(InfElasticGrenadeCollisionNum, inf_elastic_grenade_collision_num, 3, 0, 10, CFGFLAG_SERVER, "Elastic grenade life span")
+
+MACRO_CONFIG_INT(InfPoliceShieldRadius, inf_police_shield_Radius, 100, 0, 0, CFGFLAG_SERVER, "Police shield radius")
+MACRO_CONFIG_INT(InfPoliceShieldExplodeTime, inf_police_shield_explode_time, 5, 0, 0, CFGFLAG_SERVER, "Police shield explode time")
+
 //Looper class config
 MACRO_CONFIG_INT(InfSlowMotionWallDuration, inf_slow_motion_wall_duration, 30, 0, 1024, CFGFLAG_SERVER, "How long looper wall slow motion effect will slow down zombies (in centiSec)")
 MACRO_CONFIG_INT(InfSlowMotionGunDuration, inf_slow_motion_gun_duration, 6, 0, 1024, CFGFLAG_SERVER, "How long looper gun slow motion effect will slow down zombies (in centiSec)")
@@ -152,11 +158,6 @@ MACRO_CONFIG_INT(InfHealBoomRadius, inf_heal_boom_radius, 96, 0, 200, CFGFLAG_SE
 MACRO_CONFIG_INT(InfHealBoomLifeSpan, inf_heal_boom_life_span, 10, 0, 100, CFGFLAG_SERVER, "Heal boom life span")
 MACRO_CONFIG_INT(InfHealBoomMaxHeal, inf_heal_boom_maxheal, 5, 4, 10, CFGFLAG_SERVER, "Max heal of heal booms")
 MACRO_CONFIG_INT(InfHealBoomProbability, inf_heal_boom_probability, 10, 0, 100, CFGFLAG_SERVER, "Probability of super weapon being available after MinimalKill requirement")
-
-MACRO_CONFIG_INT(InfElasticGrenadeLifeSpan, inf_elastic_grenade_life_span, 10, 0, 100, CFGFLAG_SERVER, "Elastic grenade life span")
-MACRO_CONFIG_INT(InfElasticGrenadeCollisionNum, inf_elastic_grenade_collision_num, 3, 0, 10, CFGFLAG_SERVER, "Elastic grenade life span")
-
-MACRO_CONFIG_INT(InfPoliceShieldRadius, inf_police_shield_Radius, 100, 0, 0, CFGFLAG_SERVER, "Police shield radius")
 
 MACRO_CONFIG_INT(InfStunGrenadeMinimalKills, inf_stun_grenade_minimal_kills, 2, 0, 30, CFGFLAG_SERVER, "Minimal number of kills before grenade stun ammunition can be found")
 MACRO_CONFIG_INT(InfStunGrenadeProbability, inf_stun_grenade_probability, 30, 0, 100, CFGFLAG_SERVER, "Probability of super weapon being available after MinimalKill requirement")

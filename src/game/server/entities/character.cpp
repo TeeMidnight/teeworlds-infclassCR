@@ -423,6 +423,12 @@ void CCharacter::DoWeaponSwitch()
 		return;
 /* INFECTION MODIFICATION END *****************************************/
 
+	if(m_QueuedWeapon == WEAPON_HAMMER && GetClass() == PLAYERCLASS_POLICE)
+	{
+		GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(),
+			BROADCAST_PRIORITY_WEAPONSTATE, 100, "Use hammer to switch shield mode", NULL);
+	}
+
 	// switch Weapon
 	SetWeapon(m_QueuedWeapon);
 }
@@ -678,6 +684,17 @@ void CCharacter::FireWeapon()
 
 	if(GetInfWeaponID(m_ActiveWeapon) == INFWEAPON_POLICE_HAMMER)
 	{
+		m_ShieldExplode = !m_ShieldExplode;
+
+		const char *Mode = 0;
+
+		if(m_ShieldExplode)
+			Mode = Server()->Localization()->Localize(m_pPlayer->GetLanguage(), _("Explode"));
+		else 
+			Mode = Server()->Localization()->Localize(m_pPlayer->GetLanguage(), _("Defend"));
+
+		GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(),
+			BROADCAST_PRIORITY_WEAPONSTATE, 100, "Your shield mode is: {str:Mode}", "Mode", Mode, NULL);
 		return;
 	}
 
@@ -1770,7 +1787,7 @@ void CCharacter::HandleWeapons()
 					Rate = 0.5f;
 					if(VictimChar->GetClass() == PLAYERCLASS_POLICE && VictimChar->m_ActiveWeapon == WEAPON_HAMMER)
 					{
-						Damage = 3 * g_Config.m_InfSmokerHookDamage;
+						Damage = 2 * g_Config.m_InfSmokerHookDamage;
 					}
 					else Damage = g_Config.m_InfSmokerHookDamage;
 				}
@@ -2621,9 +2638,13 @@ void CCharacter::Tick()
 			{
 				GameServer()->m_World.DestroyEntity(pCurrentShield);
 			}
-			else
+			else if(!m_ShieldExplode)
 			{
 				m_Armor = 5;
+			}
+			else
+			{
+				m_Armor = 0;
 			}
 		}
 	}

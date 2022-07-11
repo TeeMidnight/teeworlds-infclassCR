@@ -217,6 +217,7 @@ public:
 	bool m_HasHealBoom;
 	bool m_HasIndicator;
 	bool m_HasStunGrenade;
+	bool m_ShieldExplode;
 	int m_BroadcastWhiteHoleReady;
 	int m_BroadcastElasticHoleReady;// used to broadcast "WhiteHole ready" for a short period of time
 	int m_BroadcastHealBoomReady;

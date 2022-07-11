@@ -134,6 +134,11 @@ void CElasticEntity::Collision()
 
 void CElasticEntity::Tick()
 {
+	if(!GameServer()->GetPlayerChar(m_Owner) || GameServer()->GetPlayerChar(m_Owner)->IsZombie())
+	{
+		GameServer()->m_World.DestroyEntity(this);
+	}
+	
     float Pt = (Server()->Tick()-m_StartTick-1)/(float)Server()->TickSpeed();
 	float Ct = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
 	vec2 PrevPos = GetPos(Pt);

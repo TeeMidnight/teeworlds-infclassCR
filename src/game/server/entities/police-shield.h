@@ -17,6 +17,7 @@ public:
 	virtual void Tick();
 	virtual void Snap(int SnappingClient);
 	int m_Owner;
+	int m_ExplodeTick;
 	array<int> m_IDs;
 	vec2 m_SnapIDsPos[NUM_IDS];
 	

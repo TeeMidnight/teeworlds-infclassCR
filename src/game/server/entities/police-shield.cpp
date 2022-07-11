@@ -11,6 +11,7 @@ CPoliceShield::CPoliceShield(CGameWorld *pGameWorld, int Owner)
 : CEntity(pGameWorld, CGameWorld::ENTTYPE_POLICE_SHIELD)
 {
 	m_Owner = Owner;
+	m_ExplodeTick = 0;
     m_Radius = g_Config.m_InfPoliceShieldRadius;
 	GameWorld()->InsertEntity(this);
 
@@ -45,6 +46,10 @@ void CPoliceShield::Tick()
 	{
 		m_OwnerChrCore = GameServer()->GetPlayerChar(m_Owner)->GetCore();
 	}
+
+	if(m_ExplodeTick)
+		m_ExplodeTick--;
+
     m_Pos = m_OwnerChrCore.m_Pos;
     int Angle = int(m_OwnerChrCore.m_Angle / 4.5);
 
@@ -56,19 +61,28 @@ void CPoliceShield::Tick()
 	    {
 		    float Len = distance(pChr->m_Pos, m_SnapIDsPos[i]);
 
-		    if(Len < pChr->m_ProximityRadius + 4)
+		    if(Len < pChr->m_ProximityRadius + 2)
 		    {
-				vec2 Vel = pChr->GetCore().m_Vel;
-
-				if( abs(m_OwnerChrCore.m_Vel.x) > 4)
+				switch (GameServer()->GetPlayerChar(m_Owner)->m_ShieldExplode)
 				{
-			    	pChr->SetVel(vec2(m_OwnerChrCore.m_Vel.x*2, pChr->GetCore().m_Vel.y));
-				}
+					case 0:
+						if(abs(m_OwnerChrCore.m_Vel.x) > 4)
+						{
+							pChr->SetVel(vec2(m_OwnerChrCore.m_Vel.x*1.5f, pChr->GetCore().m_Vel.y));
+						}
 
-				if( abs(m_OwnerChrCore.m_Vel.y) > 4)
-				{
-			    	pChr->SetVel(vec2(pChr->GetCore().m_Vel.x, m_OwnerChrCore.m_Vel.y*2));
+						if(abs(m_OwnerChrCore.m_Vel.y) > 4)
+						{
+							pChr->SetVel(vec2(pChr->GetCore().m_Vel.x, m_OwnerChrCore.m_Vel.y*1.5f));
+						}
+						break;
+					case 1:
+						if((abs(m_OwnerChrCore.m_Vel.x) > 8 || abs(m_OwnerChrCore.m_Vel.y) > 8) && !m_ExplodeTick)
+							GameServer()->CreateExplosionDisk(m_SnapIDsPos[i], 32, 24, 3, 24.0f, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
+							m_ExplodeTick = g_Config.m_InfPoliceShieldExplodeTime;
+						break;
 				}
+				
 			}
         }
 	}
