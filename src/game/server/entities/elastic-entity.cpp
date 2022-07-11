@@ -161,7 +161,7 @@ void CElasticEntity::Tick()
 		{
 			vec2 Vel = pChr->GetVel();
 			pChr->SetVel(vec2((int)(m_ActualDir.x*25.0f), (int)(m_ActualDir.y*25.0f)));
-			pChr->TakeDamage(vec2(0.0f,0.0f), 5, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
+			pChr->TakeDamage(vec2(0.0f,0.0f), g_Config.m_InfElasticEntityDamage, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
 			Collision();
 		}
 	}
