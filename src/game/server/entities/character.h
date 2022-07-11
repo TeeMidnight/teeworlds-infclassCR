@@ -245,6 +245,7 @@ public:
 	CCharacterCore GetCore() { return m_Core; }
 	vec2 GetVel() { return m_Core.m_Vel;}
 	void SetVel(vec2 Vel) { m_Core.m_Vel = Vel;}
+	void SetPos(vec2 Pos) { m_Core.m_Pos = Pos;}
 	void DestroyChildEntities();
 	void ClassSpawnAttributes();
 	void GiveArmorIfLonely();

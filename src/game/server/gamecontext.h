@@ -107,6 +107,9 @@ class CGameContext : public IGameServer
 	static bool ConVote(IConsole::IResult *pResult, void *pUserData);
 	static bool ConStartFunRound(IConsole::IResult *pResult, void *pUserData);
 	static bool ConchainSpecialMotdupdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
+	void Teleport(CCharacter *pChr, vec2 Pos);
+	static bool ConTeleport(IConsole::IResult *pResult, void *pUserData);
+
 
 	CGameContext(int Resetting);
 	void Construct(int Resetting);
