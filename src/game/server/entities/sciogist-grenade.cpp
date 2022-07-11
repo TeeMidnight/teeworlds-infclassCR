@@ -76,8 +76,8 @@ void CSciogistGrenade::TickPaused()
 
 vec2 CSciogistGrenade::GetPos(float Time)
 {
-	float Curvature = GameServer()->Tuning()->m_GrenadeCurvature;
-	float Speed = GameServer()->Tuning()->m_GrenadeSpeed;
+	float Curvature = 7.0f;
+	float Speed = 1000.0f;
 
 	return CalcPos(m_Pos, m_Direction, Curvature, Speed, Time);
 }
