@@ -1417,7 +1417,7 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_SCIOGIST)
 			{
-				float Spreading[] = {-0.63f, -0.42f, 0.21f};
+				float Spreading[] = {-0.42f, 0.0f, 0.42f};
 				float angle = GetAngle(Direction);
 				for(int i = 1;i <= 3;i++)
 				{
