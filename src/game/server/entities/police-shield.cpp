@@ -63,25 +63,26 @@ void CPoliceShield::Tick()
 
 		    if(Len < pChr->m_ProximityRadius + 2)
 		    {
-				switch (GameServer()->GetPlayerChar(m_Owner)->m_ShieldExplode)
-				{
-					case 0:
-						if(abs(m_OwnerChrCore.m_Vel.x) > 4)
-						{
-							pChr->SetVel(vec2(m_OwnerChrCore.m_Vel.x*1.5f, pChr->GetCore().m_Vel.y));
-						}
+				if(GameServer()->GetPlayerChar(m_Owner))
+					switch (GameServer()->GetPlayerChar(m_Owner)->m_ShieldExplode)
+					{
+						case 0:
+							if(abs(m_OwnerChrCore.m_Vel.x) > 4)
+							{
+								pChr->SetVel(vec2(m_OwnerChrCore.m_Vel.x*1.5f, pChr->GetCore().m_Vel.y));
+							}
 
-						if(abs(m_OwnerChrCore.m_Vel.y) > 4)
-						{
-							pChr->SetVel(vec2(pChr->GetCore().m_Vel.x, m_OwnerChrCore.m_Vel.y*1.5f));
-						}
-						break;
-					case 1:
-						if((abs(m_OwnerChrCore.m_Vel.x) > 8 || abs(m_OwnerChrCore.m_Vel.y) > 8) && !m_ExplodeTick)
-							GameServer()->CreateExplosionDisk(m_SnapIDsPos[i], 32, 32, 3, 32.0f, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
-							m_ExplodeTick = g_Config.m_InfPoliceShieldExplodeTime;
-						break;
-				}
+							if(abs(m_OwnerChrCore.m_Vel.y) > 4)
+							{
+								pChr->SetVel(vec2(pChr->GetCore().m_Vel.x, m_OwnerChrCore.m_Vel.y*1.5f));
+							}
+							break;
+						case 1:
+							if((abs(m_OwnerChrCore.m_Vel.x) > 8 || abs(m_OwnerChrCore.m_Vel.y) > 8) && !m_ExplodeTick)
+								GameServer()->CreateExplosionDisk(m_SnapIDsPos[i], 32, 32, 3, 32.0f, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
+								m_ExplodeTick = g_Config.m_InfPoliceShieldExplodeTime;
+							break;
+					}
 				
 			}
         }

@@ -1417,10 +1417,10 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_SCIOGIST)
 			{
-				float Spreading[] = {-0.42f, 0.0f, 0.42f};
-				float angle = GetAngle(Direction);
 				for(int i = 1;i <= 3;i++)
 				{
+					float Spreading[] = {-0.315f, -0.210f, 0.105f};
+					float angle = GetAngle(Direction);
 					angle += Spreading[i] * 2.0f*(0.25f + 0.75f*static_cast<float>(10-3)/10.0f);
 					CSciogistGrenade *pSciGre = new CSciogistGrenade(GameWorld(), m_pPlayer->GetCID(), ProjStartPos, vec2(cosf(angle), sinf(angle)));
 				}
