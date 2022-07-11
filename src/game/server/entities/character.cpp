@@ -121,6 +121,7 @@ m_pConsole(pConsole)
 	m_HasElasticHole = false;
 	m_HasHealBoom = false;
 	m_HasIndicator = false;
+	m_ShieldExplode = false;
 	m_TurretCount = 0;
 	m_HasStunGrenade = false;
 	m_VoodooTimeAlive = Server()->TickSpeed()*g_Config.m_InfVoodooAliveTime;
@@ -1186,7 +1187,7 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_CATAPULT)
 			{
-				new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach/2, m_pPlayer->GetCID(), 2);
+				new CLaser(GameWorld(), m_Pos, Direction, 400.0f, m_pPlayer->GetCID(), 2);
 				GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
 			}
 			else if(GetClass() == PLAYERCLASS_POLICE)
@@ -1714,6 +1715,8 @@ void CCharacter::HandleWeapons()
 		
 	//ninja
 	HandleNinja();
+	
+	//slime
 	if(m_ReloadSlimeTick)
 	{
 		m_ReloadSlimeTick--;
@@ -1785,7 +1788,7 @@ void CCharacter::HandleWeapons()
 				if(GetClass() == PLAYERCLASS_SMOKER)
 				{
 					Rate = 0.5f;
-					if(VictimChar->GetClass() == PLAYERCLASS_POLICE && VictimChar->m_ActiveWeapon == WEAPON_HAMMER)
+					if(VictimChar->GetClass() == PLAYERCLASS_POLICE && VictimChar->m_ActiveWeapon == WEAPON_HAMMER && !VictimChar->m_ShieldExplode)
 					{
 						Damage = 2 * g_Config.m_InfSmokerHookDamage;
 					}
@@ -4475,6 +4478,11 @@ void CCharacter::DestroyChildEntities()
 	{
 		if(pGrenade->m_Owner != m_pPlayer->GetCID()) continue;
 			GameServer()->m_World.DestroyEntity(pGrenade);
+	}
+	for(CHealBoom* pHB = (CHealBoom*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_HEAL_BOOM); pHB; pHB = (CHealBoom*) pHB->TypeNext())
+	{
+		if(pHB->m_Owner != m_pPlayer->GetCID()) continue;
+			GameServer()->m_World.DestroyEntity(pHB);
 	}
 	for(CMercenaryBomb *pBomb = (CMercenaryBomb*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_MERCENARY_BOMB); pBomb; pBomb = (CMercenaryBomb*) pBomb->TypeNext())
 	{

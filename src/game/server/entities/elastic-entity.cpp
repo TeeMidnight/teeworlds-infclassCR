@@ -59,7 +59,7 @@ void CElasticEntity::Explode()
 		vec2 DirPos = m_ActualPos + (GetDir(Degres*pi/180) * 2);
 		vec2 Dir = normalize(DirPos - m_ActualPos);
 		vec2 StartPos = DirPos + Dir*-3.0f;
-		new CLaser(GameWorld(), StartPos, Dir, GameServer()->Tuning()->m_LaserReach/4, m_Owner, 8);
+		new CLaser(GameWorld(), StartPos, Dir, 200.0f, m_Owner, 8);
 		Degres += 360 / NUM_IDS;
 	}
 	
@@ -138,7 +138,7 @@ void CElasticEntity::Tick()
 	{
 		GameServer()->m_World.DestroyEntity(this);
 	}
-	
+
     float Pt = (Server()->Tick()-m_StartTick-1)/(float)Server()->TickSpeed();
 	float Ct = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
 	vec2 PrevPos = GetPos(Pt);

@@ -78,7 +78,7 @@ void CPoliceShield::Tick()
 						break;
 					case 1:
 						if((abs(m_OwnerChrCore.m_Vel.x) > 8 || abs(m_OwnerChrCore.m_Vel.y) > 8) && !m_ExplodeTick)
-							GameServer()->CreateExplosionDisk(m_SnapIDsPos[i], 32, 32, 3, 24.0f, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
+							GameServer()->CreateExplosionDisk(m_SnapIDsPos[i], 32, 32, 3, 32.0f, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
 							m_ExplodeTick = g_Config.m_InfPoliceShieldExplodeTime;
 						break;
 				}
