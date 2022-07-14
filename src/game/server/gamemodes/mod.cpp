@@ -292,7 +292,13 @@ void CGameControllerMOD::Tick()
 				{
 					if(StartInfectionTrigger)
 					{
-						Iter.Player()->SetClass(ChooseHumanClass(Iter.Player()));
+						if(!GameServer()->m_FunRound)
+						{
+							Iter.Player()->SetClass(ChooseHumanClass(Iter.Player()));
+						}else
+							Iter.Player()->SetClass(GameServer()->m_FunRoundHumanClass);
+						
+						
 						if(Iter.Player()->GetCharacter())
 							Iter.Player()->GetCharacter()->IncreaseArmor(10);
 					}
@@ -328,7 +334,13 @@ void CGameControllerMOD::Tick()
 			CPlayerIterator<PLAYERITER_SPECTATORS> IterSpec(GameServer()->m_apPlayers);
 			while(IterSpec.Next())
 			{
-				IterSpec.Player()->SetClass(PLAYERCLASS_NONE);
+				if(!GameServer()->m_FunRound)
+				{
+					IterSpec.Player()->SetClass(PLAYERCLASS_NONE);
+				}else
+				{
+					IterSpec.Player()->SetClass(GameServer()->m_FunRoundHumanClass);
+				}
 			}
 		}
 		

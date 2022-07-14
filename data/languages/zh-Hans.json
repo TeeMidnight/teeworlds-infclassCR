@@ -684,6 +684,22 @@
 		"value": "\u82f1\u96c4\u627e\u5230\u4e86\u65d7\u5e1c \uff01"
 	},
 	{
+		"key": "{str:PlayerName} is calling for Witch! ({int:NumCallers}/{int:NumCallersLimit}) To call witch write: /witch",
+		"value": "{str:PlayerName} 想要召唤witch! ({int:NumCallers}/{int:NumCallersLimit}) 要召唤witch输入: /witch"
+	},
+	{
+		"key": "Witch ({int:NumCallers}/{int:NumCallersLimit})",
+		"value": "召唤witch ({int:NumCallers}/{int:NumCallersLimit})"
+	},
+	{
+		"key": "You can't call witch twice",
+		"value": "你不能再次召唤witch"
+	},
+	{
+		"key": "Witch {str:PlayerName} has arrived!",
+		"value": "Witch {str:PlayerName} 已经到达!"
+	},
+	{
 		"key": "heal boom found...",
 		"value": "已经找到治愈爆炸..."
 	},

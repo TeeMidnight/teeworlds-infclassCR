@@ -367,7 +367,7 @@ void CServer::CClient::Reset(bool ResetScore)
 		m_CustomSkin = 0;
 		m_AlwaysRandom = 0;
 		m_DefaultScoreMode = PLAYERSCOREMODE_SCORE;
-		str_copy(m_aLanguage, "en", sizeof(m_aLanguage));
+		str_copy(m_aLanguage, "zh", sizeof(m_aLanguage));
 
 		m_WaitingTime = 0;
 		m_WasInfected = 0;

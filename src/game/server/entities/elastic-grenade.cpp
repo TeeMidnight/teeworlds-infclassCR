@@ -110,6 +110,7 @@ void CElasticGrenade::Tick()
 			m_Direction.x = -vel.x;
 			m_Direction.y = -vel.y;
 		}
+		m_LifeSpan =  g_Config.m_InfElasticGrenadeLifeSpan * Server()->TickSpeed();
 		
 		m_Direction.x *= (100 - 50) / 100.0;
 		m_Direction.y *= (100 - 50) / 100.0;

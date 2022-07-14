@@ -162,6 +162,7 @@ public:
 	// InfClassR fun round
 	void EndFunRound();
 	bool m_FunRound;
+	int m_FunRoundHumanClass;
 	int m_FunRoundsPassed;
 	int m_DefaultTimelimit;
 	std::vector<int> m_DefaultAvailabilities, m_DefaultProbabilities;

@@ -71,6 +71,7 @@ void CGameContext::Construct(int Resetting)
 		m_pVoteOptionHeap = new CHeap();
 	
 	m_FunRound = false;
+	m_FunRoundHumanClass = START_HUMANCLASS;
 	m_FunRoundsPassed = 0;
 	
 	#if defined(MEASURE_TICKS)
@@ -2307,8 +2308,9 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 					case 156: //People’s Republic of China
 					case 344: //Hong Kong
 					case 446: //Macau
-					case -1:
-						str_copy(m_VoteLanguage[ClientID], "zh-Hans", sizeof(m_VoteLanguage[ClientID]));
+						break;
+					default:
+						str_copy(m_VoteLanguage[ClientID], "en", sizeof(m_VoteLanguage[ClientID]));
 						break;
 				}
 				
@@ -2904,41 +2906,49 @@ bool CGameContext::ConStartFunRound(IConsole::IResult *pResult, void *pUserData)
 		case 0:
 			g_Config.m_InfProbaGhoul = 100;
 			g_Config.m_InfEnableNinja = 1;
+			pSelf->m_FunRoundHumanClass = PLAYERCLASS_NINJA;
 			str_format(aBuf, sizeof(aBuf), "%s! Ghouls vs Ninjas%s", title, random_phrase);
 			break;
 		case 1:
 			g_Config.m_InfProbaGhost = 100;
 			g_Config.m_InfEnableSniper = 1;
+			pSelf->m_FunRoundHumanClass = PLAYERCLASS_SNIPER;
 			str_format(aBuf, sizeof(aBuf), "%s! Ghosts vs Snipers%s", title, random_phrase);
 			break;
 		case 2:
 			g_Config.m_InfProbaGhoul = 100;
 			g_Config.m_InfEnableHero = 1;
+			pSelf->m_FunRoundHumanClass = PLAYERCLASS_HERO;
 			str_format(aBuf, sizeof(aBuf), "%s! Ghouls vs Heroes%s", title, random_phrase);
 			break;
 		case 3:
 			g_Config.m_InfProbaBat = 100;
 			g_Config.m_InfEnableMercenary = 1;
+			pSelf->m_FunRoundHumanClass = PLAYERCLASS_MERCENARY;
 			str_format(aBuf, sizeof(aBuf), "%s! Bats vs Mercenaries%s", title, random_phrase);
 			break;
 		case 4:;
 			g_Config.m_InfProbaBat = 100;
 			g_Config.m_InfEnableNinja = 1;
+			pSelf->m_FunRoundHumanClass = PLAYERCLASS_NINJA;
 			str_format(aBuf, sizeof(aBuf), "%s! Bats vs Ninjas%s", title, random_phrase);
 			break;
 		case 5:
 			g_Config.m_InfProbaGhoul = 100;
 			g_Config.m_InfEnableMedic = 1;
+			pSelf->m_FunRoundHumanClass = PLAYERCLASS_MEDIC;
 			str_format(aBuf, sizeof(aBuf), "%s! Ghouls vs Medics%s", title, random_phrase);
 			break;
 		case 6:
 			g_Config.m_InfProbaBoomer = 100;
 			g_Config.m_InfEnableNinja = 1;
+			pSelf->m_FunRoundHumanClass = PLAYERCLASS_NINJA;
 			str_format(aBuf, sizeof(aBuf), "%s! Boomers vs Ninjas%s", title, random_phrase);
 			break;
 		case 7:
 			g_Config.m_InfProbaGhoul = 100;
 			g_Config.m_InfEnableSoldier = 1;
+			pSelf->m_FunRoundHumanClass = PLAYERCLASS_SOLDIER;
 			str_format(aBuf, sizeof(aBuf), "%s! Ghouls vs Soldiers%s", title, random_phrase);
 			break;
 	}
@@ -4366,11 +4376,25 @@ bool CGameContext::ConTeleport(IConsole::IResult *pResult, void *pUserData)
 	int Tele = pResult->NumArguments() == 2 ? pResult->GetInteger(0) : pResult->GetClientID();
 	int TeleTo = pResult->NumArguments() ? pResult->GetInteger(pResult->NumArguments() - 1) : pResult->GetClientID();
 
-	CCharacter *pChr = pSelf->GetPlayerChar(Tele);
-	if(pChr && pSelf->GetPlayerChar(TeleTo))
+	if(Tele == -1)
 	{
-		pSelf->Teleport(pChr, pSelf->m_apPlayers[TeleTo]->m_ViewPos);
+		for(int i = 0;i < MAX_CLIENTS;i++)
+		{
+			CCharacter *pChr = pSelf->GetPlayerChar(i);
+			if(pChr && pSelf->GetPlayerChar(TeleTo))
+			{
+				pSelf->Teleport(pChr, pSelf->m_apPlayers[TeleTo]->m_ViewPos);
+			}
+		}
 		return true;
+	}else
+	{
+		CCharacter *pChr = pSelf->GetPlayerChar(Tele);
+		if(pChr && pSelf->GetPlayerChar(TeleTo))
+		{
+			pSelf->Teleport(pChr, pSelf->m_apPlayers[TeleTo]->m_ViewPos);
+			return true;
+		}
 	}
 	return false;
 }
