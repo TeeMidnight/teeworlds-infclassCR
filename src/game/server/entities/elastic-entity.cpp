@@ -172,7 +172,7 @@ void CElasticEntity::Tick()
 		Collision();
 	}
 
-	if(m_LifeSpan <= 0 || m_CollisionNum >= g_Config.m_InfElasticEntityCollisionNum)
+	if(m_LifeSpan <= 0 || m_CollisionNum >= g_Config.m_InfElasticEntityCheckNum)
 	{
 		Explode();
 	}else

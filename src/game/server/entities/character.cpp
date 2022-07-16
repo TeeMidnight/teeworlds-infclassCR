@@ -1722,8 +1722,6 @@ void CCharacter::HandleWeapons()
 		m_ReloadSlimeTick--;
 		if(m_ReloadSlimeTick-1 == 0)
 		{
-			GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), 
-			CHATCATEGORY_DEFAULT, "Slime entity is ready!");
 			GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(),
 			BROADCAST_PRIORITY_WEAPONSTATE, 100, "Slime entity is ready!");
 		}

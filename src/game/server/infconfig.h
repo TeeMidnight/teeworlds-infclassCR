@@ -103,15 +103,15 @@ MACRO_CONFIG_INT(FunRoundGhoulStomachSize, funround_ghoul_stomach_size, 40, 0, 1
 //weapon config
 MACRO_CONFIG_INT(InfElasticEntityRadius, inf_elastic_entity_radius, 46, 0, 200, CFGFLAG_SERVER, "Radius of elastic entitys")
 MACRO_CONFIG_INT(InfElasticEntityLifeSpan, inf_elastic_entity_life_span, 5, 0, 100, CFGFLAG_SERVER, "Elastic entity life span")
-MACRO_CONFIG_INT(InfElasticEntityCollisionNum, inf_elastic_entity_collision_num, 6, 0, 10, CFGFLAG_SERVER, "Elastic entity life span")
+MACRO_CONFIG_INT(InfElasticEntityCheckNum, inf_elastic_entity_check_num, 6, 0, 10, CFGFLAG_SERVER, "Elastic entity life span")
 MACRO_CONFIG_INT(InfElasticEntityDamage, inf_elastic_entity_damage, 12, 0, 100, CFGFLAG_SERVER, "Damage of elastic entitys")
 
 MACRO_CONFIG_INT(InfElasticGrenadeLifeSpan, inf_elastic_grenade_life_span, 2, 0, 100, CFGFLAG_SERVER, "Elastic grenade life span")
-MACRO_CONFIG_INT(InfElasticGrenadeCollisionNum, inf_elastic_grenade_collision_num, 3, 0, 10, CFGFLAG_SERVER, "Elastic grenade life span")
+MACRO_CONFIG_INT(InfElasticGrenadeCheckNum, inf_elastic_grenade_check_num, 3, 0, 10, CFGFLAG_SERVER, "Elastic grenade life span")
 
 MACRO_CONFIG_INT(InfPoliceShieldRadius, inf_police_shield_Radius, 100, 0, 0, CFGFLAG_SERVER, "Police shield radius")
-MACRO_CONFIG_INT(InfPoliceShieldExplodeTime, inf_police_shield_explode_time, 3, 0, 0, CFGFLAG_SERVER, "Police shield explode time")
-MACRO_CONFIG_INT(InfPoliceShieldDamage, inf_police_shield_damage, 8, 0, 0, CFGFLAG_SERVER, "Police shield damage")
+MACRO_CONFIG_INT(InfPoliceShieldExplodeTime, inf_police_shield_explode_time, 4, 0, 0, CFGFLAG_SERVER, "Police shield explode time")
+MACRO_CONFIG_INT(InfPoliceShieldDamage, inf_police_shield_damage, 12, 0, 0, CFGFLAG_SERVER, "Police shield damage")
 
 //Looper class config
 MACRO_CONFIG_INT(InfSlowMotionWallDuration, inf_slow_motion_wall_duration, 30, 0, 1024, CFGFLAG_SERVER, "How long looper wall slow motion effect will slow down zombies (in centiSec)")

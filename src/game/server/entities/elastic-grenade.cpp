@@ -119,7 +119,7 @@ void CElasticGrenade::Tick()
 		m_ActualDir = normalize(m_Direction);
 	}
 
-	if(m_LifeSpan <= 0 || m_CollisionNum >= g_Config.m_InfElasticGrenadeCollisionNum)
+	if(m_LifeSpan <= 0 || m_CollisionNum >= g_Config.m_InfElasticGrenadeCheckNum)
 	{
 		Explode();
 	}
