@@ -135,26 +135,10 @@ bool IGameController::IsRoundEndTime()
 void IGameController::StartRound()
 {
 	ResetGame();
-	
-	Server()->OnRoundStart();
-	GameServer()->OnStartRound();
-	
-/* INFECTION MODIFICATION START ***************************************/
-	for(int i = 0; i < MAX_CLIENTS; i++)
-	{
-		if(GameServer()->m_apPlayers[i])
-		{
-			Server()->SetClientMemory(i, CLIENTMEMORY_ROUNDSTART_OR_MAPCHANGE, true);
-			GameServer()->m_apPlayers[i]->SetClass(PLAYERCLASS_NONE);			
-			GameServer()->m_apPlayers[i]->m_ScoreRound = 0;
-			GameServer()->m_apPlayers[i]->m_HumanTime = 0;
-		}
-	}	
-/* INFECTION MODIFICATION END *****************************************/
 
 	m_RoundId = rand();
-	m_RoundStartTick = Server()->Tick();
 	m_SuddenDeath = 0;
+	m_RoundStartTick = Server()->Tick();
 	m_GameOverTick = -1;
 	GameServer()->m_World.m_Paused = false;
 	m_aTeamscore[TEAM_RED] = 0;
@@ -164,6 +148,25 @@ void IGameController::StartRound()
 	char aBuf[256];
 	str_format(aBuf, sizeof(aBuf), "start round type='%s' teamplay='%d' id='%d'", m_pGameType, m_GameFlags&GAMEFLAG_TEAMS, m_RoundId);
 	GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "game", aBuf);
+
+	Server()->OnRoundStart();
+	GameServer()->OnStartRound();
+	
+/* INFECTION MODIFICATION START ***************************************/
+	for(int i = 0; i < MAX_CLIENTS; i++)
+	{
+		if(GameServer()->m_apPlayers[i])
+		{
+			Server()->SetClientMemory(i, CLIENTMEMORY_ROUNDSTART_OR_MAPCHANGE, true);
+			if(GameServer()->m_FunRound)
+				GameServer()->m_apPlayers[i]->SetClass(GameServer()->m_FunRoundHumanClass);
+			else
+				GameServer()->m_apPlayers[i]->SetClass(PLAYERCLASS_NONE);			
+			GameServer()->m_apPlayers[i]->m_ScoreRound = 0;
+			GameServer()->m_apPlayers[i]->m_HumanTime = 0;
+		}
+	}	
+/* INFECTION MODIFICATION END *****************************************/
 }
 
 void IGameController::ChangeMap(const char *pToMap)
@@ -432,7 +435,14 @@ void IGameController::Tick()
 			}
 			
 			CycleMap();
-			StartRound();
+			if(random_int(0, 100) <= g_Config.m_FunRoundProba)
+			{
+				GameServer()->StartFunRound();
+			}
+			else
+			{
+				StartRound();
+			}
 			m_RoundCount++;
 		}
 		else

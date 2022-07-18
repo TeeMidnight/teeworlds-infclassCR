@@ -95,10 +95,11 @@ MACRO_CONFIG_INT(InfMinEngineerPlayer, inf_min_engineer_player, 8, 0, 32, CFGFLA
 MACRO_CONFIG_INT(InfHeroFlagIndicator, inf_hero_flag_indicator, 1, 0, 1, CFGFLAG_SERVER, "Shows the heros in which direction the next flag is")
 MACRO_CONFIG_INT(InfHeroFlagIndicatorTime, inf_hero_flag_indicator_time, 3, 0, 1000, CFGFLAG_SERVER, "How many seconds the hero has to stand still until the indicator is shown")
 
-MACRO_CONFIG_STR(FunRoundTitle, funround_title, 64, "Fun round", CFGFLAG_SERVER, "Fun round title")
-MACRO_CONFIG_INT(FunRoundLimit, funround_limit, 1, 0, 100, CFGFLAG_SERVER, "Number of possible fun rounds per map")
 MACRO_CONFIG_INT(FunRoundDuration, funround_duration, 3, 0, 100, CFGFLAG_SERVER, "Fun round duration (min)")
 MACRO_CONFIG_INT(FunRoundGhoulStomachSize, funround_ghoul_stomach_size, 40, 0, 10000, CFGFLAG_SERVER, "Number of dead that the ghoul can eat")
+MACRO_CONFIG_INT(FunRoundUndeadProba, funround_undead_proba, 6, 0, 100, CFGFLAG_SERVER, "Fun round undead proba")
+MACRO_CONFIG_INT(FunRoundWitchProba, funround_wtich_proba, 5, 0, 100, CFGFLAG_SERVER, "Fun round witch proba")
+MACRO_CONFIG_INT(FunRoundProba, funround_wtich_proba, 12, 0, 100, CFGFLAG_SERVER, "Fun round proba")
 
 //weapon config
 MACRO_CONFIG_INT(InfElasticEntityRadius, inf_elastic_entity_radius, 46, 0, 200, CFGFLAG_SERVER, "Radius of elastic entitys")
@@ -111,7 +112,12 @@ MACRO_CONFIG_INT(InfElasticGrenadeCheckNum, inf_elastic_grenade_check_num, 3, 0,
 
 MACRO_CONFIG_INT(InfPoliceShieldRadius, inf_police_shield_Radius, 100, 0, 0, CFGFLAG_SERVER, "Police shield radius")
 MACRO_CONFIG_INT(InfPoliceShieldExplodeTime, inf_police_shield_explode_time, 4, 0, 0, CFGFLAG_SERVER, "Police shield explode time")
-MACRO_CONFIG_INT(InfPoliceShieldDamage, inf_police_shield_damage, 12, 0, 0, CFGFLAG_SERVER, "Police shield damage")
+MACRO_CONFIG_INT(InfPoliceShieldDamage, inf_police_shield_damage, 8, 0, 0, CFGFLAG_SERVER, "Police shield damage")
+
+MACRO_CONFIG_INT(InfAntiAirMineRadius, inf_anti_airmine_radius, 64, 0, 1024, CFGFLAG_SERVER, "Radius of anti-airmines")
+MACRO_CONFIG_INT(InfAntiAirMineSpeed, inf_anti_airmine_speed, 40, 0, 180, CFGFLAG_SERVER, "Rotation speed of anti-airmines")
+MACRO_CONFIG_INT(InfAntiAirMineLifeSpan, inf_anti_airmine_life_span, 20, 0, 100, CFGFLAG_SERVER, "Anti-Airmines life span")
+MACRO_CONFIG_INT(InfAntiAirMineDamage, inf_anti_airmine_damage, 6, 0, 100, CFGFLAG_SERVER, "Anti-Airmines damage")
 
 //Looper class config
 MACRO_CONFIG_INT(InfSlowMotionWallDuration, inf_slow_motion_wall_duration, 30, 0, 1024, CFGFLAG_SERVER, "How long looper wall slow motion effect will slow down zombies (in centiSec)")
@@ -156,10 +162,10 @@ MACRO_CONFIG_INT(InfElasticHoleLifeSpan, inf_elastic_hole_life_span, 20, 0, 100,
 MACRO_CONFIG_INT(InfElasticHoleProbability, inf_elastic_hole_probability, 20, 0, 100, CFGFLAG_SERVER, "Probability of super weapon being available after MinimalKill requirement")
 
 MACRO_CONFIG_INT(InfHealBoomMinimalKills, inf_heal_boom_minimal_kills, 8, 0, 30, CFGFLAG_SERVER, "Minimal number of kills before elastic hole become available")
-MACRO_CONFIG_INT(InfHealBoomRadius, inf_heal_boom_radius, 96, 0, 200, CFGFLAG_SERVER, "Radius of heal booms")
+MACRO_CONFIG_INT(InfHealBoomRadius, inf_heal_boom_radius, 128, 0, 200, CFGFLAG_SERVER, "Radius of heal booms")
 MACRO_CONFIG_INT(InfHealBoomLifeSpan, inf_heal_boom_life_span, 10, 0, 100, CFGFLAG_SERVER, "Heal boom life span")
-MACRO_CONFIG_INT(InfHealBoomMaxHeal, inf_heal_boom_maxheal, 5, 4, 10, CFGFLAG_SERVER, "Max heal of heal booms")
-MACRO_CONFIG_INT(InfHealBoomProbability, inf_heal_boom_probability, 10, 0, 100, CFGFLAG_SERVER, "Probability of super weapon being available after MinimalKill requirement")
+MACRO_CONFIG_INT(InfHealBoomMaxHeal, inf_heal_boom_maxheal, 3, 4, 10, CFGFLAG_SERVER, "Max heal of heal booms")
+MACRO_CONFIG_INT(InfHealBoomProbability, inf_heal_boom_probability, 20, 0, 100, CFGFLAG_SERVER, "Probability of super weapon being available after MinimalKill requirement")
 
 MACRO_CONFIG_INT(InfStunGrenadeMinimalKills, inf_stun_grenade_minimal_kills, 2, 0, 30, CFGFLAG_SERVER, "Minimal number of kills before grenade stun ammunition can be found")
 MACRO_CONFIG_INT(InfStunGrenadeProbability, inf_stun_grenade_probability, 30, 0, 100, CFGFLAG_SERVER, "Probability of super weapon being available after MinimalKill requirement")

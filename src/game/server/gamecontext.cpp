@@ -72,6 +72,7 @@ void CGameContext::Construct(int Resetting)
 	
 	m_FunRound = false;
 	m_FunRoundHumanClass = START_HUMANCLASS;
+	m_FunRoundZombieClass = START_INFECTEDCLASS;
 	m_FunRoundsPassed = 0;
 	
 	#if defined(MEASURE_TICKS)
@@ -146,6 +147,41 @@ class CCharacter *CGameContext::GetPlayerChar(int ClientID)
 	if(ClientID < 0 || ClientID >= MAX_CLIENTS || !m_apPlayers[ClientID])
 		return 0;
 	return m_apPlayers[ClientID]->GetCharacter();
+}
+
+const char *CGameContext::GetClassName(int Class)
+{
+	switch(Class)
+	{
+		//Humans
+		case PLAYERCLASS_MERCENARY: return ("Mercenary");break;
+		case PLAYERCLASS_MEDIC: return ("Medic");break;
+		case PLAYERCLASS_HERO: return ("Hero");break;
+		case PLAYERCLASS_ENGINEER: return ("Engineer");break;
+		case PLAYERCLASS_SOLDIER: return ("Soldier");break;
+		case PLAYERCLASS_NINJA: return ("Ninja");break;
+		case PLAYERCLASS_SNIPER: return ("Sniper");break;
+		case PLAYERCLASS_SCIENTIST: return ("Scientist");break;
+		case PLAYERCLASS_BIOLOGIST: return ("Biologist");break;
+		case PLAYERCLASS_LOOPER: return ("Looper");break;
+		case PLAYERCLASS_SCIOGIST: return ("Sciogist");break;
+		case PLAYERCLASS_CATAPULT: return ("Catapult");break;
+		case PLAYERCLASS_POLICE: return ("Police");break;
+		case PLAYERCLASS_REVIVER: return ("Reviver");break;
+		//Zombies
+		case PLAYERCLASS_SMOKER: return ("Smoker");break;
+		case PLAYERCLASS_BOOMER: return ("Boomer");break;
+		case PLAYERCLASS_HUNTER: return ("Hunter");break;
+		case PLAYERCLASS_BAT: return ("Bat");break;
+		case PLAYERCLASS_GHOST: return ("Ghost");break;
+		case PLAYERCLASS_SPIDER: return ("Spider");break;
+		case PLAYERCLASS_GHOUL: return ("Ghoul");break;
+		case PLAYERCLASS_SLUG: return ("Slug");break;
+		case PLAYERCLASS_VOODOO: return ("Voodoo");break;
+		case PLAYERCLASS_WITCH: return ("Witch");break;
+		case PLAYERCLASS_UNDEAD: return ("Undead");break;
+		case PLAYERCLASS_SLIME: return ("Slime");break;
+	}
 }
 
 void CGameContext::CountActivePlayers(){
@@ -1497,6 +1533,8 @@ void CGameContext::OnClientConnected(int ClientID)
 	//Thanks to Stitch
 	if(m_pController->IsInfectionStarted())
 		m_apPlayers[ClientID]->StartInfection();
+	else if(m_FunRound)
+		m_apPlayers[ClientID]->SetClass(m_FunRoundHumanClass);
 	//players[client_id].init(client_id);
 	//players[client_id].client_id = client_id;
 
@@ -2521,8 +2559,9 @@ bool CGameContext::ConRestart(IConsole::IResult *pResult, void *pUserData)
 	if(pResult->NumArguments())
 		pSelf->m_pController->DoWarmup(pResult->GetInteger(0));
 	else
+	{
 		pSelf->m_pController->StartRound();
-	
+	}
 	return true;
 }
 
@@ -2827,147 +2866,41 @@ bool CGameContext::ConVote(IConsole::IResult *pResult, void *pUserData)
 bool CGameContext::ConStartFunRound(IConsole::IResult *pResult, void *pUserData)
 {
 	CGameContext *pSelf = (CGameContext *)pUserData;
-	const char* title = g_Config.m_FunRoundTitle;
 	char aBuf[256];
 
 	if (pSelf->m_FunRound) {
-		str_format(aBuf, sizeof(aBuf), "%s is not over yet", title);
-		pSelf->SendChatTarget(-1, aBuf);
-		return true;
-	}
-	else if (pSelf->m_FunRoundsPassed >= g_Config.m_FunRoundLimit) {
-		switch (g_Config.m_FunRoundLimit) {
-			case 1: str_format(aBuf, sizeof(aBuf), "%s can be played only once per map", title); break;
-			case 2: str_format(aBuf, sizeof(aBuf), "%s can be played only twice per map", title); break;
-			default: str_format(aBuf, sizeof(aBuf), "%s can be played only %d times per map", title, g_Config.m_FunRoundLimit);
-		}
+		str_format(aBuf, sizeof(aBuf), "Funround is not over yet");
 		pSelf->SendChatTarget(-1, aBuf);
 		return true;
 	}
 
-	// zombies
-	auto zero_probabilities = [pSelf] () {
-		pSelf->SetProbabilities(std::vector<int>());
-	};
-	std::vector<int> probabilities = { // order is important!
-		g_Config.m_InfProbaBat,
-		g_Config.m_InfProbaBoomer,
-		g_Config.m_InfProbaGhost,
-		g_Config.m_InfProbaGhoul,
-		g_Config.m_InfProbaHunter,
-		g_Config.m_InfProbaSlug,
-		g_Config.m_InfProbaSmoker,
-		g_Config.m_InfProbaSpider,
-		g_Config.m_InfProbaVoodoo,
-		g_Config.m_InfGhoulThreshold,
-		g_Config.m_InfGhoulStomachSize,
-		g_Config.m_InfProbaSlime
-	};
+	pSelf->StartFunRound();
 
-	// humans
-	auto zero_availabilities = [pSelf] () {
-		pSelf->SetAvailabilities(std::vector<int>());
-	};
-	std::vector<int> availabilities = { // order is important!
-		g_Config.m_InfEnableBiologist,
-		g_Config.m_InfEnableEngineer,
-		g_Config.m_InfEnableHero,
-		g_Config.m_InfEnableMedic,
-		g_Config.m_InfEnableMercenary,
-		g_Config.m_InfEnableNinja,
-		g_Config.m_InfEnableScientist,
-		g_Config.m_InfEnableSniper,
-		g_Config.m_InfEnableSoldier,
-		g_Config.m_InfEnableLooper,
-		g_Config.m_InfEnableSciogist,
-		g_Config.m_InfEnableCatapult,
-		g_Config.m_InfEnablePolice,
-		g_Config.m_InfEnableReviver
-	};
-
-	std::vector<const char*> phrases = {
-		", glhf!",
-		", not ez!",
-		" c:",
-		" xd",
-		", that's gg",
-		", good luck!"
-	};
-	const char* random_phrase = phrases[random_int(0, phrases.size()-1)];
-	zero_probabilities();
-	zero_availabilities();
-	g_Config.m_InfGhoulStomachSize = g_Config.m_FunRoundGhoulStomachSize;
-	pSelf->m_DefaultTimelimit = g_Config.m_SvTimelimit;
-	if (g_Config.m_SvTimelimit > g_Config.m_FunRoundDuration)
-		g_Config.m_SvTimelimit = g_Config.m_FunRoundDuration;
-
-	int type = random_int(0, 7);
-	switch (type) { // todo: generalize and shrink, or remove and make something configurable
-		case 0:
-			g_Config.m_InfProbaGhoul = 100;
-			g_Config.m_InfEnableNinja = 1;
-			pSelf->m_FunRoundHumanClass = PLAYERCLASS_NINJA;
-			str_format(aBuf, sizeof(aBuf), "%s! Ghouls vs Ninjas%s", title, random_phrase);
-			break;
-		case 1:
-			g_Config.m_InfProbaGhost = 100;
-			g_Config.m_InfEnableSniper = 1;
-			pSelf->m_FunRoundHumanClass = PLAYERCLASS_SNIPER;
-			str_format(aBuf, sizeof(aBuf), "%s! Ghosts vs Snipers%s", title, random_phrase);
-			break;
-		case 2:
-			g_Config.m_InfProbaGhoul = 100;
-			g_Config.m_InfEnableHero = 1;
-			pSelf->m_FunRoundHumanClass = PLAYERCLASS_HERO;
-			str_format(aBuf, sizeof(aBuf), "%s! Ghouls vs Heroes%s", title, random_phrase);
-			break;
-		case 3:
-			g_Config.m_InfProbaBat = 100;
-			g_Config.m_InfEnableMercenary = 1;
-			pSelf->m_FunRoundHumanClass = PLAYERCLASS_MERCENARY;
-			str_format(aBuf, sizeof(aBuf), "%s! Bats vs Mercenaries%s", title, random_phrase);
-			break;
-		case 4:;
-			g_Config.m_InfProbaBat = 100;
-			g_Config.m_InfEnableNinja = 1;
-			pSelf->m_FunRoundHumanClass = PLAYERCLASS_NINJA;
-			str_format(aBuf, sizeof(aBuf), "%s! Bats vs Ninjas%s", title, random_phrase);
-			break;
-		case 5:
-			g_Config.m_InfProbaGhoul = 100;
-			g_Config.m_InfEnableMedic = 1;
-			pSelf->m_FunRoundHumanClass = PLAYERCLASS_MEDIC;
-			str_format(aBuf, sizeof(aBuf), "%s! Ghouls vs Medics%s", title, random_phrase);
-			break;
-		case 6:
-			g_Config.m_InfProbaBoomer = 100;
-			g_Config.m_InfEnableNinja = 1;
-			pSelf->m_FunRoundHumanClass = PLAYERCLASS_NINJA;
-			str_format(aBuf, sizeof(aBuf), "%s! Boomers vs Ninjas%s", title, random_phrase);
-			break;
-		case 7:
-			g_Config.m_InfProbaGhoul = 100;
-			g_Config.m_InfEnableSoldier = 1;
-			pSelf->m_FunRoundHumanClass = PLAYERCLASS_SOLDIER;
-			str_format(aBuf, sizeof(aBuf), "%s! Ghouls vs Soldiers%s", title, random_phrase);
-			break;
-	}
-	pSelf->m_pController->StartRound();
-	pSelf->CreateSoundGlobal(SOUND_CTF_CAPTURE);
-	pSelf->SendChatTarget(-1, aBuf);
-	pSelf->m_FunRound = true;
-	pSelf->m_DefaultAvailabilities = availabilities;
-	pSelf->m_DefaultProbabilities = probabilities;
 	return true;
+}
+
+void CGameContext::StartFunRound()
+{
+	m_FunRoundHumanClass = START_HUMANCLASS + random_int(1, NB_HUMANCLASS);
+	m_FunRoundZombieClass = START_INFECTEDCLASS + random_int(1, NB_INFECTEDCLASS);
+	
+	SendChatTarget_Localization(-1, CHATCATEGORY_SCORE, 
+	_("Funround are start! Zombies are {str:Zombie}. Humans are {str:Human}"),
+	"Zombie", GetClassName(m_FunRoundZombieClass),
+	"Human", GetClassName(m_FunRoundHumanClass), NULL);
+
+	m_FunRound = true;
+	m_pController->StartRound();
+	CreateSoundGlobal(SOUND_CTF_CAPTURE);
+	CreateSoundGlobal(SOUND_MENU);
+
+	return;
 }
 
 void CGameContext::EndFunRound()
 {
-	SetAvailabilities(m_DefaultAvailabilities);
-	SetProbabilities(m_DefaultProbabilities);
 	m_FunRound = false;
 	m_FunRoundsPassed++;
-	g_Config.m_SvTimelimit = m_DefaultTimelimit;
 }
 
 bool CGameContext::ConchainSpecialMotdupdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData)
@@ -4402,6 +4335,7 @@ bool CGameContext::ConTeleport(IConsole::IResult *pResult, void *pUserData)
 void CGameContext::Teleport(CCharacter *pChr, vec2 Pos)
 {
 	pChr->SetPos(Pos);
+	pChr->SetVel(vec2(0, 0));
 	pChr->m_Pos = Pos;
 }
 

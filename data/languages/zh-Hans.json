@@ -684,6 +684,22 @@
 		"value": "\u82f1\u96c4\u627e\u5230\u4e86\u65d7\u5e1c \uff01"
 	},
 	{
+		"key": "Anti-AirMine is active",
+		"value": "防空地雷已经激活"
+	},
+	{
+		"key": "Elastic hole: {sec:RemainingTime}",
+		"value": "弹射洞剩余时间: {sec:RemainingTime}"
+	},
+	{
+		"key": "Anti-AirMine is active\nElastic hole: {sec:RemainingTime}",
+		"value": "防空地雷已激活\n弹射洞剩余时间: {sec:RemainingTime}"
+	},
+	{
+		"key": "Funround are start! Zombies are {str:Zombie}. Humans are {str:Human}",
+		"value": "Funround 开始了! 僵尸是{str:Zombie}。人类是{str:Human}"
+	},
+	{
 		"key": "{str:PlayerName} is calling for Witch! ({int:NumCallers}/{int:NumCallersLimit}) To call witch write: /witch",
 		"value": "{str:PlayerName} 想要召唤witch! ({int:NumCallers}/{int:NumCallersLimit}) 要召唤witch输入: /witch"
 	},

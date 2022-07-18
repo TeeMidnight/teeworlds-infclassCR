@@ -113,6 +113,14 @@ void CGameControllerMOD::ResetFinalExplosion()
 	}
 }
 
+void CGameControllerMOD::StartRound()
+{
+	m_InfectedStarted = false;
+	m_RoundStartTick = Server()->Tick();
+	m_InfectedQuit = true;
+	IGameController::StartRound();
+}
+
 void CGameControllerMOD::EndRound()
 {	
 	m_InfectedStarted = false;
@@ -292,28 +300,13 @@ void CGameControllerMOD::Tick()
 				{
 					if(StartInfectionTrigger)
 					{
-						if(!GameServer()->m_FunRound)
-						{
-							Iter.Player()->SetClass(ChooseHumanClass(Iter.Player()));
-						}else
-							Iter.Player()->SetClass(GameServer()->m_FunRoundHumanClass);
-						
+						Iter.Player()->SetClass(ChooseHumanClass(Iter.Player()));
 						
 						if(Iter.Player()->GetCharacter())
 							Iter.Player()->GetCharacter()->IncreaseArmor(10);
 					}
 					else
 						Iter.Player()->StartInfection();
-				}
-			}
-			
-			// Infect spectators
-			if (StartInfectionTrigger)
-			{
-				CPlayerIterator<PLAYERITER_SPECTATORS> IterSpec(GameServer()->m_apPlayers);
-				while(IterSpec.Next())
-				{
-					IterSpec.Player()->StartInfection();
 				}
 			}
 			
@@ -815,7 +808,7 @@ bool CGameControllerMOD::PreSpawn(CPlayer* pPlayer, vec2 *pOutPos)
 	if(pPlayer->GetTeam() == TEAM_SPECTATORS)
 		return false;
 	
-	if(m_InfectedStarted)
+	if(IsInfectionStarted())
 		pPlayer->StartInfection();
 	else
 		pPlayer->m_WasHumanThisRound = true;
@@ -823,7 +816,7 @@ bool CGameControllerMOD::PreSpawn(CPlayer* pPlayer, vec2 *pOutPos)
 	if(pPlayer->IsZombie() && m_ExplosionStarted)
 		return false;
 		
-	if(m_InfectedStarted && pPlayer->IsZombie() && random_prob(0.66f))
+	if(IsInfectionStarted() && pPlayer->IsZombie() && random_prob(0.66f))
 	{
 		CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
 		while(Iter.Next())
@@ -869,6 +862,9 @@ bool CGameControllerMOD::PickupAllowed(int Index)
 
 int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 {
+	if(GameServer()->m_FunRound)
+		return GameServer()->m_FunRoundHumanClass;
+
 	//Get information about existing humans
 	int nbSupport = 0;
 	int nbHero = 0;
@@ -916,7 +912,8 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 	double Probability[NB_HUMANCLASS];
 	
 	Probability[PLAYERCLASS_ENGINEER - START_HUMANCLASS - 1] =
-		(nbDefender < g_Config.m_InfDefenderLimit && g_Config.m_InfEnableEngineer) ?
+		(nbDefender < g_Config.m_InfDefenderLimit && g_Config.m_InfEnableEngineer && 
+		GameServer()->GetActivePlayerCount() >= g_Config.m_InfMinEngineerPlayer) ?
 		1.0f : 0.0f;
 	Probability[PLAYERCLASS_SOLDIER - START_HUMANCLASS - 1] =
 		(nbDefender < g_Config.m_InfDefenderLimit && g_Config.m_InfEnableSoldier) ?
@@ -989,6 +986,16 @@ int CGameControllerMOD::ChooseInfectedClass(const CPlayer *pPlayer) const
 		if(Iter.Player()->GetClass() == PLAYERCLASS_UNDEAD) thereIsAnUndead = true;
 	}
 	
+	if(GameServer()->m_FunRound)
+	{
+		if(random_int(0, 100) <= g_Config.m_FunRoundUndeadProba && !thereIsAnUndead) 
+			return PLAYERCLASS_UNDEAD;
+		else if(random_int(0, 100) <= g_Config.m_FunRoundWitchProba && !thereIsAWitch)
+			return PLAYERCLASS_WITCH;
+		else 
+			return GameServer()->m_FunRoundZombieClass;
+	}
+
 	double Probability[NB_INFECTEDCLASS];
 	
 	Probability[PLAYERCLASS_SMOKER - START_INFECTEDCLASS - 1] =
@@ -1043,7 +1050,8 @@ bool CGameControllerMOD::IsEnabledClass(int PlayerClass) {
 	switch(PlayerClass)
 	{
 		case PLAYERCLASS_ENGINEER:
-			return g_Config.m_InfEnableEngineer;
+			return (g_Config.m_InfEnableEngineer && 
+			GameServer()->GetActivePlayerCount() >= g_Config.m_InfMinEngineerPlayer);
 		case PLAYERCLASS_SOLDIER:
 			return g_Config.m_InfEnableSoldier;
 		case PLAYERCLASS_SCIENTIST:

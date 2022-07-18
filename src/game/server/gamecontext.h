@@ -143,6 +143,7 @@ public:
 	// helper functions
 	class CCharacter *GetPlayerChar(int ClientID);
 	// InfClassR
+	const char *GetClassName(int Class);
 	void CountActivePlayers();
 	int GetActivePlayerCount();
 	void CountSpectators();
@@ -160,12 +161,12 @@ public:
 	std::vector<int> m_WitchCallers;
 
 	// InfClassR fun round
+	void StartFunRound();
 	void EndFunRound();
 	bool m_FunRound;
 	int m_FunRoundHumanClass;
+	int m_FunRoundZombieClass;
 	int m_FunRoundsPassed;
-	int m_DefaultTimelimit;
-	std::vector<int> m_DefaultAvailabilities, m_DefaultProbabilities;
 	void SetAvailabilities(std::vector<int> value);
 	void SetProbabilities(std::vector<int> value);
 	

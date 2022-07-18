@@ -43,6 +43,7 @@
 #include "superweapon-indicator.h"
 #include "laser-teleport.h"
 #include "police-shield.h"
+#include "anti-airmine.h"
 
 //input count
 struct CInputCount
@@ -118,6 +119,7 @@ m_pConsole(pConsole)
 	m_NinjaStrengthBuff = 0;
 	m_NinjaAmmoBuff = 0;
 	m_HasWhiteHole = false;
+	m_HasAntiAirMine = false;
 	m_HasElasticHole = false;
 	m_HasHealBoom = false;
 	m_HasIndicator = false;
@@ -856,7 +858,7 @@ void CCharacter::FireWeapon()
 				
 				m_ReloadTimer = Server()->TickSpeed()/4;
 			}
-			else if(GetClass() == PLAYERCLASS_SCIENTIST || GetClass() == PLAYERCLASS_SCIOGIST)
+			else if(GetClass() == PLAYERCLASS_SCIENTIST)
 			{
 				bool FreeSpace = true;
 				int NbMine = 0;
@@ -903,6 +905,32 @@ void CCharacter::FireWeapon()
 					new CScientistMine(GameWorld(), ProjStartPos, m_pPlayer->GetCID());
 					
 					m_ReloadTimer = Server()->TickSpeed()/2;
+				}
+			}
+			else if(GetClass() == PLAYERCLASS_SCIOGIST && !GameServer()->m_FunRound)
+			{
+				bool NoSkip = true;
+				if(m_HasAntiAirMine)
+				{
+					for(CAntiAirMine* pMine = (CAntiAirMine*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_ANTI_AIRMINE); pMine; pMine = (CAntiAirMine*) pMine->TypeNext())
+					{
+						if(pMine->GetOwner() == m_pPlayer->GetCID())
+						{
+							if(pMine->m_AttackNow)
+							{
+								NoSkip = false;
+								break;
+							}
+							else
+								GameServer()->m_World.DestroyEntity(pMine);
+						}
+					}
+				}
+				
+				if(NoSkip)
+				{
+					new CAntiAirMine(GameWorld(), m_Pos, m_pPlayer->GetCID());
+					m_HasAntiAirMine = true;
 				}
 			}
 			else if(GetClass() == PLAYERCLASS_NINJA)
@@ -2753,12 +2781,7 @@ void CCharacter::Tick()
 	}
 	else if(GetClass() == PLAYERCLASS_SCIOGIST)
 	{
-		int NumMines = 0;
-		for(CScientistMine *pMine = (CScientistMine*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SCIENTIST_MINE); pMine; pMine = (CScientistMine*) pMine->TypeNext())
-		{
-			if(pMine->m_Owner == m_pPlayer->GetCID())
-				NumMines++;
-		}
+		
 		
 		CElasticHole* pCurrentElasticHole = NULL;
 		for(CElasticHole *pElasticHole = (CElasticHole*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_ELASTIC_HOLE); pElasticHole; pElasticHole = (CElasticHole*) pElasticHole->TypeNext())
@@ -2791,16 +2814,15 @@ void CCharacter::Tick()
 		}
 		
 		//else 
-		if(NumMines > 0 && !pCurrentElasticHole)
+		if(m_HasAntiAirMine && !pCurrentElasticHole)
 		{
-			GameServer()->SendBroadcast_Localization_P(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, NumMines,
-				_P("One mine is active", "{int:NumMines} mines are active"),
-				"NumMines", &NumMines,
+			GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+				_("Anti-AirMine is active"),
 				NULL
 			);
 		}
 		
-		else if(NumMines <= 0 && pCurrentElasticHole)
+		else if(!m_HasAntiAirMine && pCurrentElasticHole)
 		{
 			int Seconds = 1+pCurrentElasticHole->GetTick()/Server()->TickSpeed();
 			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
@@ -2810,12 +2832,11 @@ void CCharacter::Tick()
 			);
 		}
 		
-		else if(NumMines > 0 && pCurrentElasticHole)
+		else if(m_HasAntiAirMine && pCurrentElasticHole)
 		{
 			int Seconds = 1+pCurrentElasticHole->GetTick()/Server()->TickSpeed();
 			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
-				_("{int:NumMines} mines are active\nElastic hole: {sec:RemainingTime}"),
-				"NumMines", &NumMines,
+				_("Anti-AirMine is active\nElastic hole: {sec:RemainingTime}"),
 				"RemainingTime", &Seconds,
 				NULL
 			);
@@ -3325,6 +3346,11 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 
 	if(Mode == TAKEDAMAGEMODE_ALL)
 	{
+		if(pKillerChar->IsZombie() == IsZombie())
+		{
+			Dmg = max(1,Dmg/2);	
+		}
+
 		if(m_Armor)
 		{
 			if(Dmg <= m_Armor)
@@ -4490,6 +4516,11 @@ void CCharacter::DestroyChildEntities()
 	for(CScientistMine* pMine = (CScientistMine*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SCIENTIST_MINE); pMine; pMine = (CScientistMine*) pMine->TypeNext())
 	{
 		if(pMine->m_Owner != m_pPlayer->GetCID()) continue;
+			GameServer()->m_World.DestroyEntity(pMine);
+	}
+	for(CAntiAirMine* pMine = (CAntiAirMine*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_ANTI_AIRMINE); pMine; pMine = (CAntiAirMine*) pMine->TypeNext())
+	{
+		if(pMine->GetOwner() != m_pPlayer->GetCID()) continue;
 			GameServer()->m_World.DestroyEntity(pMine);
 	}
 	for(CBiologistMine* pMine = (CBiologistMine*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_BIOLOGIST_MINE); pMine; pMine = (CBiologistMine*) pMine->TypeNext())
