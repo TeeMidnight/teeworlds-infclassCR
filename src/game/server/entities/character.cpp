@@ -1080,7 +1080,7 @@ void CCharacter::FireWeapon()
 									m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_INFECTION);
 							}
 						}
-						else if(GetClass() == PLAYERCLASS_BIOLOGIST || GetClass() == PLAYERCLASS_MERCENARY)
+						else if(GetClass() == PLAYERCLASS_BIOLOGIST || GetClass() == PLAYERCLASS_MERCENARY ||  GetClass() == PLAYERCLASS_SCIOGIST)
 						{
 							/* affects mercenary only if love bombs are disabled. */
 							if (pTarget->IsZombie())
@@ -1541,7 +1541,7 @@ void CCharacter::FireWeapon()
 				else
 					return;
 			}
-			else if(GetClass() == PLAYERCLASS_CATAPULT)
+			else if(GetClass() == PLAYERCLASS_CATAPULT && !GameServer()->m_FunRound)
 			{
 				new CElasticEntity(GameWorld(), m_Pos, Direction, m_pPlayer->GetCID());
 				GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);

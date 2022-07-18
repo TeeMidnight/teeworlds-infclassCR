@@ -240,6 +240,8 @@ void CGameContext::CountInfPlayers()
 	{
 		if (!m_apPlayers[i])
 			continue;
+		if(m_apPlayers[i]->GetTeam() == TEAM_SPECTATORS)
+			continue;
 		if (m_apPlayers[i]->IsHuman())
 			humanCounter++;
 		else if (m_apPlayers[i]->IsZombie())
