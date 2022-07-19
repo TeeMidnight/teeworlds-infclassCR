@@ -847,7 +847,7 @@ void CCharacter::FireWeapon()
 						pCurrentBomb->Explode();
 					else
 					{
-						pCurrentBomb->IncreaseDamage();
+						pCurrentBomb->IncreaseDamage(2);
 						GameServer()->CreateSound(m_Pos, SOUND_PICKUP_ARMOR);
 					}
 				}
@@ -1336,7 +1336,7 @@ void CCharacter::FireWeapon()
 				
 				if(!BombFound && m_aWeapons[m_ActiveWeapon].m_Ammo)
 				{
-					int ShotSpread = 2;
+					int ShotSpread = 1;
 					
 					CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
 					Msg.AddInt(ShotSpread*2+1);

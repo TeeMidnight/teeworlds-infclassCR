@@ -20,9 +20,9 @@ public:
 	virtual void Explode();
 	virtual void Snap(int SnappingClient);
 	virtual void FlashGrenade();
+	vec2 m_ActualPos;
 
 private:
-	vec2 m_ActualPos;
 	vec2 m_ActualDir;
 	vec2 m_Direction;
 	int m_StartTick;

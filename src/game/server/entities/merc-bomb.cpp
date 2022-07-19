@@ -4,6 +4,7 @@
 #include <engine/shared/config.h>
 #include "growingexplosion.h"
 #include "merc-bomb.h"
+#include "scatter-grenade.h"
 
 CMercenaryBomb::CMercenaryBomb(CGameWorld *pGameWorld, vec2 Pos, int Owner)
 : CEntity(pGameWorld, CGameWorld::ENTTYPE_MERCENARY_BOMB)
@@ -33,9 +34,9 @@ void CMercenaryBomb::Reset()
 	GameServer()->m_World.DestroyEntity(this);
 }
 
-void CMercenaryBomb::IncreaseDamage()
+void CMercenaryBomb::IncreaseDamage(int Damage)
 {
-	m_Damage += 2;
+	m_Damage += Damage;
 	if(m_Damage > g_Config.m_InfMercBombs)
 		m_Damage = g_Config.m_InfMercBombs;
 }
@@ -60,6 +61,21 @@ void CMercenaryBomb::Tick()
 		{
 			MustExplode = true;
 			break;
+		}
+	}
+	if( m_Damage != g_Config.m_InfMercBombs )
+	{
+		for(CScatterGrenade *p = (CScatterGrenade*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SCATTER_GRENADE); p; p = (CScatterGrenade *)p->TypeNext())
+		{
+			if(p->m_Owner != m_Owner)continue;;
+
+			float Len = distance(p->m_ActualPos, m_Pos);
+			if(Len < 80.0f)
+			{
+				GameServer()->m_World.DestroyEntity(p);
+				IncreaseDamage(1);
+				GameServer()->CreateSound(m_Pos, SOUND_PICKUP_ARMOR);
+			}
 		}
 	}
 	

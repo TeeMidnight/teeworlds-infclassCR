@@ -24,7 +24,7 @@ public:
 	virtual void Tick();
 	virtual void Reset();
 	void Explode();
-	void IncreaseDamage();
+	void IncreaseDamage(int Damage);
 	bool ReadyToExplode();
 
 private:
