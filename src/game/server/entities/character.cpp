@@ -10,6 +10,7 @@
 #include <game/server/gamecontext.h>
 #include <game/mapitems.h>
 #include <iostream>
+#include <game/collision.h>
 
 #include "character.h"
 #include "projectile.h"

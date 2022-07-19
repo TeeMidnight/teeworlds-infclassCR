@@ -169,6 +169,10 @@ struct CMapItemLayerTilemap
 	int m_Data;
 
 	int m_aName[3];
+
+	// DDRace
+
+	int m_Tele;
 } ;
 
 struct CMapItemLayerQuads

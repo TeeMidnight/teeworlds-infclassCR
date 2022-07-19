@@ -163,6 +163,7 @@ private:
 	// the player core for the physics
 public:
 	CCharacterCore m_Core;
+	CCharacterCore *m_pCore;
 	
 private:
 /* INFECTION MODIFICATION END *****************************************/
@@ -244,6 +245,7 @@ public:
 
 public:
 	CCharacterCore GetCore() { return m_Core; }
+	CCharacterCore *Core() { return m_pCore; }
 	vec2 GetVel() { return m_Core.m_Vel;}
 	void SetVel(vec2 Vel) { m_Core.m_Vel = Vel;}
 	void SetPos(vec2 Pos) { m_Core.m_Pos = Pos;}

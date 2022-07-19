@@ -1934,48 +1934,10 @@ int CServer::LoadMap(const char *pMapName)
 	
 	
 	{
-		g_Config.m_SvTimelimit = 5;
 		
-		//Open file
 		char MapInfoFilename[512];
 		str_format(MapInfoFilename, sizeof(MapInfoFilename), "maps/%s.mapinfo", pMapName);
-		IOHANDLE File = Storage()->OpenFile(MapInfoFilename, IOFLAG_READ, IStorage::TYPE_ALL);
-		if(File)
-		{
-			char MapInfoLine[512];
-			bool isEndOfFile = false;
-			while(!isEndOfFile)
-			{
-				isEndOfFile = true;
-				
-				//Load one line
-				int MapInfoLineLength = 0;
-				char c;
-				while(io_read(File, &c, 1))
-				{
-					isEndOfFile = false;
-					
-					if(c == '\n') break;
-					else
-					{
-						MapInfoLine[MapInfoLineLength] = c;
-						MapInfoLineLength++;
-					}
-				}
-				
-				MapInfoLine[MapInfoLineLength] = 0;
-				
-				//Get the key
-				if(str_comp_nocase_num(MapInfoLine, "timelimit ", 10) == 0)
-				{
-					g_Config.m_SvTimelimit = str_toint(MapInfoLine+10);
-				}
-			}
-		
-			io_close(File);
-		}
-		else
-			g_Config.m_SvTimelimit = 5;
+		m_pConsole->ExecuteFile(MapInfoFilename);
 	}
 /* INFECTION MODIFICATION END *****************************************/
 	

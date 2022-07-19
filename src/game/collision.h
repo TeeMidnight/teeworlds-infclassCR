@@ -5,6 +5,18 @@
 
 #include <base/vmath.h>
 #include <base/tl/array.h>
+#include <map>
+#include <vector>
+
+
+enum DD_TILE_TELE
+{
+	TILE_TELEINEVIL = 10,
+	TILE_TELEINWEAPON = 14,
+	TILE_TELEINHOOK = 15,
+	TILE_TELEIN = 26,
+	TILE_TELEOUT = 27,
+};
 
 class CCollision
 {

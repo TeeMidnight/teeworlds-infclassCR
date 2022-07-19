@@ -21,7 +21,7 @@ MACRO_CONFIG_INT(InfSpawnProtectionTime, inf_spawn_protection_time, 1, 0, 10000,
 MACRO_CONFIG_INT(InfDefenderLimit, inf_defender_limit, 40, 0, 64, CFGFLAG_SERVER, "Maximum number of defenders in game")
 MACRO_CONFIG_INT(InfSciogistLimit, inf_sciogist_limit, 1, 0, 64, CFGFLAG_SERVER, "Maximum number of sciogists in game")
 MACRO_CONFIG_INT(InfMedicLimit, inf_medic_limit, 20, 0, 64, CFGFLAG_SERVER, "Maximum number of medics in game")
-MACRO_CONFIG_INT(InfHeroLimit, inf_hero_limit, 10, 0, 64, CFGFLAG_SERVER, "Maximum number of heros in game")
+MACRO_CONFIG_INT(InfHeroLimit, inf_hero_limit, 1, 0, 64, CFGFLAG_SERVER, "Maximum number of heros in game")
 MACRO_CONFIG_INT(InfSupportLimit, inf_support_limit, 40, 0, 64, CFGFLAG_SERVER, "Maximum number of supports in game")
 MACRO_CONFIG_INT(InfReviverLimit, inf_reviver_limit, 1, 0, 4, CFGFLAG_SERVER, "Maximum number of revivers in game")
 
@@ -99,7 +99,7 @@ MACRO_CONFIG_INT(FunRoundDuration, funround_duration, 3, 0, 100, CFGFLAG_SERVER,
 MACRO_CONFIG_INT(FunRoundGhoulStomachSize, funround_ghoul_stomach_size, 40, 0, 10000, CFGFLAG_SERVER, "Number of dead that the ghoul can eat")
 MACRO_CONFIG_INT(FunRoundUndeadProba, funround_undead_proba, 6, 0, 100, CFGFLAG_SERVER, "Fun round undead proba")
 MACRO_CONFIG_INT(FunRoundWitchProba, funround_wtich_proba, 5, 0, 100, CFGFLAG_SERVER, "Fun round witch proba")
-MACRO_CONFIG_INT(FunRoundProba, funround_wtich_proba, 12, 0, 100, CFGFLAG_SERVER, "Fun round proba")
+MACRO_CONFIG_INT(FunRoundProba, funround_proba, 12, 0, 100, CFGFLAG_SERVER, "Fun round proba")
 
 //weapon config
 MACRO_CONFIG_INT(InfElasticEntityRadius, inf_elastic_entity_radius, 46, 0, 200, CFGFLAG_SERVER, "Radius of elastic entitys")
