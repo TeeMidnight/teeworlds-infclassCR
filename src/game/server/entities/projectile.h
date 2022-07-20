@@ -18,6 +18,9 @@ public:
 	virtual void Snap(int SnappingClient);
 
 	int GetOwner() const;
+	int GetType() const { return m_Type;}
+
+	vec2 m_ActualPos;
 
 private:
 	vec2 m_Direction;

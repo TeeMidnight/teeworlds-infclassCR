@@ -63,11 +63,11 @@ void CMercenaryBomb::Tick()
 			break;
 		}
 	}
-	if( m_Damage != g_Config.m_InfMercBombs )
+	if( m_Damage < g_Config.m_InfMercBombs )
 	{
 		for(CScatterGrenade *p = (CScatterGrenade*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_SCATTER_GRENADE); p; p = (CScatterGrenade *)p->TypeNext())
 		{
-			if(p->m_Owner != m_Owner)continue;;
+			if(p->m_Owner != m_Owner)continue;
 
 			float Len = distance(p->m_ActualPos, m_Pos);
 			if(Len < 80.0f)

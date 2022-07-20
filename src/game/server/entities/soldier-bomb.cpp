@@ -3,6 +3,7 @@
 #include <game/server/gamecontext.h>
 #include <engine/shared/config.h>
 #include "soldier-bomb.h"
+#include "projectile.h"
 
 CSoldierBomb::CSoldierBomb(CGameWorld *pGameWorld, vec2 Pos, int Owner)
 : CEntity(pGameWorld, CGameWorld::ENTTYPE_SOLDIER_BOMB)
@@ -12,6 +13,7 @@ CSoldierBomb::CSoldierBomb(CGameWorld *pGameWorld, vec2 Pos, int Owner)
 	m_DetectionRadius = 60.0f;
 	m_StartTick = Server()->Tick();
 	m_Owner = Owner;
+	m_nbMaxBomb = g_Config.m_InfSoldierBombs;
 	m_nbBomb = g_Config.m_InfSoldierBombs;
 	
 	m_IDBomb.set_size(g_Config.m_InfSoldierBombs);
@@ -32,11 +34,30 @@ void CSoldierBomb::Reset()
 	GameServer()->m_World.DestroyEntity(this);
 }
 
-void CSoldierBomb::Explode()
+void CSoldierBomb::Tick()
+{
+	if( m_nbBomb < m_nbMaxBomb )
+	{
+		for(CProjectile *p = (CProjectile*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_PROJECTILE); p; p = (CProjectile *)p->TypeNext())
+		{
+			if(p->GetOwner() != m_Owner || p->GetType() != WEAPON_GRENADE)continue;
+
+			float Len = distance(p->m_ActualPos, m_Pos);
+			if(Len < m_DetectionRadius)
+			{
+				GameServer()->m_World.DestroyEntity(p);
+				m_nbBomb++;
+				GameServer()->CreateSound(m_Pos, SOUND_PICKUP_GRENADE);
+			}
+		}
+	}
+}
+
+bool CSoldierBomb::Explode()
 {
 	CCharacter *OwnerChar = GameServer()->GetPlayerChar(m_Owner);
-	if(!OwnerChar)
-		return;
+	if(!OwnerChar || !m_nbBomb)
+		return false;
 		
 	vec2 dir = normalize(OwnerChar->m_Pos - m_Pos);
 	
@@ -60,11 +81,8 @@ void CSoldierBomb::Explode()
 	}
 	
 	m_nbBomb--;
-	
-	if(m_nbBomb == 0)
-	{
-		GameServer()->m_World.DestroyEntity(this);
-	}
+
+	return true;
 }
 
 void CSoldierBomb::Snap(int SnappingClient)
@@ -75,7 +93,7 @@ void CSoldierBomb::Snap(int SnappingClient)
 	float time = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
 	float angle = fmodf(time*pi/2, 2.0f*pi);
 	
-	for(int i=0; i<m_nbBomb; i++)
+	for(int i=0; i<m_nbMaxBomb; i++)
 	{
 		if(NetworkClipped(SnappingClient))
 			return;
@@ -88,7 +106,7 @@ void CSoldierBomb::Snap(int SnappingClient)
 		pProj->m_VelX = (int)(0.0f);
 		pProj->m_VelY = (int)(0.0f);
 		pProj->m_StartTick = Server()->Tick();
-		pProj->m_Type = WEAPON_GRENADE;
+		pProj->m_Type = (i+1 > m_nbBomb) ? WEAPON_HAMMER : WEAPON_GRENADE;
 	}
 }
 

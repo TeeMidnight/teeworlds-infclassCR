@@ -133,8 +133,11 @@ void CAntiAirMine::Tick()
 
 				if(Len < p->m_ProximityRadius)
 				{
+					float Radius = g_Config.m_InfAntiAirMineRadius;
 					int Damage = g_Config.m_InfAntiAirMineDamage;
-					p->TakeDamage(vec2(0.0f, 0.0f), m_Owner == p->GetPlayer()->GetCID() ? Damage/2 : Damage, m_Owner, WEAPON_HAMMER,TAKEDAMAGEMODE_SELFHARM);
+					
+					GameServer()->CreateExplosionDisk(m_Pos, Radius, Radius, m_Owner == p->GetPlayer()->GetCID() ? Damage/2 : Damage,
+						32.0f, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_SELFHARM);
 				}
 			}
         }

@@ -801,8 +801,9 @@ void CCharacter::FireWeapon()
 				{
 					if(pBomb->m_Owner == m_pPlayer->GetCID())
 					{
-						pBomb->Explode();
-						BombFound = true;
+						BombFound = pBomb->Explode();
+						if(!BombFound)
+							GameServer()->m_World.DestroyEntity(pBomb);
 					}
 				}
 				

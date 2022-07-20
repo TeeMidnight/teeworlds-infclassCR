@@ -15,7 +15,8 @@ public:
 	virtual void Snap(int SnappingClient);
 	virtual void Reset();
 	virtual void TickPaused();
-	void Explode();
+	virtual void Tick();
+	bool Explode();
 	bool AddBomb();
 	int GetNbBombs() { return m_nbBomb; }
 
@@ -23,6 +24,7 @@ private:
 	int m_StartTick;
 	array<int> m_IDBomb;
 	int m_nbBomb;
+	int m_nbMaxBomb;
 	
 public:
 	float m_DetectionRadius;
