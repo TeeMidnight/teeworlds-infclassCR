@@ -117,7 +117,15 @@ MACRO_CONFIG_INT(InfPoliceShieldDamage, inf_police_shield_damage, 8, 0, 0, CFGFL
 MACRO_CONFIG_INT(InfAntiAirMineRadius, inf_anti_airmine_radius, 64, 0, 1024, CFGFLAG_SERVER, "Radius of anti-airmines")
 MACRO_CONFIG_INT(InfAntiAirMineSpeed, inf_anti_airmine_speed, 40, 0, 180, CFGFLAG_SERVER, "Rotation speed of anti-airmines")
 MACRO_CONFIG_INT(InfAntiAirMineLifeSpan, inf_anti_airmine_life_span, 20, 0, 100, CFGFLAG_SERVER, "Anti-Airmines life span")
-MACRO_CONFIG_INT(InfAntiAirMineDamage, inf_anti_airmine_damage, 6, 0, 100, CFGFLAG_SERVER, "Anti-Airmines damage")
+MACRO_CONFIG_INT(InfAntiAirMineDamage, inf_anti_airmine_damage, 12, 0, 100, CFGFLAG_SERVER, "Anti-Airmines damage")
+
+MACRO_CONFIG_INT(InfReviverGrenadeLifeSpan, inf_reviver_grenade_life_span, 5, 0, 100, CFGFLAG_SERVER, "Reviver grenade life span")
+MACRO_CONFIG_INT(InfReviverGrenadeSlowTime, inf_reviver_grenade_slow_time, 4, 0, 100, CFGFLAG_SERVER, "Reviver grenade slow time")
+
+MACRO_CONFIG_INT(InfPlasmaPlusRange, inf_plasma_plus_range, 160, 0, 2000, CFGFLAG_SERVER, "Range of plasma plus")
+MACRO_CONFIG_INT(InfPlasmaPlusLifeSpan, inf_plasma_plus_life_span, 3, 0, 10, CFGFLAG_SERVER, "plasma plus life span")
+MACRO_CONFIG_INT(InfPlasmaPlusDamage, inf_plasma_plus_damage, 8, 0, 20, CFGFLAG_SERVER, "Damage of plasma plus")
+MACRO_CONFIG_INT(InfPlasmaPlusSpeed, inf_plasma_plus_speed, 24, 0, 20, CFGFLAG_SERVER, "Speed of plasma plus")
 
 //Looper class config
 MACRO_CONFIG_INT(InfSlowMotionWallDuration, inf_slow_motion_wall_duration, 30, 0, 1024, CFGFLAG_SERVER, "How long looper wall slow motion effect will slow down zombies (in centiSec)")

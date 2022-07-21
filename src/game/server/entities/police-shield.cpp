@@ -78,8 +78,8 @@ void CPoliceShield::Tick()
 							}
 							break;
 						case 1:
-							if((abs(m_OwnerChrCore.m_Vel.x) > 8 || abs(m_OwnerChrCore.m_Vel.y) > 8) && !m_ExplodeTick)
-								GameServer()->CreateExplosionDisk(m_SnapIDsPos[i], 32, 48, g_Config.m_InfPoliceShieldDamage, 32.0f, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
+							if((abs(m_OwnerChrCore.m_Vel.x) > 4 || abs(m_OwnerChrCore.m_Vel.y) > 4) && !m_ExplodeTick)
+								GameServer()->CreateExplosionDisk(m_SnapIDsPos[i], 32.0f, 48.0f, g_Config.m_InfPoliceShieldDamage + (int)(max(m_OwnerChrCore.m_Vel.y, m_OwnerChrCore.m_Vel.x) - 4), 32.0f, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
 								m_ExplodeTick = g_Config.m_InfPoliceShieldExplodeTime;
 							break;
 					}

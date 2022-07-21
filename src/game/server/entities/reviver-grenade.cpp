@@ -16,10 +16,23 @@ CReviverGrenade::CReviverGrenade(CGameWorld *pGameWorld, int Owner, vec2 Pos, ve
 	m_ActualDir = Dir;
 	m_Direction = Dir;
 	m_Owner = Owner;
-	m_LifeSpan =  g_Config.m_InfElasticGrenadeLifeSpan * Server()->TickSpeed();
+	m_Angle = 0;
+	m_LifeSpan =  g_Config.m_InfReviverGrenadeLifeSpan * Server()->TickSpeed();
 	m_StartTick = Server()->Tick();
 
 	GameWorld()->InsertEntity(this);
+	for(int i=0; i< NUM_AMMO; i++)
+	{
+		m_IDs[i] = Server()->SnapNewID();
+	}
+}
+
+CReviverGrenade::~CReviverGrenade()
+{
+	for(int i=0; i< NUM_AMMO; i++)
+	{
+		Server()->SnapFreeID(m_IDs[i]);
+	}
 }
 
 void CReviverGrenade::Reset()
@@ -55,14 +68,15 @@ void CReviverGrenade::Tick()
 	m_ActualDir = normalize(CurPos - PrevPos);
 	
 	m_LifeSpan--;
+	m_Angle += 4;
 
 	for(CCharacter *pChr = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); pChr; pChr = (CCharacter *)pChr->TypeNext())
 	{
 		if(pChr->IsHuman()) continue;
-		float Len = distance(pChr->m_Pos, m_Pos);
+		float Len = distance(pChr->m_Pos, m_ActualPos);
 		if(Len < pChr->m_ProximityRadius)
 		{
-			Explode(pChr->m_Pos);
+			Explode(m_ActualPos);
 		}
 	}
 
@@ -102,14 +116,42 @@ void CReviverGrenade::Snap(int SnappingClient)
 	CNetObj_Projectile *pProj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_ID, sizeof(CNetObj_Projectile)));
 	if(pProj)
 		FillInfo(pProj);
+
+	float Radius = 16.0f;
+	int Degres = m_Angle;
+
+	for(int i=0;i < NUM_AMMO;i++)
+	{
+		vec2 Pos = GetPos(Ct) + (GetDir(Degres*pi/180) * Radius);
+		CNetObj_Laser *pObj = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_IDs[i], sizeof(CNetObj_Laser)));
+		if(pObj)
+		{
+			pObj->m_FromX = (int)Pos.x;
+			pObj->m_X = (int)Pos.x;
+			pObj->m_FromY = (int)Pos.y;
+			pObj->m_Y = (int)Pos.y;
+			pObj->m_StartTick = Server()->Tick();
+		}
+		Degres += 360 / NUM_AMMO;
+	}
 }
 	
 void CReviverGrenade::Explode(vec2 Pos)
 {
-	new CGrowingExplosion(GameWorld(), m_ActualPos, m_Direction, m_Owner, 5, GROWINGEXPLOSIONEFFECT_LOVE_INFECTED);
+	float Radius = 5 * 16.0f;
+	new CGrowingExplosion(GameWorld(), Pos, vec2(0.0f, 0.0f), m_Owner, Radius / 16.0f, GROWINGEXPLOSIONEFFECT_LOVE_INFECTED);
+	GameServer()->CreateExplosionDisk(Pos, Radius, Radius, 0, -1.0f, m_Owner, WEAPON_GRENADE, TAKEDAMAGEMODE_NOINFECTION);
+	GameServer()->CreateSound(Pos, SOUND_GRENADE_EXPLODE);
 
-	GameServer()->CreateExplosion(m_ActualPos, m_Owner, WEAPON_GRENADE, true, TAKEDAMAGEMODE_NOINFECTION);
-	GameServer()->CreateSound(m_ActualPos, SOUND_GRENADE_EXPLODE);
+	for(CCharacter *pChr = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); pChr; pChr = (CCharacter *)pChr->TypeNext())
+	{
+		if(pChr->IsHuman()) continue;
+		float Len = distance(pChr->m_Pos, Pos);
+		if(Len < pChr->m_ProximityRadius + Radius)
+		{
+			pChr->SlowMotionEffect(g_Config.m_InfReviverGrenadeSlowTime * 10);
+		}
+	}
 
 	GameServer()->m_World.DestroyEntity(this);
 }

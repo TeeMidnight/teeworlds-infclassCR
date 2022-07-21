@@ -34,6 +34,7 @@
 #include "hero-flag.h"
 #include "slug-slime.h"
 #include "plasma.h"
+#include "plasma-plus.h"
 #include "growingexplosion.h"
 #include "white-hole.h"
 #include "elastic-hole.h"
@@ -1189,7 +1190,13 @@ void CCharacter::FireWeapon()
 
 		case WEAPON_GUN:
 		{
-			if(GetClass() == PLAYERCLASS_MERCENARY)
+			if(GetClass() == PLAYERCLASS_SCIENTIST)
+			{
+				CPlasmaPlus *pPlus = new CPlasmaPlus(GameWorld(), m_Pos, m_pPlayer->GetCID(),
+					Direction, false, true);
+				GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
+			}
+			else if(GetClass() == PLAYERCLASS_MERCENARY)
 			{
 				CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_GUN,
 					m_pPlayer->GetCID(),
@@ -4575,6 +4582,11 @@ void CCharacter::DestroyChildEntities()
 		if(pPlasma->GetOwner() != m_pPlayer->GetCID()) continue;
 		GameServer()->m_World.DestroyEntity(pPlasma);
 	}
+	for(CPlasmaPlus* pPlasma = (CPlasmaPlus*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_PLASMA_PLUS); pPlasma; pPlasma = (CPlasmaPlus*) pPlasma->TypeNext())
+	{
+		if(pPlasma->GetOwner() != m_pPlayer->GetCID()) continue;
+		GameServer()->m_World.DestroyEntity(pPlasma);
+	}
 	for(CHeroFlag* pFlag = (CHeroFlag*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_HERO_FLAG); pFlag; pFlag = (CHeroFlag*) pFlag->TypeNext())
 	{
 		if(pFlag->GetOwner() != m_pPlayer->GetCID()) continue;
@@ -4731,6 +4743,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_CATAPULT_GUN;
 			case PLAYERCLASS_POLICE:
 				return INFWEAPON_POLICE_GUN;
+			case PLAYERCLASS_SCIENTIST:
+				return INFWEAPON_SCIENTIST_GUN;
 			default:
 				return INFWEAPON_GUN;
 		}
