@@ -1175,6 +1175,7 @@ void CCharacter::FireWeapon()
 						{
 							ShowAttackAnimation = true;
 							new CSlugSlime(GameWorld(), CheckPos, m_pPlayer->GetCID());
+							GameServer()->CreateSound(m_Pos, SOUND_HAMMER_FIRE);
 						}
 					}
 				}

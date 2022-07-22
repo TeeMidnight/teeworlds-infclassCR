@@ -1750,7 +1750,7 @@ void CServer::SendServerInfo(const NETADDR *pAddr, int Token, bool Extended, boo
 	str_format(aBuf, sizeof(aBuf), "%d", PlayerCount); p.AddString(aBuf, 3); // num players
 	str_format(aBuf, sizeof(aBuf), "%d", MaxClients-g_Config.m_SvSpectatorSlots); p.AddString(aBuf, 3); // max players
 	str_format(aBuf, sizeof(aBuf), "%d", ClientCount); p.AddString(aBuf, 3); // num clients
-	str_format(aBuf, sizeof(aBuf), "%d", MaxClients); p.AddString(aBuf, 3); // max clients
+	str_format(aBuf, sizeof(aBuf), "%d", max(ClientCount, MaxClients)); p.AddString(aBuf, 3); // max clients
 
 	if (Extended)
 		p.AddInt(Offset);

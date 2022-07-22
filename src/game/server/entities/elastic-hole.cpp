@@ -59,14 +59,18 @@ void CElasticHole::Explode()
 	new CGrowingExplosion(GameWorld(), m_Pos, vec2(0.0, 0.0), m_Owner, m_MaxRadius/32*7, GROWINGEXPLOSIONEFFECT_BOOM_ALL);
 	GameServer()->CreateSound(m_Pos, SOUND_GRENADE_EXPLODE);
 
-	GameServer()->m_World.DestroyEntity(this);
+	Reset();
 }
 
 void CElasticHole::Tick()
 {
-	if(!GameServer()->GetPlayerChar(m_Owner) || GameServer()->GetPlayerChar(m_Owner)->IsZombie())
+	if(!GameServer()->GetPlayerChar(m_Owner))
 	{
-		GameServer()->m_World.DestroyEntity(this);
+		if(GameServer()->GetPlayerChar(m_Owner)->IsZombie())
+		{
+			Reset();
+			return;
+		}
 	}
 
 	if(m_Radius > m_MaxRadius)
@@ -96,19 +100,17 @@ void CElasticHole::Tick()
 			pChr->SetVel(vec2(Vel.x*-1.25, Vel.y*-1.25));
 		}
 	}
-	bool boom = false;
 	if(m_Radius < 0)
 	{
-		if(!boom && m_IsExplode)
+		if(m_IsExplode)
 		{
 			Explode();
-			boom = true;
 		}
 		else
 		{
 			GameServer()->CreateExplosion(m_Pos, m_Owner, WEAPON_HAMMER, true, TAKEDAMAGEMODE_NOINFECTION);
 			GameServer()->CreateSound(m_Pos, SOUND_GRENADE_EXPLODE);
-			GameServer()->m_World.DestroyEntity(this);
+			Reset();
 		}
 	}
 }
