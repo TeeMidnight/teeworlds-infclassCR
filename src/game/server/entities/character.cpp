@@ -1123,7 +1123,7 @@ void CCharacter::FireWeapon()
 							{
 								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, 20, 
 										m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
-								GameServer()->CreateExplosion(m_Pos, m_pPlayer->GetCID(), WEAPON_HAMMER, false, TAKEDAMAGEMODE_NOINFECTION);
+								GameServer()->CreateExplosion(pTarget->m_Pos, m_pPlayer->GetCID(), WEAPON_HAMMER, false, TAKEDAMAGEMODE_NOINFECTION);
 							}
 							else
 							{

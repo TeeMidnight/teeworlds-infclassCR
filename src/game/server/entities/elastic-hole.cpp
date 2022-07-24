@@ -66,11 +66,13 @@ void CElasticHole::Tick()
 {
 	if(!GameServer()->GetPlayerChar(m_Owner))
 	{
-		if(GameServer()->GetPlayerChar(m_Owner)->IsZombie())
-		{
-			Reset();
-			return;
-		}
+		Reset();
+		return;
+	}
+	else if(GameServer()->GetPlayerChar(m_Owner)->IsZombie())
+	{
+		Reset();
+		return;
 	}
 
 	if(m_Radius > m_MaxRadius)
