@@ -1,2 +1,4 @@
+#minplayers 7
+#maxplayers 32
 sv_timelimit 4
-inf_first_infected_limit 3
+sv_rounds_per_map 3

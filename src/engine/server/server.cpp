@@ -1981,7 +1981,7 @@ int CServer::GetMinPlayersForMap(const char* pMapName)
 		MapInfoLine[MapInfoLineLength] = 0;
 		
 		//Get the key
-		if(str_comp_nocase_num(MapInfoLine, "minplayers ", 11) == 0)
+		if(str_comp_nocase_num(MapInfoLine, "#minplayers ", 11) == 0)
 		{
 			MinPlayers = str_toint(MapInfoLine+11);
 		}
@@ -1989,6 +1989,50 @@ int CServer::GetMinPlayersForMap(const char* pMapName)
 	io_close(File);
 
 	return MinPlayers;
+}
+
+int CServer::GetMaxPlayersForMap(const char* pMapName)
+{
+	int MaxPlayers = 0;
+	char MapInfoFilename[256];
+	str_format(MapInfoFilename, sizeof(MapInfoFilename), "maps/%s.mapinfo", pMapName);
+	IOHANDLE File = Storage()->OpenFile(MapInfoFilename, IOFLAG_READ, IStorage::TYPE_ALL);
+
+	if(!File)
+		return 0;
+
+	char MapInfoLine[512];
+	bool isEndOfFile = false;
+	while(!isEndOfFile)
+	{
+		isEndOfFile = true;
+		
+		//Load one line
+		int MapInfoLineLength = 0;
+		char c;
+		while(io_read(File, &c, 1))
+		{
+			isEndOfFile = false;
+			
+			if(c == '\n') break;
+			else
+			{
+				MapInfoLine[MapInfoLineLength] = c;
+				MapInfoLineLength++;
+			}
+		}
+		
+		MapInfoLine[MapInfoLineLength] = 0;
+		
+		//Get the key
+		if(str_comp_nocase_num(MapInfoLine, "#maxplayers ", 11) == 0)
+		{
+			MaxPlayers = str_toint(MapInfoLine+11);
+		}
+	}
+	io_close(File);
+
+	return MaxPlayers;
 }
 
 void CServer::InitRegister(CNetServer *pNetServer, IEngineMasterServer *pMasterServer, IConsole *pConsole)

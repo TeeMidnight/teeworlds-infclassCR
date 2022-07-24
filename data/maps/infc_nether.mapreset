@@ -1,0 +1,7 @@
+sv_rounds_per_map 8
+inf_enable_scientist 1
+inf_enable_sciogist 1
+inf_enable_mercenary 1
+inf_enable_ninja 1
+inf_enable_hero 1
+inf_proba_bat 5

@@ -232,6 +232,13 @@ void IGameController::CycleMap(bool Forced)
 		char aBuf[256];
 		str_format(aBuf, sizeof(aBuf), "rotating map to %s", m_aMapWish);
 		GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "game", aBuf);
+
+		{
+			char MapResetFilename[512];
+			str_format(MapResetFilename, sizeof(MapResetFilename), "maps/%s.mapreset", g_Config.m_SvMap);
+
+			GameServer()->Console()->ExecuteFile(MapResetFilename);
+		}
 		str_copy(g_Config.m_SvMap, m_aMapWish, sizeof(g_Config.m_SvMap));
 		m_aMapWish[0] = 0;
 		m_RoundCount = 0;
@@ -251,6 +258,13 @@ void IGameController::CycleMap(bool Forced)
 	if (pMapRotationInfo.m_MapCount <= 1)
 		return;
 
+	{
+		char MapResetFilename[512];
+		str_format(MapResetFilename, sizeof(MapResetFilename), "maps/%s.mapreset", g_Config.m_SvMap);
+
+		GameServer()->Console()->ExecuteFile(MapResetFilename);
+	}
+
 	char aBuf[256] = {0};
 	int i=0;
 	if (g_Config.m_InfMaprotationRandom)
@@ -262,7 +276,8 @@ void IGameController::CycleMap(bool Forced)
 			RandInt = random_int(0, pMapRotationInfo.m_MapCount-1);
 			GetWordFromList(aBuf, g_Config.m_SvMaprotation, pMapRotationInfo.m_MapNameIndices[RandInt]);
 			int MinPlayers = Server()->GetMinPlayersForMap(aBuf);
-			if (RandInt != pMapRotationInfo.m_CurrentMapNumber && PlayerCount >= MinPlayers)
+			int MaxPlayers = Server()->GetMaxPlayersForMap(aBuf);
+			if (RandInt != pMapRotationInfo.m_CurrentMapNumber && PlayerCount >= MinPlayers && PlayerCount <= MaxPlayers)
 				break;
 		}
 		i = RandInt;
@@ -281,7 +296,8 @@ void IGameController::CycleMap(bool Forced)
 			}
 			GetWordFromList(aBuf, g_Config.m_SvMaprotation, pMapRotationInfo.m_MapNameIndices[i]);
 			int MinPlayers = Server()->GetMinPlayersForMap(aBuf);
-			if (PlayerCount >= MinPlayers)
+			int MaxPlayers = Server()->GetMaxPlayersForMap(aBuf);
+			if (PlayerCount >= MinPlayers && PlayerCount <= MaxPlayers)
 				break;
 		}
 	}

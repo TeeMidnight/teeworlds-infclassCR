@@ -1,1 +1,3 @@
+#minplayers 4
+#maxplayers 30
 sv_timelimit 6
