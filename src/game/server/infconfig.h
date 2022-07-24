@@ -124,7 +124,7 @@ MACRO_CONFIG_INT(InfReviverGrenadeSlowTime, inf_reviver_grenade_slow_time, 4, 0,
 
 MACRO_CONFIG_INT(InfPlasmaPlusRange, inf_plasma_plus_range, 128, 0, 2000, CFGFLAG_SERVER, "Range of plasma plus")
 MACRO_CONFIG_INT(InfPlasmaPlusLifeSpan, inf_plasma_plus_life_span, 3, 0, 10, CFGFLAG_SERVER, "plasma plus life span")
-MACRO_CONFIG_INT(InfPlasmaPlusDamage, inf_plasma_plus_damage, 4, 0, 20, CFGFLAG_SERVER, "Damage of plasma plus")
+MACRO_CONFIG_INT(InfPlasmaPlusDamage, inf_plasma_plus_damage, 6, 0, 20, CFGFLAG_SERVER, "Damage of plasma plus")
 MACRO_CONFIG_INT(InfPlasmaPlusSpeed, inf_plasma_plus_speed, 24, 0, 20, CFGFLAG_SERVER, "Speed of plasma plus")
 
 //Looper class config

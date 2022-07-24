@@ -6,4 +6,5 @@ inf_enable_sciogist 0
 inf_enable_mercenary 0
 inf_enable_ninja 0
 inf_enable_hero 0
-inf_proba_bat 60
+inf_proba_bat 90
+funround_proba 0
