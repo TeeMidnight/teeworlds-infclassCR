@@ -64,17 +64,6 @@ void CElasticHole::Explode()
 
 void CElasticHole::Tick()
 {
-	if(!GameServer()->GetPlayerChar(m_Owner))
-	{
-		Reset();
-		return;
-	}
-	else if(GameServer()->GetPlayerChar(m_Owner)->IsZombie())
-	{
-		Reset();
-		return;
-	}
-
 	if(m_Radius > m_MaxRadius)
 	{
 		m_Growing = GROW_STOPING;

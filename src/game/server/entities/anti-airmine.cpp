@@ -137,7 +137,7 @@ void CAntiAirMine::Tick()
 					int Damage = g_Config.m_InfAntiAirMineDamage;
 					
 					GameServer()->CreateExplosionDisk(m_Pos, Radius, Radius, m_Owner == p->GetPlayer()->GetCID() ? Damage/2 : Damage,
-						32.0f, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_SELFHARM);
+						8.0f, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_SELFHARM);
 				}
 			}
         }
