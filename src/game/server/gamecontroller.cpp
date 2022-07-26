@@ -258,13 +258,6 @@ void IGameController::CycleMap(bool Forced)
 	if (pMapRotationInfo.m_MapCount <= 1)
 		return;
 
-	{
-		char MapResetFilename[512];
-		str_format(MapResetFilename, sizeof(MapResetFilename), "maps/%s.mapreset", g_Config.m_SvMap);
-
-		GameServer()->Console()->ExecuteFile(MapResetFilename);
-	}
-
 	char aBuf[256] = {0};
 	int i=0;
 	if (g_Config.m_InfMaprotationRandom)
@@ -300,6 +293,13 @@ void IGameController::CycleMap(bool Forced)
 			if (PlayerCount >= MinPlayers && PlayerCount <= MaxPlayers)
 				break;
 		}
+	}
+
+	{
+		char MapResetFilename[512];
+		str_format(MapResetFilename, sizeof(MapResetFilename), "maps/%s.mapreset", g_Config.m_SvMap);
+
+		GameServer()->Console()->ExecuteFile(MapResetFilename);
 	}
 
 	if (i == pMapRotationInfo.m_CurrentMapNumber)
