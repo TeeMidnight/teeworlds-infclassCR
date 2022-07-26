@@ -62,9 +62,11 @@ void CFreezeMine::Explode()
 {
 	new CGrowingExplosion(GameWorld(), m_ActualPos, vec2(0.0, 0.0), m_Owner, m_Radius / 32 * 2, GROWINGEXPLOSIONEFFECT_FREEZE_HUMAN);
 
-	GameServer()->GetPlayerChar(m_Owner)->m_HasFreezeMine = false;
-	GameServer()->SendScoreSound(m_Owner);
-	
+	if(GameServer()->GetPlayerChar(m_Owner))
+	{
+		GameServer()->GetPlayerChar(m_Owner)->m_HasFreezeMine = false;
+		GameServer()->SendScoreSound(m_Owner);
+	}
 	Reset();
 }
 
