@@ -315,7 +315,7 @@ void CGameContext::SetAvailabilities(std::vector<int> value) { // todo: should b
 
 void CGameContext::SetProbabilities(std::vector<int> value) { // todo: should be order-independent, e.g with std map
 	if (value.empty())
-		value = std::vector<int>(12);
+		value = std::vector<int>(13);
 	g_Config.m_InfProbaBat = value[0];
 	g_Config.m_InfProbaBoomer = value[1];
 	g_Config.m_InfProbaGhost = value[2];
@@ -328,6 +328,7 @@ void CGameContext::SetProbabilities(std::vector<int> value) { // todo: should be
 	g_Config.m_InfGhoulThreshold = value[9];
 	g_Config.m_InfGhoulStomachSize = value[10];
 	g_Config.m_InfProbaSlime = value[11];
+	g_Config.m_InfProbaFreezer = value[12];
 }
 
 void CGameContext::CreateDamageInd(vec2 Pos, float Angle, int Amount)
