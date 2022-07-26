@@ -239,6 +239,8 @@ void CPlayer::Snap(int SnappingClient)
 
 	CNetObj_ClientInfo *pClientInfo = static_cast<CNetObj_ClientInfo *>(Server()->SnapNewItem(NETOBJTYPE_CLIENTINFO, id, sizeof(CNetObj_ClientInfo)));
 
+	CPlayer *pClient = GameServer()->m_apPlayers[SnappingClient];
+
 	if(!pClientInfo)
 		return;
 
@@ -272,94 +274,97 @@ void CPlayer::Snap(int SnappingClient)
 			
 			PlayerInfoScore = m_HumanTime/Server()->TickSpeed();
 		}
-		else
+		else	
 		{
-			char aClanName[12];
+			char aClanName[16];
 			switch(GetClass())
 			{
 				case PLAYERCLASS_ENGINEER:
-					str_format(aClanName, sizeof(aClanName), "%sEngineer", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Engineer"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_SOLDIER:
-					str_format(aClanName, sizeof(aClanName), "%sSoldier", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Soldier"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_MERCENARY:
-					str_format(aClanName, sizeof(aClanName), "%sMercenary", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Mercenary"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_SNIPER:
-					str_format(aClanName, sizeof(aClanName), "%sSniper", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Sniper"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_SCIENTIST:
-					str_format(aClanName, sizeof(aClanName), "%sScientist", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Scientist"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_CATAPULT:
-					str_format(aClanName, sizeof(aClanName), "%sCatapult", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Catapult"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_BIOLOGIST:
-					str_format(aClanName, sizeof(aClanName), "%sBiologist", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Biologist"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_SCIOGIST:
-					str_format(aClanName, sizeof(aClanName), "%sSciogist", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Sciogist"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_POLICE:
-					str_format(aClanName, sizeof(aClanName), "%sPolice", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Police"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_LOOPER:
-					str_format(aClanName, sizeof(aClanName), "%sLooper", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Looper"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_REVIVER:
-					str_format(aClanName, sizeof(aClanName), "%sReviver", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Reviver"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_MEDIC:
-					str_format(aClanName, sizeof(aClanName), "%sMedic", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Medic"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_HERO:
-					str_format(aClanName, sizeof(aClanName), "%sHero", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Hero"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_NINJA:
-					str_format(aClanName, sizeof(aClanName), "%sNinja", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Ninja"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_SMOKER:
-					str_format(aClanName, sizeof(aClanName), "%sSmoker", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Smoker"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_BOOMER:
-					str_format(aClanName, sizeof(aClanName), "%sBoomer", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Boomer"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_HUNTER:
-					str_format(aClanName, sizeof(aClanName), "%sHunter", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Hunter"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_BAT:
-					str_format(aClanName, sizeof(aClanName), "%sBat", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Bat"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_GHOST:
-					str_format(aClanName, sizeof(aClanName), "%sGhost", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Ghost"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_SPIDER:
-					str_format(aClanName, sizeof(aClanName), "%sSpider", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Spider"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_GHOUL:
-					str_format(aClanName, sizeof(aClanName), "%sGhoul", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Ghoul"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_SLUG:
-					str_format(aClanName, sizeof(aClanName), "%sSlug", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Slug"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_SLIME:
-					str_format(aClanName, sizeof(aClanName), "%sSlime", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Slime"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_VOODOO:
-					str_format(aClanName, sizeof(aClanName), "%sVoodoo", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Voodoo"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_UNDEAD:
-					str_format(aClanName, sizeof(aClanName), "%sUndead", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Undead"), sizeof(aClanName));
 					break;
 				case PLAYERCLASS_WITCH:
-					str_format(aClanName, sizeof(aClanName), "%sWitch", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Witch"), sizeof(aClanName));
+					break;
+				case PLAYERCLASS_FREEZER:
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Freezer"), sizeof(aClanName));
 					break;
 				default:
-					str_format(aClanName, sizeof(aClanName), "%s?????", Server()->IsClientLogged(GetCID()) ? "@" : " ");
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"????"), sizeof(aClanName));
 			}
 			
-			StrToInts(&pClientInfo->m_Clan0, 3, aClanName);
+			StrToInts(&pClientInfo->m_Clan0, 4, aClanName);
 			
 			PlayerInfoScore = Server()->RoundStatistics()->PlayerScore(m_ClientID);
 		}
@@ -764,6 +769,12 @@ void CPlayer::SetClassSkin(int newClass, int State)
 			str_copy(m_TeeInfos.m_SkinName, "redbopp", sizeof(m_TeeInfos.m_SkinName));
 			m_TeeInfos.m_ColorBody = 16776744;
 			m_TeeInfos.m_ColorFeet = 13168;
+			break;
+		case PLAYERCLASS_FREEZER:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "toptri", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 8257280;
+			m_TeeInfos.m_ColorFeet = 65414;
 			break;
 		default:
 			m_TeeInfos.m_UseCustomColor = 0;

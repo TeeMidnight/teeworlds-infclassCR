@@ -68,6 +68,7 @@ CGrowingExplosion::CGrowingExplosion(CGameWorld *pGameWorld, vec2 Pos, vec2 Dir,
 	switch(m_ExplosionEffect)
 	{
 		case GROWINGEXPLOSIONEFFECT_FREEZE_INFECTED:
+		case GROWINGEXPLOSIONEFFECT_FREEZE_HUMAN:
 			if(random_prob(0.1f))
 			{
 				GameServer()->CreateHammerHit(m_SeedPos);
@@ -148,6 +149,7 @@ void CGrowingExplosion::Tick()
 					switch(m_ExplosionEffect)
 					{
 						case GROWINGEXPLOSIONEFFECT_FREEZE_INFECTED:
+						case GROWINGEXPLOSIONEFFECT_FREEZE_HUMAN:
 							if(random_prob(0.1f))
 							{
 								GameServer()->CreateHammerHit(TileCenter);
@@ -275,6 +277,11 @@ void CGrowingExplosion::Tick()
 						GameServer()->SendEmoticon(p->GetPlayer()->GetCID(), EMOTICON_EYES);
 						m_Hit[p->GetPlayer()->GetCID()] = true;
 						break;
+					case GROWINGEXPLOSIONEFFECT_FREEZE_HUMAN:
+						p->Freeze(4.0f, m_Owner, FREEZEREASON_FLASH);
+						GameServer()->SendEmoticon(p->GetPlayer()->GetCID(), EMOTICON_QUESTION);
+						m_Hit[p->GetPlayer()->GetCID()] = true;
+						break;
 				}
 			}
 		}
@@ -318,6 +325,10 @@ void CGrowingExplosion::Tick()
 						int Damage = 5+20*((float)(m_MaxGrowing - min(tick - m_StartTick, (int)m_MaxGrowing)))/(m_MaxGrowing);
 						p->TakeDamage(normalize(p->m_Pos - m_SeedPos)*10.0f, Damage, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_NOINFECTION);
 						m_Hit[p->GetPlayer()->GetCID()] = true;
+						break;
+					}
+					case GROWINGEXPLOSIONEFFECT_FREEZE_HUMAN:
+					{
 						break;
 					}
 				}

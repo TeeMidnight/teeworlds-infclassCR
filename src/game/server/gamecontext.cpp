@@ -881,6 +881,9 @@ void CGameContext::SendBroadcast_ClassIntro(int ClientID, int Class)
 		case PLAYERCLASS_UNDEAD:
 			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Undead"));
 			break;
+		case PLAYERCLASS_FREEZER:
+			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Freezer"));
+			break;
 		default:
 			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Unknown class"));
 			break;
@@ -2960,6 +2963,7 @@ bool CGameContext::ConSetClass(IConsole::IResult *pResult, void *pUserData)
 	else if(str_comp(pClassName, "voodoo") == 0) pPlayer->SetClass(PLAYERCLASS_VOODOO);
 	else if(str_comp(pClassName, "undead") == 0) pPlayer->SetClass(PLAYERCLASS_UNDEAD);
 	else if(str_comp(pClassName, "witch") == 0) pPlayer->SetClass(PLAYERCLASS_WITCH);
+	else if(str_comp(pClassName, "freezer") == 0) pPlayer->SetClass(PLAYERCLASS_FREEZER);
 	else if(str_comp(pClassName, "none") == 0)
 	{
 		pPlayer->SetClass(PLAYERCLASS_NONE);
@@ -3221,6 +3225,11 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 			{
 				CheckClass = PLAYERCLASS_WITCH;
 				str_copy(aChatTitle, "witch", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "!freezer") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_WITCH;
+				str_copy(aChatTitle, "freezer", sizeof(aChatTitle));
 			}
 			else
 			{

@@ -57,6 +57,7 @@ MACRO_CONFIG_INT(InfSpiderDamage, inf_spider_damage, 10, 1, 10000, CFGFLAG_SERVE
 MACRO_CONFIG_INT(InfSlimeDamage, inf_slime_damage, 2, 1, 10000, CFGFLAG_SERVER, "Damage taken by slime")
 MACRO_CONFIG_INT(InfSpiderHookDamage, inf_spider_hook_damage, 1, 0, 10000, CFGFLAG_SERVER, "Damage taken by spider (hook)")
 MACRO_CONFIG_INT(InfSmokerHookDamage, inf_smoker_hook_damage, 3, 1, 10000, CFGFLAG_SERVER, "Damage taken by smoker (hook)")
+MACRO_CONFIG_INT(InfFreezerHookDamage, inf_freezer_hook_damage, 2, 1, 10000, CFGFLAG_SERVER, "Damage taken by freezer (hook)")
 MACRO_CONFIG_INT(InfSpiderCatchHumans, inf_spider_catch_humans, 1, 0, 1, CFGFLAG_SERVER, "Spider always catch humans with hook")
 MACRO_CONFIG_INT(InfUndeadIncNumKills, inf_undead_inc_num_kills, 0, 0, 1, CFGFLAG_SERVER, "Whether freezing undead increase killer's NumberKills or not")
 
@@ -71,6 +72,7 @@ MACRO_CONFIG_INT(InfProbaSlug, inf_proba_slug, 7, 0, 100, CFGFLAG_SERVER, "Proba
 MACRO_CONFIG_INT(InfProbaVoodoo, inf_proba_voodoo, 6, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be a voodoo")
 MACRO_CONFIG_INT(InfProbaSlime, inf_proba_slime, 5, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be a slime")
 MACRO_CONFIG_INT(InfProbaWitch, inf_proba_witch, 5, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be a witch")
+MACRO_CONFIG_INT(InfProbaFreezer, inf_proba_freezer, 5, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be a freezer")
 MACRO_CONFIG_INT(InfProbaUndead, inf_proba_undead, 6, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be an undead")
 //Slime
 MACRO_CONFIG_INT(InfSlimeReloadTime, inf_slime_reload_time, 180, 0, 60, CFGFLAG_SERVER, "Slime reload time")
@@ -98,14 +100,18 @@ MACRO_CONFIG_INT(InfHeroFlagIndicatorTime, inf_hero_flag_indicator_time, 3, 0, 1
 MACRO_CONFIG_INT(FunRoundDuration, funround_duration, 3, 0, 100, CFGFLAG_SERVER, "Fun round duration (min)")
 MACRO_CONFIG_INT(FunRoundGhoulStomachSize, funround_ghoul_stomach_size, 40, 0, 10000, CFGFLAG_SERVER, "Number of dead that the ghoul can eat")
 MACRO_CONFIG_INT(FunRoundUndeadProba, funround_undead_proba, 6, 0, 100, CFGFLAG_SERVER, "Fun round undead proba")
-MACRO_CONFIG_INT(FunRoundWitchProba, funround_wtich_proba, 5, 0, 100, CFGFLAG_SERVER, "Fun round witch proba")
+MACRO_CONFIG_INT(FunRoundWitchProba, funround_witch_proba, 5, 0, 100, CFGFLAG_SERVER, "Fun round witch proba")
+MACRO_CONFIG_INT(FunRoundFreezerProba, funround_freezer_proba, 5, 0, 100, CFGFLAG_SERVER, "Fun round freezer proba")
 MACRO_CONFIG_INT(FunRoundProba, funround_proba, 12, 0, 100, CFGFLAG_SERVER, "Fun round proba")
+// class config
+
+MACRO_CONFIG_INT(InfFreezerReslowlyTime, inf_freezer_reslowly_time, 200, 0, 1000, CFGFLAG_SERVER, "tick")
 
 //weapon config
 MACRO_CONFIG_INT(InfElasticEntityRadius, inf_elastic_entity_radius, 46, 0, 200, CFGFLAG_SERVER, "Radius of elastic entitys")
 MACRO_CONFIG_INT(InfElasticEntityLifeSpan, inf_elastic_entity_life_span, 5, 0, 100, CFGFLAG_SERVER, "Elastic entity life span")
 MACRO_CONFIG_INT(InfElasticEntityCheckNum, inf_elastic_entity_check_num, 6, 0, 10, CFGFLAG_SERVER, "Elastic entity life span")
-MACRO_CONFIG_INT(InfElasticEntityDamage, inf_elastic_entity_damage, 12, 0, 100, CFGFLAG_SERVER, "Damage of elastic entitys")
+MACRO_CONFIG_INT(InfElasticEntityDamage, inf_elastic_entity_damage, 15, 0, 100, CFGFLAG_SERVER, "Damage of elastic entitys")
 
 MACRO_CONFIG_INT(InfElasticGrenadeLifeSpan, inf_elastic_grenade_life_span, 2, 0, 100, CFGFLAG_SERVER, "Elastic grenade life span")
 MACRO_CONFIG_INT(InfElasticGrenadeCheckNum, inf_elastic_grenade_check_num, 3, 0, 10, CFGFLAG_SERVER, "Elastic grenade life span")
@@ -178,5 +184,7 @@ MACRO_CONFIG_INT(InfHealBoomProbability, inf_heal_boom_probability, 20, 0, 100, 
 MACRO_CONFIG_INT(InfStunGrenadeMinimalKills, inf_stun_grenade_minimal_kills, 2, 0, 30, CFGFLAG_SERVER, "Minimal number of kills before grenade stun ammunition can be found")
 MACRO_CONFIG_INT(InfStunGrenadeProbability, inf_stun_grenade_probability, 30, 0, 100, CFGFLAG_SERVER, "Probability of super weapon being available after MinimalKill requirement")
 MACRO_CONFIG_INT(InfIgnoreSpec, inf_ignore_spec, 1, 0, 1, CFGFLAG_SERVER, "Ignore spectator number when set first infection (not count as infected)")
+
+MACRO_CONFIG_INT(InfFreezeMineMinimalKills, inf_freeze_mine_minimal_kills, 3, 0, 30, CFGFLAG_SERVER, "Minimal number of kills before grenade stun ammunition can be found")
 
 #endif

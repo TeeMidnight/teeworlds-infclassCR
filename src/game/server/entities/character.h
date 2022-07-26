@@ -219,6 +219,7 @@ public:
 	bool m_HasHealBoom;
 	bool m_HasIndicator;
 	bool m_HasStunGrenade;
+	bool m_HasFreezeMine;// Freezer
 	bool m_ShieldExplode;
 	int m_BroadcastWhiteHoleReady;
 	int m_BroadcastElasticHoleReady;// used to broadcast "WhiteHole ready" for a short period of time
@@ -227,6 +228,7 @@ public:
 	int m_HallucinationTick;
 	int m_ReloadSlimeTick;
 	int m_SlipperyTick;
+	int m_ReslowlyTick;
 	int m_PoisonTick;
 	int m_Poison;
 	int m_SlowMotionTick; //LooperClass changes here

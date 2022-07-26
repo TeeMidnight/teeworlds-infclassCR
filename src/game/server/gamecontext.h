@@ -139,6 +139,7 @@ public:
 
 	IGameController *m_pController;
 	CGameWorld m_World;
+	CGameWorld *m_pWorld;
 
 	// helper functions
 	class CCharacter *GetPlayerChar(int ClientID);

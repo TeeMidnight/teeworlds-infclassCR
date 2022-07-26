@@ -139,7 +139,7 @@ void CReviverGrenade::Snap(int SnappingClient)
 void CReviverGrenade::Explode(vec2 Pos)
 {
 	float Radius = 5 * 16.0f;
-	new CGrowingExplosion(GameWorld(), Pos, vec2(0.0f, 0.0f), m_Owner, Radius / 16.0f, GROWINGEXPLOSIONEFFECT_LOVE_INFECTED);
+	new CGrowingExplosion(GameWorld(), Pos, vec2(0.0, -1.0), m_Owner, Radius / 32.0f, GROWINGEXPLOSIONEFFECT_LOVE_INFECTED);
 	GameServer()->CreateExplosionDisk(Pos, Radius, Radius, 0, -1.0f, m_Owner, WEAPON_GRENADE, TAKEDAMAGEMODE_NOINFECTION);
 	GameServer()->CreateSound(Pos, SOUND_GRENADE_EXPLODE);
 

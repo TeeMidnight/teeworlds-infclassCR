@@ -72,15 +72,16 @@ void CElasticHole::Tick()
 	else if(m_Growing == GROW_GROWING)
 		m_Radius += 2;
 	else if(m_Growing == GROW_ZOOMING)
+	{
 		m_Radius -= 2;
-	
+	}
 	if(m_LifeSpan <= 0)
 	{
 		m_Growing = GROW_ZOOMING;
-	}else
-	{
-		m_LifeSpan--;
 	}
+
+	m_LifeSpan--;
+
 	for(CCharacter *pChr = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); pChr; pChr = (CCharacter *)pChr->TypeNext())
 	{
 		if(pChr->IsHuman()) continue;

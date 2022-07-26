@@ -1981,9 +1981,9 @@ int CServer::GetMinPlayersForMap(const char* pMapName)
 		MapInfoLine[MapInfoLineLength] = 0;
 		
 		//Get the key
-		if(str_comp_nocase_num(MapInfoLine, "#minplayers ", 11) == 0)
+		if(str_comp_nocase_num(MapInfoLine, "#minplayers ", 12) == 0)
 		{
-			MinPlayers = str_toint(MapInfoLine+11);
+			MinPlayers = str_toint(MapInfoLine+12);
 		}
 	}
 	io_close(File);
@@ -2025,9 +2025,9 @@ int CServer::GetMaxPlayersForMap(const char* pMapName)
 		MapInfoLine[MapInfoLineLength] = 0;
 		
 		//Get the key
-		if(str_comp_nocase_num(MapInfoLine, "#maxplayers ", 11) == 0)
+		if(str_comp_nocase_num(MapInfoLine, "#maxplayers ", 12) == 0)
 		{
-			MaxPlayers = str_toint(MapInfoLine+11);
+			MaxPlayers = str_toint(MapInfoLine+12);
 		}
 	}
 	io_close(File);

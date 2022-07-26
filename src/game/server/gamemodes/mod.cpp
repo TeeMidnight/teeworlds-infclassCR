@@ -977,6 +977,7 @@ int CGameControllerMOD::ChooseInfectedClass(const CPlayer *pPlayer) const
 	int nbInfected = 0;
 	bool thereIsAWitch = false;
 	bool thereIsAnUndead = false;
+	bool thereIsAFreezer = false;
 
 	CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
 	while(Iter.Next())
@@ -984,6 +985,7 @@ int CGameControllerMOD::ChooseInfectedClass(const CPlayer *pPlayer) const
 		if(Iter.Player()->IsZombie()) nbInfected++;
 		if(Iter.Player()->GetClass() == PLAYERCLASS_WITCH) thereIsAWitch = true;
 		if(Iter.Player()->GetClass() == PLAYERCLASS_UNDEAD) thereIsAnUndead = true;
+		if(Iter.Player()->GetClass() == PLAYERCLASS_FREEZER) thereIsAFreezer = true;
 	}
 	
 	if(GameServer()->m_FunRound)
@@ -992,6 +994,8 @@ int CGameControllerMOD::ChooseInfectedClass(const CPlayer *pPlayer) const
 			return PLAYERCLASS_UNDEAD;
 		else if(random_int(0, 100) <= g_Config.m_FunRoundWitchProba && !thereIsAWitch)
 			return PLAYERCLASS_WITCH;
+		else if(random_int(0, 100) <= g_Config.m_FunRoundFreezerProba && !thereIsAFreezer)
+			return PLAYERCLASS_FREEZER;
 		else 
 			return GameServer()->m_FunRoundZombieClass;
 	}
@@ -1036,7 +1040,10 @@ int CGameControllerMOD::ChooseInfectedClass(const CPlayer *pPlayer) const
 	Probability[PLAYERCLASS_UNDEAD - START_INFECTEDCLASS - 1] =
 		(Server()->GetClassAvailability(PLAYERCLASS_UNDEAD) && nbInfected > 2 && !thereIsAnUndead) ?
 		(double) g_Config.m_InfProbaUndead : 0.0f;
-	
+	Probability[PLAYERCLASS_FREEZER - START_INFECTEDCLASS - 1] =
+		(Server()->GetClassAvailability(PLAYERCLASS_FREEZER) && nbInfected > 5 && !thereIsAFreezer) ?
+		(double) g_Config.m_InfProbaFreezer : 0.0f;
+
 	int Seconds = (Server()->Tick()-m_RoundStartTick)/((float)Server()->TickSpeed());
 	char aBuf[256];
 	str_format(aBuf, sizeof(aBuf), "infected victim='%s' duration='%d'", 

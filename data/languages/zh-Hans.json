@@ -153,11 +153,11 @@
 	},
 	{
 		"key": "Biologist",
-		"value": "\u751f\u7269\u5b66\u5bb6"
+		"value": "\u751f\u7269\u5b66"
 	},
 	{
 		"key": "Sciogist",
-		"value": "融合学家"
+		"value": "融合学"
 	},
 	{
 		"key": "Looper",
@@ -169,7 +169,7 @@
 	},
 	{
 		"key": "Police",
-		"value": "防暴警察"
+		"value": "警察"
 	},
 	{
 		"key": "Reviver",
@@ -212,12 +212,20 @@
 		"value": "粘液"
 	},
 	{
+		"key": "Bat",
+		"value": "蝙蝠"
+	},
+	{
 		"key": "Witch",
 		"value": "\u5deb\u5a46"
 	},
 	{
 		"key": "Undead",
 		"value": "\u4e0d\u6b7b\u65cf"
+	},
+	{
+		"key": "Freezer",
+		"value": "冷冻者"
 	},
 	{
 		"key": "Unknown class",
@@ -684,6 +692,10 @@
 		"value": "\u82f1\u96c4\u627e\u5230\u4e86\u65d7\u5e1c \uff01"
 	},
 	{
+		"key": "You are slowed: {sec:EffectDuration}",
+		"value": "你变慢了,剩余时间: {sec:EffectDuration}"
+	},
+	{
 		"key": "Anti-AirMine is active",
 		"value": "防空地雷已经激活"
 	},
@@ -718,6 +730,14 @@
 	{
 		"key": "heal boom found...",
 		"value": "已经找到治愈爆炸..."
+	},
+	{
+		"key": "The freezer is dead",
+		"value": "冷冻者死了"
+	},
+	{
+		"key": "you has a freeze mine...",
+		"value": "你获得了一个冻结地雷..."
 	},
 	{
 		"key": "Use hammer to defend",
@@ -769,7 +789,7 @@
 	},
 	{
 		"key": "The Police can use hammer to use shield.",
-		"value": "防暴警察可以使用锤子来触发盾牌."
+		"value": "警察可以使用锤子来触发盾牌."
 	},
 	{
 		"key": "He also has a laser-rifle that can freeze zombies.",

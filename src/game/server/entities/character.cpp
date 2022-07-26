@@ -35,6 +35,7 @@
 #include "slug-slime.h"
 #include "plasma.h"
 #include "plasma-plus.h"
+#include "freeze-mine.h"
 #include "growingexplosion.h"
 #include "white-hole.h"
 #include "elastic-hole.h"
@@ -112,6 +113,7 @@ m_pConsole(pConsole)
 	m_HealTick = 0;
 	m_InfZoneTick = -1;
 	m_ProtectionTick = 0;
+	m_ReslowlyTick = 0;
 	m_InAirTick = 0;
 	m_InWater = 0;
 	m_BonusTick = 0;
@@ -125,6 +127,7 @@ m_pConsole(pConsole)
 	m_HasElasticHole = false;
 	m_HasHealBoom = false;
 	m_HasIndicator = false;
+	m_HasFreezeMine = true;
 	m_ShieldExplode = false;
 	m_TurretCount = 0;
 	m_HasStunGrenade = false;
@@ -998,6 +1001,18 @@ void CCharacter::FireWeapon()
 			else
 			{
 /* INFECTION MODIFICATION END *****************************************/
+
+				if(GetClass() == PLAYERCLASS_FREEZER && m_HasFreezeMine)
+				{
+					CFreezeMine *pOldMine = 0;
+					for(CFreezeMine* pMine = (CFreezeMine*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_FREEZE_MINE); pMine; pMine = (CFreezeMine*) pMine->TypeNext())
+					{
+						if(pMine->GetOwner() == m_pPlayer->GetCID()) pOldMine = pMine; 
+					}
+					if(pOldMine)GameServer()->m_World.DestroyEntity(pOldMine);
+
+					new CFreezeMine(GameWorld(), m_Pos, m_pPlayer->GetCID());
+				}
 				// reset objects Hit
 				int Hits = 0;
 				bool ShowAttackAnimation = false;
@@ -1075,7 +1090,7 @@ void CCharacter::FireWeapon()
 							else if(GetClass() == PLAYERCLASS_SLIME)
 							{
 								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_Config.m_InfSlimeDamage,
-									m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_INFECTION);
+									m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
 							}
 							else if(GameServer()->m_pController->IsInfectionStarted())
 							{
@@ -1090,7 +1105,12 @@ void CCharacter::FireWeapon()
 							{
 								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, 20, 
 										m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
+							}else if(pTarget->IsFrozen())
+							{
+								pTarget->Unfreeze();
+								GameServer()->ClearBroadcast(pTarget->GetPlayer()->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE);
 							}
+							
 							
 						}
 						else if(GetClass() == PLAYERCLASS_MEDIC)
@@ -1102,6 +1122,11 @@ void CCharacter::FireWeapon()
 							}
 							else
 							{
+								if(pTarget->IsFrozen())
+								{
+									pTarget->Unfreeze();
+									GameServer()->ClearBroadcast(pTarget->GetPlayer()->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE);
+								}
 								if(pTarget->GetClass() != PLAYERCLASS_HERO && pTarget->GetClass() != PLAYERCLASS_POLICE)
 								{
 									pTarget->IncreaseArmor(4);
@@ -1127,9 +1152,14 @@ void CCharacter::FireWeapon()
 							}
 							else
 							{
+								if(pTarget->IsFrozen())
+								{
+									pTarget->Unfreeze();
+									GameServer()->ClearBroadcast(pTarget->GetPlayer()->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE);
+								}
 								if(pTarget->GetClass() != PLAYERCLASS_HERO && pTarget->GetClass() != PLAYERCLASS_MEDIC)
 								{
-									pTarget->IncreaseHealth(4);
+									pTarget->IncreaseHealth(2);
 									if(pTarget->m_Health == 10 && pTarget->m_NeedFullHeal)
 									{
 										Server()->RoundStatistics()->OnScoreEvent(GetPlayer()->GetCID(), SCOREEVENT_HUMAN_HEALING, GetClass(), Server()->ClientName(GetPlayer()->GetCID()), Console());
@@ -1144,6 +1174,11 @@ void CCharacter::FireWeapon()
 						}
 						else
 						{
+							if(pTarget->IsFrozen())
+							{
+								pTarget->Unfreeze();
+								GameServer()->ClearBroadcast(pTarget->GetPlayer()->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE);
+							}
 							pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, g_pData->m_Weapons.m_Hammer.m_pBase->m_Damage,
 								m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
 						}
@@ -1557,12 +1592,6 @@ void CCharacter::FireWeapon()
 				GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
 				m_aWeapons[WEAPON_RIFLE].m_Ammo = 0;
 			}
-			else if(GetClass() == PLAYERCLASS_POLICE)
-			{
-				new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID(), 2);
-				GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
-				m_aWeapons[WEAPON_RIFLE].m_Ammo = 0;
-			}
 			else
 			{
 				int Damage = GameServer()->Tuning()->m_LaserDamage;
@@ -1575,6 +1604,12 @@ void CCharacter::FireWeapon()
 						Damage = random_int(10, 13);
 					new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID(), Damage);
 					GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+				}
+				else if(GetClass() == PLAYERCLASS_POLICE)
+				{
+					new CLaser(GameWorld(), m_Pos, Direction, GameServer()->Tuning()->m_LaserReach, m_pPlayer->GetCID(), 2);
+					GameServer()->CreateSound(m_Pos, SOUND_RIFLE_FIRE);
+					m_aWeapons[WEAPON_RIFLE].m_Ammo = 0;
 				}
 				else if(GetClass() == PLAYERCLASS_SCIENTIST)
 				{
@@ -1709,6 +1744,19 @@ void CCharacter::CheckSuperWeaponAccess()
 			} 
 		}
 	}
+
+	if(GetClass() == PLAYERCLASS_FREEZER)
+	{
+		if(!m_HasFreezeMine)
+		{
+			if (kills > g_Config.m_InfFreezeMineMinimalKills)
+			{
+				m_HasFreezeMine = true;
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_SCORE, _("you has a freeze mine..."), NULL);
+				m_pPlayer->ResetNumberKills();
+			}
+		}
+	}
 }
 
 
@@ -1829,6 +1877,26 @@ void CCharacter::HandleWeapons()
 						Damage = 2 * g_Config.m_InfSmokerHookDamage;
 					}
 					else Damage = g_Config.m_InfSmokerHookDamage;
+				}
+				else if(GetClass() == PLAYERCLASS_FREEZER)
+				{
+					if(!VictimChar->IsInSlowMotion())
+					{
+						if(VictimChar->GetClass() != PLAYERCLASS_LOOPER && !m_ReslowlyTick)
+						{
+							VictimChar->SlowMotionEffect(30);
+							m_ReslowlyTick = g_Config.m_InfFreezerReslowlyTime;
+						}
+						
+						m_Core.m_HookedPlayer = -1;
+						m_Core.m_HookProtected = false;
+						m_Core.m_HookState = HOOK_RETRACTED;
+
+						return;
+					}else
+					{
+						Damage = g_Config.m_InfFreezerHookDamage;
+					}
 				}
 				else if(GetClass() == PLAYERCLASS_SPIDER)
 				{
@@ -2068,7 +2136,10 @@ void CCharacter::Tick()
 		}
 	}
 	
-	
+	if(m_ReslowlyTick)
+	{
+		m_ReslowlyTick--;
+	}
 	
 	if(m_SlowMotionTick > 0)
 	{
@@ -3296,6 +3367,7 @@ void CCharacter::Die(int Killer, int Weapon)
 	GameServer()->m_World.m_Core.m_apCharacters[m_pPlayer->GetCID()] = 0;
 	GameServer()->CreateDeath(m_Pos, m_pPlayer->GetCID());
 	
+/* INFECTION MODIFICATION START ***************************************/
 	if(Killer >=0 && Killer < MAX_CLIENTS)
 	{
 		CPlayer* pKillerPlayer = GameServer()->m_apPlayers[Killer];
@@ -3311,7 +3383,6 @@ void CCharacter::Die(int Killer, int Weapon)
 		}
 	}
 	
-/* INFECTION MODIFICATION START ***************************************/
 	if(GetClass() == PLAYERCLASS_BOOMER && !IsFrozen() && Weapon != WEAPON_GAME && !(IsInLove() && Weapon == WEAPON_SELF) )
 	{
 		GameServer()->CreateSound(m_Pos, SOUND_GRENADE_EXPLODE);
@@ -3328,6 +3399,13 @@ void CCharacter::Die(int Killer, int Weapon)
 	{
 		m_pPlayer->StartInfection(true);
 		GameServer()->SendBroadcast_Localization(-1, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("The undead is finally dead"), NULL);
+		GameServer()->CreateSoundGlobal(SOUND_CTF_RETURN);
+	}
+	else if(GetClass() == PLAYERCLASS_FREEZER)
+	{
+		GameServer()->GetPlayerChar(Killer)->Freeze(4.0, m_pPlayer->GetCID(), FREEZEREASON_FLASH);
+		m_pPlayer->StartInfection(true);
+		GameServer()->SendBroadcast_Localization(-1, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("The freezer is dead"), NULL);
 		GameServer()->CreateSoundGlobal(SOUND_CTF_RETURN);
 	}
 	else if(GameServer()->m_pController->IsInfectionStarted())
@@ -3352,6 +3430,11 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	CCharacter *pKillerChar = 0; // before using this variable check if it exists with "if (pKillerChar)"
 	if (pKillerPlayer)
 		pKillerChar = pKillerPlayer->GetCharacter();
+
+	if(GetClass() == PLAYERCLASS_FREEZER)
+	{
+		Dmg = max(1,Dmg/2);
+	}
 
 
 	if(Mode == TAKEDAMAGEMODE_ALL)
@@ -3668,10 +3751,7 @@ void CCharacter::Snap(int SnappingClient)
 
 			pP->m_X = (int)m_Pos.x;
 			pP->m_Y = (int)m_Pos.y - 60.0;
-			if(m_Health < 10 && m_Armor == 0)
-				pP->m_Type = POWERUP_HEALTH;
-			else
-				pP->m_Type = POWERUP_ARMOR;
+			pP->m_Type = POWERUP_ARMOR;
 			pP->m_Subtype = 0;
 		}
 	}
@@ -4445,6 +4525,21 @@ void CCharacter::ClassSpawnAttributes()
 				m_pPlayer->m_knownClass[PLAYERCLASS_WITCH] = true;
 			}
 			break;
+		case PLAYERCLASS_FREEZER:
+			m_Health = 10;
+			m_Armor = 10;
+			RemoveAllGun();
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			m_ActiveWeapon = WEAPON_HAMMER;
+			
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_FREEZER);
+			if(!m_pPlayer->IsKnownClass(PLAYERCLASS_FREEZER))
+			{
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "freezer", NULL);
+				m_pPlayer->m_knownClass[PLAYERCLASS_FREEZER] = true;
+			}
+			break;
 	}
 }
 
@@ -4593,6 +4688,11 @@ void CCharacter::DestroyChildEntities()
 		if(pFlag->GetOwner() != m_pPlayer->GetCID()) continue;
 		GameServer()->m_World.DestroyEntity(pFlag);
 	}
+	for(CFreezeMine* pMine = (CFreezeMine*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_FREEZE_MINE); pMine; pMine = (CFreezeMine*) pMine->TypeNext())
+	{
+		if(pMine->GetOwner() != m_pPlayer->GetCID()) continue;
+		GameServer()->m_World.DestroyEntity(pMine);
+	}
 			
 	m_FirstShot = true;
 	m_HookMode = 0;
@@ -4656,7 +4756,7 @@ void CCharacter::GrantSpawnProtection()
 
 void CCharacter::Freeze(float Time, int Player, int Reason)
 {
-	if(m_IsFrozen && m_FreezeReason == FREEZEREASON_UNDEAD)
+	if((m_IsFrozen && m_FreezeReason == FREEZEREASON_UNDEAD) || GetClass() == PLAYERCLASS_FREEZER)
 		return;
 	if(Reason == FREEZEREASON_INFECTION)
 	{
