@@ -247,13 +247,6 @@ void IGameController::CycleMap(bool Forced)
 	if(!str_length(g_Config.m_SvMaprotation))
 		return;
 
-	{
-		char MapResetFilename[512];
-		str_format(MapResetFilename, sizeof(MapResetFilename), "maps/%s.mapreset", g_Config.m_SvMap);
-
-		GameServer()->Console()->ExecuteFile(MapResetFilename);
-	}
-
 	if(!Forced && m_RoundCount < g_Config.m_SvRoundsPerMap-1)
 		return;
 
@@ -264,6 +257,13 @@ void IGameController::CycleMap(bool Forced)
 	
 	if (pMapRotationInfo.m_MapCount <= 1)
 		return;
+
+	{
+		char MapResetFilename[512];
+		str_format(MapResetFilename, sizeof(MapResetFilename), "maps/%s.mapreset", g_Config.m_SvMap);
+
+		GameServer()->Console()->ExecuteFile(MapResetFilename);
+	}
 
 	char aBuf[256] = {0};
 	int i=0;
