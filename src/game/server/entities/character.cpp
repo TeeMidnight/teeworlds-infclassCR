@@ -3368,12 +3368,13 @@ void CCharacter::Die(int Killer, int Weapon)
 	GameServer()->CreateDeath(m_Pos, m_pPlayer->GetCID());
 	
 /* INFECTION MODIFICATION START ***************************************/
+	CPlayer* pKillerPlayer = GameServer()->m_apPlayers[Killer];
+	CCharacter* pKiller = GameServer()->m_apPlayers[Killer]->GetCharacter();
+
 	if(Killer >=0 && Killer < MAX_CLIENTS)
 	{
-		CPlayer* pKillerPlayer = GameServer()->m_apPlayers[Killer];
 		if(pKillerPlayer && pKillerPlayer->GetClass() == PLAYERCLASS_SNIPER)
 		{
-			CCharacter* pKiller = GameServer()->m_apPlayers[Killer]->GetCharacter();
 			if(pKiller)
 			{
 				if(Weapon == WEAPON_RIFLE)
@@ -3382,7 +3383,7 @@ void CCharacter::Die(int Killer, int Weapon)
 			}
 		}
 	}
-	
+
 	if(GetClass() == PLAYERCLASS_BOOMER && !IsFrozen() && Weapon != WEAPON_GAME && !(IsInLove() && Weapon == WEAPON_SELF) )
 	{
 		GameServer()->CreateSound(m_Pos, SOUND_GRENADE_EXPLODE);
@@ -3403,7 +3404,10 @@ void CCharacter::Die(int Killer, int Weapon)
 	}
 	else if(GetClass() == PLAYERCLASS_FREEZER)
 	{
-		GameServer()->GetPlayerChar(Killer)->Freeze(4.0, m_pPlayer->GetCID(), FREEZEREASON_FLASH);
+		if(pKiller)
+		{
+			pKiller->Freeze(4.0, m_pPlayer->GetCID(), FREEZEREASON_FLASH);
+		}
 		m_pPlayer->StartInfection(true);
 		GameServer()->SendBroadcast_Localization(-1, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("The freezer is dead"), NULL);
 		GameServer()->CreateSoundGlobal(SOUND_CTF_RETURN);
