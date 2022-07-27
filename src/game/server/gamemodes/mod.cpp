@@ -691,7 +691,27 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 			}
 		}
 	}
-		
+	
+	//Add killing num for freezer
+	if(pVictim->IsHuman() && pVictim->IsFrozen() && pVictim->m_LastFreezer >= 0 && pVictim->m_LastFreezer != pKiller->GetCID())
+	{
+		CPlayer* pFreezer = GameServer()->m_apPlayers[pVictim->m_LastFreezer];
+		if(pFreezer)
+		{
+			if (pFreezer->GetClass() == PLAYERCLASS_FREEZER)
+			{
+				Server()->RoundStatistics()->OnScoreEvent(pFreezer->GetCID(), SCOREEVENT_HELP_FREEZE, pFreezer->GetClass(), Server()->ClientName(pFreezer->GetCID()), GameServer()->Console());
+				GameServer()->SendScoreSound(pFreezer->GetCID());
+
+				if(pFreezer->GetCharacter())
+				{
+					pFreezer->GetCharacter()->SetEmote(EMOTE_HAPPY, Server()->Tick() + Server()->TickSpeed());
+					GameServer()->SendEmoticon(pFreezer->GetCID(), EMOTICON_MUSIC);
+				}
+			}
+		}
+	}
+
 	//Add bonus point for ninja
 	if(pVictim->IsZombie() && pVictim->IsFrozen() && pVictim->m_LastFreezer >= 0 && pVictim->m_LastFreezer != pKiller->GetCID())
 	{
@@ -720,7 +740,7 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 		}
 	}
 	
-	//Add bonus point for ninja
+	//Add kiiling num for reviver
 	if(pVictim->IsZombie() && pVictim->IsFrozen() && pVictim->m_LastFreezer >= 0 && pVictim->m_LastFreezer != pKiller->GetCID())
 	{
 		CPlayer* pFreezer = GameServer()->m_apPlayers[pVictim->m_LastFreezer];

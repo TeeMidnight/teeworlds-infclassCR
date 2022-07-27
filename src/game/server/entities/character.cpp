@@ -1711,7 +1711,7 @@ void CCharacter::CheckSuperWeaponAccess()
 			// enable white hole probabilities
 			if (kills > g_Config.m_InfHealBoomMinimalKills) 
 			{
-				if (random_int(0,100) < g_Config.m_InfElasticHoleProbability) 
+				if (random_int(0,100) < g_Config.m_InfHealBoomProbability) 
 				{
 					//Scientist-laser.cpp will make it unavailable after usage and reset player kills
 					
