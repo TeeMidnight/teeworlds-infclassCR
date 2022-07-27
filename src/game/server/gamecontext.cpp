@@ -181,6 +181,8 @@ const char *CGameContext::GetClassName(int Class)
 		case PLAYERCLASS_WITCH: return ("Witch");break;
 		case PLAYERCLASS_UNDEAD: return ("Undead");break;
 		case PLAYERCLASS_SLIME: return ("Slime");break;
+		case PLAYERCLASS_FREEZER: return ("Freezer");break;
+		default: return ("None");break;
 	}
 }
 
