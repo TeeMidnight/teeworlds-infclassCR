@@ -1878,7 +1878,7 @@ void CCharacter::HandleWeapons()
 					}
 					else Damage = g_Config.m_InfSmokerHookDamage;
 				}
-				else if(GetClass() == PLAYERCLASS_FREEZER)
+				else if(GetClass() == PLAYERCLASS_FREEZER && VictimChar->IsHuman())
 				{
 					if(!VictimChar->IsInSlowMotion())
 					{
