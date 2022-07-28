@@ -227,21 +227,25 @@ void IGameController::GetMapRotationInfo(CMapRotationInfo *pMapRotationInfo)
 
 void IGameController::CycleMap(bool Forced)
 {
+	
+	char aOldMap[512];
+	str_format(aOldMap, sizeof(aOldMap), "%s.map", g_Config.m_SvMap);
+
 	if(m_aMapWish[0] != 0)
 	{
 		char aBuf[256];
 		str_format(aBuf, sizeof(aBuf), "rotating map to %s", m_aMapWish);
 		GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "game", aBuf);
 
-		{
-			char MapResetFilename[512];
-			str_format(MapResetFilename, sizeof(MapResetFilename), "maps/%s.mapreset", g_Config.m_SvMap);
-
-			GameServer()->Console()->ExecuteFile(MapResetFilename);
-		}
 		str_copy(g_Config.m_SvMap, m_aMapWish, sizeof(g_Config.m_SvMap));
 		m_aMapWish[0] = 0;
 		m_RoundCount = 0;
+		{
+			char MapResetFilename[512];
+			str_format(MapResetFilename, sizeof(MapResetFilename), "maps/%s.mapreset", aOldMap);
+
+			GameServer()->Console()->ExecuteFile(MapResetFilename);
+		}
 		return;
 	}
 	if(!str_length(g_Config.m_SvMaprotation))
@@ -249,9 +253,6 @@ void IGameController::CycleMap(bool Forced)
 
 	if(!Forced && m_RoundCount < g_Config.m_SvRoundsPerMap-1)
 		return;
-
-	char aOldMap[512];
-	str_format(aOldMap, sizeof(aOldMap), "%s.map", g_Config.m_SvMap);
 
 	int PlayerCount = GameServer()->GetActivePlayerCount();
 
@@ -308,12 +309,6 @@ void IGameController::CycleMap(bool Forced)
 		GetWordFromList(aBuf, g_Config.m_SvMaprotation, pMapRotationInfo.m_MapNameIndices[i]);
 	}
 
-	{
-		char MapResetFilename[512];
-		str_format(MapResetFilename, sizeof(MapResetFilename), "maps/%s.mapreset", aOldMap);
-
-		GameServer()->Console()->ExecuteFile(MapResetFilename);
-	}
 
 	m_RoundCount = 0;
 
@@ -321,6 +316,14 @@ void IGameController::CycleMap(bool Forced)
 	str_format(aBufMsg, sizeof(aBufMsg), "rotating map to %s", aBuf);
 	GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "game", aBuf);
 	str_copy(g_Config.m_SvMap, aBuf, sizeof(g_Config.m_SvMap));
+
+	
+	{
+		char MapResetFilename[512];
+		str_format(MapResetFilename, sizeof(MapResetFilename), "maps/%s.mapreset", aOldMap);
+
+		GameServer()->Console()->ExecuteFile(MapResetFilename);
+	}
 }
 
 void IGameController::SkipMap()
