@@ -106,6 +106,11 @@ void CSuperWeaponIndicator::Tick()
 		{
 			GameServer()->m_World.DestroyEntity(this);
 			return; // Do not proceed after destruction
+		}
+		if (m_OwnerChar->m_HasHealBoom == false)
+		{
+			GameServer()->m_World.DestroyEntity(this);
+			return; // Do not proceed after destruction
 		} 
 	}
 }

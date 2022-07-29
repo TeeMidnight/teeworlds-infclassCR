@@ -792,6 +792,10 @@
 		"value": "你获得了一个冻结地雷..."
 	},
 	{
+		"key": "stun grenades found...",
+		"value": "已经获得震爆弹..."
+	},
+	{
 		"key": "Use hammer to switch shield mode",
 		"value": "使用锤子来切换盾牌模式"
 	},
