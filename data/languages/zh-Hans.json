@@ -628,12 +628,16 @@
 		"value": "激光墙: {sec:RemainingTime}"
 	},
 	{
+		"key": "Looper laser wall: {sec:RemainingTime}",
+		"value": "循环者激光墙: {sec:RemainingTime}"
+	},
+	{
 		"key": "{int:NumBombs} bombs left",
-		"other": "炸弹剩余 {int:NumBombs}",
+		"other": "炸弹剩余 {int:NumBombs} 个",
 	},
 	{
 		"key": "{int:NumMines} mines are active",
-		"other": "当前激活地雷 {int:NumMines}",
+		"other": "当前激活地雷 {int:NumMines} 个",
 	},
 	{
 		"key": "Mine activated",
@@ -708,14 +712,6 @@
 		"value": "防空地雷已经激活"
 	},
 	{
-		"key": "Elastic hole: {sec:RemainingTime}",
-		"value": "弹射洞剩余时间: {sec:RemainingTime}"
-	},
-	{
-		"key": "Anti-AirMine is active\nElastic hole: {sec:RemainingTime}",
-		"value": "防空地雷已激活\n弹射洞剩余时间: {sec:RemainingTime}"
-	},
-	{
 		"key": "Funround are start! Zombies are {str:Zombie}. Humans are {str:Human}",
 		"value": "有趣的一轮开始了! 僵尸是{str:Zombie}。人类是{str:Human}"
 	},
@@ -737,27 +733,59 @@
 	},
 	{
 		"key": "white hole ready, your laser rifle now disrupts space time",
-		"value": "白洞准备好了, 使用你的激光枪来放置它"
+		"value": "白洞就绪, 使用你的激光枪来放置它"
 	},
 	{
 		"key": "white hole found, adjusting scientific parameters...",
 		"value": "已经建立白洞, 正在调整你的科学参数..."
 	},
 	{
+		"key": "WhiteHole ready !",
+		"value": "白洞已经就绪!"
+	},
+	{
+		"key": "White hole: {sec:RemainingTime}",
+		"value": "白洞剩余时间: {sec:RemainingTime}"
+	},
+	{
+		"key": "{int:NumMines} mines are active\nWhite hole: {sec:RemainingTime}",
+		"value": "当前激活地雷 {int:NumMines} 个\n白洞剩余时间: {sec:RemainingTime}"
+	},
+	{
 		"key": "elastic hole ready, your grenade now disrupts space time",
-		"value": "弹射洞准备好了, 使用你的榴弹炮来放置它"
+		"value": "弹射洞就绪, 使用你的榴弹炮来放置它"
 	},
 	{
 		"key": "elastic hole found, finding the exit passageway!",
 		"value": "已经建立弹射洞, 正在获取安全通道!"
 	},
 	{
+		"key": "ElasticHole ready !",
+		"value": "弹射洞就绪!"
+	},
+	{
+		"key": "Elastic hole: {sec:RemainingTime}",
+		"value": "弹射洞剩余时间: {sec:RemainingTime}"
+	},
+	{
+		"key": "Anti-AirMine is active\nElastic hole: {sec:RemainingTime}",
+		"value": "防空地雷已激活\n弹射洞剩余时间: {sec:RemainingTime}"
+	},
+	{
 		"key": "heal boom ready, your laser rifle now disrupts space time",
-		"value": "治愈爆炸准备好了, 使用你的激光枪来放置它"
+		"value": "治愈爆炸就绪, 使用你的激光枪来放置它"
 	},
 	{
 		"key": "heal boom found, heal them...",
 		"value": "已经取得治愈爆炸, 治疗它们..."
+	},
+	{
+		"key": "Heal boom ready !",
+		"value": "治愈爆炸就绪!"
+	},
+	{
+		"key": "Heal Boom: {sec:RemainingTime}",
+		"value": "治愈爆炸剩余时间: {sec:RemainingTime}"
 	},
 	{
 		"key": "you had a freeze mine...",
