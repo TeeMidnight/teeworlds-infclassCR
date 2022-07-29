@@ -341,6 +341,8 @@ Messages = [
 		NetStringStrict("m_Reason"),
 	]),
 	
+	NetMessage("Cl_IsDDNetLegacy", []),
+
 	NetMessage("Cl_IsDDRace", []),
 
 	NetMessage("Sv_DDRaceTime", [

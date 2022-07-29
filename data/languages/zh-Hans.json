@@ -653,7 +653,7 @@
 	},
 	{
 		"key": "Position lock: {sec:RemainingTime}",
-		"value": "中毒时间还剩: {sec:RemainingTime}"
+		"value": "固定时间还剩: {sec:RemainingTime}"
 	},
 	{
 		"key": "Explosive yield: {percent:BombLevel}",
