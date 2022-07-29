@@ -379,6 +379,29 @@ int CNetServer::GetClientSlot(const NETADDR &Addr)
 	return Slot;
 }
 
+static bool IsDDNetControlMsg(const CNetPacketConstruct *pPacket)
+{
+	if(!(pPacket->m_Flags&NET_PACKETFLAG_CONTROL)
+		|| pPacket->m_DataSize < 1)
+	{
+		return false;
+	}
+	if(pPacket->m_aChunkData[0] == NET_CTRLMSG_CONNECT
+		&& pPacket->m_DataSize >= (int)(1 + sizeof(SECURITY_TOKEN_MAGIC) + sizeof(SECURITY_TOKEN))
+		&& mem_comp(&pPacket->m_aChunkData[1], SECURITY_TOKEN_MAGIC, sizeof(SECURITY_TOKEN_MAGIC)) == 0)
+	{
+		// DDNet CONNECT
+		return true;
+	}
+	if(pPacket->m_aChunkData[0] == NET_CTRLMSG_ACCEPT
+		&& pPacket->m_DataSize >= 1 + (int)sizeof(SECURITY_TOKEN))
+	{
+		// DDNet ACCEPT
+		return true;
+	}
+	return false;
+}
+
 /*
 	TODO: chopp up this function into smaller working parts
 */
@@ -421,6 +444,11 @@ int CNetServer::Recv(CNetChunk *pChunk)
 				pChunk->m_Address = Addr;
 				pChunk->m_DataSize = m_RecvUnpacker.m_Data.m_DataSize;
 				pChunk->m_pData = m_RecvUnpacker.m_Data.m_aChunkData;
+				if(m_RecvUnpacker.m_Data.m_Flags&NET_PACKETFLAG_EXTENDED)
+				{
+					pChunk->m_Flags |= NETSENDFLAG_EXTENDED;
+					mem_copy(pChunk->m_aExtraData, m_RecvUnpacker.m_Data.m_aExtraData, sizeof(pChunk->m_aExtraData));
+				}
 				return 1;
 			}
 			else
@@ -459,9 +487,8 @@ int CNetServer::Recv(CNetChunk *pChunk)
 						continue;
  					}
 
-					if(m_RecvUnpacker.m_Data.m_Flags&NET_PACKETFLAG_CONTROL &&
-						m_RecvUnpacker.m_Data.m_DataSize > 1)
-						// got control msg with extra size (should support token)
+					if(IsDDNetControlMsg(&m_RecvUnpacker.m_Data))
+						// got ddnet control msg
 						OnTokenCtrlMsg(Addr, m_RecvUnpacker.m_Data.m_aChunkData[0], m_RecvUnpacker.m_Data);
 					else
 						// got connection-less ctrl or sys msg
@@ -484,7 +511,8 @@ int CNetServer::Send(CNetChunk *pChunk)
 	if(pChunk->m_Flags&NETSENDFLAG_CONNLESS)
 	{
 		// send connectionless packet
-		CNetBase::SendPacketConnless(m_Socket, &pChunk->m_Address, pChunk->m_pData, pChunk->m_DataSize);
+		CNetBase::SendPacketConnless(m_Socket, &pChunk->m_Address, pChunk->m_pData, pChunk->m_DataSize,
+				pChunk->m_Flags&NETSENDFLAG_EXTENDED, pChunk->m_aExtraData);
 	}
 	else
 	{

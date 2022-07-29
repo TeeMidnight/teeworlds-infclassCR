@@ -3669,6 +3669,12 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		Msg.m_Weapon = WEAPON_HAMMER;
 		Msg.m_ModeSpecial = 0;
 		Server()->SendPackMsg(&Msg, MSGFLAG_VITAL, -1);
+
+		
+		if (pKillerPlayer)
+			pKillerPlayer->IncreaseNumberKills();
+		if (pKillerChar)
+			pKillerChar->CheckSuperWeaponAccess();
 	}
 /* INFECTION MODIFICATION END *****************************************/
 
@@ -3685,14 +3691,6 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 				pKillerChar->m_EmoteType = EMOTE_HAPPY;
 				pKillerChar->m_EmoteStop = Server()->Tick() + Server()->TickSpeed();
 			}
-		}
-		
-		if (!(GetClass() == PLAYERCLASS_UNDEAD) || g_Config.m_InfUndeadIncNumKills)
-		{
-			if (pKillerPlayer)
-				pKillerPlayer->IncreaseNumberKills();
-			if (pKillerChar)
-				pKillerChar->CheckSuperWeaponAccess();
 		}
 		
 		return false;

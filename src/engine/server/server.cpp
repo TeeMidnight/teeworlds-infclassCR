@@ -1942,7 +1942,13 @@ void CServer::PumpNetwork()
 				if(Packet.m_DataSize >= (int)sizeof(SERVERBROWSE_GETINFO)+1 &&
 					mem_comp(Packet.m_pData, SERVERBROWSE_GETINFO, sizeof(SERVERBROWSE_GETINFO)) == 0)
 				{
-					Type = SERVERINFO_64_LEGACY;
+					if(Packet.m_Flags&NETSENDFLAG_EXTENDED)
+					{
+						Type = SERVERINFO_EXTENDED;
+						ExtraToken = (Packet.m_aExtraData[0] << 8) | Packet.m_aExtraData[1];
+					}
+					else
+						Type = SERVERINFO_VANILLA;
 				}
 				else if(Packet.m_DataSize >= (int)sizeof(SERVERBROWSE_GETINFO_64_LEGACY)+1 &&
 					mem_comp(Packet.m_pData, SERVERBROWSE_GETINFO_64_LEGACY, sizeof(SERVERBROWSE_GETINFO_64_LEGACY)) == 0)
