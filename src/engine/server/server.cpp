@@ -1934,15 +1934,6 @@ int CServer::LoadMap(const char *pMapName)
 	str_copy(m_aCurrentMap, pMapName, sizeof(m_aCurrentMap));
 	ResetMapVotes();
 
-	//map_set(df);
-	
-	
-	{
-		
-		char MapInfoFilename[512];
-		str_format(MapInfoFilename, sizeof(MapInfoFilename), "maps/%s.mapinfo", pMapName);
-		m_pConsole->ExecuteFile(MapInfoFilename);
-	}
 /* INFECTION MODIFICATION END *****************************************/
 	
 	return 1;

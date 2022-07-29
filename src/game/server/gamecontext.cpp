@@ -1975,9 +1975,9 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 		}
 		else if(MsgID == NETMSGTYPE_CL_VOTE)
 		{
+			CNetMsg_Cl_Vote *pMsg = (CNetMsg_Cl_Vote *)pRawMsg;
 			if(m_VoteLanguageTick[ClientID] > 0)
 			{
-				CNetMsg_Cl_Vote *pMsg = (CNetMsg_Cl_Vote *)pRawMsg;
 				if(!pMsg->m_Vote)
 					return;
 
@@ -2027,7 +2027,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				Server()->SetClientDefaultScoreMode(ClientID, ScoreMode);
 				m_apPlayers[ClientID]->SetScoreMode(ScoreMode);
 			}
-			else
+			else if(pMsg->m_Vote == 1)
 			{
 				m_apPlayers[ClientID]->HookProtection(!m_apPlayers[ClientID]->HookProtectionEnabled(), false);
 			}
@@ -3002,7 +3002,7 @@ bool CGameContext::ConChatInfo(IConsole::IResult *pResult, void *pUserData)
 	const char aContributors[] = "necropotame, Stitch626, yavl, Socialdarwinist,\nbretonium,duralakun,FluffyTee|Bro,ResamVi\nErrorDreemurr,NineCloud";
 	
 	
-	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("InfectionClassChinaRank, by ErrorDreemurr"), NULL); 
+	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("InfectionClassChallengeRank, by ErrorDreemurr"), NULL); 
 	Buffer.append("\n\n");
 	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Based on the concept of InfectionClass mod by necropotame"), NULL); 
 	Buffer.append("\n\n");
@@ -4310,7 +4310,7 @@ bool CGameContext::ConCmdList(IConsole::IResult *pResult, void *pUserData)
 	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, "/challenge, /top10, /rank, /goal", NULL);
 	Buffer.append("\n\n");
 #endif
-	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Press <F3> or <F4> to enable or disable hook protection"), NULL);
+	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Press <F3> to enable or disable hook protection"), NULL);
 			
 	pSelf->SendMOTD(ClientID, Buffer.buffer());
 	
@@ -4504,6 +4504,14 @@ void CGameContext::OnInit(/*class IKernel *pKernel*/)
 	// select gametype
 	m_pController = new CGameControllerMOD(this);
 
+	// reset game config, if has.
+	
+	{
+		char MapResetFilename[512];
+		str_format(MapResetFilename, sizeof(MapResetFilename), "maps/%s.mapreset", g_Config.m_SvLastMap);
+		m_pConsole->ExecuteFile(MapResetFilename);
+	}
+
 	// setup core world
 	//for(int i = 0; i < MAX_CLIENTS; i++)
 	//	game.players[i].core.world = &game.world.core;
@@ -4536,6 +4544,12 @@ void CGameContext::OnInit(/*class IKernel *pKernel*/)
 				}
 			}
 		}
+	}
+
+	{
+		char MapInfoFilename[512];
+		str_format(MapInfoFilename, sizeof(MapInfoFilename), "maps/%s.mapinfo", g_Config.m_SvMap);
+		m_pConsole->ExecuteFile(MapInfoFilename);
 	}
 
 	//game.world.insert_entity(game.Controller);

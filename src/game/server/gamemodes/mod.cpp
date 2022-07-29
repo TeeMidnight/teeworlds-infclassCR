@@ -134,17 +134,7 @@ void CGameControllerMOD::SetFirstInfectedNumber()
 	int NumInfected = GameServer()->GetZombieCount();
 	int NumSpec = GameServer()->GetSpectatorCount();
 	
-	if(NumHumans + NumInfected <= 1)
-		m_NumFirstInfected = 0;
-	else if(NumHumans + NumInfected <= 3)
-		m_NumFirstInfected = 1;
-	else if(NumHumans + NumInfected <= 8)
-		m_NumFirstInfected = 2;
-	else
-		m_NumFirstInfected = 3;
-
-	if(g_Config.m_InfIgnoreSpec)
-		m_NumFirstInfected += NumSpec;
+	m_NumFirstInfected = get_power_num_int(NumHumans + NumInfected + g_Config.m_InfIgnoreSpec ? 0 : NumSpec, 2);
 }
 
 int CGameControllerMOD::GetFirstInfNb()
@@ -669,6 +659,12 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 				Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_KILL_WITCH, pKiller->GetClass(), Server()->ClientName(pKiller->GetCID()), GameServer()->Console());
 				GameServer()->SendScoreSound(pKiller->GetCID());
 			}
+			else if(pVictim->GetClass() == PLAYERCLASS_WITCH)
+			{
+				GameServer()->SendChatTarget_Localization(pKiller->GetCID(), CHATCATEGORY_SCORE, _("You have killed a freezer, +3 points"), NULL);
+				Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_KILL_FREEZER, pKiller->GetClass(), Server()->ClientName(pKiller->GetCID()), GameServer()->Console());
+				GameServer()->SendScoreSound(pKiller->GetCID());
+			}
 			else if(pVictim->IsZombie())
 			{
 				Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_KILL_INFECTED, pKiller->GetClass(), Server()->ClientName(pKiller->GetCID()), GameServer()->Console());
@@ -700,6 +696,7 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 		{
 			if (pFreezer->GetClass() == PLAYERCLASS_FREEZER)
 			{
+				pFreezer->IncreaseNumberKills();
 				Server()->RoundStatistics()->OnScoreEvent(pFreezer->GetCID(), SCOREEVENT_HELP_FREEZE, pFreezer->GetClass(), Server()->ClientName(pFreezer->GetCID()), GameServer()->Console());
 				GameServer()->SendScoreSound(pFreezer->GetCID());
 
@@ -720,6 +717,7 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 		{
 			if (pFreezer->GetClass() == PLAYERCLASS_NINJA)
 			{
+				pFreezer->IncreaseNumberKills();
 				Server()->RoundStatistics()->OnScoreEvent(pFreezer->GetCID(), SCOREEVENT_HELP_FREEZE, pFreezer->GetClass(), Server()->ClientName(pFreezer->GetCID()), GameServer()->Console());
 				GameServer()->SendScoreSound(pFreezer->GetCID());
 				
@@ -748,6 +746,7 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 		{
 			if (pFreezer->GetClass() == PLAYERCLASS_REVIVER)
 			{
+				pFreezer->IncreaseNumberKills();
 				Server()->RoundStatistics()->OnScoreEvent(pFreezer->GetCID(), SCOREEVENT_HELP_FREEZE, pFreezer->GetClass(), Server()->ClientName(pFreezer->GetCID()), GameServer()->Console());
 				GameServer()->SendScoreSound(pFreezer->GetCID());
 

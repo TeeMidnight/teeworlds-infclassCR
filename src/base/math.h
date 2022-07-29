@@ -27,6 +27,13 @@ inline int round_to_int(float f)
 		return (int)(f+0.5f);
 	return (int)(f-0.5f);
 }
+inline int get_power_num_int(int a, int b)
+{
+	int x=0;
+	for(;a > 0;){a/=b;x++;}
+	return x;
+}
+
 
 template<typename T, typename TB>
 inline T mix(const T a, const T b, TB amount)

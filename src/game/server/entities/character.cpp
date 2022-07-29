@@ -443,6 +443,10 @@ void CCharacter::DoWeaponSwitch()
 
 void CCharacter::HandleWeaponSwitch()
 {
+	if(IsFrozen())
+	{
+		return;
+	}
 	// select Weapon
 	int Next = CountInput(m_LatestPrevInput.m_NextWeapon, m_LatestInput.m_NextWeapon).m_Presses;
 	int Prev = CountInput(m_LatestPrevInput.m_PrevWeapon, m_LatestInput.m_PrevWeapon).m_Presses;
@@ -1683,19 +1687,17 @@ void CCharacter::CheckSuperWeaponAccess()
 	if(GetClass() == PLAYERCLASS_SCIOGIST)
 	{
 		
-		if (!m_HasElasticHole) // Can't receive a white hole while having one available
+		if (!m_HasElasticHole) // Can't receive a elastic hole while having one available
 		{
-			// enable white hole probabilities
+			// enable elastic hole probabilities
 			if (kills > g_Config.m_InfElasticHoleMinimalKills) 
 			{
 				if (random_int(0,100) < g_Config.m_InfElasticHoleProbability) 
 				{
-					//Scientist-laser.cpp will make it unavailable after usage and reset player kills
-					
 					//create an indicator object
 					if (m_HasIndicator == false) {
 						m_HasIndicator = true;
-						GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_SCORE, _("elastic hole found, adjusting scientific parameters..."), NULL);
+						GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_SCORE, _("elastic hole found, finding the exit passageway!"), NULL);
 						new CSuperWeaponIndicator(GameWorld(), m_Pos, m_pPlayer->GetCID());
 					}
 				}
@@ -1718,7 +1720,7 @@ void CCharacter::CheckSuperWeaponAccess()
 					//create an indicator object
 					if (m_HasIndicator == false) {
 						m_HasIndicator = true;
-						GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_SCORE, _("heal boom found..."), NULL);
+						GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_SCORE, _("heal boom found, heal them..."), NULL);
 						new CSuperWeaponIndicator(GameWorld(), m_Pos, m_pPlayer->GetCID());
 					}
 				}
@@ -1749,10 +1751,10 @@ void CCharacter::CheckSuperWeaponAccess()
 	{
 		if(!m_HasFreezeMine)
 		{
-			if (kills > g_Config.m_InfFreezeMineMinimalKills)
+			if (kills >= g_Config.m_InfFreezeMineMinimalKills)
 			{
 				m_HasFreezeMine = true;
-				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_SCORE, _("you has a freeze mine..."), NULL);
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_SCORE, _("you had a freeze mine..."), NULL);
 				m_pPlayer->ResetNumberKills();
 			}
 		}
@@ -2732,9 +2734,6 @@ void CCharacter::Tick()
 		}
 		if(GetInfWeaponID(m_ActiveWeapon) != INFWEAPON_POLICE_HAMMER)
 		{
-			GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), 
-			BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
-			 _("Use hammer to defend"), NULL);
 			m_Armor = 0;
 			if(pCurrentShield)
 				GameServer()->m_World.DestroyEntity(pCurrentShield);
@@ -3406,7 +3405,7 @@ void CCharacter::Die(int Killer, int Weapon)
 	{
 		if(pKiller)
 		{
-			pKiller->Freeze(4.0, m_pPlayer->GetCID(), FREEZEREASON_FLASH);
+			pKiller->Freeze(2.0, m_pPlayer->GetCID(), FREEZEREASON_FLASH);
 		}
 		m_pPlayer->StartInfection(true);
 		GameServer()->SendBroadcast_Localization(-1, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("The freezer is dead"), NULL);
@@ -3437,7 +3436,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 
 	if(GetClass() == PLAYERCLASS_FREEZER)
 	{
-		Dmg = max(1,Dmg/2);
+		Dmg = Dmg/2;
 	}
 
 
@@ -3697,6 +3696,14 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		}
 		
 		return false;
+	}
+
+	if (!(GetClass() == PLAYERCLASS_UNDEAD) || g_Config.m_InfUndeadIncNumKills)
+	{
+		if (pKillerPlayer)
+			pKillerPlayer->IncreaseNumberKills();
+		if (pKillerChar)
+			pKillerChar->CheckSuperWeaponAccess();
 	}
 
 	if (Dmg > 2)

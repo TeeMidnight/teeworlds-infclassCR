@@ -28,6 +28,7 @@ public:
 
 	int GetOwner() const;
 	void Explode();
+    void MovePlayer();
 
     int m_AttackNow;
 

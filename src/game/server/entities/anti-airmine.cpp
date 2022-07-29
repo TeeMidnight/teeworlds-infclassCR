@@ -137,11 +137,12 @@ void CAntiAirMine::Tick()
 					int Damage = g_Config.m_InfAntiAirMineDamage;
 					
 					GameServer()->CreateExplosionDisk(m_Pos, Radius, Radius, m_Owner == p->GetPlayer()->GetCID() ? Damage/2 : Damage,
-						8.0f, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_SELFHARM);
+						0.0f, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_SELFHARM);
 				}
 			}
         }
 
+		MovePlayer();
         m_Angle += g_Config.m_InfAntiAirMineSpeed;
         m_LifeSpan--;
 		
@@ -149,6 +150,21 @@ void CAntiAirMine::Tick()
 	
 	if(m_LifeSpan <= 0)
 		Explode();
+}
+
+void CAntiAirMine::MovePlayer()
+{
+	for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
+	{
+		if(p->IsHuman()) continue;
+		int Len = distance(p->m_Pos, m_Pos);
+		if(Len < p->m_ProximityRadius + g_Config.m_InfAntiAirMineRadius)
+		{
+			vec2 Dir = normalize(m_Pos - p->m_Pos);
+			p->SetVel(Dir * 8.0f);
+		}
+		
+	}
 }
 
 void CAntiAirMine::TickPaused()
