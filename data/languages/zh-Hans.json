@@ -57,7 +57,7 @@
 	},
 	{
 		"key": "Infected won the round in {sec:RoundDuration}",
-		"value": "感染赢了这轮在{sec:RoundDuration}内"
+		"value": "感染在{sec:RoundDuration}内赢了这轮"
 	},
 	{
 		"key": "{int:NumHumans} humans won the round",
@@ -69,7 +69,7 @@
 	},
 	{
 		"key": "You have infected {str:VictimName}, +3 points",
-		"value": "你感染了 {str:VictimName}, +3分"
+		"value": "你感染了{str:VictimName}, +3分"
 	},
 	{
 		"key": "You have killed a witch, +5 points",

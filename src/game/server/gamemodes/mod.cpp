@@ -133,8 +133,26 @@ void CGameControllerMOD::SetFirstInfectedNumber()
 	int NumHumans = GameServer()->GetHumanCount();
 	int NumInfected = GameServer()->GetZombieCount();
 	int NumSpec = GameServer()->GetSpectatorCount();
-	
-	m_NumFirstInfected = get_power_num_int(NumHumans + NumInfected + g_Config.m_InfIgnoreSpec ? 0 : NumSpec, 2);
+	int Players = NumHumans + NumInfected;
+	if(Players < 3)
+	{
+		m_NumFirstInfected = 1;
+	}else if(Players < 7)
+	{
+		m_NumFirstInfected = 2;
+	}else if(Players < 12)
+	{
+		m_NumFirstInfected = 3;
+	}else if(Players < 16)
+	{
+		m_NumFirstInfected = 4;
+	}else if(Players < 24)
+	{
+		m_NumFirstInfected = 5;
+	}else if(Players < 30)
+	{
+		m_NumFirstInfected = 6;
+	}else m_NumFirstInfected = 7;
 }
 
 int CGameControllerMOD::GetFirstInfNb()
