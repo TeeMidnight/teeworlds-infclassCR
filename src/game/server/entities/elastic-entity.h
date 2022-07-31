@@ -21,6 +21,7 @@ public:
 	virtual void Tick();
 	virtual void Reset();
 	virtual void Snap(int SnappingClient);
+	void Collision(bool Down = true);
 	int GetTick() { return m_LifeSpan; }
 
 	int GetOwner() { return m_Owner; }
@@ -30,7 +31,6 @@ private:
 	int m_ParticleIDs[NUM_PARTICLES];
 	array<int> m_IDs;
 	void Explode();
-	void Collision();
 	void TickPaused();
 	vec2 GetPos(float Time);
 

@@ -51,7 +51,7 @@ CElasticEntity::~CElasticEntity()
 
 void CElasticEntity::Explode()
 {
-    GameServer()->CreateExplosion(m_Pos, m_Owner, WEAPON_HAMMER, true, TAKEDAMAGEMODE_NOINFECTION);
+    GameServer()->CreateExplosion(m_ActualPos, m_Owner, WEAPON_HAMMER, true, TAKEDAMAGEMODE_NOINFECTION);
 
 	int Degres = 0;
 	for(int i=0;i < CElasticEntity::NUM_IDS;i++)
@@ -84,7 +84,7 @@ void CElasticEntity::TickPaused()
 	m_StartTick++;
 }
 
-void CElasticEntity::Collision()
+void CElasticEntity::Collision(bool Down)
 {
 	GameServer()->CreateExplosion(m_LastPos, m_Owner, WEAPON_HAMMER, false, TAKEDAMAGEMODE_NOINFECTION);
 
@@ -125,8 +125,8 @@ void CElasticEntity::Collision()
 		m_Direction.y = -vel.y;
 	}
 	
-	m_Direction.x *= (100 - 50) / 100.0;
-	m_Direction.y *= (100 - 50) / 100.0;
+	m_Direction.x *= (Down ? 100 : 175 - 50) / (100.0);
+	m_Direction.y *= (Down ? 100 : 175 - 50) / (100.0);
 	m_StartTick = Server()->Tick();
 	
 	m_ActualDir = normalize(m_Direction);

@@ -740,6 +740,8 @@ int CServer::Init()
 	SetClassAvailability(PLAYERCLASS_CATAPULT, 2);
 	SetClassAvailability(PLAYERCLASS_LOOPER, 2);
 	SetClassAvailability(PLAYERCLASS_REVIVER, 2);
+	SetClassAvailability(PLAYERCLASS_POLICE, 2);
+	SetClassAvailability(PLAYERCLASS_JOKER, 2);
 	
 	SetClassAvailability(PLAYERCLASS_SMOKER, 1);
 	SetClassAvailability(PLAYERCLASS_HUNTER, 1);

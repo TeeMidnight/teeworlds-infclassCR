@@ -87,6 +87,8 @@ m_pConsole(pConsole)
 	m_Armor = 0;
 	
 /* INFECTION MODIFICATION START ***************************************/
+	m_StartTick = Server()->Tick();
+
 	m_AirJumpCounter = 0;
 	m_FirstShot = true;
 	
@@ -98,6 +100,11 @@ m_pConsole(pConsole)
 	for(int i=0; i<2; i++)
 	{
 		m_BarrierHintIDs[i] = Server()->SnapNewID();
+	}
+	m_AuraIDs.set_size(15);
+	for(int i=0; i<15; i++)
+	{
+		m_AuraIDs[i] = Server()->SnapNewID();
 	}
 	m_AntiFireTick = 0;
 	m_IsFrozen = false;
@@ -225,6 +232,7 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 /* INFECTION MODIFICATION START ***************************************/
 	m_AntiFireTick = Server()->Tick();
 	m_IsFrozen = false;
+	m_IsInAura = false;
 	m_IsInSlowMotion = false;
 	m_FrozenTime = -1;
 	m_LoveTick = -1;
@@ -287,6 +295,16 @@ void CCharacter::Destroy()
 		{
 			Server()->SnapFreeID(m_BarrierHintIDs[i]);
 			m_BarrierHintIDs[i] = -1;
+		}
+
+	}
+
+	if(m_AuraIDs[0] >= 0)
+	{
+		for(int i=0; i<9; i++) 
+		{
+			Server()->SnapFreeID(m_AuraIDs[i]);
+			m_AuraIDs[i] = -1;
 		}
 
 	}
@@ -609,6 +627,13 @@ void CCharacter::UpdateTuningParam()
 		pTuningParams->m_AirControlAccel = pTuningParams->m_AirControlAccel * (1.0f + 0.5f*Factor);
 		pTuningParams->m_HookDragAccel = pTuningParams->m_HookDragAccel * (1.0f + 0.5f*Factor);
 		pTuningParams->m_HookDragSpeed = pTuningParams->m_HookDragSpeed * (1.0f + 0.5f*Factor);
+	}
+
+	if(GetClass() == PLAYERCLASS_JOKER)
+	{
+		pTuningParams->m_Gravity = 0.4f;
+		pTuningParams->m_HookLength = 640.0f;
+		pTuningParams->m_GroundJumpImpulse = 18.2f;
 	}
 }
 
@@ -1114,7 +1139,21 @@ void CCharacter::FireWeapon()
 								pTarget->Unfreeze();
 								GameServer()->ClearBroadcast(pTarget->GetPlayer()->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE);
 							}
-							
+						}
+						else if(GetClass() == PLAYERCLASS_JOKER)
+						{
+							/* affects mercenary only if love bombs are disabled. */
+							if (pTarget->IsZombie())
+							{
+								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, 20, 
+										m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
+								IncreaseHealth(2);
+							}else if(pTarget->IsFrozen())
+							{
+								pTarget->Unfreeze();
+								GameServer()->ClearBroadcast(pTarget->GetPlayer()->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE);
+							}
+
 							
 						}
 						else if(GetClass() == PLAYERCLASS_MEDIC)
@@ -1219,6 +1258,18 @@ void CCharacter::FireWeapon()
 					}
 				}
 				
+				if(GetClass() == PLAYERCLASS_JOKER)
+				{
+					for(CElasticEntity* p = (CElasticEntity*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_ELASTIC_ENTITY); p; p = (CElasticEntity*) p->TypeNext())
+					{
+						float Len = distance(p->m_ActualPos, ProjStartPos);
+						if(Len < 16 + p->m_Radius)
+						{
+							p->Collision(false);
+						}
+					}
+				}
+
 				if(!ShowAttackAnimation)
 					return;
 					
@@ -1264,7 +1315,7 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_CATAPULT)
 			{
-				new CLaser(GameWorld(), m_Pos, Direction, 400.0f, m_pPlayer->GetCID(), 2);
+				new CLaser(GameWorld(), ProjStartPos, Direction, 400.0f, m_pPlayer->GetCID(), 2);
 				GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
 			}
 			else if(GetClass() == PLAYERCLASS_POLICE)
@@ -1831,6 +1882,7 @@ void CCharacter::HandleWeapons()
 	{
 		int InfWID = GetInfWeaponID(i);
 		int AmmoRegenTime = Server()->GetAmmoRegenTime(InfWID);
+		AmmoRegenTime *= m_IsInAura ? 0.5 : 1;
 		int MaxAmmo = Server()->GetMaxAmmo(GetInfWeaponID(i));
 		
 		if(InfWID == INFWEAPON_NINJA_GRENADE)
@@ -1917,6 +1969,28 @@ void CCharacter::HandleWeapons()
 						IncreaseOverallHp(2);
 				}
 			}
+		}
+	}
+
+	if(GetClass() == PLAYERCLASS_JOKER)
+	{
+		if(m_Core.m_HookedPlayer > 0)
+		{
+			CCharacter *VictimChar = GameServer()->GetPlayerChar(m_Core.m_HookedPlayer);
+			if(VictimChar)
+			{
+				float Rate = 3.0f;
+				int Damage = 2;
+
+				if(m_HookDmgTick + Server()->TickSpeed()*Rate < Server()->Tick())
+				{
+					m_HookDmgTick = Server()->Tick();
+					VictimChar->TakeDamage(vec2(0.0f,0.0f), Damage, m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
+					if(VictimChar->IsZombie())
+						IncreaseOverallHp(3);
+				}
+			}
+			
 		}
 	}
 /* INFECTION MODIFICATION END *****************************************/
@@ -2051,6 +2125,7 @@ void CCharacter::Tick()
 		{
 			m_PositionLocked = false;
 		}
+		m_Core.m_HookState = HOOK_IDLE;
 	}
 	
 	if(IsHuman() && IsAlive() && GameServer()->m_pController->IsInfectionStarted())
@@ -2158,7 +2233,38 @@ void CCharacter::Tick()
 		}
 	}
 	
-	
+	m_IsInAura = false;
+
+	if(IsHuman())
+	{
+		for(CCharacter *pChr = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); pChr; pChr = (CCharacter *)pChr->TypeNext())
+		{
+			if(pChr->GetClass() != PLAYERCLASS_JOKER && pChr->GetPlayer()->GetCID() != m_pPlayer->GetCID())continue;
+			float Len = distance(pChr->m_Pos, m_Pos);
+			if(Len < pChr->m_ProximityRadius+g_Config.m_InfJokerAuraRadius)
+			{
+				m_IsInAura = true;
+				m_InAuraTick++;
+			}
+		}
+	}
+
+	if(!m_IsInAura)
+	{
+		m_InAuraTick = 0;
+	}else
+	{
+		if(!m_InAuraTick % g_Config.m_InfJokerAuraTick)
+		{
+			if(GetClass() == PLAYERCLASS_MEDIC)
+				IncreaseArmor(1);
+			else IncreaseHealth(1);
+		}
+	}
+
+
+
+
 	if(m_HallucinationTick > 0)
 		--m_HallucinationTick;
 	
@@ -2597,6 +2703,13 @@ void CCharacter::Tick()
 							Broadcast = true;
 						}
 						break;
+					case CMapConverter::MENUCLASS_JOKER:
+						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_JOKER))
+						{
+							GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Joker"), NULL);
+							Broadcast = true;
+						}
+						break;
 				}
 			}
 			
@@ -2658,6 +2771,9 @@ void CCharacter::Tick()
 						break;
 					case CMapConverter::MENUCLASS_REVIVER:
 						NewClass = PLAYERCLASS_REVIVER;
+						break;
+					case CMapConverter::MENUCLASS_JOKER:
+						NewClass = PLAYERCLASS_JOKER;
 						break;
 				}
 				
@@ -3439,6 +3555,10 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		Dmg = Dmg/2;
 	}
 
+	if(GetClass() == PLAYERCLASS_JOKER)
+	{
+		Dmg = (int)(Dmg * 1.5);
+	}
 
 	if(Mode == TAKEDAMAGEMODE_ALL)
 	{
@@ -3693,8 +3813,6 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 			}
 		}
 		
-		return false;
-
 		if (!(GetClass() == PLAYERCLASS_UNDEAD) || g_Config.m_InfUndeadIncNumKills)
 		{
 			if (pKillerPlayer)
@@ -3702,6 +3820,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 			if (pKillerChar)
 				pKillerChar->CheckSuperWeaponAccess();
 		}
+		return false;
 	}
 
 	if (Dmg > 2)
@@ -3732,6 +3851,27 @@ void CCharacter::Snap(int SnappingClient)
 		pClient = nullptr;
 	
 /* INFECTION MODIFICATION START ***************************************/
+	if(GetClass() == PLAYERCLASS_JOKER)
+	{
+		float time = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
+		float angle = fmodf(time*pi/2, 2.0f*pi);
+		int Radius = g_Config.m_InfJokerAuraRadius;
+		for(int i=0; i<m_AuraIDs.size()-1; i++)
+		{	
+			float shiftedAngle = angle + 2.0*pi*static_cast<float>(i)/static_cast<float>(m_AuraIDs.size()-1);
+			
+			CNetObj_Pickup *pObj = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_AuraIDs[i], sizeof(CNetObj_Pickup)));
+			
+			if(!pObj)
+				continue;
+			
+			pObj->m_X = (int)(m_Pos.x + Radius*cos(shiftedAngle));
+			pObj->m_Y = (int)(m_Pos.y + Radius*sin(shiftedAngle));
+			pObj->m_Type = (i%2) ? POWERUP_HEALTH : POWERUP_ARMOR;
+			pObj->m_Subtype = 0;
+		}
+	}
+
 	if(GetClass() == PLAYERCLASS_WITCH)
 	{
 		CNetObj_Flag *pFlag = (CNetObj_Flag *)Server()->SnapNewItem(NETOBJTYPE_FLAG, m_FlagID, sizeof(CNetObj_Flag));
@@ -3947,6 +4087,7 @@ void CCharacter::Snap(int SnappingClient)
 		return;
 	int EmoteNormal = EMOTE_NORMAL;
 	if(IsZombie()) EmoteNormal = EMOTE_ANGRY;
+	if(GetClass() == PLAYERCLASS_JOKER) EmoteNormal = EMOTE_HAPPY;
 	if(m_IsInvisible) EmoteNormal = EMOTE_BLINK;
 	if(m_LoveTick > 0 || m_HallucinationTick > 0 || m_SlowMotionTick > 0) EmoteNormal = EMOTE_SURPRISE;
 	if(IsFrozen()) EmoteNormal = EMOTE_PAIN;
@@ -4345,6 +4486,21 @@ void CCharacter::ClassSpawnAttributes()
 			{
 				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "ninja", NULL);
 				m_pPlayer->m_knownClass[PLAYERCLASS_NINJA] = true;
+			}
+			break;
+		case PLAYERCLASS_JOKER:
+			RemoveAllGun();
+			m_pPlayer->m_InfectionTick = -1;
+			m_Health = 10;
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
+			GiveWeapon(WEAPON_GUN, -1);
+			m_ActiveWeapon = WEAPON_HAMMER;
+			
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_JOKER);
+			if(!m_pPlayer->IsKnownClass(PLAYERCLASS_JOKER))
+			{
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "joker", NULL);
+				m_pPlayer->m_knownClass[PLAYERCLASS_JOKER] = true;
 			}
 			break;
 		case PLAYERCLASS_NONE:

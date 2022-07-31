@@ -186,6 +186,7 @@ private:
 	int m_InfZoneTick;
 	int m_ProtectionTick;
 	
+	array<int> m_AuraIDs;
 	int m_FlagID;
 	int m_HeartID;
 	int m_BarrierHintID;
@@ -196,8 +197,11 @@ private:
 	bool m_IsFrozen;
 	int m_FrozenTime;
 	bool m_IsInSlowMotion; //LooperClass changes here
+	bool m_IsInAura; // Joker class
 	int m_FreezeReason;
+	int m_InAuraTick;
 	int m_InAirTick;
+	int m_StartTick;
 	
 	char m_GhostSearchMap[GHOST_SEARCHMAP_SIZE*GHOST_SEARCHMAP_SIZE];
 	

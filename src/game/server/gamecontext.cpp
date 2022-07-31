@@ -168,6 +168,7 @@ const char *CGameContext::GetClassName(int Class)
 		case PLAYERCLASS_CATAPULT: return ("Catapult");break;
 		case PLAYERCLASS_POLICE: return ("Police");break;
 		case PLAYERCLASS_REVIVER: return ("Reviver");break;
+		case PLAYERCLASS_JOKER: return ("Joker");break;
 		//Zombies
 		case PLAYERCLASS_SMOKER: return ("Smoker");break;
 		case PLAYERCLASS_BOOMER: return ("Boomer");break;
@@ -313,6 +314,7 @@ void CGameContext::SetAvailabilities(std::vector<int> value) { // todo: should b
 	g_Config.m_InfEnableCatapult = value[11];
 	g_Config.m_InfEnablePolice = value[12];
 	g_Config.m_InfEnableReviver = value[13];
+	g_Config.m_InfEnableJoker = value[14];
 }
 
 void CGameContext::SetProbabilities(std::vector<int> value) { // todo: should be order-independent, e.g with std map
@@ -847,6 +849,9 @@ void CGameContext::SendBroadcast_ClassIntro(int ClientID, int Class)
 			break;
 		case PLAYERCLASS_LOOPER:
 			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Looper"));
+			break;
+		case PLAYERCLASS_JOKER:
+			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Joker"));
 			break;
 		case PLAYERCLASS_SMOKER:
 			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Smoker"));
@@ -2935,6 +2940,8 @@ bool CGameContext::ConSetClass(IConsole::IResult *pResult, void *pUserData)
 	int PlayerID = pResult->GetInteger(0);
 	const char *pClassName = pResult->GetString(1);
 
+	if(PlayerID < 0 || PlayerID >= MAX_CLIENTS) return true;
+
 	CPlayer* pPlayer = pSelf->m_apPlayers[PlayerID];
 	
 	if(!pPlayer)
@@ -2947,6 +2954,7 @@ bool CGameContext::ConSetClass(IConsole::IResult *pResult, void *pUserData)
 	else if(str_comp(pClassName, "catapult") == 0) pPlayer->SetClass(PLAYERCLASS_CATAPULT);
 	else if(str_comp(pClassName, "sciogist") == 0) pPlayer->SetClass(PLAYERCLASS_SCIOGIST);
 	else if(str_comp(pClassName, "reviver") == 0) pPlayer->SetClass(PLAYERCLASS_REVIVER);
+	else if(str_comp(pClassName, "joker") == 0) pPlayer->SetClass(PLAYERCLASS_JOKER);
 	else if(str_comp(pClassName, "looper") == 0) pPlayer->SetClass(PLAYERCLASS_LOOPER);
 	else if(str_comp(pClassName, "police") == 0) pPlayer->SetClass(PLAYERCLASS_POLICE);
 	else if(str_comp(pClassName, "medic") == 0) pPlayer->SetClass(PLAYERCLASS_MEDIC);
@@ -2981,10 +2989,6 @@ bool CGameContext::ConSetClass(IConsole::IResult *pResult, void *pUserData)
 		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "inf_set_class", "Unknown class");
 		return true;
 	}
-	
-	char aBuf[256];
-	str_format(aBuf, sizeof(aBuf), "The admin change the class of %s to %s", pSelf->Server()->ClientName(PlayerID), pClassName);
-	pSelf->SendChat(-1, CGameContext::CHAT_ALL, aBuf);
 	
 	return true;
 }
@@ -3143,6 +3147,11 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 			{
 				CheckClass = PLAYERCLASS_REVIVER;
 				str_copy(aChatTitle, "reviver", sizeof(aChatTitle));
+			}
+			else if(str_comp(aNameFound, "!joker") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_JOKER;
+				str_copy(aChatTitle, "joker", sizeof(aChatTitle));
 			}
 			else if(str_comp(aNameFound, "!looper") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{

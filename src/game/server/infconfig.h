@@ -24,6 +24,7 @@ MACRO_CONFIG_INT(InfMedicLimit, inf_medic_limit, 20, 0, 64, CFGFLAG_SERVER, "Max
 MACRO_CONFIG_INT(InfHeroLimit, inf_hero_limit, 1, 0, 64, CFGFLAG_SERVER, "Maximum number of heros in game")
 MACRO_CONFIG_INT(InfSupportLimit, inf_support_limit, 40, 0, 64, CFGFLAG_SERVER, "Maximum number of supports in game")
 MACRO_CONFIG_INT(InfReviverLimit, inf_reviver_limit, 1, 0, 4, CFGFLAG_SERVER, "Maximum number of revivers in game")
+MACRO_CONFIG_INT(InfJokerLimit, inf_joker_limit, 1, 0, 4, CFGFLAG_SERVER, "Maximum number of jokers in game")
 
 MACRO_CONFIG_INT(InfSoldierBombs, inf_soldier_bombs, 3, 1, 16, CFGFLAG_SERVER, "Number of bombs for the soldier")
 MACRO_CONFIG_INT(InfMercBombs, inf_merc_bombs, 15, 1, 100, CFGFLAG_SERVER, "Number of poison grenades for the mercenary")
@@ -91,6 +92,7 @@ MACRO_CONFIG_INT(InfEnableNinja, inf_enable_ninja, 1, 0, 1, CFGFLAG_SERVER, "Mak
 MACRO_CONFIG_INT(InfEnableMedic, inf_enable_medic, 1, 0, 1, CFGFLAG_SERVER, "Makes the medic class available")
 MACRO_CONFIG_INT(InfEnableHero, inf_enable_hero, 1, 0, 1, CFGFLAG_SERVER, "Makes the hero class available")
 MACRO_CONFIG_INT(InfEnablePolice, inf_enable_police, 1, 0, 1, CFGFLAG_SERVER, "Makes the police class available")
+MACRO_CONFIG_INT(InfEnableJoker, inf_enable_joker, 1, 0, 1, CFGFLAG_SERVER, "Makes the joker class available")
 
 MACRO_CONFIG_INT(InfMinEngineerPlayer, inf_min_engineer_player, 8, 0, 32, CFGFLAG_SERVER, "Min engineer need player num")
 
@@ -106,6 +108,9 @@ MACRO_CONFIG_INT(FunRoundProba, funround_proba, 6, 0, 100, CFGFLAG_SERVER, "Fun 
 // class config
 
 MACRO_CONFIG_INT(InfFreezerReslowlyTime, inf_freezer_reslowly_time, 200, 0, 1000, CFGFLAG_SERVER, "tick")
+
+MACRO_CONFIG_INT(InfJokerAuraRadius, inf_joker_aura_radius, 320, 0, 1200, CFGFLAG_SERVER, "Radius of Joker Aura")
+MACRO_CONFIG_INT(InfJokerAuraTick, inf_joker_aura_tick, 500, 0, 1200, CFGFLAG_SERVER, "Radius of Joker Aura")
 
 //weapon config
 MACRO_CONFIG_INT(InfElasticEntityRadius, inf_elastic_entity_radius, 46, 0, 200, CFGFLAG_SERVER, "Radius of elastic entitys")

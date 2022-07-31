@@ -29,7 +29,7 @@ void CSlimeEntity::Reset()
 vec2 CSlimeEntity::GetPos(float Time)
 {
 	float Curvature = GameServer()->Tuning()->m_GrenadeCurvature;
-	float Speed = 1500.0f;
+	float Speed = 3000.0f;
 
 	return CalcPos(m_Pos, m_Direction, Curvature, Speed, Time);
 }
@@ -65,6 +65,51 @@ void CSlimeEntity::Tick()
 	
 }
 
+void CSlimeEntity::Collision()
+{
+	float Pt = (Server()->Tick()-m_StartTick-1)/(float)Server()->TickSpeed();
+	float Ct = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
+	vec2 PrevPos = GetPos(Pt);
+	vec2 CurPos = GetPos(Ct);
+
+	//Thanks to TeeBall 0.6
+	vec2 CollisionPos;
+	CollisionPos.x = m_LastPos.x;
+	CollisionPos.y = CurPos.y;
+	int CollideY = GameServer()->Collision()->IntersectLine(PrevPos, CollisionPos, NULL, NULL);
+	CollisionPos.x = CurPos.x;
+	CollisionPos.y = m_LastPos.y;
+	int CollideX = GameServer()->Collision()->IntersectLine(PrevPos, CollisionPos, NULL, NULL);
+	
+	m_Pos = m_LastPos;
+	m_ActualPos = m_Pos;
+	vec2 vel;
+	vel.x = m_Direction.x;
+	vel.y = m_Direction.y + 2*3.25f/10000*Ct*1500.0f;
+	
+	if (CollideX && !CollideY)
+	{
+		m_Direction.x = -vel.x;
+		m_Direction.y = vel.y;
+	}
+	else if (!CollideX && CollideY)
+	{
+		m_Direction.x = vel.x;
+		m_Direction.y = -vel.y;
+	}
+	else
+	{
+		m_Direction.x = -vel.x;
+		m_Direction.y = -vel.y;
+	}
+	
+	m_Direction.x *= (100 - 50) / 100.0;
+	m_Direction.y *= (100 - 50) / 100.0;
+	m_StartTick = Server()->Tick();
+	
+	m_ActualDir = normalize(m_Direction);
+}
+
 void CSlimeEntity::FillInfo(CNetObj_Laser *pProj)
 {
 	pProj->m_X = (int)m_ActualPos.x;
@@ -76,9 +121,8 @@ void CSlimeEntity::FillInfo(CNetObj_Laser *pProj)
 
 void CSlimeEntity::Snap(int SnappingClient)
 {
-	float Ct = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
 	
-	if(NetworkClipped(SnappingClient, GetPos(Ct)))
+	if(NetworkClipped(SnappingClient, m_ActualPos))
 		return;
 	
 	CNetObj_Laser *pL = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_ID, sizeof(CNetObj_Laser)));

@@ -687,6 +687,7 @@ void CMapConverter::Finalize()
 	int CatapultImageID = AddExternalImage("../skins/coala", 256, 128);
 	int PoliceImageID = AddExternalImage("../skins/kitty_x_ninja", 256, 128);
 	int ReviverImageID = AddExternalImage("../skins/coala_limekitty", 256, 128);
+	int JokerImageID = AddExternalImage("../skins/pinky", 256, 128);
 	
 	//Menu
 	
@@ -784,6 +785,9 @@ void CMapConverter::Finalize()
 							break;
 						case MENUCLASS_SCIOGIST:
 							ClassMask = MASK_SCIOGIST;
+							break;
+						case MENUCLASS_JOKER:
+							ClassMask = MASK_JOKER;
 							break;
 						default:
 							ClassMask = MASK_SUPPORT;
@@ -959,6 +963,9 @@ void CMapConverter::Finalize()
 							case MENUCLASS_REVIVER:
 								AddTeeLayer("Reviver", ReviverImageID, Pos, 64.0f, m_NumEnvs-1);
 								break;
+							case MENUCLASS_JOKER:
+								AddTeeLayer("Joker", JokerImageID, Pos, 64.0f, m_NumEnvs-1);
+								break;
 						}
 					}
 				}
@@ -987,7 +994,7 @@ bool CMapConverter::CreateMap(const char* pFilename)
 	if(!m_DataFile.Open(Storage(), pFilename))
 	{
 		str_format(aBuf, sizeof(aBuf), "failed to open file '%s'...", pFilename);
-		Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "infclass", aBuf);
+		Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "mapconvrter", aBuf);
 		return false;
 	}
 	
@@ -1025,6 +1032,6 @@ bool CMapConverter::CreateMap(const char* pFilename)
 	m_DataFile.AddItem(MAPITEMTYPE_ENVPOINTS, 0, m_lEnvPoints.size()*sizeof(CEnvPoint), m_lEnvPoints.base_ptr());
 	m_DataFile.Finish();
 	
-	Console()->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "infclass", "highres map created");
+	Console()->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "mapconvrter", "highres map created");
 	return true;
 }

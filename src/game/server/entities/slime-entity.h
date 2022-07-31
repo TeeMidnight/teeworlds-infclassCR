@@ -19,15 +19,16 @@ public:
 	virtual void Reset();
 	virtual void Tick();
 	virtual void TickPaused();
-	virtual void Explode();
 	virtual void Snap(int SnappingClient);
+	void Explode();
+	void Collision();
 	vec2 m_ActualPos;
+	int m_StartTick;
 
 private:
 	vec2 m_LastPos;
 	vec2 m_ActualDir;
 	vec2 m_Direction;
-	int m_StartTick;
 	bool m_IsFlashGrenade;
 };
 

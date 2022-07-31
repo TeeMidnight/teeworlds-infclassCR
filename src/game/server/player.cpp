@@ -321,6 +321,9 @@ void CPlayer::Snap(int SnappingClient)
 				case PLAYERCLASS_NINJA:
 					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Ninja"), sizeof(aClanName));
 					break;
+				case PLAYERCLASS_JOKER:
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Joker"), sizeof(aClanName));
+					break;
 				case PLAYERCLASS_SMOKER:
 					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Smoker"), sizeof(aClanName));
 					break;
@@ -688,6 +691,10 @@ void CPlayer::SetClassSkin(int newClass, int State)
 			m_TeeInfos.m_ColorBody = 255;
 			m_TeeInfos.m_ColorFeet = 0;
 			break;
+		case PLAYERCLASS_JOKER:
+			m_TeeInfos.m_UseCustomColor = 0;
+			str_copy(m_TeeInfos.m_SkinName, "pinky", sizeof(m_TeeInfos.m_SkinName));
+			break;
 		case PLAYERCLASS_SMOKER:
 			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_SkinName, "cammostripes", sizeof(m_TeeInfos.m_SkinName));
@@ -772,7 +779,7 @@ void CPlayer::SetClassSkin(int newClass, int State)
 			break;
 		case PLAYERCLASS_FREEZER:
 			m_TeeInfos.m_UseCustomColor = 1;
-			str_copy(m_TeeInfos.m_SkinName, "toptri", sizeof(m_TeeInfos.m_SkinName));
+			str_copy(m_TeeInfos.m_SkinName, "cammo", sizeof(m_TeeInfos.m_SkinName));
 			m_TeeInfos.m_ColorBody = 8257280;
 			m_TeeInfos.m_ColorFeet = 65414;
 			break;

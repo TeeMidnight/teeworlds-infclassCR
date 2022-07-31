@@ -133,7 +133,7 @@ void CGameControllerMOD::SetFirstInfectedNumber()
 	int NumHumans = GameServer()->GetHumanCount();
 	int NumInfected = GameServer()->GetZombieCount();
 	int NumSpec = GameServer()->GetSpectatorCount();
-	int Players = NumHumans + NumInfected;
+	int Players = NumHumans + NumInfected + g_Config.m_InfIgnoreSpec ? NumSpec : 0;
 	if(Players < 3)
 	{
 		m_NumFirstInfected = 1;
@@ -143,13 +143,13 @@ void CGameControllerMOD::SetFirstInfectedNumber()
 	}else if(Players < 12)
 	{
 		m_NumFirstInfected = 3;
-	}else if(Players < 16)
-	{
-		m_NumFirstInfected = 4;
 	}else if(Players < 24)
 	{
+		m_NumFirstInfected = 4;
+	}else if(Players < 32)
+	{
 		m_NumFirstInfected = 5;
-	}else if(Players < 30)
+	}else if(Players < 48)
 	{
 		m_NumFirstInfected = 6;
 	}else m_NumFirstInfected = 7;
@@ -538,6 +538,7 @@ void CGameControllerMOD::Snap(int SnappingClient)
 		int Support = 0;
 		int Sciogist = 0;
 		int Reviver = 0;
+		int Joker = 0;
 		
 		CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
 		while(Iter.Next())
@@ -572,6 +573,9 @@ void CGameControllerMOD::Snap(int SnappingClient)
 				case PLAYERCLASS_REVIVER:
 					Reviver++;
 					break;
+				case PLAYERCLASS_JOKER:
+					Joker++;
+					break;
 			}
 		}
 		
@@ -587,30 +591,32 @@ void CGameControllerMOD::Snap(int SnappingClient)
 			ClassMask |= CMapConverter::MASK_SCIOGIST;
 		if(Reviver < g_Config.m_InfReviverLimit)
 			ClassMask |= CMapConverter::MASK_REVIVER;
+		if(Joker < g_Config.m_InfJokerLimit)
+			ClassMask |= CMapConverter::MASK_JOKER;
 	}
 	
 	if(SnappingClient != -1)
 	{
-	if(GameServer()->m_apPlayers[SnappingClient])
-	{
-		int Page = -1;
-		
-		if(GameServer()->m_apPlayers[SnappingClient]->MapMenu() == 1)
+		if(GameServer()->m_apPlayers[SnappingClient])
 		{
-			int Item = GameServer()->m_apPlayers[SnappingClient]->m_MapMenuItem;
-			Page = CMapConverter::TIMESHIFT_MENUCLASS + 3*((Item+1) + ClassMask*CMapConverter::TIMESHIFT_MENUCLASS_MASK) + 1;
-		}
-		
-		if(Page >= 0)
-		{
-			double PageShift = static_cast<double>(Page * Server()->GetTimeShiftUnit())/1000.0f;
-			double CycleShift = fmod(static_cast<double>(Server()->Tick() - pGameInfoObj->m_RoundStartTick)/Server()->TickSpeed(), Server()->GetTimeShiftUnit()/1000.0);
-			int TimeShift = (PageShift + CycleShift)*Server()->TickSpeed();
+			int Page = -1;
 			
-			pGameInfoObj->m_RoundStartTick = Server()->Tick() - TimeShift;
-			pGameInfoObj->m_TimeLimit += (TimeShift/Server()->TickSpeed())/60;
+			if(GameServer()->m_apPlayers[SnappingClient]->MapMenu() == 1)
+			{
+				int Item = GameServer()->m_apPlayers[SnappingClient]->m_MapMenuItem;
+				Page = CMapConverter::TIMESHIFT_MENUCLASS + 3*((Item+1) + ClassMask*CMapConverter::TIMESHIFT_MENUCLASS_MASK) + 1;
+			}
+			
+			if(Page >= 0)
+			{
+				double PageShift = static_cast<double>(Page * Server()->GetTimeShiftUnit())/1000.0f;
+				double CycleShift = fmod(static_cast<double>(Server()->Tick() - pGameInfoObj->m_RoundStartTick)/Server()->TickSpeed(), Server()->GetTimeShiftUnit()/1000.0);
+				int TimeShift = (PageShift + CycleShift)*Server()->TickSpeed();
+				
+				pGameInfoObj->m_RoundStartTick = Server()->Tick() - TimeShift;
+				pGameInfoObj->m_TimeLimit += (TimeShift/Server()->TickSpeed())/60;
+			}
 		}
-	}
 	}
 
 	CNetObj_GameData *pGameDataObj = (CNetObj_GameData *)Server()->SnapNewItem(NETOBJTYPE_GAMEDATA, 0, sizeof(CNetObj_GameData));
@@ -1122,6 +1128,8 @@ bool CGameControllerMOD::IsEnabledClass(int PlayerClass) {
 			return g_Config.m_InfEnablePolice;
 		case PLAYERCLASS_REVIVER:
 			return g_Config.m_InfEnableReviver;
+		case PLAYERCLASS_JOKER:
+			return g_Config.m_InfEnableJoker;
 		default:
 			return false;
 	}
@@ -1138,6 +1146,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 	int nbHero = 0;
 	int nbSupport = 0;
 	int nbReviver = 0;
+	int nbJoker = 0;
 
 	CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
 	while(Iter.Next())
@@ -1172,6 +1181,9 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			case PLAYERCLASS_REVIVER:
 				nbReviver++;
 				break;
+			case PLAYERCLASS_JOKER:
+				nbJoker++;
+				break;
 		}
 	}
 	
@@ -1198,6 +1210,8 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			return (nbSciogist < g_Config.m_InfSciogistLimit);
 		case PLAYERCLASS_REVIVER:
 			return (nbReviver < g_Config.m_InfReviverLimit);
+		case PLAYERCLASS_JOKER:
+			return (nbJoker < g_Config.m_InfJokerLimit);
 	}
 	
 	return false;
