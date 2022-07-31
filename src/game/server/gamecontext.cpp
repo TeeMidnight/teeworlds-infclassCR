@@ -4514,11 +4514,8 @@ void CGameContext::OnInit(/*class IKernel *pKernel*/)
 	m_pController = new CGameControllerMOD(this);
 
 	// reset game config, if has.
-	
 	{
-		char MapResetFilename[512];
-		str_format(MapResetFilename, sizeof(MapResetFilename), "maps/%s.mapreset", g_Config.m_SvLastMap);
-		m_pConsole->ExecuteFile(MapResetFilename);
+		m_pConsole->ExecuteFile(g_Config.m_SvResetFile);
 	}
 
 	// setup core world

@@ -238,7 +238,6 @@ void IGameController::CycleMap(bool Forced)
 		GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "game", aBuf);
 
 		str_copy(g_Config.m_SvMap, m_aMapWish, sizeof(g_Config.m_SvMap));
-		str_copy(g_Config.m_SvLastMap, aOldMap, sizeof(g_Config.m_SvLastMap));
 		m_aMapWish[0] = 0;
 		m_RoundCount = 0;
 		return;
@@ -311,7 +310,6 @@ void IGameController::CycleMap(bool Forced)
 	str_format(aBufMsg, sizeof(aBufMsg), "rotating map to %s", aBuf);
 	GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "game", aBuf);
 	str_copy(g_Config.m_SvMap, aBuf, sizeof(g_Config.m_SvMap));
-	str_copy(g_Config.m_SvLastMap, aOldMap, sizeof(g_Config.m_SvLastMap));
 }
 
 void IGameController::SkipMap()
