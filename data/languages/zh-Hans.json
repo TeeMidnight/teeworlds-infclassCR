@@ -236,6 +236,10 @@
 		"value": "冷冻者"
 	},
 	{
+		"key": "Nightmare",
+		"value": "梦魇"
+	},
+	{
 		"key": "Unknown class",
 		"value": "未知职业"
 	},
@@ -710,6 +714,10 @@
 	{
 		"key": "You are slowed: {sec:EffectDuration}",
 		"value": "你变慢了,剩余时间: {sec:EffectDuration}"
+	},
+	{
+		"key": "You are in nightmare: {sec:EffectDuration}",
+		"value": "你处于梦魇之中,剩余时间: {sec:EffectDuration}"
 	},
 	{
 		"key": "Anti-AirMine is active",

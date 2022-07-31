@@ -112,7 +112,7 @@ void CEngineerWall::TickPaused()
 
 void CEngineerWall::Snap(int SnappingClient)
 {
-	if(NetworkClipped(SnappingClient))
+	if(IsDontSnapEntity(SnappingClient))
 		return;
 
 	// Laser dieing animation

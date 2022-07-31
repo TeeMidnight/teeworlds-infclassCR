@@ -41,7 +41,7 @@ int CSuperWeaponIndicator::GetOwner() const
 
 void CSuperWeaponIndicator::Snap(int SnappingClient)
 {
-	if(NetworkClipped(SnappingClient))
+	if(IsDontSnapEntity(SnappingClient))
 		return;
 	if (Server()->GetClientAntiPing(SnappingClient))
 		return;

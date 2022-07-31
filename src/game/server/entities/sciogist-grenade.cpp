@@ -91,7 +91,7 @@ void CSciogistGrenade::Snap(int SnappingClient)
 {
 	float Ct = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
 	
-	if(NetworkClipped(SnappingClient, GetPos(Ct)))
+	if(IsDontSnapEntity(SnappingClient, GetPos(Ct)))
 		return;
 	
 	CNetObj_Projectile *pProj = static_cast<CNetObj_Projectile *>(Server()->SnapNewItem(NETOBJTYPE_PROJECTILE, m_ID, sizeof(CNetObj_Projectile)));

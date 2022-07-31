@@ -73,7 +73,7 @@ void CFreezeMine::Explode()
 void CFreezeMine::Snap(int SnappingClient)
 {
 	
-	if(NetworkClipped(SnappingClient))
+	if(IsDontSnapEntity(SnappingClient))
 		return;
     
     if(GameServer()->m_apPlayers[SnappingClient]->IsHuman())

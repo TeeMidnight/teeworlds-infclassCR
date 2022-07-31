@@ -122,7 +122,7 @@ void CSlimeEntity::FillInfo(CNetObj_Laser *pProj)
 void CSlimeEntity::Snap(int SnappingClient)
 {
 	
-	if(NetworkClipped(SnappingClient, m_ActualPos))
+	if(IsDontSnapEntity(SnappingClient, m_ActualPos))
 		return;
 	
 	CNetObj_Laser *pL = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_ID, sizeof(CNetObj_Laser)));

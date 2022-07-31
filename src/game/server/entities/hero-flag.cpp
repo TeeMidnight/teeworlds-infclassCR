@@ -151,7 +151,7 @@ void CHeroFlag::Snap(int SnappingClient)
 	if(m_CoolDownTick > 0)
 		return;
 	
-	if(NetworkClipped(SnappingClient))
+	if(IsDontSnapEntity(SnappingClient))
 		return;
 	
 	if(SnappingClient != m_OwnerID && SnappingClient >= 0)

@@ -139,6 +139,8 @@ public:
 		Returns:
 			Non-zero if the entity doesn't have to be in the snapshot.
 	*/
+	bool IsDontSnapEntity(int SnappingClient);
+	bool IsDontSnapEntity(int SnappingClient, vec2 Pos);
 	int NetworkClipped(int SnappingClient);
 	int NetworkClipped(int SnappingClient, vec2 CheckPos);
 

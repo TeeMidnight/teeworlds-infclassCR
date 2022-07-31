@@ -26,7 +26,7 @@ void CLaserTeleport::Tick()
 void CLaserTeleport::Snap(int SnappingClient)
 {
 	
-	if(NetworkClipped(SnappingClient))
+	if(IsDontSnapEntity(SnappingClient))
 		return;
 	m_LaserFired = true;
 

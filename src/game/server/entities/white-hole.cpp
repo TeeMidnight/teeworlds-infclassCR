@@ -90,7 +90,7 @@ void CWhiteHole::StartVisualEffect()
 // Draw ParticleEffect
 void CWhiteHole::Snap(int SnappingClient)
 {
-	if(NetworkClipped(SnappingClient))
+	if(IsDontSnapEntity(SnappingClient))
 		return;
 	// Draw AntiPing white hole effect
 	if (Server()->GetClientAntiPing(SnappingClient)) {	

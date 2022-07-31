@@ -106,7 +106,7 @@ void CPoliceShield::Tick()
 
 void CPoliceShield::Snap(int SnappingClient)
 {
-	if(NetworkClipped(SnappingClient))
+	if(IsDontSnapEntity(SnappingClient))
 		return;
 
 	int Degres = int((m_OwnerChrCore.m_Angle + 200) / 4.5);

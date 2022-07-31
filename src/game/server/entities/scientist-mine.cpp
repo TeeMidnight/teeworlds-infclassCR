@@ -63,7 +63,7 @@ void CScientistMine::Explode(int DetonatedBy)
 void CScientistMine::Snap(int SnappingClient)
 {
 	
-	if(NetworkClipped(SnappingClient))
+	if(IsDontSnapEntity(SnappingClient))
 		return;
 		
 	float Radius = g_Config.m_InfMineRadius;

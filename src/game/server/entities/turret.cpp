@@ -200,7 +200,7 @@ void CTurret::Tick()
 void CTurret::Snap(int SnappingClient)
 {
 	
-	if(NetworkClipped(SnappingClient))
+	if(IsDontSnapEntity(SnappingClient))
 		return;
 	// Draw AntiPing  effect
 	if (Server()->GetClientAntiPing(SnappingClient)) {	

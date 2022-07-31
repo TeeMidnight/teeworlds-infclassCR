@@ -114,7 +114,7 @@ void CPlasmaPlus::Explode()
 
 void CPlasmaPlus::Snap(int SnappingClient)
 {
-	if (NetworkClipped(SnappingClient))
+	if (IsDontSnapEntity(SnappingClient))
 		return;
 	
 	

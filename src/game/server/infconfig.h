@@ -58,6 +58,7 @@ MACRO_CONFIG_INT(InfSpiderDamage, inf_spider_damage, 10, 1, 10000, CFGFLAG_SERVE
 MACRO_CONFIG_INT(InfSlimeDamage, inf_slime_damage, 2, 1, 10000, CFGFLAG_SERVER, "Damage taken by slime")
 MACRO_CONFIG_INT(InfSpiderHookDamage, inf_spider_hook_damage, 1, 0, 10000, CFGFLAG_SERVER, "Damage taken by spider (hook)")
 MACRO_CONFIG_INT(InfSmokerHookDamage, inf_smoker_hook_damage, 3, 1, 10000, CFGFLAG_SERVER, "Damage taken by smoker (hook)")
+MACRO_CONFIG_INT(InfNightmareHookDamage, inf_nightmare_hook_damage, 2, 1, 10000, CFGFLAG_SERVER, "Damage taken by smoker (hook)")
 MACRO_CONFIG_INT(InfFreezerHookDamage, inf_freezer_hook_damage, 2, 1, 10000, CFGFLAG_SERVER, "Damage taken by freezer (hook)")
 MACRO_CONFIG_INT(InfSpiderCatchHumans, inf_spider_catch_humans, 1, 0, 1, CFGFLAG_SERVER, "Spider always catch humans with hook")
 MACRO_CONFIG_INT(InfUndeadIncNumKills, inf_undead_inc_num_kills, 0, 0, 1, CFGFLAG_SERVER, "Whether freezing undead increase killer's NumberKills or not")
@@ -75,6 +76,7 @@ MACRO_CONFIG_INT(InfProbaSlime, inf_proba_slime, 5, 0, 100, CFGFLAG_SERVER, "Pro
 MACRO_CONFIG_INT(InfProbaWitch, inf_proba_witch, 5, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be a witch")
 MACRO_CONFIG_INT(InfProbaFreezer, inf_proba_freezer, 5, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be a freezer")
 MACRO_CONFIG_INT(InfProbaUndead, inf_proba_undead, 6, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be an undead")
+MACRO_CONFIG_INT(InfProbaNightmare, inf_proba_nightmare, 2, 0, 100, CFGFLAG_SERVER, "Probability for an infected to be a nightmare")
 //Slime
 MACRO_CONFIG_INT(InfSlimeReloadTime, inf_slime_reload_time, 180, 0, 60, CFGFLAG_SERVER, "Slime reload time")
 

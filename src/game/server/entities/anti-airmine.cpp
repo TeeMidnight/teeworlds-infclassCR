@@ -66,7 +66,7 @@ void CAntiAirMine::Explode()
 void CAntiAirMine::Snap(int SnappingClient)
 {
 	
-	if(NetworkClipped(SnappingClient))
+	if(IsDontSnapEntity(SnappingClient))
 		return;
 		
 	float Radius = g_Config.m_InfAntiAirMineRadius;

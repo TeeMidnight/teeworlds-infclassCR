@@ -183,6 +183,7 @@ const char *CGameContext::GetClassName(int Class)
 		case PLAYERCLASS_UNDEAD: return ("Undead");break;
 		case PLAYERCLASS_SLIME: return ("Slime");break;
 		case PLAYERCLASS_FREEZER: return ("Freezer");break;
+		case PLAYERCLASS_NIGHTMARE: return ("Nightmare");break;
 		default: return ("None");break;
 	}
 }
@@ -891,6 +892,9 @@ void CGameContext::SendBroadcast_ClassIntro(int ClientID, int Class)
 			break;
 		case PLAYERCLASS_FREEZER:
 			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Freezer"));
+			break;
+		case PLAYERCLASS_NIGHTMARE:
+			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Nightmare"));
 			break;
 		default:
 			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Unknown class"));
@@ -2975,6 +2979,7 @@ bool CGameContext::ConSetClass(IConsole::IResult *pResult, void *pUserData)
 	else if(str_comp(pClassName, "undead") == 0) pPlayer->SetClass(PLAYERCLASS_UNDEAD);
 	else if(str_comp(pClassName, "witch") == 0) pPlayer->SetClass(PLAYERCLASS_WITCH);
 	else if(str_comp(pClassName, "freezer") == 0) pPlayer->SetClass(PLAYERCLASS_FREEZER);
+	else if(str_comp(pClassName, "nightmare") == 0) pPlayer->SetClass(PLAYERCLASS_NIGHTMARE);
 	else if(str_comp(pClassName, "none") == 0)
 	{
 		pPlayer->SetClass(PLAYERCLASS_NONE);

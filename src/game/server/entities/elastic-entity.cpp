@@ -93,7 +93,7 @@ void CElasticEntity::Collision(bool Down)
 	vec2 PrevPos = GetPos(Pt);
 	vec2 CurPos = GetPos(Ct);
 
-	m_CollisionNum++;
+	if(Down)m_CollisionNum++;
 	//Thanks to TeeBall 0.6
 	vec2 CollisionPos;
 	CollisionPos.x = m_LastPos.x;
@@ -185,7 +185,7 @@ void CElasticEntity::Reset()
 void CElasticEntity::Snap(int SnappingClient)
 {
 
-	if(NetworkClipped(SnappingClient, m_ActualPos))
+	if(IsDontSnapEntity(SnappingClient, m_ActualPos))
 		return;
 
 	int Degres = 0;

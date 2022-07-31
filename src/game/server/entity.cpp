@@ -52,6 +52,31 @@ CEntity::~CEntity()
 	
 }
 
+bool CEntity::IsDontSnapEntity(int SnappingClient)
+{
+	return IsDontSnapEntity(SnappingClient, m_Pos);
+}
+
+bool CEntity::IsDontSnapEntity(int SnappingClient, vec2 Pos)
+{
+	if(NetworkClipped(SnappingClient, Pos))
+	{
+		return true;
+	}
+
+	CPlayer *pPlayer = GameServer()->m_apPlayers[SnappingClient];
+	if(!pPlayer)return true;
+
+	if(pPlayer->GetCharacter())
+	{
+		if(pPlayer->GetCharacter()->IsInNightmare())
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 int CEntity::NetworkClipped(int SnappingClient)
 {
 	return NetworkClipped(SnappingClient, m_Pos);

@@ -363,6 +363,9 @@ void CPlayer::Snap(int SnappingClient)
 				case PLAYERCLASS_FREEZER:
 					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Freezer"), sizeof(aClanName));
 					break;
+				case PLAYERCLASS_NIGHTMARE:
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Nightmare"), sizeof(aClanName));
+					break;
 				default:
 					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"????"), sizeof(aClanName));
 			}
@@ -782,6 +785,12 @@ void CPlayer::SetClassSkin(int newClass, int State)
 			str_copy(m_TeeInfos.m_SkinName, "cammo", sizeof(m_TeeInfos.m_SkinName));
 			m_TeeInfos.m_ColorBody = 8257280;
 			m_TeeInfos.m_ColorFeet = 65414;
+			break;
+		case PLAYERCLASS_NIGHTMARE:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "ghost", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 0;
+			m_TeeInfos.m_ColorFeet = 0;
 			break;
 		default:
 			m_TeeInfos.m_UseCustomColor = 0;

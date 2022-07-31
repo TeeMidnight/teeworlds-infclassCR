@@ -115,7 +115,7 @@ void CElasticHole::Reset()
 void CElasticHole::Snap(int SnappingClient)
 {
 
-	if(NetworkClipped(SnappingClient, m_Pos))
+	if(IsDontSnapEntity(SnappingClient, m_Pos))
 		return;
 
 	int Degres = 0;

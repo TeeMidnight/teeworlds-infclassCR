@@ -117,6 +117,7 @@ m_pConsole(pConsole)
 	m_PositionLocked = false;
 	m_PositionLockAvailable = false;
 	m_PoisonTick = 0;
+	m_InNightmareTick = 0;
 	m_HealTick = 0;
 	m_InfZoneTick = -1;
 	m_ProtectionTick = 0;
@@ -635,6 +636,12 @@ void CCharacter::UpdateTuningParam()
 		pTuningParams->m_HookLength = 640.0f;
 		pTuningParams->m_GroundJumpImpulse = 18.2f;
 	}
+
+	if(GetClass() == PLAYERCLASS_NIGHTMARE)
+	{
+		pTuningParams->m_Gravity = 0.35f;
+		pTuningParams->m_HookLength = 480.0f;
+	}
 }
 
 void CCharacter::FireWeapon()
@@ -1054,7 +1061,7 @@ void CCharacter::FireWeapon()
 					m_NumObjectsHit = 0;
 					GameServer()->CreateSound(m_Pos, SOUND_HAMMER_FIRE);
 
-					if(GetClass() == PLAYERCLASS_GHOST)
+					if(GetClass() == PLAYERCLASS_GHOST || GetClass() == PLAYERCLASS_NIGHTMARE)
 					{
 						m_IsInvisible = false;
 						m_InvisibleTick = Server()->Tick();
@@ -1145,7 +1152,7 @@ void CCharacter::FireWeapon()
 							/* affects mercenary only if love bombs are disabled. */
 							if (pTarget->IsZombie())
 							{
-								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, 20, 
+								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, 30, 
 										m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
 								IncreaseHealth(2);
 							}else if(pTarget->IsFrozen())
@@ -1882,7 +1889,7 @@ void CCharacter::HandleWeapons()
 	{
 		int InfWID = GetInfWeaponID(i);
 		int AmmoRegenTime = Server()->GetAmmoRegenTime(InfWID);
-		AmmoRegenTime *= m_IsInAura ? 0.5 : 1;
+		AmmoRegenTime = int(AmmoRegenTime * (m_IsInAura ? 0.75 : 1));
 		int MaxAmmo = Server()->GetMaxAmmo(GetInfWeaponID(i));
 		
 		if(InfWID == INFWEAPON_NINJA_GRENADE)
@@ -1956,6 +1963,10 @@ void CCharacter::HandleWeapons()
 				{
 					Damage = g_Config.m_InfSpiderHookDamage;
 				}
+				else if(GetClass() == PLAYERCLASS_NIGHTMARE)
+				{
+					Damage = g_Config.m_InfNightmareHookDamage;
+				}
 				else if(GetClass() == PLAYERCLASS_GHOUL)
 				{
 					Rate = 0.33f + 0.66f * (1.0f-m_pPlayer->GetGhoulPercent());
@@ -1965,7 +1976,7 @@ void CCharacter::HandleWeapons()
 				{
 					m_HookDmgTick = Server()->Tick();
 					VictimChar->TakeDamage(vec2(0.0f,0.0f), Damage, m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
-					if((GetClass() == PLAYERCLASS_SMOKER || GetClass() == PLAYERCLASS_BAT) && VictimChar->IsHuman())
+					if((GetClass() == PLAYERCLASS_SMOKER || GetClass() == PLAYERCLASS_BAT || GetClass() == PLAYERCLASS_NIGHTMARE) && VictimChar->IsHuman())
 						IncreaseOverallHp(2);
 				}
 			}
@@ -2233,6 +2244,17 @@ void CCharacter::Tick()
 		}
 	}
 	
+	if(m_InNightmareTick > 0)
+	{
+		if(!(m_InNightmareTick % 50))
+		{
+			GameServer()->CreateSound(m_Pos, SOUND_PLAYER_PAIN_LONG);
+		}
+		--m_InNightmareTick;
+		int NightmareSec = 1+(m_InNightmareTick/Server()->TickSpeed());
+		GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE, BROADCAST_DURATION_REALTIME, _("You are in nightmare: {sec:EffectDuration}"), "EffectDuration", &NightmareSec, NULL);
+	}
+
 	m_IsInAura = false;
 
 	if(IsHuman())
@@ -2244,7 +2266,6 @@ void CCharacter::Tick()
 			if(Len < pChr->m_ProximityRadius+g_Config.m_InfJokerAuraRadius)
 			{
 				m_IsInAura = true;
-				m_InAuraTick++;
 			}
 		}
 	}
@@ -2254,16 +2275,14 @@ void CCharacter::Tick()
 		m_InAuraTick = 0;
 	}else
 	{
-		if(!m_InAuraTick % g_Config.m_InfJokerAuraTick)
+		m_InAuraTick++;
+		if(!(m_InAuraTick % g_Config.m_InfJokerAuraTick))
 		{
 			if(GetClass() == PLAYERCLASS_MEDIC)
 				IncreaseArmor(1);
 			else IncreaseHealth(1);
 		}
 	}
-
-
-
 
 	if(m_HallucinationTick > 0)
 		--m_HallucinationTick;
@@ -2324,117 +2343,141 @@ void CCharacter::Tick()
 		m_InAirTick = 0;
 	}
 	
-	//Ghost
-	if(GetClass() == PLAYERCLASS_GHOST)
+	//Ghost and Nightmare
+	if(GetClass() == PLAYERCLASS_GHOST || GetClass() == PLAYERCLASS_NIGHTMARE)
 	{
-		if(Server()->Tick() < m_InvisibleTick + 3*Server()->TickSpeed() || IsFrozen() || IsInSlowMotion())
+		//Search nearest human
+		int cellGhostX = static_cast<int>(round(m_Pos.x))/32;
+		int cellGhostY = static_cast<int>(round(m_Pos.y))/32;
+		
+		vec2 SeedPos = vec2(16.0f, 16.0f) + vec2(
+			static_cast<float>(static_cast<int>(round(m_Pos.x))/32)*32.0,
+			static_cast<float>(static_cast<int>(round(m_Pos.y))/32)*32.0);
+		
+		for(int y=0; y<GHOST_SEARCHMAP_SIZE; y++)
 		{
-			m_IsInvisible = false;
+			for(int x=0; x<GHOST_SEARCHMAP_SIZE; x++)
+			{
+				vec2 Tile = SeedPos + vec2(32.0f*(x-GHOST_RADIUS), 32.0f*(y-GHOST_RADIUS));
+				if(GameServer()->Collision()->CheckPoint(Tile))
+				{
+					m_GhostSearchMap[y*GHOST_SEARCHMAP_SIZE+x] = 0x8;
+				}
+				else
+				{
+					m_GhostSearchMap[y*GHOST_SEARCHMAP_SIZE+x] = 0x0;
+				}
+			}
 		}
-		else
+		for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
 		{
-			//Search nearest human
-			int cellGhostX = static_cast<int>(round(m_Pos.x))/32;
-			int cellGhostY = static_cast<int>(round(m_Pos.y))/32;
+			if(p->IsZombie()) continue;
 			
-			vec2 SeedPos = vec2(16.0f, 16.0f) + vec2(
-				static_cast<float>(static_cast<int>(round(m_Pos.x))/32)*32.0,
-				static_cast<float>(static_cast<int>(round(m_Pos.y))/32)*32.0);
+			int cellHumanX = static_cast<int>(round(p->m_Pos.x))/32;
+			int cellHumanY = static_cast<int>(round(p->m_Pos.y))/32;
 			
+			int cellX = cellHumanX - cellGhostX + GHOST_RADIUS;
+			int cellY = cellHumanY - cellGhostY + GHOST_RADIUS;
+			
+			if(cellX >= 0 && cellX < GHOST_SEARCHMAP_SIZE && cellY >= 0 && cellY < GHOST_SEARCHMAP_SIZE)
+			{
+				m_GhostSearchMap[cellY * GHOST_SEARCHMAP_SIZE + cellX] |= 0x2;
+			}
+		}
+		m_GhostSearchMap[GHOST_RADIUS * GHOST_SEARCHMAP_SIZE + GHOST_RADIUS] |= 0x1;
+		bool HumanFound = false;
+		for(int i=0; i<GHOST_RADIUS; i++)
+		{
 			for(int y=0; y<GHOST_SEARCHMAP_SIZE; y++)
 			{
 				for(int x=0; x<GHOST_SEARCHMAP_SIZE; x++)
 				{
-					vec2 Tile = SeedPos + vec2(32.0f*(x-GHOST_RADIUS), 32.0f*(y-GHOST_RADIUS));
-					if(GameServer()->Collision()->CheckPoint(Tile))
+					if(!((m_GhostSearchMap[y*GHOST_SEARCHMAP_SIZE+x] & 0x1) || (m_GhostSearchMap[y*GHOST_SEARCHMAP_SIZE+x] & 0x8)))
 					{
-						m_GhostSearchMap[y*GHOST_SEARCHMAP_SIZE+x] = 0x8;
-					}
-					else
-					{
-						m_GhostSearchMap[y*GHOST_SEARCHMAP_SIZE+x] = 0x0;
-					}
-				}
-			}
-			for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
-			{
-				if(p->IsZombie()) continue;
-				
-				int cellHumanX = static_cast<int>(round(p->m_Pos.x))/32;
-				int cellHumanY = static_cast<int>(round(p->m_Pos.y))/32;
-				
-				int cellX = cellHumanX - cellGhostX + GHOST_RADIUS;
-				int cellY = cellHumanY - cellGhostY + GHOST_RADIUS;
-				
-				if(cellX >= 0 && cellX < GHOST_SEARCHMAP_SIZE && cellY >= 0 && cellY < GHOST_SEARCHMAP_SIZE)
-				{
-					m_GhostSearchMap[cellY * GHOST_SEARCHMAP_SIZE + cellX] |= 0x2;
-				}
-			}
-			m_GhostSearchMap[GHOST_RADIUS * GHOST_SEARCHMAP_SIZE + GHOST_RADIUS] |= 0x1;
-			bool HumanFound = false;
-			for(int i=0; i<GHOST_RADIUS; i++)
-			{
-				for(int y=0; y<GHOST_SEARCHMAP_SIZE; y++)
-				{
-					for(int x=0; x<GHOST_SEARCHMAP_SIZE; x++)
-					{
-						if(!((m_GhostSearchMap[y*GHOST_SEARCHMAP_SIZE+x] & 0x1) || (m_GhostSearchMap[y*GHOST_SEARCHMAP_SIZE+x] & 0x8)))
-						{
-							if(
-								(
-									(x > 0 && (m_GhostSearchMap[y*GHOST_SEARCHMAP_SIZE+x-1] & 0x1)) ||
-									(x < GHOST_SEARCHMAP_SIZE-1 && (m_GhostSearchMap[y*GHOST_SEARCHMAP_SIZE+x+1] & 0x1)) ||
-									(y > 0 && (m_GhostSearchMap[(y-1)*GHOST_SEARCHMAP_SIZE+x] & 0x1)) ||
-									(y < GHOST_SEARCHMAP_SIZE-1 && (m_GhostSearchMap[(y+1)*GHOST_SEARCHMAP_SIZE+x] & 0x1))
-								) ||
-								(
-									(random_prob(0.25f)) && (
-										(x > 0 && y > 0 && (m_GhostSearchMap[(y-1)*GHOST_SEARCHMAP_SIZE+x-1] & 0x1)) ||
-										(x > 0 && y < GHOST_SEARCHMAP_SIZE-1 && (m_GhostSearchMap[(y+1)*GHOST_SEARCHMAP_SIZE+x-1] & 0x1)) ||
-										(x < GHOST_SEARCHMAP_SIZE-1 && y > 0 && (m_GhostSearchMap[(y-1)*GHOST_SEARCHMAP_SIZE+x+1] & 0x1)) ||
-										(x < GHOST_SEARCHMAP_SIZE-1 && y < GHOST_SEARCHMAP_SIZE-1 && (m_GhostSearchMap[(y+1)*GHOST_SEARCHMAP_SIZE+x+1] & 0x1))
-									)
+						if(
+							(
+								(x > 0 && (m_GhostSearchMap[y*GHOST_SEARCHMAP_SIZE+x-1] & 0x1)) ||
+								(x < GHOST_SEARCHMAP_SIZE-1 && (m_GhostSearchMap[y*GHOST_SEARCHMAP_SIZE+x+1] & 0x1)) ||
+								(y > 0 && (m_GhostSearchMap[(y-1)*GHOST_SEARCHMAP_SIZE+x] & 0x1)) ||
+								(y < GHOST_SEARCHMAP_SIZE-1 && (m_GhostSearchMap[(y+1)*GHOST_SEARCHMAP_SIZE+x] & 0x1))
+							) ||
+							(
+								(random_prob(0.25f)) && (
+									(x > 0 && y > 0 && (m_GhostSearchMap[(y-1)*GHOST_SEARCHMAP_SIZE+x-1] & 0x1)) ||
+									(x > 0 && y < GHOST_SEARCHMAP_SIZE-1 && (m_GhostSearchMap[(y+1)*GHOST_SEARCHMAP_SIZE+x-1] & 0x1)) ||
+									(x < GHOST_SEARCHMAP_SIZE-1 && y > 0 && (m_GhostSearchMap[(y-1)*GHOST_SEARCHMAP_SIZE+x+1] & 0x1)) ||
+									(x < GHOST_SEARCHMAP_SIZE-1 && y < GHOST_SEARCHMAP_SIZE-1 && (m_GhostSearchMap[(y+1)*GHOST_SEARCHMAP_SIZE+x+1] & 0x1))
 								)
 							)
+						)
+						{
+							m_GhostSearchMap[y*GHOST_SEARCHMAP_SIZE+x] |= 0x4;
+							//~ if((Server()->Tick()%5 == 0) && i == (Server()->Tick()/5)%GHOST_RADIUS)
+							//~ {
+								//~ vec2 HintPos = vec2(
+									//~ 32.0f*(cellGhostX + (x - GHOST_RADIUS))+16.0f,
+									//~ 32.0f*(cellGhostY + (y - GHOST_RADIUS))+16.0f);
+								//~ GameServer()->CreateHammerHit(HintPos);
+							//~ }
+							if(m_GhostSearchMap[y*GHOST_SEARCHMAP_SIZE+x] & 0x2)
 							{
-								m_GhostSearchMap[y*GHOST_SEARCHMAP_SIZE+x] |= 0x4;
-								//~ if((Server()->Tick()%5 == 0) && i == (Server()->Tick()/5)%GHOST_RADIUS)
-								//~ {
-									//~ vec2 HintPos = vec2(
-										//~ 32.0f*(cellGhostX + (x - GHOST_RADIUS))+16.0f,
-										//~ 32.0f*(cellGhostY + (y - GHOST_RADIUS))+16.0f);
-									//~ GameServer()->CreateHammerHit(HintPos);
-								//~ }
-								if(m_GhostSearchMap[y*GHOST_SEARCHMAP_SIZE+x] & 0x2)
-								{
-									HumanFound = true;
-								}
+								HumanFound = true;
 							}
 						}
 					}
 				}
-				for(int y=0; y<GHOST_SEARCHMAP_SIZE; y++)
+			}
+			for(int y=0; y<GHOST_SEARCHMAP_SIZE; y++)
+			{
+				for(int x=0; x<GHOST_SEARCHMAP_SIZE; x++)
 				{
-					for(int x=0; x<GHOST_SEARCHMAP_SIZE; x++)
+					if(m_GhostSearchMap[y*GHOST_SEARCHMAP_SIZE+x] & 0x4)
 					{
-						if(m_GhostSearchMap[y*GHOST_SEARCHMAP_SIZE+x] & 0x4)
+						m_GhostSearchMap[y*GHOST_SEARCHMAP_SIZE+x] |= 0x1;
+					}
+				}
+			}
+		}
+		
+		if(HumanFound)
+		{				
+			if(m_IsInvisible)
+			{
+				GameServer()->CreatePlayerSpawn(m_Pos);
+
+				m_IsInvisible = false;
+
+				if(GetClass() == PLAYERCLASS_NIGHTMARE)
+				{
+					CTuningParams* pTuningParams = &m_pPlayer->m_NextTuningParams;
+					for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
+					{
+						if(p->IsZombie()) continue;
+
+						float Len = distance(p->m_Pos, m_Pos);
+						if(Len < m_ProximityRadius + pTuningParams->m_HookLength)
 						{
-							m_GhostSearchMap[y*GHOST_SEARCHMAP_SIZE+x] |= 0x1;
+							p->NightmareEffect(30);
+							p->TakeDamage(vec2(0.0f, 0.0f), 1, m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
 						}
 					}
 				}
 			}
-			
-			if(HumanFound)
-			{				
-				if(m_IsInvisible)
-				{
-					GameServer()->CreatePlayerSpawn(m_Pos);
-					m_IsInvisible = false;
-				}
-				
-				m_InvisibleTick = Server()->Tick();
+			m_InvisibleTick = Server()->Tick();
+		}
+		else
+		{
+			bool IsGhost = false;
+			if(GetClass() == PLAYERCLASS_GHOST)
+			{
+				IsGhost = true;
+			}
+
+			int NeedSecond = IsGhost ? 3 : 9;
+
+			if(Server()->Tick() < m_InvisibleTick + NeedSecond*Server()->TickSpeed() || IsFrozen() || IsInSlowMotion())
+			{
+				m_IsInvisible = false;
 			}
 			else
 			{
@@ -3308,7 +3351,7 @@ void CCharacter::TickDefered()
 
 
 	if(Events&COREEVENT_HOOK_ATTACH_PLAYER) GameServer()->CreateSound(m_Pos, SOUND_HOOK_ATTACH_PLAYER, CmaskAll());
-	if(GetClass() != PLAYERCLASS_GHOST || !m_IsInvisible)
+	if( ( GetClass() != PLAYERCLASS_GHOST && GetClass() != PLAYERCLASS_NIGHTMARE ) || !m_IsInvisible)
 	{
 		if(Events&COREEVENT_GROUND_JUMP) GameServer()->CreateSound(m_Pos, SOUND_PLAYER_JUMP, Mask);
 		if(Events&COREEVENT_HOOK_ATTACH_GROUND) GameServer()->CreateSound(m_Pos, SOUND_HOOK_ATTACH_GROUND, Mask);
@@ -3842,7 +3885,7 @@ void CCharacter::Snap(int SnappingClient)
 		if (!Server()->Translate(id, SnappingClient))
 			return;
 
-	if(NetworkClipped(SnappingClient))
+	if(IsDontSnapEntity(SnappingClient) && SnappingClient != id)
 		return;
 	
 		CPlayer* pClient = GameServer()->m_apPlayers[SnappingClient];
@@ -3885,7 +3928,7 @@ void CCharacter::Snap(int SnappingClient)
 
 	if(SnappingClient != -1)
 	{
-	if(GetClass() == PLAYERCLASS_GHOST)
+	if(GetClass() == PLAYERCLASS_GHOST || GetClass() == PLAYERCLASS_NIGHTMARE)
 	{
 		if(!pClient->IsZombie() && m_IsInvisible) return;
 	}
@@ -4089,7 +4132,7 @@ void CCharacter::Snap(int SnappingClient)
 	if(IsZombie()) EmoteNormal = EMOTE_ANGRY;
 	if(GetClass() == PLAYERCLASS_JOKER) EmoteNormal = EMOTE_HAPPY;
 	if(m_IsInvisible) EmoteNormal = EMOTE_BLINK;
-	if(m_LoveTick > 0 || m_HallucinationTick > 0 || m_SlowMotionTick > 0) EmoteNormal = EMOTE_SURPRISE;
+	if(m_LoveTick > 0 || m_HallucinationTick > 0 || m_SlowMotionTick > 0 || IsInNightmare()) EmoteNormal = EMOTE_SURPRISE;
 	if(IsFrozen()) EmoteNormal = EMOTE_PAIN;
 	
 	// write down the m_Core
@@ -4705,6 +4748,21 @@ void CCharacter::ClassSpawnAttributes()
 				m_pPlayer->m_knownClass[PLAYERCLASS_FREEZER] = true;
 			}
 			break;
+		case PLAYERCLASS_NIGHTMARE:
+			m_Health = 10;
+			m_Armor = 0;
+			RemoveAllGun();
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			m_ActiveWeapon = WEAPON_HAMMER;
+			
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_NIGHTMARE);
+			if(!m_pPlayer->IsKnownClass(PLAYERCLASS_NIGHTMARE))
+			{
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "nightmare", NULL);
+				m_pPlayer->m_knownClass[PLAYERCLASS_NIGHTMARE] = true;
+			}
+			break;
 	}
 }
 
@@ -4968,6 +5026,16 @@ bool CCharacter::IsInSlowMotion() const
 	return m_SlowMotionTick > 0;
 }
 
+bool CCharacter::IsInAura() const
+{
+	return m_IsInAura;
+}
+
+bool CCharacter::IsInNightmare() const
+{
+	return m_InNightmareTick > 0;
+}
+
 // duration in centiSec (10 == 1 second)
 void CCharacter::SlowMotionEffect(float duration)
 {
@@ -4978,6 +5046,17 @@ void CCharacter::SlowMotionEffect(float duration)
 		m_SlowMotionTick = Server()->TickSpeed()*duration;
 		m_IsInSlowMotion = true;
 		m_Core.m_Vel *= 0.4;
+	}
+}
+
+// duration in centiSec (10 == 1 second)
+void CCharacter::NightmareEffect(float duration)
+{
+	if (duration == 0) return;
+	duration *= 0.1f;
+	if(m_InNightmareTick <= 0)
+	{
+		m_InNightmareTick = Server()->TickSpeed()*duration;
 	}
 }
 

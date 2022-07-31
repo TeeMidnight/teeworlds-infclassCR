@@ -92,7 +92,7 @@ void CPlasma::Explode()
 
 void CPlasma::Snap(int SnappingClient)
 {
-	if (NetworkClipped(SnappingClient))
+	if (IsDontSnapEntity(SnappingClient))
 		return;
 	
 	

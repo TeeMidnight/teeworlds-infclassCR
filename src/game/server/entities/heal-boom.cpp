@@ -109,7 +109,7 @@ void CHealBoom::Reset()
 
 void CHealBoom::Snap(int SnappingClient)
 {
-	if(NetworkClipped(SnappingClient))
+	if(IsDontSnapEntity(SnappingClient))
 		return;
 	for(int i=0;i < NUM_LASERS;i++)
 	{
