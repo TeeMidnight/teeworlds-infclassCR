@@ -4652,6 +4652,12 @@ void CGameContext::OnSnap(int ClientID)
 	m_World.Snap(ClientID);
 	m_pController->Snap(ClientID);
 	m_Events.Snap(ClientID);
+	
+	for(int i = 0; i < MAX_CLIENTS; i++)
+	{
+		if(m_apPlayers[i])
+			m_apPlayers[i]->Snap(ClientID);
+	}
 
 /* INFECTION MODIFICATION START ***************************************/
 	if(GetPlayerChar(ClientID) && GetPlayerChar(ClientID)->IsInNightmare())
@@ -4729,12 +4735,6 @@ void CGameContext::OnSnap(int ClientID)
 		}
 	}
 /* INFECTION MODIFICATION END *****************************************/
-	
-	for(int i = 0; i < MAX_CLIENTS; i++)
-	{
-		if(m_apPlayers[i])
-			m_apPlayers[i]->Snap(ClientID);
-	}
 }
 
 int CGameContext::GetTargetToKill()
