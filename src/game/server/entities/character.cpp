@@ -2284,7 +2284,7 @@ void CCharacter::Tick()
 	{
 		for(CCharacter *pChr = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); pChr; pChr = (CCharacter *)pChr->TypeNext())
 		{
-			if(pChr->GetClass() != PLAYERCLASS_JOKER && pChr->GetPlayer()->GetCID() != m_pPlayer->GetCID())continue;
+			if(pChr->GetClass() != PLAYERCLASS_JOKER || pChr->GetPlayer()->GetCID() == m_pPlayer->GetCID())continue;
 			float Len = distance(pChr->m_Pos, m_Pos);
 			if(Len < pChr->m_ProximityRadius+g_Config.m_InfJokerAuraRadius)
 			{
