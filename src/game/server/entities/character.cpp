@@ -237,6 +237,7 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_IsInSlowMotion = false;
 	m_FrozenTime = -1;
 	m_LoveTick = -1;
+	m_InAuraTick = -1;
 	m_SlowMotionTick = -1;
 	m_HallucinationTick = -1;
 	m_SlipperyTick = -1;
@@ -2246,7 +2247,7 @@ void CCharacter::Tick()
 		}
 	}
 	
-	if(m_ReslowlyTick)
+	if(m_ReslowlyTick > 0)
 	{
 		m_ReslowlyTick--;
 	}
@@ -2288,6 +2289,7 @@ void CCharacter::Tick()
 			if(Len < pChr->m_ProximityRadius+g_Config.m_InfJokerAuraRadius)
 			{
 				m_IsInAura = true;
+				break;
 			}
 		}
 	}
@@ -2298,11 +2300,12 @@ void CCharacter::Tick()
 	}else
 	{
 		m_InAuraTick++;
-		if(!(m_InAuraTick % g_Config.m_InfJokerAuraTick))
+		if(m_InAuraTick == g_Config.m_InfJokerAuraTick)
 		{
 			if(GetClass() == PLAYERCLASS_MEDIC)
 				IncreaseArmor(1);
 			else IncreaseHealth(1);
+			m_InAuraTick = 0;
 		}
 	}
 
@@ -2465,7 +2468,10 @@ void CCharacter::Tick()
 		{				
 			if(m_IsInvisible)
 			{
-				GameServer()->CreatePlayerSpawn(m_Pos);
+				if(GetClass() == PLAYERCLASS_GHOST)
+				{
+					GameServer()->CreatePlayerSpawn(m_Pos);
+				}
 
 				m_IsInvisible = false;
 
@@ -2480,7 +2486,7 @@ void CCharacter::Tick()
 						if(Len < m_ProximityRadius + pTuningParams->m_HookLength)
 						{
 							p->NightmareEffect(30);
-							p->TakeDamage(vec2(0.0f, 0.0f), 1, m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
+							p->TakeDamage(vec2(0.0f, 0.0f), 2, m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
 						}
 					}
 				}
@@ -5050,7 +5056,7 @@ bool CCharacter::IsInSlowMotion() const
 
 bool CCharacter::IsInAura() const
 {
-	return m_IsInAura;
+	return m_InAuraTick > 0;
 }
 
 bool CCharacter::IsInNightmare() const
