@@ -89,6 +89,18 @@ int CRoundStatistics::CPlayer::OnScoreEvent(int EventType, int Class)
 		case PLAYERCLASS_SNIPER:
 			m_SniperScore += Points;
 			break;
+		case PLAYERCLASS_CATAPULT:
+			m_CatapultScore += Points;
+			break;
+		case PLAYERCLASS_POLICE:
+			m_PoliceScore += Points;
+			break;
+		case PLAYERCLASS_REVIVER:
+			m_ReviverScore += Points;
+			break;
+		case PLAYERCLASS_JOKER:
+			m_JokerScore += Points;
+			break;
 		case PLAYERCLASS_SMOKER:
 			m_SmokerScore += Points;
 			break;
@@ -113,6 +125,9 @@ int CRoundStatistics::CPlayer::OnScoreEvent(int EventType, int Class)
 		case PLAYERCLASS_SLUG:
 			m_SlugScore += Points;
 			break;
+		case PLAYERCLASS_SLIME:
+			m_SlimeScore += Points;
+			break;
 		case PLAYERCLASS_VOODOO:
 			m_VoodooScore += Points;
 			break;
@@ -121,6 +136,12 @@ int CRoundStatistics::CPlayer::OnScoreEvent(int EventType, int Class)
 			break;
 		case PLAYERCLASS_WITCH:
 			m_WitchScore += Points;
+			break;
+		case PLAYERCLASS_FREEZER:
+			m_FreezerScore += Points;
+			break;
+		case PLAYERCLASS_NIGHTMARE:
+			m_NightmareScore += Points;
 			break;
 	}
 

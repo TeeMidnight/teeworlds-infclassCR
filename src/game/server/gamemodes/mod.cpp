@@ -683,7 +683,7 @@ int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlaye
 				Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_KILL_WITCH, pKiller->GetClass(), Server()->ClientName(pKiller->GetCID()), GameServer()->Console());
 				GameServer()->SendScoreSound(pKiller->GetCID());
 			}
-			else if(pVictim->GetClass() == PLAYERCLASS_WITCH)
+			else if(pVictim->GetClass() == PLAYERCLASS_FREEZER)
 			{
 				GameServer()->SendChatTarget_Localization(pKiller->GetCID(), CHATCATEGORY_SCORE, _("You have killed a freezer, +3 points"), NULL);
 				Server()->RoundStatistics()->OnScoreEvent(pKiller->GetCID(), SCOREEVENT_KILL_FREEZER, pKiller->GetClass(), Server()->ClientName(pKiller->GetCID()), GameServer()->Console());

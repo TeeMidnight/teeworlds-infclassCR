@@ -1347,6 +1347,28 @@ void CCharacter::FireWeapon()
 
 				GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
 			}
+			else if(GetClass() == PLAYERCLASS_JOKER)
+			{
+				CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_GUN,
+					m_pPlayer->GetCID(),
+					ProjStartPos,
+					Direction,
+					(int)(Server()->TickSpeed()*GameServer()->Tuning()->m_GunLifetime),
+					2, 0, 0, -1, WEAPON_GUN);
+
+				// pack the Projectile and send it to the client Directly
+				CNetObj_Projectile p;
+				pProj->FillInfo(&p);
+
+				CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
+				Msg.AddInt(1);
+				for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
+					Msg.AddInt(((int *)&p)[i]);
+
+				Server()->SendMsg(&Msg, MSGFLAG_VITAL, m_pPlayer->GetCID());
+
+				GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
+			}
 			else
 			{
 				CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_GUN,
@@ -2452,7 +2474,7 @@ void CCharacter::Tick()
 					CTuningParams* pTuningParams = &m_pPlayer->m_NextTuningParams;
 					for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
 					{
-						if(p->IsZombie()) continue;
+						if(p->IsZombie() || p->GetClass() == PLAYERCLASS_JOKER || p->IsInAura()) continue;
 
 						float Len = distance(p->m_Pos, m_Pos);
 						if(Len < m_ProximityRadius + pTuningParams->m_HookLength)

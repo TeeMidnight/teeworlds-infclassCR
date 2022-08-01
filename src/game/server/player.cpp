@@ -789,8 +789,8 @@ void CPlayer::SetClassSkin(int newClass, int State)
 		case PLAYERCLASS_NIGHTMARE:
 			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_SkinName, "ghost", sizeof(m_TeeInfos.m_SkinName));
-			m_TeeInfos.m_ColorBody = 0;
-			m_TeeInfos.m_ColorFeet = 0;
+			m_TeeInfos.m_ColorBody = 3866368;
+			m_TeeInfos.m_ColorFeet = 65414;
 			break;
 		default:
 			m_TeeInfos.m_UseCustomColor = 0;

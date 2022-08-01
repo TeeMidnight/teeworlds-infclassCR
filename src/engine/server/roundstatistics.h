@@ -42,6 +42,10 @@ public:
 		int m_NinjaScore;
 		int m_MercenaryScore;
 		int m_SniperScore;
+		int m_ReviverScore;
+		int m_PoliceScore;
+		int m_CatapultScore;
+		int m_JokerScore;
 		
 		int m_SmokerScore;
 		int m_HunterScore;
@@ -51,9 +55,12 @@ public:
 		int m_SpiderScore;
 		int m_GhoulScore;
 		int m_SlugScore;
+		int m_SlimeScore;
 		int m_VoodooScore;
 		int m_UndeadScore;
 		int m_WitchScore;
+		int m_FreezerScore;
+		int m_NightmareScore;
 		
 		bool m_WasSpectator;
 		bool m_Won;

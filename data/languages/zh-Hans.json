@@ -332,18 +332,6 @@
 		"value": "感染者的目标是感染所有人类"
 	},
 	{
-		"key": "How to translate the mod",
-		"value": "怎么翻译这个模组"
-	},
-	{
-		"key": "Create an account on Crowdin and join a translation team:",
-		"value": "\u5728 Crowdin \u4e0a\u521b\u5efa\u4e00\u4e2a\u5e10\u6237\u5e76\u52a0\u5165\u7ffb\u8bd1\u56e2\u961f\ufe30"
-	},
-	{
-		"key": "For any question about the translation process, please contact us on IRC ({str:IRCAddress})",
-		"value": "\u7ffb\u8bd1\u8fc7\u7a0b\u4e2d\u5982\u6709\u4efb\u4f55\u7591\u95ee\uff0c\u8bf7\u4e8e IRC \u8054\u7cfb\u6211\u4eec ({str:IRCAddress})"
-	},
-	{
 		"key": "The Engineer can build walls with his hammer to block infected.",
 		"value": "工程师可以用锤子建造激光墙来阻挡感染者"
 	},
@@ -353,191 +341,315 @@
 	},
 	{
 		"key": "The lifespan of a wall is {sec:LifeSpan} and walls are limited to one per player at the same time.",
-		"value": "\u4e00\u5835\u5899\u53ef\u4ee5\u4fdd\u7559 {sec:LifeSpan}\uff0c\u6bcf\u4e2a\u73a9\u5bb6\u540c\u65f6\u53ea\u80fd\u62e5\u6709\u4e00\u5835\u6fc0\u5149\u5899\u3002"
+		"value": "激光墙的存在时间为 {sec:LifeSpan} 以及同一玩家同一时间最多只能有一个激光墙"
 	},
 	{
 		"key": "The Soldier can pose floating bombs with his hammer.",
-		"value": "\u58eb\u5175\u53ef\u4ee5\u7528\u9524\u5b50\u6446\u653e\u60ac\u6d6e\u96f7\u3002"
+		"value": "士兵可以用锤子布置悬浮的炸弹"
 	},
 	{
-		"key": "Each bomb can explode {int:NumBombs} times.",
-		"other": "\u6bcf\u4e2a\u60ac\u6d6e\u96f7\u53ef\u4ee5\u7206\u70b8 {int:NumBombs} \u6b21\u3002",
+		"key": "Bomb default can explode {int:NumBombs} times.",
+		"value": "炸弹默认可以爆炸 {int:NumBombs}次"
 	},
 	{
 		"key": "Use the hammer to place the bombs and explode each with one click.",
-		"value": "\u7528\u9524\u5b50\u653e\u7f6e\u60ac\u6d6e\u96f7\u5e76\u5f15\u7206\u5b83\u6570\u6b21\u3002"
+		"value": "使用锤子可以布置炸弹并引爆炸弹中的其中一个"
+	},
+	{
+		"key": "The bombs can use grenades to add.",
+		"value": "炸弹可以通过榴弹炮来添加"
 	},
 	{
 		"key": "Bombs are limited to one per player at the same time.",
-		"value": "\u6bcf\u4e2a\u73a9\u5bb6\u540c\u65f6\u53ea\u80fd\u653e\u7f6e\u4e00\u4e2a\u60ac\u6d6e\u96f7\u3002"
+		"value": "在同一时间内同一玩家最多只能有一处炸弹"
 	},
 	{
 		"key": "The Scientist can pose floating mines with his hammer.",
-		"value": "\u79d1\u5b66\u5bb6\u53ef\u4ee5\u7528\u4ed6\u7684\u9524\u5b50\u8bbe\u7f6e\u9677\u9631\u6d6e\u96f7\u3002"
+		"value": "科学家可以布置悬浮的地雷"
 	},
 	{
 		"key": "Mines are limited to {int:NumMines} per player at the same time.",
-		"other": "\u6bcf\u4e2a\u73a9\u5bb6\u540c\u65f6\u53ef\u4f7f\u7528 {int:NumMines} \u4e2a\u5730\u96f7\u3002",
+		"other": "同一时间内同一玩家最多只能布置 {int:NumMines}个地雷",
 	},
 	{
 		"key": "He has also grenades that teleport him.",
-		"value": "\u4e5f\u53ef\u4ee5\u7528\u69b4\u5f39\u67aa\u77ac\u79fb\u3002"
+		"value": "他也可以用榴弹炮来传送自己"
 	},
 	{
-		"key": "The Sciogist can pose floating mines with his hammer.",
-		"value": "融合学家可以使用他的锤子安置地雷"
+		"key": "Additionally he can place white holes with the laser rifle. Further information on /help whitehole",
+		"value": "此外, 他可以用激光墙安放白洞, 关于白洞的信息可以查看/help whitehole"
 	},
 	{
-		"key":"He has also fire 3 time grenades . And he has a shotgun with bouncing bullets",
+		"key": "The Sciogist can pose floating anti-airmines with his hammer.",
+		"value": "融合学家可以使用他的锤子安置防空地雷"
+	},
+	{
+		"key": "Mine is limited 1 per player at the same time",
+		"value": "同一时间内同一玩家最多只能布置1个防空地雷"
+	},
+	{
+		"key":"He also has fire 3 time grenades . And he has a shotgun with bouncing bullets",
 		"value": "他也拥有3重榴弹 . 他可以使用猎枪击退感染者"
 	},
 	{
 		"key": "Additionally he can place elastic holes with the grenades.\n that explode will damage anything.",
-		"value": "他还可以通过榴弹放置弹射洞.\n爆炸会对所有人造成伤害."
+		"value": "此外,他可以通过榴弹放置弹射洞.\n弹射洞爆炸会对所有人造成伤害."
+	},
+	{
+		"key": "The Catapult can use elastic grenades.",
+		"value": "弹射者可以使用弹射榴弹炮."
+	},
+	{
+		"key": "He also has a laser-rifle that can fire a elastic entity.",
+		"value": "他还可以使用激光枪来发射一个弹射体,"
+	},
+	{
+		"key": "If elatic entity collide wall, floor",
+		"value": "如果弹射体碰到墙壁，地板"
+	},
+	{
+		"key": "It will bounce back and explode. Then repeat the loop until it disappears.",
+		"value": "它会反弹并产生爆炸. 然后重复循环直到消失."
+	},
+	{
+		"key": "If elastic entity disappeared. its will create many laser and explode.",
+		"value": "如果弹射体消失了.它将会产生许多激光并且产生爆炸."
+	},
+	{
+		"key": "The Police can use hammer to use shield.",
+		"value": "警察可以使用锤子来触发盾牌."
+	},
+	{
+		"key": "The shield can switch mode with the hammer.",
+		"value": "盾牌可以通过锤子切换模式."
+	},
+	{
+		"key": "He also has a laser-rifle that can freeze zombies.",
+		"value": "他还有一把激光枪，可以冻结僵尸."
+	},
+	{
+		"key": "And he has a gun, damage is very high.But ammo is scarce",
+		"value": "他还有一把手枪, 伤害很高, 但是弹药量很少."
+	},
+	{
+		"key": "The Reviver can protect humans with his hammer by giving them health.But can't heal heroes and medics.",
+		"value": "归命师可以用锤子治疗人类，给予他们血量.但是不能治疗英雄和医疗兵."
+	},
+	{
+		"key": "And he has a grenades that hinder infected from harming and make them slower.",
+		"value": "以及他有榴弹炮可以让感染者暂时无法造成伤害,并使他们减慢速度."
 	},
 	{
 		"key": "The Biologist has a shotgun with bouncing bullets and can create a flower-like-laser-trap by shooting with his rifle.",
-		"value": "\u751f\u7269\u5b66\u5bb6\u53ef\u4ee5\u7528\u9730\u5f39\u67aa\u5c04\u51fa\u8df3\u5f39\uff0c\u4e5f\u53ef\u4ee5\u7528\u6fc0\u5149\u67aa\u8bbe\u7f6e\u5f39\u7c27\u6fc0\u5149\u9677\u9631\u3002"
+		"value": "生物学家拥有一把猎枪可以射出会反弹的子弹, 并且他可以用激光创建像花朵一样的激光地雷."
+	},
+	{
+		"key": "The Looper has a laser wall that slows down zombies and a fast shooting low-range-laser-rifle.",
+		"value": "循环者拥有激光墙，它可以降低僵尸的移动速度，以及一柄快速射击的低范围激光枪."
+	},
+	{
+		"key": "He also has a grenades.",
+		"value": "他还有一柄榴弹炮."
 	},
 	{
 		"key": "The Medic can protect humans with his hammer by giving them armor.",
-		"value": "\u533b\u7597\u5175\u53ef\u4ee5\u7528\u4ed6\u7684\u9524\u5b50\u4e3a\u5176\u4ed6\u4eba\u7c7b\u589e\u52a0\u62a4\u7532\u3002"
+		"value": "医疗兵可以用锤子给人类盾牌来保护人类"
+	},
+	{
+		"key": "Grenades with medicine give armor to everybody in their range, including heroes and medic themself",
+		"value": "医疗兵的榴弹可以给予附近的人类盾牌, 包括英雄和医疗兵."
+	},
+	{
+		"key": "Laser revives infected zombies, but at great cost - 17 hp and armor.",
+		"value": "激光可以治疗感染者, 但是会损失17点血量加盾牌."
 	},
 	{
 		"key": "He has also a powerful shotgun that can pullback infected.",
-		"value": "\u4ed6\u6709\u4e00\u628a\u5f3a\u529b\u7684\u9730\u5f39\u67aa\u6765\u51fb\u9000\u88ab\u611f\u67d3\u8005\u3002"
+		"value": "他还拥有超棒的猎枪可以击退感染"
 	},
 	{
 		"key": "The Hero has a shotgun, a laser rifle and grenades.",
-		"value": "\u82f1\u96c4\u6709\u9730\u5f39\u67aa\u3001\u6fc0\u5149\u67aa\u548c\u69b4\u5f39\u67aa\u3002"
+		"value": "英雄拥有猎枪, 激光枪和榴弹炮."
 	},
 	{
-		"key": "The Hero must find a flag hidden in the map.",
-		"value": "\u82f1\u96c4\u9700\u8981\u627e\u5230\u5730\u56fe\u4e2d\u7684\u65d7\u5e1c\u3002"
+		"key": "The Hero can find a flag on the map which is only visible to himself.",
+		"value": "英雄可以在地图上找到只有他自己才能看到的旗帜."
 	},
 	{
 		"key": "Once taken, the flag gives 1 health point, 4 armor points, and full ammo to all humans, furthermore full health and armor to the hero.",
-		"value": "\u4e00\u65e6\u62ff\u5230\uff0c\u65d7\u5e1c\u4f1a\u7ed9\u6240\u6709\u4eba\u7c7b\u63d0\u4f9b 1 \u70b9\u751f\u547d\u503c\u30014 \u70b9\u62a4\u7532\u503c\u548c\u8db3\u91cf\u7684\u5f39\u836f\uff0c\u540c\u65f6\u82f1\u96c4\u751f\u547d\u503c\u548c\u62a4\u76fe\u503c\u4e5f\u4f1a\u586b\u5145\u6ee1\u3002"
+		"value": "一旦找到旗帜, 会给予所有人类1点血量和4点盾牌, 与全满的弹药, 也会给英雄的血量与护甲增满."
 	},
 	{
 		"key": "The hero cannot be healed by a medic, but he can withstand a thrust by an infected, an his health suffice.",
-		"value": "\u5c3d\u7ba1\u82f1\u96c4\u4e0d\u80fd\u88ab\u533b\u7597\u5175\u6cbb\u6108\uff0c\u4f46\u662f\u88ab\u611f\u67d3\u8005\u53ea\u80fd\u901a\u8fc7\u6740\u6b7b\u4ed6\u7684\u65b9\u5f0f\u6765\u611f\u67d3\u4ed6\uff0c\u4ed6\u7684\u751f\u547d\u529b\u975e\u5e38\u987d\u5f3a\u3002"
+		"value": "英雄不能被医疗兵治疗, 但是他可以在满盾情况下抵挡一次感染者的致命攻击."
 	},
 	{
 		"key": "The Ninja can throw flash grenades that can freeze infected for three seconds.",
-		"value": "\u5fcd\u8005\u53ef\u4ee5\u6254\u95ea\u5149\u5f39\uff0c\u53ef\u4ee5\u51bb\u7ed3\u51fb\u4e2d\u7684\u88ab\u611f\u67d3\u8005\u4e09\u79d2\u3002"
+		"value": "忍者可以投掷闪光弹来冻结感染者3秒"
 	},
 	{
 		"key": "His hammer is replaced by a katana, allowing him to jump {int:NinjaJump} times before touching the ground.",
-		"other": "\u4ed6\u7684\u9524\u5b50\u88ab\u6b66\u58eb\u5200\u53d6\u4ee3\uff0c\u5141\u8bb8\u4ed6\u89e6\u5730\u540e\u51b2\u523a {int:NinjaJump} \u6b21\u3002",
+		"other": "他的锤子被替换为忍者刀, 允许他在碰到地面前刀跃{int:NinjaJump}次",
 	},
 	{
 		"key": "The Mercenary can fly using his machine gun.",
-		"value": "\u96c7\u4f63\u5175\u53ef\u4ee5\u7528\u673a\u67aa\u98de\u884c\u3002"
+		"value": "雇佣兵可以用手枪飞行"
 	},
 	{
-		"key": "He can coil explosives with his hammer that hinder infected from harming.",
-		"value": "\u4ed6\u53ef\u4ee5\u7528\u9524\u5b50\u8bbe\u7f6e\u9677\u9631\uff0c\u89e6\u53d1\u65f6\u9644\u8fd1\u7684\u88ab\u611f\u67d3\u8005\u65e0\u6cd5\u9020\u6210\u4f24\u5bb3\u3002"
+		"key": "He can coil explosives with his hammer and grenade that can explode to damage infected and self.",
+		"value": "他可以用锤子和榴弹增加爆炸当量来产生爆炸, 可以伤害到感染者和自己."
 	},
 	{
 		"key": "He can also throw poison grenades that each deal {int:NumDamagePoints} damage points during two seconds.",
-		"other": "\u4ed6\u4e5f\u80fd\u6254\u6bd2\u70b8\u5f39\uff0c\u6bcf\u6b21\u9020\u6210 {int:NumDamagePoints} \u70b9\u4f24\u5bb3\u3002",
+		"other": "他的榴弹炮也可以发射毒气炸弹,在两秒内每秒对感染者造成{int:NumDamagePoints}点伤害",
 	},
 	{
 		"key": "The Sniper can lock his position in air for 15 seconds with his hammer.",
-		"value": "\u72d9\u51fb\u624b\u53ef\u4ee5\u7528\u9524\u5b50\u5728\u7a7a\u4e2d\u9501\u5b9a\u81ea\u5df1\u4f4d\u7f6e 15 \u79d2\u3002"
+		"value": "狙击手可以用锤子固定在空中15秒."
 	},
 	{
-		"key": "He has tripple jump.",
-		"value": "\u4ed6\u62e5\u6709\u989d\u5916\u4e00\u6bb5\u8df3\u8dc3\u3002"
+		"key": "He can jump two times in air.",
+		"value": "他可以在空中跳跃两次."
 	},
 	{
-		"key": "He has also a powerful rifle that deals 30 damage points in locked position, and 10\u201313 otherwise.",
-		"value": "\u5728\u4f4d\u7f6e\u9501\u5b9a\u65f6\uff0c\u6fc0\u5149\u67aa\u80fd\u9020\u6210 30 \u70b9\u4f24\u5bb3\uff0c\u5176\u4ed6\u65f6\u5019\u53ea\u80fd\u9020\u6210 10 \u81f3 13 \u70b9\u4f24\u5bb3\u3002"
+		"key": "He has also a powerful rifle that deals 30 damage points in locked position, and 10–13 otherwise.",
+		"value": "他拥有超棒的激光枪在固定时可以造成高达30点的伤害, 其他情况只能造成10~13点伤害."
+	},
+	{
+		"key": "The Joker can kill zombies with his hammer.then heal self 3 health.",
+		"value": "小丑可以用锤子杀死感染者,并治疗自己3点血量."
+	},
+	{
+		"key": "He can jump very high, and his gravity is low.",
+		"value": "他可以跳得很高并且他受到的重力较低."
+	},
+	{
+		"key": "His hook lenth is 20 block.And he can take 3 damage points per 3 seconds by hooking infected,\n and heal self 2 health.",
+		"value": "他的钩子有20格距离.并且可以通过钩住感染对感染每3秒造成3点伤害,并对自己治疗2格血."
+	},
+	{
+		"key": "His aura can speed up the recovery speed of humans' bullet.",
+		"value": "他的光环可以加快人类的子弹恢复速度."
+	},
+	{
+		"key": "The Aura can give humans +1 health or armor per {sec:Time}.",
+		"value": "光环可以每{sec:Time}给人类+1血量或者盾牌."
 	},
 	{
 		"key": "The Smoker can infect humans and heal infected with his hammer.",
-		"value": "\u5438\u70df\u8005\u53ef\u4ee5\u7528\u9524\u5b50\u611f\u67d3\u4eba\u7c7b\uff0c\u6216\u6cbb\u7597\u88ab\u611f\u67d3\u8005\u3002"
+		"value": "吸烟者可以用锤子感染人类或者治愈感染者."
 	},
 	{
 		"key": "He can also inflict {int:DamagePoints} damage points per second by hooking humans.",
-		"value": "\u52fe\u4f4f\u6b63\u5e38\u4eba\u65f6\u80fd\u9020\u6210\u6bcf\u79d2 4 \u70b9\u4f24\u5bb3\u3002"
+		"value": "他可以用钩子每秒对人类造成 {int:DamagePoints} 点伤害"
 	},
 	{
 		"key": "The Boomer explodes when he attacks.",
-		"value": "\u7206\u70b8\u8005\u5728\u653b\u51fb\u7684\u65f6\u5019\u4f1a\u81ea\u7206\u3002"
+		"value": "爆炸者可以在他攻击时产生爆炸."
 	},
 	{
 		"key": "All humans affected by the explosion become infected.",
-		"value": "\u88ab\u70b8\u5230\u7684\u4eba\u90fd\u4f1a\u88ab\u611f\u67d3\u3002"
+		"value": "人类在被炸到的时候会被感染."
 	},
 	{
 		"key": "He can also inflict 1 damage point per second by hooking humans.",
-		"value": "\u52fe\u4f4f\u6b63\u5e38\u4eba\u65f6\u80fd\u9020\u6210\u6bcf\u79d2 1 \u70b9\u4f24\u5bb3\u3002"
+		"value": "他的钩子每秒对人类造成1点伤害"
 	},
 	{
 		"key": "The Hunter can infect humans and heal infected with his hammer.",
-		"value": "\u730e\u4eba\u53ef\u4ee5\u7528\u9524\u5b50\u611f\u67d3\u4eba\u7c7b\uff0c\u6216\u6cbb\u7597\u88ab\u611f\u67d3\u8005\u3002"
+		"value": "猎人可以用锤子感染人类或者治愈感染者."
+	},
+	{
+		"key": "He has tripple jump.",
+		"value": "他拥有三段跳."
+	},
+	{
+		"key": "The Bat can infect humans and heal infected with his hammer.",
+		"value": "蝙蝠可以用锤子感染人类或者治愈感染者."
+	},
+	{
+		"key": "He can jump infinitely.",
+		"value": "他可以无限跳."
 	},
 	{
 		"key": "The Ghost can infect humans and heal infected with his hammer.",
-		"value": "\u5e7d\u7075\u53ef\u4ee5\u7528\u9524\u5b50\u611f\u67d3\u4eba\u7c7b\uff0c\u6216\u6cbb\u7597\u88ab\u611f\u67d3\u8005\u3002"
+		"value": "幽灵可以用锤子感染人类或者治愈感染者."
 	},
 	{
 		"key": "He is invisible, except if a human is near him, if he takes damage or if he uses his hammer.",
-		"value": "\u4ed6\u662f\u9690\u8eab\u7684\uff0c\u5f53\u4eba\u7c7b\u63a5\u8fd1\u4ed6\u3001\u53d7\u5230\u4f24\u5bb3\u3001\u4f7f\u7528\u9524\u5b50\u65f6\u4f1a\u73b0\u8eab\u3002"
+		"value": "他是隐形的, 除非有人类靠近他或者他对人造成伤害或者在使用锤子."
 	},
 	{
 		"key": "The Spider can infect humans and heal infected with his hammer.",
-		"value": "\u8718\u86db\u4eba\u53ef\u4ee5\u7528\u9524\u5b50\u611f\u67d3\u4eba\u7c7b\uff0c\u6216\u6cbb\u7597\u88ab\u611f\u67d3\u8005\u3002"
+		"value": "蜘蛛可以用锤子感染人类或者治愈感染者."
 	},
 	{
 		"key": "When selecting any gun, his hook enters web mode.",
-		"value": "\u5207\u6362\u6b66\u5668\u65f6\uff0c\u94a9\u722a\u4f1a\u8fdb\u5165\u7ec7\u7f51\u6a21\u5f0f\u3002"
+		"value": "鼠标滚轮可以切换钩子的模式."
 	},
 	{
 		"key": "Any human that touches a hook in web mode is automatically grabbed.",
-		"value": "\u7ec7\u7f51\u6a21\u5f0f\u65f6\uff0c\u88ab\u52fe\u4f4f\u7684\u4eba\u7c7b\u90fd\u4f1a\u88ab\u56f0\u4f4f\u3002"
-	},
-	{
-		"key": "The Spider's hook deals one damage point per second (in both modes) and can grab a human for two seconds.",
-		"value": "\u5728\u4e24\u79cd\u6a21\u5f0f\u4e0b\uff0c\u8718\u86db\u7684\u94a9\u5b50\u6bcf\u79d2\u90fd\u80fd\u9020\u6210 1 \u70b9\u4f24\u5bb3\uff0c\u5e76\u80fd\u56f0\u4f4f\u6b63\u5e38\u4eba\u4e24\u79d2\u3002"
+		"value": "任何人类在网状模式碰到它的钩子都会被捕捉."
 	},
 	{
 		"key": "The Ghoul can infect humans and heal infected with his hammer.",
-		"value": "\u98df\u5c38\u9b3c\u53ef\u4ee5\u7528\u9524\u5b50\u611f\u67d3\u4eba\u7c7b\uff0c\u6216\u6cbb\u7597\u88ab\u611f\u67d3\u8005\u3002"
+		"value": "食尸鬼可以用锤子感染人类或者治愈感染者."
 	},
 	{
 		"key": "He can devour all that has died close to him, which makes him stronger, faster and more resistant.",
-		"value": "\u4ed6\u53ef\u4ee5\u541e\u98df\u4ed6\u9644\u8fd1\u7684\u6fd2\u6b7b\u8005\uff0c\u5e76\u4f1a\u4f7f\u4ed6\u66f4\u5feb\uff0c\u66f4\u58ee\uff0c\u66f4\u5f3a\uff01"
+		"value": "他可以通过吸收死亡的tee的营养来使他更强壮."
 	},
 	{
 		"key": "Thereupon he digests his fodder bit by bit going back to his normal state, and besides, death bereaves him of his nourishment.",
-		"value": "\u4ed6\u4f1a\u4e0d\u65ad\u6d88\u8017\u8425\u517b\u503c\u56de\u5230\u6b63\u5e38\u72b6\u6001\uff0c\u6b64\u5916\uff0c\u6b7b\u4ea1\u4f1a\u6d88\u8017\u6240\u6709\u8425\u517b\u503c\u3002"
+		"value": "他会不断消耗营养值直到空, 如果他死了, 会损失部分营养."
 	},
 	{
 		"key": "The Slug can infect humans and heal infected with his hammer.",
-		"value": "\u9f3b\u6d95\u866b\u53ef\u4ee5\u7528\u9524\u5b50\u611f\u67d3\u4eba\u7c7b\uff0c\u6216\u6cbb\u7597\u88ab\u611f\u67d3\u8005\u3002"
+		"value": "鼻涕虫可以用锤子感染人类或者治愈感染者."
 	},
 	{
 		"key": "He can make the ground and walls toxic by spreading slime with his hammer.",
-		"value": "\u4ed6\u53ef\u4ee5\u7528\u9524\u5b50\u5411\u5730\u9762\u548c\u5899\u58c1\u6295\u6bd2\u3002"
-	},
-	{
-		"key": "The Slime can infect humans and heal infected with his hammer.",
-		"value": "粘液可以感染人类并且可以使用锤子治疗感染"
-	},
-	{
-		"key": "He can make slime entity by his hammer.",
-		"value": "他可以使用锤子来抛掷粘液体"
+		"value": "他可以在地上或者墙上用锤子涂抹粘液."
 	},
 	{
 		"key": "Touching the slime inflicts three damage points in three seconds on a human.",
 		"value": "人类接触粘液会在3秒内造成3点伤害."
 	},
 	{
+		"key": "The Slime can infect humans and heal infected with his hammer.",
+		"value": "粘液可以用锤子感染人类或者治愈感染者."
+	},
+	{
+		"key": "He can make slime entity by his hammer.",
+		"value": "他可以使用锤子来抛掷粘液"
+	},
+	{
+		"key": "The Voodoo can infect humans and heal infected with his hammer.",
+		"value": "巫毒者可以用锤子感染人类或者治愈感染者."
+	},
+	{
+		"key": "He does not die immediately when killed but instead enters Spirit mode and defies death for a brief span of time.",
+		"value": "他死后不会立刻死亡,而是会存在一段时间."
+	},
+	{
+		"key": "While in Spirit mode he cannot be killed. When his time is up he finally dies.",
+		"value": "他死后的那段时间不能被击杀, 只有时间到了他才会真正的死亡."
+	},
+	{
+		"key": "Receive it by killing at least {int:NumKills} zombies as scientist.",
+		"value": "科学院要至少击杀{int:NumKills}只僵尸才能获得白洞."
+	},
+	{
+		"key": "Use it with your laser rifle, the indicator around your Tee will show you if it is available",
+		"value": "需要用激光来发射它, 当它可以被建立时会有指示光点环绕在tee的周围."
+	},
+	{
+		"key": "Puts humans (if enabled) and zombies into a vulnerable state by pulling them into its center",
+		"value": "默认情况下,白洞不会吸引人类,只会吸引感染者到白洞的中心."
+	},
+	{
 		"key": "The Undead can infect humans and heal infected with his hammer.",
-		"value": "不死族可以用锤子感染人类或治愈感染"
+		"value": "不死族可以用锤子感染人类或治愈感染者"
 	},
 	{
 		"key": "Instead of dying, he freezes for 10 seconds.",
@@ -549,7 +661,7 @@
 	},
 	{
 		"key": "The Witch can infect humans and heal infected with his hammer.",
-		"value": "女巫可以用锤子感染人类或治愈感染."
+		"value": "女巫可以用锤子感染人类或治愈感染者."
 	},
 	{
 		"key": "When an infected dies, it may respawn near the Witch.",
@@ -561,7 +673,59 @@
 	},
 	{
 		"key": "She can also inflict 1 damage point per second by hooking humans.",
-		"value": "她用钩爪勾住正常人能造成每秒 1 点伤害."
+		"value": "她的钩子每秒对人类造成1点伤害."
+	},
+	{
+		"key": "The Freezer can infect humans and heal infected with his hammer.",
+		"value": "冷冻者可以用锤子感染人类或治愈感染者."
+	},
+	{
+		"key": "He can use freeze mine with his hammer.",
+		"value": "他可以用锤子放置冷冻地雷."
+	},
+	{
+		"key": "The freeze mine can freeze humans.",
+		"value": "冷冻地雷可以冻结人类."
+	},
+	{
+		"key": "If some humans in its radius. Humans will be freeze",
+		"value": "如果有人类在它的半径之内, 人类会被冻结."
+	},
+	{
+		"key": "Kill {int:Num} humans can found a freezer mine.",
+		"value": "杀死{int:Num}个人类可以获得冷冻地雷."
+	},
+	{
+		"key": "If the Freezer dies, he disappears and is replaced by another class of infected.",
+		"value": "如果冷冻者死了, 他会直接变成另一种感染职业"
+	},
+	{
+		"key": "He can also inflict {int:Damage} damage point per second by hooking slowly humans.",
+		"value": "他的钩子每秒对减速的人类造成{int:Damage}点伤害."
+	},
+	{
+		"key": "The Nightmare can infect humans and heal infected with his hammer.",
+		"value": "梦魇可以用锤子感染人类或治愈感染者."
+	},
+	{
+		"key": "If he is invisible. and a human is near him.",
+		"value": "如果他处于隐身, 并且有人类靠近了他."
+	},
+	{
+		"key": "He is visible. The human will in 3 sec nightmare",
+		"value": "他会现形. 人类会陷入3秒梦魇状态."
+	},
+	{
+		"key": "If humans in nightmare, he can't see any entity else him.",
+		"value": "如果人类陷入梦魇状态, 他就不能看到除了自己之外的任何实体."
+	},
+	{
+		"key": "The Nightmare's Hook lenth is 15 blocks, and his gravity is very low.",
+		"value": "梦魇的钩子长度为15格, 他受到的重力也很低."
+	},
+	{
+		"key": "He can also inflict {int:Damage} damage point per second by hooking humans.",
+		"value": "他的钩子每秒对人类造成{int:Damage}点伤害."
 	},
 	{
 		"key": "Targeted chat messages",
@@ -744,6 +908,10 @@
 		"value": "女巫 {str:PlayerName} 已经到达!"
 	},
 	{
+		"key": "White hole",
+		"value": "白洞"
+	},
+	{
 		"key": "white hole ready, your laser rifle now disrupts space time",
 		"value": "白洞就绪, 使用你的激光枪来放置它"
 	},
@@ -827,52 +995,4 @@
 		"key": "Slime entity is ready!",
 		"value": "粘液体已经就绪!"
 	},
-	{
-		"key": "The Looper has a laser wall that slows down zombies and a fast shooting low-range-laser-rifle.",
-		"value": "循环者有激光墙，它可以降低僵尸的移动速度，以及一柄快速射击的低范围激光枪."
-	},
-	{
-		"key": "He also has a grenades.",
-		"value": "它还有一柄榴弹炮."
-	},
-	{
-		"key": "The Catapult can use elastic grenades.",
-		"value": "弹射者可以使用弹射榴弹炮."
-	},
-	{
-		"key": "He also has a laser-rifle that can fire a elastic entity.",
-		"value": "他还可以使用激光枪来发射一个弹射体,"
-	},
-	{
-		"key": "If elatic entity collide wall, floor",
-		"value": "如果弹射体碰到墙壁，地板"
-	},
-	{
-		"key": "it will create a can't explode small elatic hole",
-		"value": "它会创建一个不能爆炸的小弹射洞."
-	},
-	{
-		"key": "The Police can use hammer to use shield.",
-		"value": "警察可以使用锤子来触发盾牌."
-	},
-	{
-		"key": "He also has a laser-rifle that can freeze zombies.",
-		"value": "他还有一把激光枪，可以冻结僵尸."
-	},
-	{
-		"key": "He also has a laser-rifle that can freeze zombies.",
-		"value": "他还有一把激光枪，可以冻结僵尸."
-	},
-	{
-		"key": "And he has a gun, damage is very high.But ammo is scarce",
-		"value": "以及他有一把手枪,伤害十分的高.但是子弹量很少."
-	},
-	{
-		"key": "The Reviver can protect humans with his hammer by giving them health.",
-		"value": "归命师可以用锤子治疗人类，给予他们血量."
-	},
-	{
-		"key": "And he has a grenades that hinder infected from harming.",
-		"value": "以及他有榴弹炮可以让感染者暂时无法造成伤害."
-	}
 ]}
