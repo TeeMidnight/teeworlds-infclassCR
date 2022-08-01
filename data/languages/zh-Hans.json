@@ -637,7 +637,7 @@
 	},
 	{
 		"key": "Receive it by killing at least {int:NumKills} zombies as scientist.",
-		"value": "科学院要至少击杀{int:NumKills}只僵尸才能获得白洞."
+		"value": "科学家要至少击杀{int:NumKills}只僵尸才能获得白洞."
 	},
 	{
 		"key": "Use it with your laser rifle, the indicator around your Tee will show you if it is available",
