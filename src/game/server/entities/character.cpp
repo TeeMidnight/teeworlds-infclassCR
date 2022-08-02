@@ -1178,6 +1178,11 @@ void CCharacter::FireWeapon()
 									pTarget->Unfreeze();
 									GameServer()->ClearBroadcast(pTarget->GetPlayer()->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE);
 								}
+								if(pTarget->IsInNightmare())
+								{
+									pTarget->m_InNightmareTick = 0;
+									GameServer()->ClearBroadcast(pTarget->GetPlayer()->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE);
+								}
 								if(pTarget->GetClass() != PLAYERCLASS_HERO && pTarget->GetClass() != PLAYERCLASS_POLICE)
 								{
 									pTarget->IncreaseArmor(4);
@@ -2266,17 +2271,6 @@ void CCharacter::Tick()
 			GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE, BROADCAST_DURATION_REALTIME, _("You are slowed: {sec:EffectDuration}"), "EffectDuration", &SloMoSec, NULL);
 		}
 	}
-	
-	if(m_InNightmareTick > 0)
-	{
-		if(!(m_InNightmareTick % 50))
-		{
-			GameServer()->CreateSound(m_Pos, SOUND_PLAYER_PAIN_LONG);
-		}
-		--m_InNightmareTick;
-		int NightmareSec = 1+(m_InNightmareTick/Server()->TickSpeed());
-		GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE, BROADCAST_DURATION_REALTIME, _("You are in nightmare: {sec:EffectDuration}"), "EffectDuration", &NightmareSec, NULL);
-	}
 
 	m_IsInAura = false;
 
@@ -2300,6 +2294,7 @@ void CCharacter::Tick()
 	}else
 	{
 		m_InAuraTick++;
+		m_InNightmareTick = 0;
 		if(m_InAuraTick == g_Config.m_InfJokerAuraTick)
 		{
 			if(GetClass() == PLAYERCLASS_MEDIC)
@@ -2307,6 +2302,17 @@ void CCharacter::Tick()
 			else IncreaseHealth(1);
 			m_InAuraTick = 0;
 		}
+	}
+
+	if(m_InNightmareTick > 0)
+	{
+		if(!(m_InNightmareTick % 50))
+		{
+			GameServer()->CreateSound(m_Pos, SOUND_PLAYER_PAIN_LONG);
+		}
+		--m_InNightmareTick;
+		int NightmareSec = 1+(m_InNightmareTick/Server()->TickSpeed());
+		GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE, BROADCAST_DURATION_REALTIME, _("You are in nightmare: {sec:EffectDuration}"), "EffectDuration", &NightmareSec, NULL);
 	}
 
 	if(m_HallucinationTick > 0)
