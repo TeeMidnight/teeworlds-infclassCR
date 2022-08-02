@@ -303,7 +303,7 @@ void CCharacter::Destroy()
 
 	if(m_AuraIDs[0] >= 0)
 	{
-		for(int i=0; i<9; i++) 
+		for(int i=0; i<15; i++) 
 		{
 			Server()->SnapFreeID(m_AuraIDs[i]);
 			m_AuraIDs[i] = -1;

@@ -4660,10 +4660,6 @@ void CGameContext::OnSnap(int ClientID)
 	}
 
 /* INFECTION MODIFICATION START ***************************************/
-	if(GetPlayerChar(ClientID) && GetPlayerChar(ClientID)->IsInNightmare())
-	{
-		return;
-	}
 	//Snap laser dots
 	for(int i=0; i < m_LaserDots.size(); i++)
 	{
