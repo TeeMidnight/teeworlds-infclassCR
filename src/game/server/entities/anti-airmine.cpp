@@ -60,6 +60,10 @@ void CAntiAirMine::Explode()
 	GameServer()->CreateExplosionDisk(m_Pos, Radius, Radius, g_Config.m_InfAntiAirMineDamage,
 		 32.0f, m_Owner, WEAPON_HAMMER, TAKEDAMAGEMODE_SELFHARM);
 		
+	if(GameServer()->GetPlayerChar(m_Owner))
+	{
+		GameServer()->GetPlayerChar(m_Owner)->m_HasAntiAirMine = false;
+	}
 	GameServer()->m_World.DestroyEntity(this);
 }
 

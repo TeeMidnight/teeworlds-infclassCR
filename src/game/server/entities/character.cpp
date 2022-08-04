@@ -1582,7 +1582,7 @@ void CCharacter::FireWeapon()
 			{
 				for(int i = 1;i <= 3;i++)
 				{
-					float Spreading[] = {-0.210f, -0.105f, 0.105f};
+					float Spreading[] = {-0.315f, -0.210f, 0.210f};
 					float angle = GetAngle(Direction);
 					angle += Spreading[i] * 2.0f*(0.25f + 0.75f*static_cast<float>(10-3)/10.0f);
 					CSciogistGrenade *pSciGre = new CSciogistGrenade(GameWorld(), m_pPlayer->GetCID(), ProjStartPos, vec2(cosf(angle), sinf(angle)));
@@ -3933,9 +3933,9 @@ void CCharacter::Snap(int SnappingClient)
 		float time = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
 		float angle = fmodf(time*pi/2, 2.0f*pi);
 		int Radius = g_Config.m_InfJokerAuraRadius;
-		for(int i=0; i<m_AuraIDs.size()-1; i++)
+		for(int i=0; i<m_AuraIDs.size(); i++)
 		{	
-			float shiftedAngle = angle + 2.0*pi*static_cast<float>(i)/static_cast<float>(m_AuraIDs.size()-1);
+			float shiftedAngle = angle + 2.0*pi*static_cast<float>(i)/static_cast<float>(m_AuraIDs.size());
 			
 			CNetObj_Pickup *pObj = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_AuraIDs[i], sizeof(CNetObj_Pickup)));
 			

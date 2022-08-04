@@ -1176,6 +1176,12 @@ void CGameContext::OnTick()
 		{
 			m_TargetToKill = -1; // disable target system
 		}
+		
+		if(m_apPlayers[m_TargetToKill])
+		{
+			if(m_apPlayers[m_TargetToKill]->IsHuman())
+				m_TargetToKill = -1;
+		}
 	}
 	
 	//Check for banvote
