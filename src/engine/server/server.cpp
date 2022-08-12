@@ -3476,7 +3476,7 @@ public:
 			//Check if the username is already taken
 			str_format(aBuf, sizeof(aBuf), 
 				"SELECT UserId FROM %s_Users "
-				"WHERE Username COLLATE UTF8_GENERAL_CI = '%s' COLLATE UTF8_GENERAL_CI;"
+				"WHERE Username = '%s;"
 				, pSqlServer->GetPrefix(), m_sName.ClrStr());
 			pSqlServer->executeSqlQuery(aBuf);
 
