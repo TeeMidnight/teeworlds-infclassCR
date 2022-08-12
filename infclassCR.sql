@@ -1,15 +1,17 @@
--- write by ErrorDreemurr
+-- Origin writer: FlowerFell-Sans
+-- edit by ErrorDreemurr
+-- Then FlowerFell-Sans fix the Edit part's Bug, lmao
 DROP TABLE IF EXISTS `tw_infc_RoundScore`;
 DROP TABLE IF EXISTS `tw_infc_Rounds`;
 DROP TABLE IF EXISTS `tw_Users`;
 CREATE TABLE IF NOT EXISTS `tw_Users` (
 	`UserId` INT NOT NULL AUTO_INCREMENT, 
 	`Username` VARCHAR(64) NOT NULL, 
+    `Nickname` VARCHAR(64) NOT NULL, 
 	`Email` VARCHAR(64) NOT NULL, 
 	`PasswordHash` VARCHAR(64) NOT NULL, 
 	`Level` INT DEFAULT '0' NOT NULL, 
 	`RegisterDate` DATETIME NOT NULL DEFAULT NOW(), 
-	`RegisterIp` VARCHAR(64) NOT NULL, 
     PRIMARY KEY (`UserId`)
 ) DEFAULT CHARSET=utf8 ;
 

@@ -365,12 +365,20 @@ void CPlayer::Snap(int SnappingClient)
 					break;
 				case PLAYERCLASS_NIGHTMARE:
 					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Nightmare"), sizeof(aClanName));
+					
 					break;
 				default:
 					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"????"), sizeof(aClanName));
 			}
-			
+
+			#ifdef CONF_SQL
+			char ClanToSnap[16];
+			str_copy(ClanToSnap, "@", sizeof(ClanToSnap));
+			str_append(ClanToSnap, aClanName, sizeof(ClanToSnap));
+			StrToInts(&pClientInfo->m_Clan0, 4, ClanToSnap);
+			#else
 			StrToInts(&pClientInfo->m_Clan0, 4, aClanName);
+			#endif
 			
 			PlayerInfoScore = Server()->RoundStatistics()->PlayerScore(m_ClientID);
 		}

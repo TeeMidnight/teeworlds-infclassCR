@@ -810,9 +810,7 @@ const char *CServer::ClientName(int ClientID)
 		return "(invalid)";
 		
 	if(m_aClients[ClientID].m_State == CServer::CClient::STATE_INGAME)
-	{
 		return m_aClients[ClientID].m_aName;
-	}
 	else
 		return "(connecting)";
 
@@ -3449,14 +3447,14 @@ public:
 			//Check for registration flooding
 			str_format(aBuf, sizeof(aBuf), 
 				"SELECT UserId FROM %s_Users "
-				"WHERE RegisterIp = '%s' AND TIMESTAMPDIFF(MINUTE, RegisterDate, UTC_TIMESTAMP()) < 5;"
-				, pSqlServer->GetPrefix(), aAddrStr);
+				"WHERE Nickname='%s';"
+				, pSqlServer->GetPrefix(), m_pServer->ClientName(m_ClientID));
 			pSqlServer->executeSqlQuery(aBuf);
 			
 			if(pSqlServer->GetResults()->next())
 			{
 				dbg_msg("infclass", "Registration flooding");
-				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, CHATCATEGORY_DEFAULT, _("Please wait 5 minutes before creating another account"));
+				CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget_Language(m_ClientID, CHATCATEGORY_DEFAULT, _("Your Nickname has been registered."));
 				m_pServer->AddGameServerCmd(pCmd);
 				
 				return true;
@@ -3476,7 +3474,7 @@ public:
 			//Check if the username is already taken
 			str_format(aBuf, sizeof(aBuf), 
 				"SELECT UserId FROM %s_Users "
-				"WHERE Username = '%s;"
+				"WHERE Username='%s';"
 				, pSqlServer->GetPrefix(), m_sName.ClrStr());
 			pSqlServer->executeSqlQuery(aBuf);
 
@@ -3503,9 +3501,9 @@ public:
 		{	
 			str_format(aBuf, sizeof(aBuf), 
 				"INSERT INTO %s_Users "
-				"(Username, PasswordHash, Email, RegisterDate, RegisterIp) "
-				"VALUES ('%s', '%s', '%s', UTC_TIMESTAMP(), '%s');"
-				, pSqlServer->GetPrefix(), m_sName.ClrStr(), m_sPasswordHash.ClrStr(), m_sEmail.ClrStr(), aAddrStr);
+				"(Username, Nickname, PasswordHash, Email) "
+				"VALUES ('%s', '%s', '%s', '%s');"
+				, pSqlServer->GetPrefix(), m_sName.ClrStr(), m_pServer->ClientName(m_ClientID), m_sPasswordHash.ClrStr(), m_sEmail.ClrStr());
 			pSqlServer->executeSql(aBuf);
 		}
 		catch (sql::SQLException &e)
@@ -3522,7 +3520,7 @@ public:
 		{	
 			str_format(aBuf, sizeof(aBuf), 
 				"SELECT UserId FROM %s_Users "
-				"WHERE Username = '%s' AND PasswordHash = '%s';"
+				"WHERE Username='%s' AND PasswordHash='%s';"
 				, pSqlServer->GetPrefix(), m_sName.ClrStr(), m_sPasswordHash.ClrStr());
 			pSqlServer->executeSqlQuery(aBuf);
 
