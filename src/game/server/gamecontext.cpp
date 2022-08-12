@@ -3500,8 +3500,8 @@ bool CGameContext::ConTop10(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_WITCH_SCORE);
 		else if(str_comp_nocase(pArg, "slime") == 0)
 			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_SLIME_SCORE);
-		else if(str_comp_nocase(pArg, "hooker") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_HOOKER_SCORE);
+		else if(str_comp_nocase(pArg, "freezer") == 0)
+			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_FREEZER_SCORE);
 	}
 	else
 		pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_ROUND_SCORE);
@@ -3566,8 +3566,8 @@ bool CGameContext::ConRank(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_WITCH_SCORE);
 		else if(str_comp_nocase(pArg, "slime") == 0)
 			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_SLIME_SCORE);
-		else if(str_comp_nocase(pArg, "hooker") == 0)
-			pSelf->Server()->ShowRamk(ClientID, SQL_SCORETYPE_HOOKER_SCORE);
+		else if(str_comp_nocase(pArg, "freezer") == 0)
+			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_FREEZER_SCORE);
 	
 	}
 	else
@@ -3633,8 +3633,8 @@ bool CGameContext::ConGoal(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_WITCH_SCORE);
 		else if(str_comp_nocase(pArg, "slime") == 0)
 			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_SLIME_SCORE);
-		else if(str_comp_nocase(pArg, "hooker") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_HOOKER_SCORE);
+		else if(str_comp_nocase(pArg, "freezer") == 0)
+			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_FREEZER_SCORE);
 	}
 	else
 		pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_ROUND_SCORE);

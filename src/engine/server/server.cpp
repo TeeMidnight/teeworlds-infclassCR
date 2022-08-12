@@ -811,10 +811,7 @@ const char *CServer::ClientName(int ClientID)
 		
 	if(m_aClients[ClientID].m_State == CServer::CClient::STATE_INGAME)
 	{
-		if(m_aClients[ClientID].m_UserID >= 0)
-			return m_aClients[ClientID].m_aUsername;
-		else
-			return m_aClients[ClientID].m_aName;
+		return m_aClients[ClientID].m_aName;
 	}
 	else
 		return "(connecting)";
