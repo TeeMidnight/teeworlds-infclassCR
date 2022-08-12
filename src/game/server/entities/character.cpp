@@ -1353,36 +1353,17 @@ void CCharacter::FireWeapon()
 
 				GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
 			}
-			else if(GetClass() == PLAYERCLASS_JOKER)
-			{
-				CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_GUN,
-					m_pPlayer->GetCID(),
-					ProjStartPos,
-					Direction,
-					(int)(Server()->TickSpeed()*GameServer()->Tuning()->m_GunLifetime),
-					2, 0, 0, -1, WEAPON_GUN);
-
-				// pack the Projectile and send it to the client Directly
-				CNetObj_Projectile p;
-				pProj->FillInfo(&p);
-
-				CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
-				Msg.AddInt(1);
-				for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
-					Msg.AddInt(((int *)&p)[i]);
-
-				Server()->SendMsg(&Msg, MSGFLAG_VITAL, m_pPlayer->GetCID());
-
-				GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
-			}
 			else
 			{
+				int Damage = 1;
+				if(GetClass() == PLAYERCLASS_JOKER)
+					Damage = 3;
 				CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_GUN,
 					m_pPlayer->GetCID(),
 					ProjStartPos,
 					Direction,
 					(int)(Server()->TickSpeed()*GameServer()->Tuning()->m_GunLifetime),
-					1, 0, 0, -1, WEAPON_GUN);
+					Damage, 0, 0, -1, WEAPON_GUN);
 
 				// pack the Projectile and send it to the client Directly
 				CNetObj_Projectile p;
@@ -1409,7 +1390,8 @@ void CCharacter::FireWeapon()
 			Msg.AddInt(ShotSpread*2+1);
 
 			float Force = 2.0f;
-			if(GetClass() == PLAYERCLASS_MEDIC || GetClass() == PLAYERCLASS_SCIOGIST)
+			if(GetClass() == PLAYERCLASS_MEDIC || GetClass() == PLAYERCLASS_SCIOGIST
+				|| GetClass() == PLAYERCLASS_JOKER)
 				Force = 10.0f;
 				
 			for(int i = -ShotSpread; i <= ShotSpread; ++i)
@@ -4571,6 +4553,7 @@ void CCharacter::ClassSpawnAttributes()
 			m_Health = 10;
 			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_GUN, -1);
+			GiveWeapon(WEAPON_SHOTGUN, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_JOKER);
