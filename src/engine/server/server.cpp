@@ -1691,49 +1691,7 @@ void CServer::SendServerInfo(const NETADDR *pAddr, int Token, int Type, bool Sen
 	}
 	else
 	{
-#ifdef CONF_SQL
-		if(g_Config.m_InfChallenge)
-		{
-			lock_wait(m_ChallengeLock);
-			int ScoreType = ChallengeTypeToScoreType(m_ChallengeType);
-			switch(ScoreType)
-			{
-				case SQL_SCORETYPE_ENGINEER_SCORE:
-					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "EngineerOfTheDay", m_aChallengeWinner);
-					break;
-				case SQL_SCORETYPE_MERCENARY_SCORE:
-					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "MercenaryOfTheDay", m_aChallengeWinner);
-					break;
-				case SQL_SCORETYPE_SCIENTIST_SCORE:
-					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "ScientistOfTheDay", m_aChallengeWinner);
-					break;
-				case SQL_SCORETYPE_BIOLOGIST_SCORE:
-					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "BiologistOfTheDay", m_aChallengeWinner);
-					break;
-				case SQL_SCORETYPE_LOOPER_SCORE:
-					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "LoooperOfTheDay", m_aChallengeWinner);
-					break;
-				case SQL_SCORETYPE_NINJA_SCORE:
-					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "NinjaOfTheDay", m_aChallengeWinner);
-					break;
-				case SQL_SCORETYPE_SOLDIER_SCORE:
-					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "SoldierOfTheDay", m_aChallengeWinner);
-					break;
-				case SQL_SCORETYPE_SNIPER_SCORE:
-					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "SniperOfTheDay", m_aChallengeWinner);
-					break;
-				case SQL_SCORETYPE_MEDIC_SCORE:
-					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "MedicOfTheDay", m_aChallengeWinner);
-					break;
-				case SQL_SCORETYPE_HERO_SCORE:
-					str_format(aBuf, sizeof(aBuf), "%s | %s: %s", g_Config.m_SvName, "HeroOfTheDay", m_aChallengeWinner);
-					break;
-			}
-			lock_release(m_ChallengeLock);
-		}
-#else
 		memcpy(aBuf, g_Config.m_SvName, sizeof(aBuf));
-#endif
 	}
 	
 	
