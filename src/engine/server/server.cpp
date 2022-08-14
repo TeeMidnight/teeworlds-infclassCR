@@ -3291,13 +3291,6 @@ public:
 						m_pServer->m_aClients[m_ClientID].m_UserID = -1;
 						m_pServer->m_aClients[m_ClientID].m_UserLevel = SQL_USERLEVEL_NORMAL;
 					}
-					else
-					{
-						str_format(aBuf, sizeof(aBuf), "%s logged in (id: %d)", m_pServer->m_aClients[m_ClientID].m_aUsername,
-							m_pServer->m_aClients[m_ClientID].m_UserID);
-						CServer::CGameServerCmd* pCmd = new CGameServerCmd_SendChatTarget(-1, aBuf);
-						m_pServer->AddGameServerCmd(pCmd);
-					}
 				}
 				else {
 					str_format(aBuf, sizeof(aBuf), "You are already logged in.");

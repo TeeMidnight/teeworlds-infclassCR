@@ -1522,8 +1522,8 @@ void CGameContext::OnClientEnter(int ClientID)
 /* INFECTION MODIFICATION START ***************************************/
 	SendChatTarget_Localization(-1, CHATCATEGORY_PLAYER, _("{str:PlayerName} entered and joined the game"), "PlayerName", Server()->ClientName(ClientID), NULL);
 #ifdef CONF_SQL
-	SendChatTarget(ClientID, "Use /register <username> <password> to register, ");
-	SendChatTarget(ClientID, "or use /login <username> <password> to login.");
+	SendChatTarget(ClientID, "Use /register <username> <password> to register.");
+	SendChatTarget(ClientID, "Or use /login <username> <password> to login.");
 #endif
 /* INFECTION MODIFICATION END *****************************************/
 

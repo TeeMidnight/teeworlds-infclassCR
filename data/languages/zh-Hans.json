@@ -4,6 +4,14 @@
 		"value": "{str:Victim} 因为 ({str:Reason}) 被禁言{sec:Duration}"
 	},
 	{
+		"key": "Use /register <username> <password> to register.",
+		"value": "使用 /register <用户名> <密码> 来注册."
+	},
+	{
+		"key": "Or use /login <username> <password> to login.",
+		"value": "或者使用 /login <用户名> <密码> 来登录."
+	},
+	{
 		"key": "You are now logged.",
 		"value": "你现在登录了"
 	},
