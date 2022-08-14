@@ -12,46 +12,6 @@
 		"value": "或者使用 /login <用户名> <密码> 来登录."
 	},
 	{
-		"key": "You are now logged.",
-		"value": "你现在登录了"
-	},
-	{
-		"key": "Wrong username/password.",
-		"value": "错误的用户名或密码"
-	},
-	{
-		"key": "An error occured during the operation.",
-		"value": "一个错误出现在此操作过程中"
-	},
-	{
-		"key": "You must be logged for this operation",
-		"value": "你必须登录才能使用这个操作"
-	},
-	{
-		"key": "Please wait 5 minutes before creating another account",
-		"value": "请等待5分钟再创建其他账号"
-	},
-	{
-		"key": "An error occured during the creation of your account.",
-		"value": "一个错误出现在创建账号的过程中"
-	},
-	{
-		"key": "This username is already taken by an existing account",
-		"value": "这个用户名已经有了一个账号"
-	},
-	{
-		"key": "Your account has been created and you are now logged.",
-		"value": "你的账号现在被创建了并且你已经登录账号"
-	},
-	{
-		"key": "You must be logged to see your rank",
-		"value": "你必须登录才能看到你的排行榜"
-	},
-	{
-		"key": "You must be logged to see your goal",
-		"value": "你必须登录才能看到你的目标"
-	},
-	{
 		"key": "You have already notified that {str:PlayerName} ought to be banned",
 		"value": "你已经提议封禁 {str:PlayerName}"
 	},

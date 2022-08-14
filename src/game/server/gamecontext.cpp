@@ -7,13 +7,16 @@
 #include <engine/console.h>
 #include <engine/storage.h>
 #include <engine/server/roundstatistics.h>
-#include <engine/server/sql_server.h>
 #include "gamecontext.h"
 #include <game/version.h>
 #include <game/collision.h>
 #include <game/gamecore.h>
 #include "gamemodes/mod.h"
 #include <algorithm>
+
+#ifdef CONF_SQL
+#include <engine/server/crypt.h>
+#endif
 
 enum
 {
@@ -82,6 +85,11 @@ void CGameContext::Construct(int Resetting)
 	#ifdef CONF_GEOLOCATION
 	geolocation = new Geolocation("GeoLite2-Country.mmdb");
 	#endif
+	#ifdef CONF_SQL
+	/* SQL */
+	m_AccountData = new CAccountData;
+	m_Sql = new CSQL(this);
+	#endif
 }
 
 CGameContext::CGameContext(int Resetting)
@@ -139,6 +147,11 @@ void CGameContext::Clear()
 		m_BroadcastStates[i].m_PrevMessage[0] = 0;
 		m_BroadcastStates[i].m_NextMessage[0] = 0;
 	}
+
+	#ifdef CONF_SQL
+	delete m_Sql;
+	delete m_AccountData;
+	#endif
 }
 
 
@@ -1116,9 +1129,6 @@ void CGameContext::OnTick()
 			{
 				if(!g_Config.m_SvMotd[0] || Server()->GetClientMemory(i, CLIENTMEMORY_ROUNDSTART_OR_MAPCHANGE))
 				{
-#ifdef CONF_SQL
-					Server()->ShowChallenge(i);
-#endif
 					Server()->SetClientMemory(i, CLIENTMEMORY_TOP10, true);
 				}
 			}
@@ -3071,9 +3081,6 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 	int CheckID = -1;
 	int CheckTeam = -1;
 	int CheckClass = -1;
-#ifdef CONF_SQL
-	int CheckLevel = SQL_USERLEVEL_NORMAL;
-#endif
 	
 	if(TeamChat && m_apPlayers[ClientID])
 	{
@@ -3105,17 +3112,6 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 					str_copy(aChatTitle, "near", sizeof(aChatTitle));
 				}
 			}
-#ifdef CONF_SQL
-			else if(str_comp(aNameFound, "!mod") == 0)
-			{
-				if(m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
-				{
-					CheckLevel = SQL_USERLEVEL_MOD;
-					CheckDistancePos = m_apPlayers[ClientID]->GetCharacter()->m_Pos;
-					str_copy(aChatTitle, "moderators", sizeof(aChatTitle));
-				}
-			}
-#endif
 			else if(str_comp(aNameFound, "!engineer") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
 				CheckClass = PLAYERCLASS_ENGINEER;
@@ -3313,11 +3309,6 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 						continue;
 				}
 				
-#ifdef CONF_SQL
-				if(Server()->GetUserLevel(i) < CheckLevel)
-					continue;
-#endif
-				
 				if(CheckID >= 0 && !(i == CheckID))
 					continue;
 				
@@ -3387,278 +3378,58 @@ void CGameContext::MutePlayer(const char* pStr, int ClientID)
 
 bool CGameContext::ConRegister(IConsole::IResult *pResult, void *pUserData)
 {
-	CGameContext *pSelf = (CGameContext *)pUserData;
-	int ClientID = pResult->GetClientID();
-	
-	const char *pLogin = pResult->GetString(0);
-	const char *pPassword = pResult->GetString(1);
-	const char *pEmail = 0;
-	
-	if(pResult->NumArguments()>2)
-		pEmail = pResult->GetString(2);
-	
-	pSelf->Server()->Register(ClientID, pLogin, pPassword, pEmail);
-	
-	return true;
+	CGameContext *pSelf = (CGameContext *) pUserData;
+
+    if (pResult->NumArguments() != 2) {
+        pSelf->SendChatTarget_Localization(pResult->GetClientID(), CHATCATEGORY_DEFAULT, _("Usage: /register <username> <password>"));
+        return false;
+    }
+
+    char Username[512];
+    char Password[512];
+    str_copy(Username, pResult->GetString(0), sizeof(Username));
+    str_copy(Password, pResult->GetString(1), sizeof(Password));
+
+    char aHash[64];
+	Crypt(Password, (const unsigned char*) "d9", 1, 14, aHash);
+
+    pSelf->Sql()->create_account(Username, aHash, pResult->GetClientID());
+    return true;
 }
 
 bool CGameContext::ConLogin(IConsole::IResult *pResult, void *pUserData)
 {
-	CGameContext *pSelf = (CGameContext *)pUserData;
-	int ClientID = pResult->GetClientID();
+	CGameContext *pSelf = (CGameContext *) pUserData;
+    if (pResult->NumArguments() != 2) {
+        pSelf->SendChatTarget_Localization(pResult->GetClientID(), CHATCATEGORY_DEFAULT, _("usage: /login <username> <password>"));
+        return false;
+    }
+
+    char Username[512];
+    char Password[512];
+    str_copy(Username, pResult->GetString(0), sizeof(Username));
+    str_copy(Password, pResult->GetString(1), sizeof(Password));
+
+    char aHash[64]; //Result
+	mem_zero(aHash, sizeof(aHash));
+	Crypt(Password, (const unsigned char*) "d9", 1, 14, aHash);
 	
-	const char *pLogin = pResult->GetString(0);
-	const char *pPassword = pResult->GetString(1);
-	pSelf->Server()->Login(ClientID, pLogin, pPassword);
-	
-	return true;
+    pSelf->Sql()->login(Username, aHash, pResult->GetClientID());
+    return true;
 }
 
 bool CGameContext::ConLogout(IConsole::IResult *pResult, void *pUserData)
 {
-	CGameContext *pSelf = (CGameContext *)pUserData;
-	int ClientID = pResult->GetClientID();
-	
-	pSelf->Server()->Logout(ClientID);
-	
-	return true;
+	CGameContext *pSelf = (CGameContext *) pUserData;
+    pSelf->LogoutAccount(pResult->GetClientID());
 }
 
-bool CGameContext::ConSetEmail(IConsole::IResult *pResult, void *pUserData)
+void CGameContext::LogoutAccount(int ClientID)
 {
-	CGameContext *pSelf = (CGameContext *)pUserData;
-	int ClientID = pResult->GetClientID();
-	
-	const char *pEmail = pResult->GetString(0);
-	
-	pSelf->Server()->SetEmail(ClientID, pEmail);
-	
-	return true;
-}
-
-bool CGameContext::ConChallenge(IConsole::IResult *pResult, void *pUserData)
-{
-	CGameContext *pSelf = (CGameContext *)pUserData;
-	int ClientID = pResult->GetClientID();
-	
-	pSelf->Server()->ShowChallenge(ClientID);
-	
-	return true;
-}
-
-bool CGameContext::ConTop10(IConsole::IResult *pResult, void *pUserData)
-{
-	CGameContext *pSelf = (CGameContext *)pUserData;
-	int ClientID = pResult->GetClientID();
-	
-	if(pResult->NumArguments()>0)
-	{
-		const char* pArg = pResult->GetString(0);
-		
-		if(str_comp_nocase(pArg, "engineer") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_ENGINEER_SCORE);
-		else if(str_comp_nocase(pArg, "soldier") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_SOLDIER_SCORE);
-		else if(str_comp_nocase(pArg, "scientist") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_SCIENTIST_SCORE);
-		else if(str_comp_nocase(pArg, "biologist") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_BIOLOGIST_SCORE);
-		else if(str_comp_nocase(pArg, "sciogist") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_SCIOGIST_SCORE);
-		else if(str_comp_nocase(pArg, "police") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_POLICE_SCORE);
-		else if(str_comp_nocase(pArg, "reviver") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_REVIVER_SCORE);
-		else if(str_comp_nocase(pArg, "catapult") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_CATAPULT_SCORE);
-		else if(str_comp_nocase(pArg, "looper") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_LOOPER_SCORE);
-		else if(str_comp_nocase(pArg, "medic") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_MEDIC_SCORE);
-		else if(str_comp_nocase(pArg, "hero") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_HERO_SCORE);
-		else if(str_comp_nocase(pArg, "ninja") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_NINJA_SCORE);
-		else if(str_comp_nocase(pArg, "mercenary") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_MERCENARY_SCORE);
-		else if(str_comp_nocase(pArg, "sniper") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_SNIPER_SCORE);
-		else if(str_comp_nocase(pArg, "smoker") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_SMOKER_SCORE);
-		else if(str_comp_nocase(pArg, "hunter") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_HUNTER_SCORE);
-		else if(str_comp_nocase(pArg, "boomer") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_BOOMER_SCORE);
-		else if(str_comp_nocase(pArg, "ghost") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_GHOST_SCORE);
-		else if(str_comp_nocase(pArg, "spider") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_SPIDER_SCORE);
-		else if(str_comp_nocase(pArg, "ghoul") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_GHOUL_SCORE);
-		else if(str_comp_nocase(pArg, "slug") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_SLUG_SCORE);
-		else if(str_comp_nocase(pArg, "undead") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_UNDEAD_SCORE);
-		else if(str_comp_nocase(pArg, "witch") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_WITCH_SCORE);
-		else if(str_comp_nocase(pArg, "slime") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_SLIME_SCORE);
-		else if(str_comp_nocase(pArg, "freezer") == 0)
-			pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_FREEZER_SCORE);
-	}
-	else
-		pSelf->Server()->ShowTop10(ClientID, SQL_SCORETYPE_ROUND_SCORE);
-	
-	return true;
-}
-
-bool CGameContext::ConRank(IConsole::IResult *pResult, void *pUserData)
-{
-	CGameContext *pSelf = (CGameContext *)pUserData;
-	int ClientID = pResult->GetClientID();
-	
-	if(pResult->NumArguments()>0)
-	{
-		const char* pArg = pResult->GetString(0);
-		
-		if(str_comp_nocase(pArg, "engineer") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_ENGINEER_SCORE);
-		else if(str_comp_nocase(pArg, "soldier") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_SOLDIER_SCORE);
-		else if(str_comp_nocase(pArg, "scientist") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_SCIENTIST_SCORE);
-		else if(str_comp_nocase(pArg, "biologist") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_BIOLOGIST_SCORE);
-		else if(str_comp_nocase(pArg, "sciogist") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_SCIOGIST_SCORE);
-		else if(str_comp_nocase(pArg, "police") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_POLICE_SCORE);
-		else if(str_comp_nocase(pArg, "reviver") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_REVIVER_SCORE);
-		else if(str_comp_nocase(pArg, "catapult") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_CATAPULT_SCORE);
-		else if(str_comp_nocase(pArg, "looper") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_LOOPER_SCORE);
-		else if(str_comp_nocase(pArg, "medic") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_MEDIC_SCORE);
-		else if(str_comp_nocase(pArg, "hero") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_HERO_SCORE);
-		else if(str_comp_nocase(pArg, "ninja") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_NINJA_SCORE);
-		else if(str_comp_nocase(pArg, "mercenary") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_MERCENARY_SCORE);
-		else if(str_comp_nocase(pArg, "sniper") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_SNIPER_SCORE);
-		else if(str_comp_nocase(pArg, "smoker") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_SMOKER_SCORE);
-		else if(str_comp_nocase(pArg, "hunter") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_HUNTER_SCORE);
-		else if(str_comp_nocase(pArg, "boomer") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_BOOMER_SCORE);
-		else if(str_comp_nocase(pArg, "ghost") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_GHOST_SCORE);
-		else if(str_comp_nocase(pArg, "spider") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_SPIDER_SCORE);
-		else if(str_comp_nocase(pArg, "ghoul") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_GHOUL_SCORE);
-		else if(str_comp_nocase(pArg, "slug") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_SLUG_SCORE);
-		else if(str_comp_nocase(pArg, "undead") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_UNDEAD_SCORE);
-		else if(str_comp_nocase(pArg, "witch") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_WITCH_SCORE);
-		else if(str_comp_nocase(pArg, "slime") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_SLIME_SCORE);
-		else if(str_comp_nocase(pArg, "freezer") == 0)
-			pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_FREEZER_SCORE);
-	
-	}
-	else
-		pSelf->Server()->ShowRank(ClientID, SQL_SCORETYPE_ROUND_SCORE);
-	
-	return true;
-}
-
-bool CGameContext::ConGoal(IConsole::IResult *pResult, void *pUserData)
-{
-	CGameContext *pSelf = (CGameContext *)pUserData;
-	int ClientID = pResult->GetClientID();
-	
-	if(pResult->NumArguments()>0)
-	{
-		const char* pArg = pResult->GetString(0);
-		
-		if(str_comp_nocase(pArg, "engineer") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_ENGINEER_SCORE);
-		else if(str_comp_nocase(pArg, "soldier") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_SOLDIER_SCORE);
-		else if(str_comp_nocase(pArg, "scientist") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_SCIENTIST_SCORE);
-		else if(str_comp_nocase(pArg, "biologist") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_BIOLOGIST_SCORE);
-		else if(str_comp_nocase(pArg, "sciogist") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_SCIOGIST_SCORE);
-		else if(str_comp_nocase(pArg, "police") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_POLICE_SCORE);
-		else if(str_comp_nocase(pArg, "reviver") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_REVIVER_SCORE);
-		else if(str_comp_nocase(pArg, "catapult") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_CATAPULT_SCORE);
-		else if(str_comp_nocase(pArg, "looper") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_LOOPER_SCORE);
-		else if(str_comp_nocase(pArg, "medic") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_MEDIC_SCORE);
-		else if(str_comp_nocase(pArg, "hero") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_HERO_SCORE);
-		else if(str_comp_nocase(pArg, "ninja") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_NINJA_SCORE);
-		else if(str_comp_nocase(pArg, "mercenary") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_MERCENARY_SCORE);
-		else if(str_comp_nocase(pArg, "sniper") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_SNIPER_SCORE);
-		else if(str_comp_nocase(pArg, "smoker") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_SMOKER_SCORE);
-		else if(str_comp_nocase(pArg, "hunter") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_HUNTER_SCORE);
-		else if(str_comp_nocase(pArg, "boomer") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_BOOMER_SCORE);
-		else if(str_comp_nocase(pArg, "ghost") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_GHOST_SCORE);
-		else if(str_comp_nocase(pArg, "spider") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_SPIDER_SCORE);
-		else if(str_comp_nocase(pArg, "ghoul") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_GHOUL_SCORE);
-		else if(str_comp_nocase(pArg, "slug") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_SLUG_SCORE);
-		else if(str_comp_nocase(pArg, "undead") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_UNDEAD_SCORE);
-		else if(str_comp_nocase(pArg, "witch") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_WITCH_SCORE);
-		else if(str_comp_nocase(pArg, "slime") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_SLIME_SCORE);
-		else if(str_comp_nocase(pArg, "freezer") == 0)
-			pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_FREEZER_SCORE);
-	}
-	else
-		pSelf->Server()->ShowGoal(ClientID, SQL_SCORETYPE_ROUND_SCORE);
-	
-	return true;
-}
-
-bool CGameContext::ConStats(IConsole::IResult *pResult, void *pUserData)
-{
-	CGameContext *pSelf = (CGameContext *)pUserData;
-	int ClientID = pResult->GetClientID();
-	
-	if(pResult->NumArguments()>0)
-	{
-		int arg = pResult->GetInteger(0);
-		pSelf->Server()->ShowStats(ClientID, arg);
-	}
-	else
-		pSelf->Server()->ShowStats(ClientID, -1);
-	
-	return true;
+	CPlayer *pP = m_apPlayers[ClientID];
+    CCharacter *pChr = pP->GetCharacter();
+    pP->Logout();
+    SendChatTarget(pP->GetCID(), _("Logout succesful"));
 }
 
 #endif
@@ -4369,7 +4140,7 @@ bool CGameContext::ConCmdList(IConsole::IResult *pResult, void *pUserData)
 #ifdef CONF_SQL
 	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, "/register, /login, /logout, /setemail", NULL);
 	Buffer.append("\n\n");
-	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, "/challenge, /top10, /rank, /goal", NULL);
+	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, "/challenge, /top, /rank, /goal", NULL);
 	Buffer.append("\n\n");
 #endif
 	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Press <F3> to enable or disable hook protection"), NULL);
@@ -4504,16 +4275,9 @@ void CGameContext::OnConsoleInit()
 	//Chat Command
 	Console()->Register("info", "", CFGFLAG_CHAT|CFGFLAG_USER, ConChatInfo, this, "Display information about the mod");
 #ifdef CONF_SQL
-	Console()->Register("register", "s<username> s<password> ?s<email>", CFGFLAG_CHAT|CFGFLAG_USER, ConRegister, this, "Create an account");
-	Console()->Register("login", "s<username> s<password>", CFGFLAG_CHAT|CFGFLAG_USER, ConLogin, this, "Login to an account");
+	Console()->Register("register", "?s?s", CFGFLAG_CHAT|CFGFLAG_USER, ConRegister, this, "Create an account");
+	Console()->Register("login", "?s?s", CFGFLAG_CHAT|CFGFLAG_USER, ConLogin, this, "Login to an account");
 	Console()->Register("logout", "", CFGFLAG_CHAT|CFGFLAG_USER, ConLogout, this, "Logout");
-	Console()->Register("setemail", "s<email>", CFGFLAG_CHAT|CFGFLAG_USER, ConSetEmail, this, "Change your email");
-	
-	Console()->Register("top", "?s<classname>", CFGFLAG_CHAT|CFGFLAG_USER, ConTop10, this, "Show the top 10 on the current map");
-	Console()->Register("challenge", "", CFGFLAG_CHAT|CFGFLAG_USER, ConChallenge, this, "Show the current winner of the challenge");
-	Console()->Register("rank", "?s<classname>", CFGFLAG_CHAT|CFGFLAG_USER, ConRank, this, "Show your rank");
-	Console()->Register("goal", "?s<classname>", CFGFLAG_CHAT|CFGFLAG_USER, ConGoal, this, "Show your goal");
-	Console()->Register("stats", "i", CFGFLAG_CHAT|CFGFLAG_USER, ConStats, this, "Show stats by id");
 #endif
 	Console()->Register("help", "?s<page>", CFGFLAG_CHAT|CFGFLAG_USER, ConHelp, this, "Display help");
 	Console()->Register("customskin", "s<all|me|none>", CFGFLAG_CHAT|CFGFLAG_USER, ConCustomSkin, this, "Display information about the mod");
@@ -4753,6 +4517,17 @@ void CGameContext::FlagCollected()
 		t = 0.0f;
 
 	m_HeroGiftCooldown = Server()->TickSpeed() * (15+(120*t));
+}
+
+void CGameContext::OnRoundOver()
+{
+	if(m_FunRound)
+	{
+		EndFunRound();
+	}
+#ifdef CONF_SQL
+
+#endif
 }
 
 void CGameContext::OnPreSnap() {}

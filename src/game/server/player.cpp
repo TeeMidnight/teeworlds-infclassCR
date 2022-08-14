@@ -62,6 +62,10 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 		m_LastHumanClasses[i] = -1;
 
 	m_VoodooIsSpirit = false;
+	#ifdef CONF_SQL
+	m_AccData.m_UserID = 0;
+	LoggedIn = false;
+	#endif
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -986,4 +990,11 @@ void CPlayer::SetToSpirit(bool IsSpirit)
 	m_VoodooIsSpirit = IsSpirit;
 }
 
+#ifdef CONF_SQL
+void CPlayer::Logout()
+{
+	m_AccData.m_UserID = 0;
+	LoggedIn = false;
+}
+#endif
 /* INFECTION MODIFICATION END *****************************************/

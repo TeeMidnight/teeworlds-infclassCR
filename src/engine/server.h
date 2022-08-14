@@ -342,24 +342,12 @@ public:
 	virtual int IsClassChooserEnabled() = 0;
 	
 	virtual bool IsClientLogged(int ClientID) = 0;
-#ifdef CONF_SQL
-	virtual void Login(int ClientID, const char* pUsername, const char* pPassword) = 0;
-	virtual void Logout(int ClientID) = 0;
-	virtual void SetEmail(int ClientID, const char* pEmail) = 0;
-	virtual void Register(int ClientID, const char* pUsername, const char* pPassword, const char* pEmail) = 0;
-	virtual void ShowTop10(int ClientID, int ScoreType) = 0;
-	virtual void ShowChallenge(int ClientID) = 0;
-	virtual void ShowRank(int ClientID, int ScoreType) = 0;
-	virtual void ShowGoal(int ClientID, int ScoreType) = 0;
-	virtual void ShowStats(int ClientID, int UserId) = 0;
-	virtual int GetUserLevel(int ClientID) = 0;
-#endif
+
 	virtual void Ban(int i, int Seconds, const char* pReason) = 0;
 
 public:
 	virtual class CRoundStatistics* RoundStatistics() = 0;
 	virtual void OnRoundStart() = 0;
-	virtual void OnRoundEnd() = 0;
 	
 	virtual void SetClientMemory(int ClientID, int Memory, bool Value = true) = 0;
 	virtual void ResetClientMemoryAboutGame(int ClientID) = 0;

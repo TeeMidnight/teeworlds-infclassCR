@@ -192,6 +192,23 @@ public:
 	int m_LastHumanClasses[2];
 
 	void SetToSpirit(bool IsSpirit);
+
+
+	#ifdef CONF_SQL
+	// Account
+	bool LoggedIn;
+	struct
+	{
+		int m_UserID;
+		char m_Username[20];
+		char m_Password[20];
+
+		
+	} m_AccData;
+	#endif
+
+	void Logout();
+
 /* INFECTION MODIFICATION END *****************************************/
 };
 

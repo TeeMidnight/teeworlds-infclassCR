@@ -19,6 +19,8 @@
 #include "gameworld.h"
 #include "player.h"
 
+#include <infclassr/sql.h>
+
 //#define MEASURE_TICKS // uncomment, to measure server performance
 #if defined(MEASURE_TICKS)
 	#include <engine/server/measure_ticks.h>
@@ -272,12 +274,6 @@ private:
 	static bool ConRegister(IConsole::IResult *pResult, void *pUserData);
 	static bool ConLogin(IConsole::IResult *pResult, void *pUserData);
 	static bool ConLogout(IConsole::IResult *pResult, void *pUserData);
-	static bool ConSetEmail(IConsole::IResult *pResult, void *pUserData);
-	static bool ConTop10(IConsole::IResult *pResult, void *pUserData);
-	static bool ConChallenge(IConsole::IResult *pResult, void *pUserData);
-	static bool ConRank(IConsole::IResult *pResult, void *pUserData);
-	static bool ConGoal(IConsole::IResult *pResult, void *pUserData);
-	static bool ConStats(IConsole::IResult *pResult, void *pUserData);
 #endif
 	static bool ConHelp(IConsole::IResult *pResult, void *pUserData);
 	static bool ConCustomSkin(IConsole::IResult *pResult, void *pUserData);
@@ -374,6 +370,13 @@ private:
 	
 	int m_aHitSoundState[MAX_CLIENTS]; //1 for hit, 2 for kill (no sounds must be sent)	
 
+#ifdef CONF_SQL
+	/* SQL */
+	CSQL *m_Sql;
+	CAccountData *m_AccountData;
+#endif
+
+
 public:
 	virtual int GetTargetToKill();
 	virtual void TargetKilled();
@@ -382,6 +385,16 @@ public:
 	virtual int GetTargetToKillCoolDown() { return m_TargetToKillCoolDown; }
 	virtual int GetHeroGiftCoolDown() { return m_HeroGiftCooldown; }
 	virtual void FlagCollected(); // Triggers global gift cooldown
+
+	virtual void OnRoundOver();
+
+#ifdef CONF_SQL
+	/* SQL */
+	CSQL *Sql() const { return m_Sql; };
+	CAccountData *AccountData() {return m_AccountData; };
+	void LogoutAccount(int ClientID);
+#endif
+
 /* INFECTION MODIFICATION END *****************************************/
 	// InfClassR begin
 	void AddSpectatorCID(int ClientID);

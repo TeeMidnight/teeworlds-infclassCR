@@ -9,11 +9,6 @@
 #include <game/server/classes.h>
 #include <game/voting.h>
 
-/* DDNET MODIFICATION START *******************************************/
-#include "sql_connector.h"
-#include "sql_server.h"
-/* DDNET MODIFICATION END *********************************************/
-
 class CSnapIDPool
 {
 	enum
@@ -77,12 +72,6 @@ class CServer : public IServer
 	class IConsole *m_pConsole;
 	class IStorage *m_pStorage;
 
-/* DDNET MODIFICATION START *******************************************/
-#ifdef CONF_SQL
-	CSqlServer* m_apSqlReadServers[MAX_SQLSERVERS];
-	CSqlServer* m_apSqlWriteServers[MAX_SQLSERVERS];
-#endif
-/* DDNET MODIFICATION END *********************************************/
 public:
 	class IGameServer *GameServer() { return m_pGameServer; }
 	class IConsole *Console() { return m_pConsole; }
@@ -159,9 +148,6 @@ public:
 		//Login
 		int m_LogInstance;
 		int m_UserID;
-#ifdef CONF_SQL
-		int m_UserLevel;
-#endif
 		char m_aUsername[MAX_NAME_LENGTH];
 
 		// DDRace
@@ -289,14 +275,6 @@ public:
 	static bool ConUnmute(class IConsole::IResult *pResult, void *pUser);
 	static bool ConWhisper(class IConsole::IResult *pResult, void *pUser);
 	
-/* DDNET MODIFICATION START *******************************************/
-	static bool ConAddSqlServer(IConsole::IResult *pResult, void *pUserData);
-	static bool ConDumpSqlServers(IConsole::IResult *pResult, void *pUserData);
-	static bool ConGetIDCount(IConsole::IResult *pResult, void *pUser);
-
-	static void CreateTablesThread(void *pData);
-/* DDNET MODIFICATION END *********************************************/
-	
 	void RegisterCommands();
 
 
@@ -349,19 +327,7 @@ public:
 	
 	virtual int IsClassChooserEnabled();
 	virtual bool IsClientLogged(int ClientID);
-#ifdef CONF_SQL
-	virtual void Login(int ClientID, const char* pUsername, const char* pPassword);
-	virtual void Logout(int ClientID);
-	virtual void SetEmail(int ClientID, const char* pEmail);
-	virtual void Register(int ClientID, const char* pUsername, const char* pPassword, const char* pEmail);
-	virtual void ShowChallenge(int ClientID);
-	virtual void ShowTop10(int ClientID, int ScoreType);
-	virtual void ShowRank(int ClientID, int ScoreType);
-	virtual void ShowGoal(int ClientID, int ScoreType);
-	virtual void ShowStats(int ClientID, int UserId);
-	virtual void RefreshChallenge();
-	virtual int GetUserLevel(int ClientID);
-#endif
+
 	virtual void Ban(int ClientID, int Seconds, const char* pReason);
 private:
 	bool InitCaptcha();
@@ -381,16 +347,6 @@ private:
 
 	IServer::CMapVote m_MapVotes[MAX_VOTE_OPTIONS];
 	int m_MapVotesCounter;
-	
-#ifdef CONF_SQL
-public:
-	array<CGameServerCmd*> m_lGameServerCmds;
-	LOCK m_GameServerCmdLock;
-	LOCK m_ChallengeLock;
-	char m_aChallengeWinner[16];
-	int64 m_ChallengeRefreshTick;
-	int m_ChallengeType;
-#endif
 
 	int m_TimeShiftUnit;
 
@@ -399,7 +355,6 @@ public:
 	
 	virtual CRoundStatistics* RoundStatistics() { return &m_RoundStatistics; }
 	virtual void OnRoundStart();
-	virtual void OnRoundEnd();
 	
 	virtual void SetClientMemory(int ClientID, int Memory, bool Value = true);
 	virtual void ResetClientMemoryAboutGame(int ClientID);

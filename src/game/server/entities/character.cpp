@@ -3580,7 +3580,7 @@ void CCharacter::Die(int Killer, int Weapon)
 	{
 		if(pKiller)
 		{
-			pKiller->Freeze(2.0, m_pPlayer->GetCID(), FREEZEREASON_FLASH);
+			pKiller->SlowMotionEffect(30);
 		}
 		m_pPlayer->StartInfection(true);
 		GameServer()->SendBroadcast_Localization(-1, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("The freezer is dead"), NULL);

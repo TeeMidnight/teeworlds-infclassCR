@@ -90,12 +90,6 @@ void IGameController::EndRound()
 	GameServer()->m_World.m_Paused = true;
 	m_GameOverTick = Server()->Tick();
 	m_SuddenDeath = 0;
-	
-	//Send score to the server
-	Server()->OnRoundEnd();
-
-	if (GameServer()->m_FunRound)
-		GameServer()->EndFunRound();
 }
 
 void IGameController::ResetGame()
