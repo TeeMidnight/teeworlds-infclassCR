@@ -142,6 +142,7 @@ public:
 	int m_Authed;
 	int m_ScoreRound;
 	int m_HumanTime;
+	int m_NumSnapPlayer;
 	
 	bool m_knownClass[NB_PLAYERCLASS];
 	int m_InfectionTick;

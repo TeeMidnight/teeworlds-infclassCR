@@ -25,6 +25,7 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	m_LastActionTick = Server()->Tick();
 	m_LastActionMoveTick = Server()->Tick();
 	m_TeamChangeTick = Server()->Tick();
+	m_NumSnapPlayer = 0;
 	
 /* INFECTION MODIFICATION START ***************************************/
 	m_Authed = IServer::AUTHED_NO;
@@ -82,6 +83,7 @@ void CPlayer::Tick()
 #endif
 	if(!Server()->ClientIngame(m_ClientID))
 		return;
+	m_NumSnapPlayer = 0;
 
 	Server()->SetClientLanguage(m_ClientID, m_aLanguage);
 
@@ -241,6 +243,11 @@ void CPlayer::Snap(int SnappingClient)
 	if(SnappingClient != -1)
 		if (!Server()->Translate(id, SnappingClient)) return;
 
+	int NumHumans = GameServer()->GetHumanCount();
+	int NumInfected = GameServer()->GetZombieCount();
+	int NumSpec = GameServer()->GetSpectatorCount();
+	int Players = NumHumans + NumInfected + NumSpec;
+
 	CNetObj_ClientInfo *pClientInfo = static_cast<CNetObj_ClientInfo *>(Server()->SnapNewItem(NETOBJTYPE_CLIENTINFO, id, sizeof(CNetObj_ClientInfo)));
 
 	CPlayer *pClient = GameServer()->m_apPlayers[SnappingClient];
@@ -283,106 +290,25 @@ void CPlayer::Snap(int SnappingClient)
 			char aClanName[16];
 			switch(GetClass())
 			{
-				case PLAYERCLASS_ENGINEER:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Engineer"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_SOLDIER:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Soldier"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_MERCENARY:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Mercenary"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_SNIPER:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Sniper"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_SCIENTIST:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Scientist"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_CATAPULT:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Catapult"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_BIOLOGIST:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Biologist"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_SCIOGIST:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Sciogist"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_POLICE:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Police"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_LOOPER:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Looper"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_REVIVER:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Reviver"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_MEDIC:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Medic"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_HERO:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Hero"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_NINJA:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Ninja"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_JOKER:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Joker"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_SMOKER:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Smoker"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_BOOMER:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Boomer"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_HUNTER:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Hunter"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_BAT:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Bat"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_GHOST:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Ghost"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_SPIDER:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Spider"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_GHOUL:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Ghoul"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_SLUG:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Slug"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_SLIME:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Slime"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_VOODOO:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Voodoo"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_UNDEAD:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Undead"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_WITCH:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Witch"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_FREEZER:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Freezer"), sizeof(aClanName));
-					break;
-				case PLAYERCLASS_NIGHTMARE:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"Nightmare"), sizeof(aClanName));
-					
+				case PLAYERCLASS_NONE:
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"????"), sizeof(aClanName));
 					break;
 				default:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"????"), sizeof(aClanName));
+					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() , GameServer()->GetClassName(m_class)), sizeof(aClanName));
 			}
 
-			#ifdef CONF_SQL
+#ifdef CONF_SQL
 			char ClanToSnap[16];
-			str_copy(ClanToSnap, "@", sizeof(ClanToSnap));
-			str_append(ClanToSnap, aClanName, sizeof(ClanToSnap));
-			StrToInts(&pClientInfo->m_Clan0, 4, ClanToSnap);
-			#else
-			StrToInts(&pClientInfo->m_Clan0, 4, aClanName);
-			#endif
+			if(LoggedIn)
+			{
+				str_copy(ClanToSnap, "@", sizeof(ClanToSnap));
+				str_append(ClanToSnap, aClanName, sizeof(ClanToSnap));
+				StrToInts(&pClientInfo->m_Clan0, 4, ClanToSnap);
+			}else 
+#endif
+			{
+				StrToInts(&pClientInfo->m_Clan0, 4, aClanName);
+			}
 			
 			PlayerInfoScore = Server()->RoundStatistics()->PlayerScore(m_ClientID);
 		}
@@ -432,6 +358,7 @@ void CPlayer::Snap(int SnappingClient)
 		pSpectatorInfo->m_X = m_ViewPos.x;
 		pSpectatorInfo->m_Y = m_ViewPos.y;
 	}
+	pClient->m_NumSnapPlayer++;
 }
 
 void CPlayer::FakeSnap(int SnappingClient)

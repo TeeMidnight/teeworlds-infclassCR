@@ -96,9 +96,8 @@ void CSQL::create_tables()
 			"Password VARCHAR(32) NOT NULL, "
 			"Score BIGINT DEFAULT 0, "
 			, prefix);
+			statement->execute(buf);
 
-			// create tables
-			char buf[2048];
 			str_format(buf, sizeof(buf), 
 			"CREATE TABLE IF NOT EXISTS %s_Round "
 			"RoundHash VARCHAR(32) NOT NULL, "
