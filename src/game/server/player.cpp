@@ -263,7 +263,7 @@ void CPlayer::Snap(int SnappingClient)
 	}
 
 	bool MustSnap = pPlayer->IsPlayerMustSnap(m_ClientID);
-	if(!MustSnap)
+	if(!MustSnap && GameServer()->GetPlayerCount() >= DDNET_MAX_CLIENTS-1)
 	{
 		if(pPlayer->m_NumNoMustSnapPlayer >= DDNET_MAX_CLIENTS - pPlayer->m_NumMustSnapPlayer)
 			return;
