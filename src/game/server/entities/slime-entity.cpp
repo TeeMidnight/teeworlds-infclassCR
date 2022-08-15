@@ -110,24 +110,20 @@ void CSlimeEntity::Collision()
 	m_ActualDir = normalize(m_Direction);
 }
 
-void CSlimeEntity::FillInfo(CNetObj_Laser *pProj)
-{
-	pProj->m_X = (int)m_ActualPos.x;
-	pProj->m_Y = (int)m_ActualPos.y;
-	pProj->m_FromX = (int)m_ActualPos.x;
-	pProj->m_FromY = (int)m_ActualPos.y;
-	pProj->m_StartTick = Server()->Tick();
-}
-
 void CSlimeEntity::Snap(int SnappingClient)
 {
 	
 	if(IsDontSnapEntity(SnappingClient, m_ActualPos))
 		return;
 	
-	CNetObj_Laser *pL = static_cast<CNetObj_Laser *>(Server()->SnapNewItem(NETOBJTYPE_LASER, m_ID, sizeof(CNetObj_Laser)));
-    if(pL)
-		FillInfo(pL);
+	CNetObj_Pickup *pObj = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_ID, sizeof(CNetObj_Pickup)));
+    if(pObj)
+	{
+		pObj->m_Type = POWERUP_HEALTH;
+		pObj->m_Subtype = 0;
+		pObj->m_X = m_Pos.x;
+		pObj->m_Y = m_Pos.y;
+	}
 }
 	
 void CSlimeEntity::Explode()

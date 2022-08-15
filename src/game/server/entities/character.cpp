@@ -605,7 +605,7 @@ void CCharacter::UpdateTuningParam()
 		pTuningParams->m_GroundJumpImpulse = 0.0f;
 		pTuningParams->m_AirJumpImpulse = 0.0f;
 		pTuningParams->m_AirControlAccel = 0.0f;
-		pTuningParams->m_HookLength = 0.0f;
+		pTuningParams->m_HookLength = 1.0f;
 	}
 	if(FixedPosition || m_Core.m_IsPassenger)
 	{
@@ -3897,9 +3897,8 @@ void CCharacter::Snap(int SnappingClient)
 {
 	int id = m_pPlayer->GetCID();
 
-	if(SnappingClient != -1)
-		if (!Server()->Translate(id, SnappingClient))
-			return;
+	if(SnappingClient > -1 && !Server()->Translate(id, SnappingClient))
+		return;
 
 	if(IsDontSnapEntity(SnappingClient) && SnappingClient != id)
 		return;

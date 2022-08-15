@@ -74,6 +74,19 @@ enum
 	BROADCAST_PRIORITY_INTERFACE,
 };
 
+enum
+{
+	SNAPPLAYER_STATE32=0,
+	SNAPPLAYER_STATE64,
+	SNAPPLAYER_STATE96,
+	SNAPPLAYER_STATE128,
+	SNAPPLAYER_STATE160,
+	SNAPPLAYER_STATE192,
+	SNAPPLAYER_STATE224,
+	SNAPPLAYER_STATE256,
+	NUM_SNAPPLAYER_STATE,
+};
+
 class CGameContext : public IGameServer
 {
 	IServer *m_pServer;
@@ -154,11 +167,13 @@ public:
 	void CountInfPlayers();
 	int GetHumanCount();
 	int GetZombieCount();
+	int GetPlayerCount();
 	static std::vector<int> spectators_id; //spectators vector
 	int m_NbActivePlayers;
 	int m_NbSpectators;
 	int m_NbHumans;
 	int m_NbZombies;
+	int m_NbPlayers;
 	int GetIsOfClassCount(int player_class);
 	int RandomZombieToWitch();
 	std::vector<int> m_WitchCallers;
@@ -400,6 +415,8 @@ public:
 	void AddSpectatorCID(int ClientID);
 	void RemoveSpectatorCID(int ClientID);
 	bool IsSpectatorCID(int ClientID);
+	bool IsSnapPlayer(int ClientID);
+	int m_SnapState;
 	// InfClassR end
 };
 

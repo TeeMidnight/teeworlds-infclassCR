@@ -68,6 +68,7 @@ void CGameContext::Construct(int Resetting)
 	m_NbSpectators = 0;
 	m_NbHumans = 0;
 	m_NbZombies = 0;
+	m_NbZombies = 0;
 	m_ChatResponseTargetID = -1;
 
 	if(Resetting==NO_RESET)
@@ -253,10 +254,12 @@ void CGameContext::CountInfPlayers()
 {
 	int humanCounter = 0;
 	int zombieCounter = 0;
+	int playerConuter = 0;
 	for(int i = 0; i < MAX_CLIENTS; i++)
 	{
 		if (!m_apPlayers[i])
 			continue;
+		playerConuter++;
 		if(m_apPlayers[i]->GetTeam() == TEAM_SPECTATORS)
 			continue;
 		if (m_apPlayers[i]->IsHuman())
@@ -265,7 +268,8 @@ void CGameContext::CountInfPlayers()
 			zombieCounter++;
 	}
 	m_NbHumans = humanCounter;
-	m_NbZombies = zombieCounter;	
+	m_NbZombies = zombieCounter;
+	m_NbPlayers = playerConuter;
 }
 
 int CGameContext::GetHumanCount()
@@ -276,6 +280,11 @@ int CGameContext::GetHumanCount()
 int CGameContext::GetZombieCount()
 {
 	return m_NbZombies;
+}
+
+int CGameContext::GetPlayerCount()
+{
+	return m_NbPlayers;
 }
 
 int CGameContext::GetIsOfClassCount(int player_class)
@@ -1120,6 +1129,21 @@ void CGameContext::OnTick()
 		m_pMeasure->Begin(); // when the tick starts	
 	#endif
 	
+	if(!(Server()->Tick() % 150))
+	{
+		m_SnapState++;
+		switch (m_SnapState)
+		{
+			case SNAPPLAYER_STATE64: if(m_NbPlayers < 32) m_SnapState = SNAPPLAYER_STATE32;break;
+			case SNAPPLAYER_STATE96: if(m_NbPlayers < 64) m_SnapState = SNAPPLAYER_STATE32;break;
+			case SNAPPLAYER_STATE128: if(m_NbPlayers < 96) m_SnapState = SNAPPLAYER_STATE32;break;
+			case SNAPPLAYER_STATE160: if(m_NbPlayers < 128) m_SnapState = SNAPPLAYER_STATE32;break;
+			case SNAPPLAYER_STATE192: if(m_NbPlayers < 160) m_SnapState = SNAPPLAYER_STATE32;break;
+			case SNAPPLAYER_STATE224: if(m_NbPlayers < 192) m_SnapState = SNAPPLAYER_STATE32;break;
+			case SNAPPLAYER_STATE256: if(m_NbPlayers < 224) m_SnapState = SNAPPLAYER_STATE32;break;
+		}
+	}
+
 	for(int i=0; i<MAX_CLIENTS; i++)
 	{		
 		if(m_apPlayers[i])
@@ -4611,4 +4635,20 @@ void CGameContext::RemoveSpectatorCID(int ClientID) {
 bool CGameContext::IsSpectatorCID(int ClientID) {
 	auto& vec = CGameContext::spectators_id;
 	return std::find(vec.begin(), vec.end(), ClientID) != vec.end();
+}
+
+bool CGameContext::IsSnapPlayer(int ClientID)
+{
+	switch(m_SnapState)
+	{
+		case SNAPPLAYER_STATE32: if(ClientID > 31) return false;
+		case SNAPPLAYER_STATE64: if(ClientID < 32 || ClientID > 63) return false;
+		case SNAPPLAYER_STATE96: if(ClientID < 64 || ClientID > 95) return false;
+		case SNAPPLAYER_STATE128: if(ClientID < 96 || ClientID > 127) return false;
+		case SNAPPLAYER_STATE160: if(ClientID < 128 || ClientID > 159) return false;
+		case SNAPPLAYER_STATE192: if(ClientID < 160 || ClientID > 191) return false;
+		case SNAPPLAYER_STATE224: if(ClientID < 192 || ClientID > 223) return false;
+		case SNAPPLAYER_STATE256: if(ClientID < 224) return false;
+	}
+	return true;
 }

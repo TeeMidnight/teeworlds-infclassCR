@@ -10,8 +10,8 @@ class CScientistMine : public CEntity
 public:
 	enum
 	{
-		NUM_SIDE = 12,
-		NUM_PARTICLES = 6,
+		NUM_SIDE = 10,
+		NUM_PARTICLES = 3,
 		NUM_IDS = NUM_SIDE + NUM_PARTICLES,
 	};
 	

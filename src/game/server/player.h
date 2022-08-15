@@ -142,7 +142,9 @@ public:
 	int m_Authed;
 	int m_ScoreRound;
 	int m_HumanTime;
-	int m_NumSnapPlayer;
+	int m_NumNoMustSnapPlayer;
+	int m_NumMustSnapPlayer;
+	int m_MustSnapPlayer[MAX_CLIENTS];
 	
 	bool m_knownClass[NB_PLAYERCLASS];
 	int m_InfectionTick;
@@ -162,6 +164,7 @@ public:
 	bool IsZombie() const;
 	bool IsHuman() const;
 	bool IsSpectator() const;
+	bool IsPlayerMustSnap(int ClientID) const;
 	void StartInfection(bool force = false);
 	bool IsKnownClass(int c);
 	

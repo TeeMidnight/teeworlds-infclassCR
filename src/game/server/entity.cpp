@@ -90,7 +90,7 @@ int CEntity::NetworkClipped(int SnappingClient, vec2 CheckPos)
 	float dx = GameServer()->m_apPlayers[SnappingClient]->m_ViewPos.x-CheckPos.x;
 	float dy = GameServer()->m_apPlayers[SnappingClient]->m_ViewPos.y-CheckPos.y;
 
-	if(absolute(dx) > 1000.0f || absolute(dy) > 800.0f)
+	if(absolute(dx) > 960.0f || absolute(dy) > 640.0f)
 		return 1;
 
 	if(distance(GameServer()->m_apPlayers[SnappingClient]->m_ViewPos, CheckPos) > 1100.0f)

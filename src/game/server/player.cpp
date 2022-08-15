@@ -25,7 +25,7 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	m_LastActionTick = Server()->Tick();
 	m_LastActionMoveTick = Server()->Tick();
 	m_TeamChangeTick = Server()->Tick();
-	m_NumSnapPlayer = 0;
+	m_NumMustSnapPlayer = 0;
 	
 /* INFECTION MODIFICATION START ***************************************/
 	m_Authed = IServer::AUTHED_NO;
@@ -83,7 +83,20 @@ void CPlayer::Tick()
 #endif
 	if(!Server()->ClientIngame(m_ClientID))
 		return;
-	m_NumSnapPlayer = 0;
+	m_NumNoMustSnapPlayer = 0;
+	m_NumMustSnapPlayer = 0;
+	for(int i = 0;i < MAX_CLIENTS;i ++)
+	{
+		if(m_NumMustSnapPlayer >= DDNET_MAX_CLIENTS)
+		{
+			break;
+		}
+		CPlayer *pPlayer = GameServer()->m_apPlayers[i];
+		if(!pPlayer) continue;
+		if(!pPlayer->GetCharacter()) continue;
+		if(!pPlayer->GetCharacter()->NetworkClipped(m_ClientID))
+			m_MustSnapPlayer[m_NumMustSnapPlayer++] = i;
+	}
 
 	Server()->SetClientLanguage(m_ClientID, m_aLanguage);
 
@@ -240,29 +253,41 @@ void CPlayer::Snap(int SnappingClient)
 		return;
 
 	int id = m_ClientID;
-	if(SnappingClient != -1)
-		if (!Server()->Translate(id, SnappingClient)) return;
+	if(SnappingClient > -1 && !Server()->Translate(id, SnappingClient))
+		return;
 
-	int NumHumans = GameServer()->GetHumanCount();
-	int NumInfected = GameServer()->GetZombieCount();
-	int NumSpec = GameServer()->GetSpectatorCount();
-	int Players = NumHumans + NumInfected + NumSpec;
+	CPlayer *pPlayer = GameServer()->m_apPlayers[SnappingClient];
+	if(!pPlayer)
+	{
+		return;
+	}
+
+	bool MustSnap = pPlayer->IsPlayerMustSnap(m_ClientID);
+	if(!MustSnap)
+	{
+		if(pPlayer->m_NumNoMustSnapPlayer >= DDNET_MAX_CLIENTS - pPlayer->m_NumMustSnapPlayer)
+			return;
+		if(!GameServer()->IsSnapPlayer(m_ClientID))
+		{
+			return;
+		}
+	}
 
 	CNetObj_ClientInfo *pClientInfo = static_cast<CNetObj_ClientInfo *>(Server()->SnapNewItem(NETOBJTYPE_CLIENTINFO, id, sizeof(CNetObj_ClientInfo)));
 
-	CPlayer *pClient = GameServer()->m_apPlayers[SnappingClient];
-
 	if(!pClientInfo)
 		return;
-
+	
 	StrToInts(&pClientInfo->m_Name0, 4, Server()->ClientName(m_ClientID));
 	
 	int SnapScoreMode = PLAYERSCOREMODE_SCORE;
 	if(SnappingClient != -1)
+	{
 		if(GameServer()->m_apPlayers[SnappingClient])
 		{
 			SnapScoreMode = GameServer()->m_apPlayers[SnappingClient]->GetScoreMode();
 		}
+	}
 	
 /* INFECTION MODIFICATION STRAT ***************************************/
 	int PlayerInfoScore = 0;
@@ -291,10 +316,10 @@ void CPlayer::Snap(int SnappingClient)
 			switch(GetClass())
 			{
 				case PLAYERCLASS_NONE:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() ,"????"), sizeof(aClanName));
+					str_copy(aClanName, Server()->Localization()->Localize(pPlayer->GetLanguage() ,"????"), sizeof(aClanName));
 					break;
 				default:
-					str_copy(aClanName, Server()->Localization()->Localize(pClient->GetLanguage() , GameServer()->GetClassName(m_class)), sizeof(aClanName));
+					str_copy(aClanName, Server()->Localization()->Localize(pPlayer->GetLanguage() , GameServer()->GetClassName(m_class)), sizeof(aClanName));
 			}
 
 #ifdef CONF_SQL
@@ -358,7 +383,8 @@ void CPlayer::Snap(int SnappingClient)
 		pSpectatorInfo->m_X = m_ViewPos.x;
 		pSpectatorInfo->m_Y = m_ViewPos.y;
 	}
-	pClient->m_NumSnapPlayer++;
+	if(!MustSnap)
+		pPlayer->m_NumNoMustSnapPlayer++;
 }
 
 void CPlayer::FakeSnap(int SnappingClient)
@@ -834,6 +860,18 @@ bool CPlayer::IsHuman() const
 bool CPlayer::IsSpectator() const
 {
 	return m_Team == TEAM_SPECTATORS;
+}
+
+bool CPlayer::IsPlayerMustSnap(int ClientID) const
+{
+	for(int i = 0 ; i < m_NumMustSnapPlayer; i++)
+	{
+		if(m_MustSnapPlayer[i] == ClientID)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 bool CPlayer::IsKnownClass(int c)
