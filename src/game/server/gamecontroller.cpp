@@ -33,6 +33,11 @@ IGameController::IGameController(class CGameContext *pGameServer)
 	m_aNumSpawnPoints[1] = 0;
 	
 	m_RoundId = -1;
+	#ifdef CONF_SQL
+	/* SQL */
+	// create tables
+	GameServer()->Sql()->create_tables();
+	#endif
 }
 
 IGameController::~IGameController()
