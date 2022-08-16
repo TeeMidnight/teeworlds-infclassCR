@@ -145,11 +145,6 @@ public:
 		IServer::CClientSession m_Session;
 		IServer::CClientAccusation m_Accusation;
 		
-		//Login
-		int m_LogInstance;
-		int m_UserID;
-		char m_aUsername[MAX_NAME_LENGTH];
-
 		// DDRace
 
 		NETADDR m_Addr;
@@ -259,7 +254,6 @@ public:
 	int Run();
 
 	static bool ConKick(IConsole::IResult *pResult, void *pUser);
-	static bool ConStatus(IConsole::IResult *pResult, void *pUser);
 	static bool ConOptionStatus(IConsole::IResult *pResult, void *pUser);
 	static bool ConShutdown(IConsole::IResult *pResult, void *pUser);
 	static bool ConRecord(IConsole::IResult *pResult, void *pUser);
@@ -326,21 +320,11 @@ public:
 	virtual int GetClientNbRound(int ClientID);
 	
 	virtual int IsClassChooserEnabled();
-	virtual bool IsClientLogged(int ClientID);
 
 	virtual void Ban(int ClientID, int Seconds, const char* pReason);
 private:
 	bool InitCaptcha();
-	
-public:
-	class CGameServerCmd
-	{
-	public:
-		virtual ~CGameServerCmd() {};
-		virtual void Execute(IGameServer* pGameServer) = 0;
-	};
 
-private:
 	CRoundStatistics m_RoundStatistics;
 	CNetSession<IServer::CClientSession> m_NetSession;
 	CNetSession<IServer::CClientAccusation> m_NetAccusation;
@@ -351,7 +335,6 @@ private:
 	int m_TimeShiftUnit;
 
 public:
-	void AddGameServerCmd(CGameServerCmd* pCmd);
 	
 	virtual CRoundStatistics* RoundStatistics() { return &m_RoundStatistics; }
 	virtual void OnRoundStart();

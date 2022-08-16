@@ -3458,6 +3458,45 @@ void CGameContext::LogoutAccount(int ClientID)
 
 #endif
 
+bool CGameContext::ConStatus(IConsole::IResult *pResult, void *pUserData)
+{
+	CGameContext *pSelf = (CGameContext *) pUserData;
+	char aBuf[1024];
+	char aAddrStr[NETADDR_MAXSTRSIZE];
+
+	for(int i = 0; i < MAX_CLIENTS; i++)
+	{
+		if(pSelf->m_apPlayers[i])
+		{
+			//Add some padding to make the command more readable
+			char aBufName[18];
+			str_copy(aBufName, pSelf->Server()->ClientName(i), sizeof(aBufName));
+			for(int c=str_length(aBufName); c<((int)sizeof(aBufName))-1; c++)
+				aBufName[c] = ' ';
+			aBufName[sizeof(aBufName)-1] = 0;
+			
+			int AuthLevel = pSelf->m_apPlayers[i]->m_Authed == IServer::AUTHED_ADMIN ? 2 :
+									pSelf->m_apPlayers[i]->m_Authed == IServer::AUTHED_MOD ? 1 : 0;
+			
+			str_format(aBuf, sizeof(aBuf), "(#%03i) %s: [antispoof=%d] [login=%d] [level=%d] [ip=%s]",
+				i,
+				aBufName,
+				pSelf->Server()->GetClientAntiPing(i),
+				#ifdef CONF_SQL
+					pSelf->m_apPlayers[i]->LoggedIn,
+				#else 
+					0,
+				#endif
+				AuthLevel,
+				pSelf->Server()->GetClientIP(i)
+			);
+			pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "Server", aBuf);
+		}
+	}
+	
+	return true;
+}
+
 bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 {
 	CGameContext *pSelf = (CGameContext *)pUserData;
@@ -4275,7 +4314,8 @@ void CGameContext::OnConsoleInit()
 	Console()->Register("tune", "s<param> i<value>", CFGFLAG_SERVER, ConTuneParam, this, "Tune variable to value");
 	Console()->Register("tune_reset", "", CFGFLAG_SERVER, ConTuneReset, this, "Reset tuning");
 	Console()->Register("tune_dump", "", CFGFLAG_SERVER, ConTuneDump, this, "Dump tuning");
-
+	Console()->Register("status", "", CFGFLAG_SERVER, ConStatus, this, "List players");
+	
 	Console()->Register("pause", "", CFGFLAG_SERVER, ConPause, this, "Pause/unpause game");
 	Console()->Register("change_map", "?r", CFGFLAG_SERVER|CFGFLAG_STORE, ConChangeMap, this, "Change map");
 	Console()->Register("skip_map", "", CFGFLAG_SERVER|CFGFLAG_STORE, ConSkipMap, this, "Change map to the next in the rotation");

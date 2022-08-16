@@ -727,6 +727,8 @@ set_glob(ENGINE_SERVER GLOB src/engine/server
 
 set_glob(GAME_SERVER GLOB_RECURSE src/game/server
   classes.h
+  enitites/anti-airmine.cpp
+  enitites/anti-airmine.h
   entities/biologist-laser.cpp
   entities/biologist-laser.h
   entities/biologist-mine.cpp
@@ -735,6 +737,12 @@ set_glob(GAME_SERVER GLOB_RECURSE src/game/server
   entities/bouncing-bullet.h
   entities/character.cpp
   entities/character.h
+  enitites/elastic-entity.cpp
+  enitites/elastic-entity.h
+  enitites/elastic-grenade.cpp
+  enitites/elastic-grenade.h
+  enitites/elastic-hole.cpp
+  enitites/elastic-hole.h
   entities/engineer-wall.cpp
   entities/engineer-wall.h
   entities/entity-timer.cpp
@@ -743,6 +751,8 @@ set_glob(GAME_SERVER GLOB_RECURSE src/game/server
   entities/flyingpoint.h
   entities/growingexplosion.cpp
   entities/growingexplosion.h
+  entities/heal-boom.cpp
+  entities/heal-boom.h
   entities/hero-flag.cpp
   entities/hero-flag.h
   entities/laser-teleport.cpp
@@ -755,16 +765,26 @@ set_glob(GAME_SERVER GLOB_RECURSE src/game/server
   entities/medic-grenade.h
   entities/merc-bomb.cpp
   entities/merc-bomb.h
+  entities/plasma-plus.cpp
+  entities/plasma-plus.h
   entities/plasma.cpp
   entities/plasma.h
+  entities/police-shield.cpp
+  entities/police-shield.h
   entities/projectile.cpp
   entities/projectile.h
+  entities/riviver-grenade.cpp
+  entities/riviver-grenade.h
   entities/scatter-grenade.cpp
   entities/scatter-grenade.h
   entities/scientist-laser.cpp
   entities/scientist-laser.h
   entities/scientist-mine.cpp
   entities/scientist-mine.h
+  entities/sciogist-grenade.cpp
+  entities/sciogist-grenade.h
+  entities/slime-entity.cpp
+  entities/slime-entity.h
   entities/slug-slime.cpp
   entities/slug-slime.h
   entities/soldier-bomb.cpp
@@ -779,6 +799,7 @@ set_glob(GAME_SERVER GLOB_RECURSE src/game/server
   entity.h
   eventhandler.cpp
   eventhandler.h
+  infconfig.h
   gamecontext.cpp
   gamecontext.h
   gamecontroller.cpp

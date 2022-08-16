@@ -290,6 +290,7 @@ private:
 	static bool ConLogin(IConsole::IResult *pResult, void *pUserData);
 	static bool ConLogout(IConsole::IResult *pResult, void *pUserData);
 #endif
+	static bool ConStatus(IConsole::IResult *pResult, void *pUserData);
 	static bool ConHelp(IConsole::IResult *pResult, void *pUserData);
 	static bool ConCustomSkin(IConsole::IResult *pResult, void *pUserData);
 	static bool ConAlwaysRandom(IConsole::IResult *pResult, void *pUserData);
