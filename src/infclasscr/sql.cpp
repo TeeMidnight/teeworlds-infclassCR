@@ -124,33 +124,23 @@ static void update_score_thread(void *user)
 	{
 		try
 		{
-			// Connect to Database
-			Data->m_SqlData->connect();
-			
 			// check if Account exists
-			char buf[512];
-			str_format(buf, sizeof(buf), "SELECT * FROM %s_Account WHERE Username='%s';", Data->m_SqlData->prefix, Data->name[Data->m_ClientID]);
+			char buf[1024];
+			str_format(buf, sizeof(buf), "SELECT * FROM %s_Account WHERE UserID=%d;", Data->m_SqlData->prefix, Data->UserID[Data->m_ClientID]);
 			Data->m_SqlData->results = Data->m_SqlData->statement->executeQuery(buf);
 			if(Data->m_SqlData->results->next())
 			{
 				// update Account data
-				str_format(buf, sizeof(buf), "UPDATE %s_Account SET HumanScore=HumanScore%s ZombieScore=ZombieScore%s WHERE UserID=%d", Data->m_SqlData->prefix, Data->HumanScore, Data->ZombieScore, Data->UserID[Data->m_ClientID]);
+				CPlayer *p = GameServer()->m_apPlayers[Data->m_ClientID];
+				if(!p)
+				{
+					lock_unlock(SQLLock);
+					return;
+				}
+				str_format(buf, sizeof(buf), "UPDATE %s_Resource SET ZombieScore=ZombieScore%s WHERE UserID=%d;", Data->m_SqlData->prefix, Data->ZombieScore, Data->UserID[Data->m_ClientID]);
 				Data->m_SqlData->statement->execute(buf);
-				
-				// get Account name from Database
-				str_format(buf, sizeof(buf), "SELECT Username FROM %s_Account WHERE UserID=%d;", Data->m_SqlData->prefix, Data->UserID[Data->m_ClientID]);
-				
-				// create results
-				Data->m_SqlData->results = Data->m_SqlData->statement->executeQuery(buf);
-
-				// jump to result
-				Data->m_SqlData->results->next();
-				
-				// finally the name is there \o/
-				char acc_name[32];
-				str_copy(acc_name, Data->m_SqlData->results->getString("Username").c_str(), sizeof(acc_name));	
-				dbg_msg("SQL", "Account '%s' score update.", acc_name);
-				
+				str_format(buf, sizeof(buf), "UPDATE %s_Resource SET HumanScore=HumanScore%s WHERE UserID=%d;", Data->m_SqlData->prefix, Data->HumanScore, Data->UserID[Data->m_ClientID]);
+				Data->m_SqlData->statement->execute(buf);
 			}
 			else
 				dbg_msg("SQL", "Account seems to be deleted");
@@ -201,7 +191,6 @@ static void show_top5_thread(void *user)
 		{
 			try
 			{
-				Data->m_SqlData->connect();
 				char Score[32];
 				str_format(Score, sizeof(Score), "%sScore", Data->team);
 				

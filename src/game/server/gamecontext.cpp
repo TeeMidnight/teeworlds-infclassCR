@@ -4622,9 +4622,13 @@ void CGameContext::OnRoundOver()
 			if(pPlayer->IsZombie())
 			{
 				ZScore = Server()->RoundStatistics()->PlayerScore(i)/90+1;
+				SendChatTarget_Localization(i, CHATCATEGORY_SCORE, 
+					_("You get {int:Score} in this round."), "Score", &ZScore, NULL);
 			}else if(pPlayer->IsHuman())
 			{
 				HScore = Server()->RoundStatistics()->PlayerScore(i)/120+2;
+				SendChatTarget_Localization(i, CHATCATEGORY_SCORE, 
+					_("You get {int:Score} in this round."), "Score", &HScore, NULL);
 			}
 			char aBuf[16];
 			str_format(aBuf, sizeof(aBuf), "\u002b%d", HScore);
