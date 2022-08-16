@@ -94,7 +94,8 @@ void CSQL::create_tables()
 			"(UserID INT AUTO_INCREMENT PRIMARY KEY, "
 			"Username VARCHAR(31) NOT NULL, "
 			"Password VARCHAR(32) NOT NULL, "
-			"Score BIGINT DEFAULT 0, "
+			"HumanScore BIGINT DEFAULT 0, "
+			"ZombieScore BIGINT DEFAULT 0, "
 			, prefix);
 			statement->execute(buf);
 
@@ -142,7 +143,7 @@ static void update_score_thread(void *user)
 			if(Data->m_SqlData->results->next())
 			{
 				// update Account data
-				str_format(buf, sizeof(buf), "UPDATE %s_Account SET Score=Score%s WHERE UserID=%d", Data->m_SqlData->prefix, Data->m_Score, Data->UserID[Data->m_ClientID]);
+				str_format(buf, sizeof(buf), "UPDATE %s_Account SET HumanScore=HumanScore%s ZombieScore=ZombieScore%s WHERE UserID=%d", Data->m_SqlData->prefix, Data->HumanScore, Data->ZombieScore, Data->UserID[Data->m_ClientID]);
 				Data->m_SqlData->statement->execute(buf);
 				
 				// get Account name from Database
@@ -181,17 +182,85 @@ static void update_score_thread(void *user)
 	lock_unlock(SQLLock);
 }
 
-void CSQL::UpdateScore(int m_ClientID, const char *score)
+void CSQL::UpdateScore(int m_ClientID, const char *hscore, const char *zscore)
 {
 	CSqlData *tmp = new CSqlData();
 	tmp->m_ClientID = m_ClientID;
 	tmp->UserID[m_ClientID] = GameServer()->m_apPlayers[m_ClientID]->m_AccData.m_UserID;
-	tmp->m_Score = score;
+	tmp->HumanScore = hscore;
+	tmp->ZombieScore = zscore;
 	tmp->m_SqlData = this;
 	
 	void *UpdateScoreThread = thread_init(update_score_thread, tmp);
 #if defined(CONF_FAMILY_UNIX)
 	pthread_detach((pthread_t)UpdateScoreThread);
+#endif
+}
+// show top5
+static void show_top5_thread(void *user)
+{
+	lock_wait(SQLLock);
+	
+	CSqlData *Data = (CSqlData *)user;
+
+	if(GameServer()->m_apPlayers[Data->m_ClientID] && GameServer()->m_apPlayers[Data->m_ClientID]->LoggedIn)
+	{
+		// Connect to Database
+		if(Data->m_SqlData->connect())
+		{
+			try
+			{
+				Data->m_SqlData->connect();
+				char Score[32];
+				str_format(Score, sizeof(Score), "%sScore", Data->team);
+				
+				char aBuf[512];
+				str_format(aBuf, sizeof(aBuf), "SELECT * FROM %s_Account ORDER BY %s DESC LIMIT 0,5;", Data->m_SqlData->prefix, Score);
+				Data->m_SqlData->results = Data->m_SqlData->statement->executeQuery(aBuf);
+				
+				GameServer()->SendChatTarget_Localization(Data->m_ClientID, 
+					CHATCATEGORY_DEFAULT, _("--------Top5 Players--------"), NULL);
+
+				int Rank=0;
+				while (Data->m_SqlData->results->next())
+				{
+					Rank++;
+					GameServer()->SendChatTarget_Localization(Data->m_ClientID, 
+					CHATCATEGORY_DEFAULT, _("{int:Rank}. {str:Name} :{int:Score} Score"),
+						"Rank", Rank, 
+						"Name", Data->m_SqlData->results->getString("Username").c_str(),
+						"Score", Data->m_SqlData->results->getString(Score).c_str(),
+						  NULL);
+				}
+				
+			}
+			catch (sql::SQLException &e)
+			{
+				dbg_msg("SQL", "ERROR: Could not show top5 (%s)", e.what());
+			}
+			
+			// disconnect from Database
+			Data->m_SqlData->disconnect();
+		}
+	}else GameServer()->SendChatTarget_Localization(Data->m_ClientID, 
+		CHATCATEGORY_DEFAULT, _("You must login to use it."), NULL);
+	
+	delete Data;
+	
+	lock_unlock(SQLLock);
+}
+
+void CSQL::ShowTop5(int m_ClientID, const char *Team)
+{
+	CSqlData *tmp = new CSqlData();
+	tmp->m_ClientID = m_ClientID;
+	tmp->UserID[m_ClientID] = GameServer()->m_apPlayers[m_ClientID]->m_AccData.m_UserID;
+	str_copy(tmp->team, Team, sizeof(tmp->team));
+	tmp->m_SqlData = this;
+	
+	void *ShowTop5Thread = thread_init(show_top5_thread, tmp);
+#if defined(CONF_FAMILY_UNIX)
+	pthread_detach((pthread_t)ShowTop5Thread);
 #endif
 }
 

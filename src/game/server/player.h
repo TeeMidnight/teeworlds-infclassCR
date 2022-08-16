@@ -206,7 +206,6 @@ public:
 		int m_UserID;
 		char m_Username[20];
 		char m_Password[20];
-
 		
 	} m_AccData;
 	#endif

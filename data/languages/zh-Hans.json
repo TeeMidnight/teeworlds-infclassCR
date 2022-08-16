@@ -12,6 +12,26 @@
 		"value": "或者使用 /login <用户名> <密码> 来登录."
 	},
 	{
+		"key": "You are now logged in.",
+		"value": "你现在登录了."
+	},
+	{
+		"key": "Not find top5.",
+		"value": "没有找到前5"
+	},
+	{
+		"key": "You must login to use it.",
+		"value": "你必须登录才能用它"
+	},
+	{
+		"key": "--------Top5 Players--------",
+		"value": "--------前5强玩家--------"
+	},
+	{
+		"key": "{int:Rank}. {str:Name} :{int:Score} Score",
+		"value": "{int:Rank}. {str:Name} :{int:Score}分"
+	},
+	{
 		"key": "You have already notified that {str:PlayerName} ought to be banned",
 		"value": "你已经提议封禁 {str:PlayerName}"
 	},

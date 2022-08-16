@@ -42,7 +42,9 @@ public:
 	void update_all();
 	void SyncAccountData(int ClientID);
 
-	void UpdateScore(int m_ClientID, const char *score);
+	void UpdateScore(int m_ClientID, const char *hscore, const char *zscore);
+	int GetScore(int m_ClientID);
+	void ShowTop5(int m_ClientID, const char *Team);
 
 /*	static void update_score_thread(void *user);
 	static void change_password_thread(void *user);
@@ -57,7 +59,9 @@ struct CSqlData
 	int UserID[MAX_CLIENTS];
 	char name[32];
 	char pass[32];
-	const char* m_Score;
+	char team[8];
+	const char* HumanScore;
+	const char* ZombieScore;
 	int m_ClientID;
 };
 

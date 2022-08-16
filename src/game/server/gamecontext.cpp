@@ -1556,8 +1556,8 @@ void CGameContext::OnClientEnter(int ClientID)
 /* INFECTION MODIFICATION START ***************************************/
 	SendChatTarget_Localization(-1, CHATCATEGORY_PLAYER, _("{str:PlayerName} entered and joined the game"), "PlayerName", Server()->ClientName(ClientID), NULL);
 #ifdef CONF_SQL
-	SendChatTarget(ClientID, "Use /register <username> <password> to register.");
-	SendChatTarget(ClientID, "Or use /login <username> <password> to login.");
+	SendChatTarget_Localization(ClientID, CHATCATEGORY_PLAYER, _("Use /register <username> <password> to register."), NULL);
+	SendChatTarget_Localization(ClientID, CHATCATEGORY_PLAYER, _("Or use /login <username> <password> to login."), NULL);
 #endif
 /* INFECTION MODIFICATION END *****************************************/
 
@@ -3448,6 +3448,31 @@ bool CGameContext::ConLogout(IConsole::IResult *pResult, void *pUserData)
     pSelf->LogoutAccount(pResult->GetClientID());
 }
 
+bool CGameContext::ConTop5(IConsole::IResult *pResult, void *pUserData)
+{
+	CGameContext *pSelf = (CGameContext *) pUserData;
+
+	char ScoreType[8];
+
+	if(pResult->NumArguments() >= 1)
+	{
+		if(str_comp(pResult->GetString(0), "zombie") == 0)
+		{
+			mem_copy(ScoreType, "Zombie", sizeof(ScoreType));
+		}else if(str_comp(pResult->GetString(0), "zombie") == 0)
+		{
+			mem_copy(ScoreType, "Human", sizeof(ScoreType));
+		}else
+		{
+			pSelf->SendChatTarget_Localization(pResult->GetClientID(), CHATCATEGORY_DEFAULT, _("No this top5."));
+			return false;
+		}
+	} 
+
+	//Get the top 5 with this very simple, intuitive and optimized SQL function >_<
+	
+}
+
 void CGameContext::LogoutAccount(int ClientID)
 {
 	CPlayer *pP = m_apPlayers[ClientID];
@@ -4342,6 +4367,7 @@ void CGameContext::OnConsoleInit()
 	Console()->Register("register", "?s?s", CFGFLAG_CHAT|CFGFLAG_USER, ConRegister, this, "Create an account");
 	Console()->Register("login", "?s?s", CFGFLAG_CHAT|CFGFLAG_USER, ConLogin, this, "Login to an account");
 	Console()->Register("logout", "", CFGFLAG_CHAT|CFGFLAG_USER, ConLogout, this, "Logout");
+	Console()->Register("top5", "s<human|zombie>", CFGFLAG_CHAT|CFGFLAG_USER, ConLogout, this, "showTop5");
 #endif
 	Console()->Register("help", "?s<page>", CFGFLAG_CHAT|CFGFLAG_USER, ConHelp, this, "Display help");
 	Console()->Register("customskin", "s<all|me|none>", CFGFLAG_CHAT|CFGFLAG_USER, ConCustomSkin, this, "Display information about the mod");
@@ -4586,7 +4612,7 @@ void CGameContext::FlagCollected()
 void CGameContext::OnRoundOver()
 {
 #ifdef CONF_SQL
-	int Score=0;
+	int HScore=0, ZScore=0;
 	int HighScorePlayer[3] = {0, 0, 0};
 	for(int i = 0;i < MAX_CLIENTS;i ++)
 	{
@@ -4595,14 +4621,16 @@ void CGameContext::OnRoundOver()
 		{
 			if(pPlayer->IsZombie())
 			{
-				Score = Server()->RoundStatistics()->PlayerScore(i)/90+1;
+				ZScore = Server()->RoundStatistics()->PlayerScore(i)/90+1;
 			}else if(pPlayer->IsHuman())
 			{
-				Score = Server()->RoundStatistics()->PlayerScore(i)/120+2;
+				HScore = Server()->RoundStatistics()->PlayerScore(i)/120+2;
 			}
-			char *Buf;
-			str_format(Buf, sizeof(Buf), "+%d", Score);
-			Sql()->UpdateScore(pPlayer->GetCID(), Buf);
+			char *aBuf;
+			str_format(aBuf, sizeof(aBuf), "+%d", HScore);
+			char *bBuf;
+			str_format(bBuf, sizeof(bBuf), "+%d", ZScore);
+			Sql()->UpdateScore(pPlayer->GetCID(), aBuf, bBuf);
 		}
 	}
 #endif
