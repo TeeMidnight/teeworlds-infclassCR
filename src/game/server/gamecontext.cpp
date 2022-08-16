@@ -4626,9 +4626,9 @@ void CGameContext::OnRoundOver()
 			{
 				HScore = Server()->RoundStatistics()->PlayerScore(i)/120+2;
 			}
-			char *aBuf;
+			char aBuf[16];
 			str_format(aBuf, sizeof(aBuf), "\u002b%d", HScore);
-			char *bBuf;
+			char bBuf[16];
 			str_format(bBuf, sizeof(bBuf), "\u002b%d", ZScore);
 			Sql()->UpdateScore(pPlayer->GetCID(), aBuf, bBuf);
 		}
