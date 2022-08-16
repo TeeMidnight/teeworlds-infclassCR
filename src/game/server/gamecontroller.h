@@ -21,6 +21,13 @@ typedef unsigned __int64 uint64_t;
 		Controls the main game logic. Keeping track of team and player score,
 		winning conditions and specific game logic.
 */
+enum
+{
+	WINNER_NONE,
+	WINNER_HUMAN,
+	WINNER_ZOMBIE,
+};
+
 class IGameController
 {
 	class CGameContext *m_pGameServer;
@@ -76,7 +83,7 @@ public:
 	void DoWarmup(int Seconds);
 
 	void StartRound();
-	virtual void EndRound();
+	virtual void EndRound(int Winner);
 	void ChangeMap(const char *pToMap);
 	int GetRoundCount();
 	bool IsRoundEndTime();

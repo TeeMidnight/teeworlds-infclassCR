@@ -121,11 +121,11 @@ void CGameControllerMOD::StartRound()
 	IGameController::StartRound();
 }
 
-void CGameControllerMOD::EndRound()
+void CGameControllerMOD::EndRound(int Winner)
 {	
 	m_InfectedStarted = false;
 	ResetFinalExplosion();
-	IGameController::EndRound();
+	IGameController::EndRound(Winner);
 }
 
 void CGameControllerMOD::SetFirstInfectedNumber()
@@ -356,7 +356,7 @@ void CGameControllerMOD::Tick()
 			str_format(aBuf, sizeof(aBuf), "round_end winner='zombies' survivors='0' duration='%d' round='%d of %d'", Seconds, m_RoundCount+1, g_Config.m_SvRoundsPerMap);
 			GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "game", aBuf);
 
-			EndRound();
+			EndRound(WINNER_ZOMBIE);
 		}
 		
 		//Start the final explosion if the time is over
@@ -439,6 +439,7 @@ void CGameControllerMOD::Tick()
 			//If no more explosions, game over, decide who win
 			if(!NewExplosion)
 			{
+				bool Zombiewin = false;
 				if(GameServer()->GetHumanCount())
 				{
 					int NumHumans = GameServer()->GetHumanCount();
@@ -473,9 +474,10 @@ void CGameControllerMOD::Tick()
 				{
 					int Seconds = g_Config.m_SvTimelimit*60;
 					GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_INFECTED, _("Infected won the round in {sec:RoundDuration}"), "RoundDuration", &Seconds, NULL);
+					Zombiewin = true;
 				}
 				
-				EndRound();
+				EndRound(Zombiewin+1);
 			}
 		}
 	}
@@ -495,7 +497,7 @@ void CGameControllerMOD::Tick()
 			str_format(aBuf, sizeof(aBuf), "round_end too few players round='%d of %d'", m_RoundCount+1, g_Config.m_SvRoundsPerMap);
 			GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "game", aBuf);
 			
-			EndRound();
+			EndRound(WINNER_NONE);
 		}
 		
 	}

@@ -82,13 +82,18 @@ double IGameController::GetTime()
 	return static_cast<double>(Server()->Tick() - m_RoundStartTick)/Server()->TickSpeed();
 }
 
-void IGameController::EndRound()
+void IGameController::EndRound(int Winner)
 {
 	if(m_Warmup) // game can't end when we are running warmup
 		return;
 
 	GameServer()->m_World.m_Paused = true;
-	GameServer()->OnRoundOver();
+	if(Winner)
+		GameServer()->OnRoundOver();
+	if(GameServer()->m_FunRound)
+	{
+		GameServer()->EndFunRound();
+	}
 	m_GameOverTick = Server()->Tick();
 	m_SuddenDeath = 0;
 }
@@ -167,7 +172,7 @@ void IGameController::StartRound()
 void IGameController::ChangeMap(const char *pToMap)
 {
 	str_copy(m_aMapWish, pToMap, sizeof(m_aMapWish));
-	EndRound();
+	EndRound(WINNER_NONE);
 }
 
 void IGameController::GetWordFromList(char *pNextWord, const char *pList, int ListIndex)
@@ -310,7 +315,7 @@ void IGameController::CycleMap(bool Forced)
 void IGameController::SkipMap()
 {
 	CycleMap(true);
-	EndRound();
+	EndRound(WINNER_NONE);
 }
 	
 bool IGameController::CanVote()
@@ -715,37 +720,6 @@ bool IGameController::CanChangeTeam(CPlayer *pPlayer, int JoinTeam)
 
 void IGameController::DoWincheck()
 {
-	if(m_GameOverTick == -1 && !m_Warmup && !GameServer()->m_World.m_ResetRequested)
-	{
-		if(IsTeamplay())
-		{
-			// check score win condition
-			if((g_Config.m_SvScorelimit > 0 && (m_aTeamscore[TEAM_RED] >= g_Config.m_SvScorelimit || m_aTeamscore[TEAM_BLUE] >= g_Config.m_SvScorelimit)) ||
-				(g_Config.m_SvTimelimit > 0 && (Server()->Tick()-m_RoundStartTick) >= g_Config.m_SvTimelimit*Server()->TickSpeed()*60))
-			{
-				if(m_aTeamscore[TEAM_RED] != m_aTeamscore[TEAM_BLUE])
-					EndRound();
-				else
-					m_SuddenDeath = 1;
-			}
-		}
-		else
-		{
-			// gather some stats
-			int Topscore = 0;
-			int TopscoreCount = 0;
-
-			// check score win condition
-			if((g_Config.m_SvScorelimit > 0 && Topscore >= g_Config.m_SvScorelimit) ||
-				(g_Config.m_SvTimelimit > 0 && (Server()->Tick()-m_RoundStartTick) >= g_Config.m_SvTimelimit*Server()->TickSpeed()*60))
-			{
-				if(TopscoreCount == 1)
-					EndRound();
-				else
-					m_SuddenDeath = 1;
-			}
-		}
-	}
 }
 
 int IGameController::ClampTeam(int Team)

@@ -40,10 +40,12 @@ public:
 	void login(const char* name, const char* pass, int client_id);
 	void update(int client_id);
 	void update_all();
-	void UpdateCK(int ClientID, const char* CK, const char* Num);
 	void SyncAccountData(int ClientID);
 
-/*	static void change_password_thread(void *user);
+	void UpdateScore(int m_ClientID, const char *score);
+
+/*	static void update_score_thread(void *user);
+	static void change_password_thread(void *user);
 	static void login_thread(void *user);
 	static void update_thread(void *user);
 	static void create_account_thread(void *user);*/
@@ -55,12 +57,7 @@ struct CSqlData
 	int UserID[MAX_CLIENTS];
 	char name[32];
 	char pass[32];
-	const char* m_Resource;
-	const char* m_Num;
-	int m_Sword[MAX_CLIENTS];
-	int m_Pickaxe[MAX_CLIENTS];
-	int m_Axe[MAX_CLIENTS];
-	int m_Wave[MAX_CLIENTS];
+	const char* m_Score;
 	int m_ClientID;
 };
 

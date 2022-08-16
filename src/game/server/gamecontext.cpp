@@ -4585,12 +4585,26 @@ void CGameContext::FlagCollected()
 
 void CGameContext::OnRoundOver()
 {
-	if(m_FunRound)
-	{
-		EndFunRound();
-	}
 #ifdef CONF_SQL
-
+	int Score=0;
+	int HighScorePlayer[3] = {0, 0, 0};
+	for(int i = 0;i < MAX_CLIENTS;i ++)
+	{
+		CPlayer *pPlayer = m_apPlayers[i];
+		if(pPlayer && pPlayer->LoggedIn)
+		{
+			if(pPlayer->IsZombie())
+			{
+				Score = Server()->RoundStatistics()->PlayerScore(i)/90+1;
+			}else if(pPlayer->IsHuman())
+			{
+				Score = Server()->RoundStatistics()->PlayerScore(i)/120+2;
+			}
+			char *Buf;
+			str_format(Buf, sizeof(Buf), "+%d", Score);
+			Sql()->UpdateScore(pPlayer->GetCID(), Buf);
+		}
+	}
 #endif
 }
 
