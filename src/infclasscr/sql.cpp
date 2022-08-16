@@ -95,17 +95,8 @@ void CSQL::create_tables()
 			"Username VARCHAR(31) NOT NULL, "
 			"Password VARCHAR(32) NOT NULL, "
 			"HumanScore BIGINT DEFAULT 0, "
-			"ZombieScore BIGINT DEFAULT 0, "
+			"ZombieScore BIGINT DEFAULT 0); "
 			, prefix);
-			statement->execute(buf);
-
-			str_format(buf, sizeof(buf), 
-			"CREATE TABLE IF NOT EXISTS %s_Round "
-			"RoundHash VARCHAR(32) NOT NULL, "
-			"RoundWinner BOOLEN DEFAULT 0, "
-			"RoundNumHuman BIGINT DEFAULT 0, "
-			, prefix);
-
 			statement->execute(buf);
 			dbg_msg("SQL", "Tables were created successfully");
 
