@@ -1,4 +1,4 @@
-# DDNet-based CMakeLists for InfclassR
+# Cmakelist.txt fix by ErrorDreemurr
 
 cmake_minimum_required(VERSION 3.3)
 
@@ -22,9 +22,9 @@ endif()
 if(POLICY CMP0048)
   cmake_policy(SET CMP0048 NEW)
   if(VERSION_PATCH STREQUAL "0")
-    project(InfclassR VERSION ${VERSION_MAJOR}.${VERSION_MINOR})
+    project(InfclassCR VERSION ${VERSION_MAJOR}.${VERSION_MINOR})
   else()
-    project(InfclassR VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
+    project(InfclassCR VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
   endif()
 else()
   project(DDNet)
@@ -461,7 +461,7 @@ endif()
 # COPY DATA AND DLLS
 ########################################################################
 
-file(COPY bin/data DESTINATION .)
+file(COPY data DESTINATION .)
 set(COPY_FILES
   ${CURL_COPY_FILES}
 )
@@ -719,8 +719,8 @@ set_glob(ENGINE_SERVER GLOB src/engine/server
 
 set_glob(GAME_SERVER GLOB_RECURSE src/game/server
   classes.h
-  enitites/anti-airmine.cpp
-  enitites/anti-airmine.h
+  entities/anti-airmine.cpp
+  entities/anti-airmine.h
   entities/biologist-laser.cpp
   entities/biologist-laser.h
   entities/biologist-mine.cpp
@@ -729,18 +729,20 @@ set_glob(GAME_SERVER GLOB_RECURSE src/game/server
   entities/bouncing-bullet.h
   entities/character.cpp
   entities/character.h
-  enitites/elastic-entity.cpp
-  enitites/elastic-entity.h
-  enitites/elastic-grenade.cpp
-  enitites/elastic-grenade.h
-  enitites/elastic-hole.cpp
-  enitites/elastic-hole.h
+  entities/elastic-entity.cpp
+  entities/elastic-entity.h
+  entities/elastic-grenade.cpp
+  entities/elastic-grenade.h
+  entities/elastic-hole.cpp
+  entities/elastic-hole.h
   entities/engineer-wall.cpp
   entities/engineer-wall.h
   entities/entity-timer.cpp
   entities/entity-timer.h
   entities/flyingpoint.cpp
   entities/flyingpoint.h
+  entities/freeze-mine.cpp
+  entities/freeze-mine.h
   entities/growingexplosion.cpp
   entities/growingexplosion.h
   entities/heal-boom.cpp
@@ -765,8 +767,8 @@ set_glob(GAME_SERVER GLOB_RECURSE src/game/server
   entities/police-shield.h
   entities/projectile.cpp
   entities/projectile.h
-  entities/riviver-grenade.cpp
-  entities/riviver-grenade.h
+  entities/reviver-grenade.cpp
+  entities/reviver-grenade.h
   entities/scatter-grenade.cpp
   entities/scatter-grenade.h
   entities/scientist-laser.cpp
@@ -803,7 +805,7 @@ set_glob(GAME_SERVER GLOB_RECURSE src/game/server
   player.cpp
   player.h
 )
-set_glob(INFCLASSR_SERVER GLOB_RECURSE src/infclassr
+set_glob(INFCLASSCR_SERVER GLOB_RECURSE src/infclasscr
   GeoLite2PP/GeoLite2PP.cpp
   GeoLite2PP/GeoLite2PP.hpp
   GeoLite2PP/GeoLite2PP_error_category.cpp
@@ -811,13 +813,15 @@ set_glob(INFCLASSR_SERVER GLOB_RECURSE src/infclassr
   GeoLite2PP/GeoLite2PP_version.hpp
   geolocation.cpp
   geolocation.h
+  sql.cpp
+  sql.h
 )
 set(GAME_GENERATED_SERVER
   "src/game/generated/nethash.cpp"
   "src/game/generated/server_data.cpp"
   "src/game/generated/server_data.h"
 )
-set(SERVER_SRC ${ENGINE_SERVER} ${GAME_SERVER} ${GAME_GENERATED_SERVER} ${INFCLASSR_SERVER})
+set(SERVER_SRC ${ENGINE_SERVER} ${GAME_SERVER} ${GAME_GENERATED_SERVER} ${INFCLASSCR_SERVER})
 if(TARGET_OS STREQUAL "windows")
   set(SERVER_ICON "other/icons/DDNet-Server.rc")
 else()

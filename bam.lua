@@ -293,7 +293,7 @@ function build(settings)
 	game_shared = Compile(settings, Collect("src/game/*.cpp"), nethash, network_source)
 	game_server = Compile(settings, CollectRecursive("src/game/server/*.cpp"), server_content_source)
 	if config.geolocation.value then
-		infclassr = Compile(settings, Collect("src/infclassr/*.cpp", "src/infclassr/GeoLite2PP/*.cpp"))
+		infclasscr = Compile(settings, Collect("src/infclasscr/*.cpp", "src/infclasscr/GeoLite2PP/*.cpp"))
 	end
 
 
@@ -313,7 +313,7 @@ function build(settings)
 
 	-- build server, version server and master server
 	server_exe = Link(server_settings, "server", engine, server,
-		game_shared, game_server, infclassr, teeuniverses, zlib, server_link_other, md5, json)
+		game_shared, game_server, infclasscr, teeuniverses, zlib, server_link_other, md5, json)
 
 	serverlaunch = {}
 	if platform == "macosx" then

@@ -19,7 +19,7 @@
 #include "gameworld.h"
 #include "player.h"
 
-#include <infclassr/sql.h>
+#include <infclasscr/sql.h>
 
 //#define MEASURE_TICKS // uncomment, to measure server performance
 #if defined(MEASURE_TICKS)
@@ -28,7 +28,7 @@
 
 
 #ifdef CONF_GEOLOCATION
-	#include <infclassr/geolocation.h>
+	#include <infclasscr/geolocation.h>
 #endif
 
 #ifdef _MSC_VER

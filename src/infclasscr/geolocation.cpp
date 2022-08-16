@@ -1,4 +1,4 @@
-#include <infclassr/geolocation.h>
+#include <infclasscr/geolocation.h>
 
 #ifdef CONF_GEOLOCATION
 Geolocation::Geolocation(const char* path_to_mmdb) {

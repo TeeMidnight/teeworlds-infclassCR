@@ -3,7 +3,7 @@
 
 #ifdef CONF_GEOLOCATION
 
-#include <infclassr/GeoLite2PP/GeoLite2PP.hpp>
+#include <infclasscr/GeoLite2PP/GeoLite2PP.hpp>
 #include <iostream>
 
 class Geolocation {
