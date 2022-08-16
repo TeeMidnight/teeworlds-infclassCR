@@ -220,7 +220,7 @@ static void show_top5_thread(void *user)
 					CHATCATEGORY_DEFAULT, _("{int:Rank}. {str:Name} :{int:Score} Score"),
 						"Rank", Rank, 
 						"Name", Data->m_SqlData->results->getString("Username").c_str(),
-						"Score", Data->m_SqlData->results->getString(Score).c_str(),
+						"Score", Data->m_SqlData->results->getInt(Score),
 						  NULL);
 				}
 				
