@@ -1,7 +1,7 @@
-autoexec.cfg
+test.cfg
 
 .vs*
-bam
+./bam
 .bam
 /config.lua
 /datasrc/__pycache__
@@ -19,8 +19,9 @@ src/game/generated
 /packetgen*
 /tileset_border*
 /versionsrv*
-/infclass_client*
-/infclass_srv*
-/infclass_editor*
-/bin/server_d
-/bin
+Infclass-Server*
+server_*
+Makefile
+CMakeFiles
+CMakeCache.txt
+cmake_install.cmake
