@@ -3465,11 +3465,12 @@ bool CGameContext::ConTop5(IConsole::IResult *pResult, void *pUserData)
 		}else
 		{
 			pSelf->SendChatTarget_Localization(pResult->GetClientID(), CHATCATEGORY_DEFAULT, _("No this top5."));
-			return false;
+			return true;
 		}
 	} 
 
-	
+	pSelf->Sql()->ShowTop5(pResult->GetClientID(), ScoreType);
+	return true;
 }
 
 void CGameContext::LogoutAccount(int ClientID)
