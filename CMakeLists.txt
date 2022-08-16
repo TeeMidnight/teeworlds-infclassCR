@@ -715,6 +715,14 @@ set_glob(ENGINE_SERVER GLOB src/engine/server
   roundstatistics.h
   server.cpp
   server.h
+  sql_connector.cpp
+  sql_connector.h
+  sql_job.cpp
+  sql_job.h
+  sql_server.cpp
+  sql_server.h
+  sql_string_helpers.cpp
+  sql_string_helpers.h
 )
 
 set_glob(GAME_SERVER GLOB_RECURSE src/game/server
