@@ -216,11 +216,12 @@ static void show_top5_thread(void *user)
 				while (Data->m_SqlData->results->next())
 				{
 					Rank++;
+					int TopScore = Data->m_SqlData->results->getInt(Score);
 					GameServer()->SendChatTarget_Localization(Data->m_ClientID, 
 					CHATCATEGORY_DEFAULT, _("{int:Rank}. {str:Name} :{int:Score} Score"),
-						"Rank", Rank, 
+						"Rank", &Rank, 
 						"Name", Data->m_SqlData->results->getString("Username").c_str(),
-						"Score", Data->m_SqlData->results->getInt(Score),
+						"Score", &TopScore,
 						  NULL);
 				}
 				

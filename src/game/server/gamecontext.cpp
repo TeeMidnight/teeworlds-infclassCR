@@ -3459,7 +3459,7 @@ bool CGameContext::ConTop5(IConsole::IResult *pResult, void *pUserData)
 		if(str_comp(pResult->GetString(0), "zombie") == 0)
 		{
 			mem_copy(ScoreType, "Zombie", sizeof(ScoreType));
-		}else if(str_comp(pResult->GetString(0), "zombie") == 0)
+		}else if(str_comp(pResult->GetString(0), "human") == 0)
 		{
 			mem_copy(ScoreType, "Human", sizeof(ScoreType));
 		}else
