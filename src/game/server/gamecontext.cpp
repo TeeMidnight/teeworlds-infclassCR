@@ -3469,7 +3469,6 @@ bool CGameContext::ConTop5(IConsole::IResult *pResult, void *pUserData)
 		}
 	} 
 
-	//Get the top 5 with this very simple, intuitive and optimized SQL function >_<
 	
 }
 
@@ -4367,7 +4366,7 @@ void CGameContext::OnConsoleInit()
 	Console()->Register("register", "?s?s", CFGFLAG_CHAT|CFGFLAG_USER, ConRegister, this, "Create an account");
 	Console()->Register("login", "?s?s", CFGFLAG_CHAT|CFGFLAG_USER, ConLogin, this, "Login to an account");
 	Console()->Register("logout", "", CFGFLAG_CHAT|CFGFLAG_USER, ConLogout, this, "Logout");
-	Console()->Register("top5", "s<human|zombie>", CFGFLAG_CHAT|CFGFLAG_USER, ConLogout, this, "showTop5");
+	Console()->Register("top5", "s<human|zombie>", CFGFLAG_CHAT|CFGFLAG_USER, ConTop5, this, "showTop5");
 #endif
 	Console()->Register("help", "?s<page>", CFGFLAG_CHAT|CFGFLAG_USER, ConHelp, this, "Display help");
 	Console()->Register("customskin", "s<all|me|none>", CFGFLAG_CHAT|CFGFLAG_USER, ConCustomSkin, this, "Display information about the mod");
@@ -4627,9 +4626,9 @@ void CGameContext::OnRoundOver()
 				HScore = Server()->RoundStatistics()->PlayerScore(i)/120+2;
 			}
 			char *aBuf;
-			str_format(aBuf, sizeof(aBuf), "+%d", HScore);
+			str_format(aBuf, sizeof(aBuf), "\u002b%d", HScore);
 			char *bBuf;
-			str_format(bBuf, sizeof(bBuf), "+%d", ZScore);
+			str_format(bBuf, sizeof(bBuf), "\u002b%d", ZScore);
 			Sql()->UpdateScore(pPlayer->GetCID(), aBuf, bBuf);
 		}
 	}
