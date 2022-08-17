@@ -3928,21 +3928,12 @@ void CCharacter::Snap(int SnappingClient)
 	}
 	else if(IsHuman() && IsInAura())
 	{
-		CNetObj_Pickup *pP = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_HeartID, sizeof(CNetObj_Pickup)));
-		if(!pP)
-			return;
-
-		pP->m_X = (int)m_Pos.x - 30.0;
-		pP->m_Y = (int)m_Pos.y - 60.0;
-		pP->m_Type = POWERUP_HEALTH;
-		pP->m_Subtype = 0;
-		
 		CNetObj_Pickup *pA = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_HeartID, sizeof(CNetObj_Pickup)));
 		if(!pA)
 			return;
 
-		pA->m_X = (int)m_Pos.x + 30.0;
-		pA->m_Y = (int)m_Pos.y - 60.0;
+		pA->m_X = (int)m_Pos.x;
+		pA->m_Y = (int)m_Pos.y;
 		pA->m_Type = POWERUP_ARMOR;
 		pA->m_Subtype = 0;
 	}

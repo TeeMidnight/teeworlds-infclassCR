@@ -126,7 +126,7 @@ static void update_score_thread(void *user)
 		{
 			// check if Account exists
 			char buf[1024];
-			str_format(buf, sizeof(buf), "SELECT * FROM %s_Account WHERE UserID=%d;", Data->m_SqlData->prefix, Data->UserID[Data->m_ClientID]);
+			str_format(buf, sizeof(buf), "SELECT * FROM %s_Account WHERE Username='%s';", Data->m_SqlData->prefix, Data->name);
 			Data->m_SqlData->results = Data->m_SqlData->statement->executeQuery(buf);
 			if(Data->m_SqlData->results->next())
 			{
