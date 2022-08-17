@@ -3782,7 +3782,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("His aura can speed up the recovery speed of humans' bullet."), NULL);
 			Buffer.append("\n\n");
-			
+
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
 		else if(str_comp_nocase(pHelpPage, "smoker") == 0)
@@ -4418,10 +4418,11 @@ void CGameContext::OnInit(/*class IKernel *pKernel*/)
 	//world = new GAMEWORLD;
 	//players = new CPlayer[MAX_CLIENTS];
 
-	// select gametype
-	m_pController = new CGameControllerMOD(this);
 	m_AccountData = new CAccountData;
 	m_Sql = new CSQL(this);
+	
+	// select gametype
+	m_pController = new CGameControllerMOD(this);
 	// reset game config, if has.
 	{
 		m_pConsole->ExecuteFile(g_Config.m_SvResetFile);
