@@ -74,6 +74,12 @@ void CGameContext::Construct(int Resetting)
 	if(Resetting==NO_RESET)
 		m_pVoteOptionHeap = new CHeap();
 	
+#ifdef CONF_SQL
+	/* SQL */
+	m_AccountData = 0;
+	m_Sql = 0;
+#endif
+
 	m_FunRound = false;
 	m_FunRoundHumanClass = START_HUMANCLASS;
 	m_FunRoundZombieClass = START_INFECTEDCLASS;
@@ -85,11 +91,6 @@ void CGameContext::Construct(int Resetting)
 	
 	#ifdef CONF_GEOLOCATION
 	geolocation = new Geolocation("GeoLite2-Country.mmdb");
-	#endif
-	#ifdef CONF_SQL
-	/* SQL */
-	m_AccountData = new CAccountData;
-	m_Sql = new CSQL(this);
 	#endif
 }
 
@@ -140,6 +141,13 @@ void CGameContext::Clear()
 	m_NumVoteOptions = NumVoteOptions;
 	m_Tuning = Tuning;
 	
+#ifdef CONF_SQL
+	delete m_Sql;
+	delete m_AccountData;
+	m_Sql = 0;
+	m_AccountData = 0;
+#endif
+
 	for(int i=0; i<MAX_CLIENTS; i++)
 	{
 		m_BroadcastStates[i].m_NoChangeTick = 0;
@@ -148,11 +156,6 @@ void CGameContext::Clear()
 		m_BroadcastStates[i].m_PrevMessage[0] = 0;
 		m_BroadcastStates[i].m_NextMessage[0] = 0;
 	}
-
-	#ifdef CONF_SQL
-	delete m_Sql;
-	delete m_AccountData;
-	#endif
 }
 
 
@@ -4419,7 +4422,8 @@ void CGameContext::OnInit(/*class IKernel *pKernel*/)
 
 	// select gametype
 	m_pController = new CGameControllerMOD(this);
-
+	m_AccountData = new CAccountData;
+	m_Sql = new CSQL(this);
 	// reset game config, if has.
 	{
 		m_pConsole->ExecuteFile(g_Config.m_SvResetFile);

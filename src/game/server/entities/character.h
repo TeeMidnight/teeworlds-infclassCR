@@ -186,7 +186,6 @@ private:
 	int m_InfZoneTick;
 	int m_ProtectionTick;
 	
-	array<int> m_AuraIDs;
 	int m_FlagID;
 	int m_HeartID;
 	int m_BarrierHintID;
@@ -200,7 +199,6 @@ private:
 	bool m_IsInAura; // Joker class
 	int m_FreezeReason;
 	int m_InNightmareTick;
-	int m_InAuraTick;
 	int m_InAirTick;
 	int m_StartTick;
 	

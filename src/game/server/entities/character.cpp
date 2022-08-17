@@ -101,11 +101,6 @@ m_pConsole(pConsole)
 	{
 		m_BarrierHintIDs[i] = Server()->SnapNewID();
 	}
-	m_AuraIDs.set_size(15);
-	for(int i=0; i<15; i++)
-	{
-		m_AuraIDs[i] = Server()->SnapNewID();
-	}
 	m_AntiFireTick = 0;
 	m_IsFrozen = false;
 	m_IsInSlowMotion = false;
@@ -237,7 +232,6 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_IsInSlowMotion = false;
 	m_FrozenTime = -1;
 	m_LoveTick = -1;
-	m_InAuraTick = -1;
 	m_SlowMotionTick = -1;
 	m_HallucinationTick = -1;
 	m_SlipperyTick = -1;
@@ -297,16 +291,6 @@ void CCharacter::Destroy()
 		{
 			Server()->SnapFreeID(m_BarrierHintIDs[i]);
 			m_BarrierHintIDs[i] = -1;
-		}
-
-	}
-
-	if(m_AuraIDs[0] >= 0)
-	{
-		for(int i=0; i<m_AuraIDs.size(); i++) 
-		{
-			Server()->SnapFreeID(m_AuraIDs[i]);
-			m_AuraIDs[i] = -1;
 		}
 
 	}
@@ -2254,35 +2238,17 @@ void CCharacter::Tick()
 		}
 	}
 
-	m_IsInAura = false;
-
 	if(IsHuman())
 	{
 		for(CCharacter *pChr = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); pChr; pChr = (CCharacter *)pChr->TypeNext())
 		{
 			if(pChr->GetClass() != PLAYERCLASS_JOKER || pChr->GetPlayer()->GetCID() == m_pPlayer->GetCID())continue;
 			float Len = distance(pChr->m_Pos, m_Pos);
-			if(Len < pChr->m_ProximityRadius+g_Config.m_InfJokerAuraRadius)
+			if(Len < pChr->m_ProximityRadius+g_Config.m_InfJokerRadius)
 			{
 				m_IsInAura = true;
 				break;
-			}
-		}
-	}
-
-	if(!m_IsInAura)
-	{
-		m_InAuraTick = 0;
-	}else
-	{
-		m_InAuraTick++;
-		m_InNightmareTick = 0;
-		if(m_InAuraTick == g_Config.m_InfJokerAuraTick)
-		{
-			if(GetClass() == PLAYERCLASS_MEDIC)
-				IncreaseArmor(1);
-			else IncreaseHealth(1);
-			m_InAuraTick = 0;
+			}else m_IsInAura = false;
 		}
 	}
 
@@ -3911,23 +3877,7 @@ void CCharacter::Snap(int SnappingClient)
 /* INFECTION MODIFICATION START ***************************************/
 	if(GetClass() == PLAYERCLASS_JOKER)
 	{
-		float time = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
-		float angle = fmodf(time*pi/2, 2.0f*pi);
-		int Radius = g_Config.m_InfJokerAuraRadius;
-		for(int i=0; i<m_AuraIDs.size(); i++)
-		{	
-			float shiftedAngle = angle + 2.0*pi*static_cast<float>(i)/static_cast<float>(m_AuraIDs.size());
-			
-			CNetObj_Pickup *pObj = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_AuraIDs[i], sizeof(CNetObj_Pickup)));
-			
-			if(!pObj)
-				continue;
-			
-			pObj->m_X = (int)(m_Pos.x + Radius*cos(shiftedAngle));
-			pObj->m_Y = (int)(m_Pos.y + Radius*sin(shiftedAngle));
-			pObj->m_Type = (i%2) ? POWERUP_HEALTH : POWERUP_ARMOR;
-			pObj->m_Subtype = 0;
-		}
+		
 	}
 
 	if(GetClass() == PLAYERCLASS_WITCH)
@@ -3975,6 +3925,26 @@ void CCharacter::Snap(int SnappingClient)
 			pP->m_Type = POWERUP_HEALTH;
 			pP->m_Subtype = 0;
 		}
+	}
+	else if(IsHuman() && IsInAura())
+	{
+		CNetObj_Pickup *pP = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_HeartID, sizeof(CNetObj_Pickup)));
+		if(!pP)
+			return;
+
+		pP->m_X = (int)m_Pos.x - 30.0;
+		pP->m_Y = (int)m_Pos.y - 60.0;
+		pP->m_Type = POWERUP_HEALTH;
+		pP->m_Subtype = 0;
+		
+		CNetObj_Pickup *pA = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_HeartID, sizeof(CNetObj_Pickup)));
+		if(!pA)
+			return;
+
+		pA->m_X = (int)m_Pos.x + 30.0;
+		pA->m_Y = (int)m_Pos.y - 60.0;
+		pA->m_Type = POWERUP_ARMOR;
+		pA->m_Subtype = 0;
 	}
 	else if((m_Armor + m_Health) < 10 && SnappingClient != m_pPlayer->GetCID() && IsZombie() && pClient->IsZombie())
 	{
@@ -4148,8 +4118,9 @@ void CCharacter::Snap(int SnappingClient)
 	if(GetClass() == PLAYERCLASS_JOKER) EmoteNormal = EMOTE_HAPPY;
 	if(m_IsInvisible) EmoteNormal = EMOTE_BLINK;
 	if(m_LoveTick > 0 || m_HallucinationTick > 0 || m_SlowMotionTick > 0 || IsInNightmare()) EmoteNormal = EMOTE_SURPRISE;
+	else if(IsInAura()) EmoteNormal = EMOTE_HAPPY;
 	if(IsFrozen()) EmoteNormal = EMOTE_PAIN;
-	
+
 	// write down the m_Core
 	if(!m_ReckoningTick || GameServer()->m_World.m_Paused)
 	{
@@ -5044,7 +5015,7 @@ bool CCharacter::IsInSlowMotion() const
 
 bool CCharacter::IsInAura() const
 {
-	return m_InAuraTick > 0;
+	return m_IsInAura;
 }
 
 bool CCharacter::IsInNightmare() const

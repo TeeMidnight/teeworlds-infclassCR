@@ -120,8 +120,7 @@ MACRO_CONFIG_INT(FunRoundProba, funround_proba, 6, 0, 100, CFGFLAG_SERVER, "Fun 
 
 MACRO_CONFIG_INT(InfFreezerReslowlyTime, inf_freezer_reslowly_time, 200, 0, 1000, CFGFLAG_SERVER, "tick")
 
-MACRO_CONFIG_INT(InfJokerAuraRadius, inf_joker_aura_radius, 320, 0, 1200, CFGFLAG_SERVER, "Radius of Joker Aura")
-MACRO_CONFIG_INT(InfJokerAuraTick, inf_joker_aura_tick, 500, 0, 1200, CFGFLAG_SERVER, "Radius of Joker Aura")
+MACRO_CONFIG_INT(InfJokerRadius, inf_joker_radius, 280, 0, 1200, CFGFLAG_SERVER, "Radius of Joker Aura")
 
 //weapon config
 MACRO_CONFIG_INT(InfElasticEntityRadius, inf_elastic_entity_radius, 46, 0, 200, CFGFLAG_SERVER, "Radius of elastic entitys")
