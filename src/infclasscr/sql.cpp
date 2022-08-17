@@ -137,9 +137,9 @@ static void update_score_thread(void *user)
 					lock_unlock(SQLLock);
 					return;
 				}
-				str_format(buf, sizeof(buf), "UPDATE %s_Resource SET ZombieScore=ZombieScore%s WHERE UserID=%d;", Data->m_SqlData->prefix, Data->ZombieScore, Data->UserID[Data->m_ClientID]);
+				str_format(buf, sizeof(buf), "UPDATE %s_Account SET ZombieScore=ZombieScore%s WHERE UserID=%d;", Data->m_SqlData->prefix, Data->ZombieScore, Data->UserID[Data->m_ClientID]);
 				Data->m_SqlData->statement->execute(buf);
-				str_format(buf, sizeof(buf), "UPDATE %s_Resource SET HumanScore=HumanScore%s WHERE UserID=%d;", Data->m_SqlData->prefix, Data->HumanScore, Data->UserID[Data->m_ClientID]);
+				str_format(buf, sizeof(buf), "UPDATE %s_Account SET HumanScore=HumanScore%s WHERE UserID=%d;", Data->m_SqlData->prefix, Data->HumanScore, Data->UserID[Data->m_ClientID]);
 				Data->m_SqlData->statement->execute(buf);
 			}
 			else

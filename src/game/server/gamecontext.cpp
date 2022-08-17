@@ -3771,7 +3771,6 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 		}
 		else if(str_comp_nocase(pHelpPage, "joker") == 0)
 		{
-			int Seconds = (int)(g_Config.m_InfJokerAuraTick/pSelf->Server()->TickSpeed());
 			Buffer.append("~~ ");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Joker"), NULL); 
 			Buffer.append(" ~~\n\n");
@@ -3783,7 +3782,6 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("His aura can speed up the recovery speed of humans' bullet."), NULL);
 			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Aura can give humans +1 health or armor per {sec:Time}."), "Time", &Seconds, NULL);
 			
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
