@@ -173,19 +173,9 @@ void CPlayer::Tick()
 				IncreaseGhoulLevel(-1);
 			}
 		}
-		
-		SetClassSkin(PLAYERCLASS_GHOUL, m_GhoulLevel);
 	}
 	else if (GetClass() == PLAYERCLASS_VOODOO)
 	{
-		if(m_VoodooIsSpirit)
-		{
-			SetClassSkin(PLAYERCLASS_VOODOO, 0); // 0 = spirit skin
-		}
-		else
-		{
-			SetClassSkin(PLAYERCLASS_VOODOO, 1); // 1 = normal skin
-		}
 	}
 	
  	HandleTuningParams();
@@ -263,17 +253,6 @@ void CPlayer::Snap(int SnappingClient)
 		return;
 	}
 
-	bool MustSnap = pPlayer->IsPlayerMustSnap(m_ClientID);
-	if(!MustSnap && GameServer()->GetPlayerCount() >= DDNET_MAX_CLIENTS-1)
-	{
-		if(pPlayer->m_NumNoMustSnapPlayer >= DDNET_MAX_CLIENTS - pPlayer->m_NumMustSnapPlayer)
-			return;
-		if(!GameServer()->IsSnapPlayer(m_ClientID))
-		{
-			return;
-		}
-	}
-
 	CNetObj_ClientInfo *pClientInfo = static_cast<CNetObj_ClientInfo *>(Server()->SnapNewItem(NETOBJTYPE_CLIENTINFO, id, sizeof(CNetObj_ClientInfo)));
 
 	if(!pClientInfo)
@@ -342,6 +321,219 @@ void CPlayer::Snap(int SnappingClient)
 	
 	pClientInfo->m_Country = Server()->ClientCountry(m_ClientID);
 
+
+	IServer::CClientInfo info;
+	Server()->GetClientInfo(SnappingClient, &info);
+
+	switch(m_class)
+	{
+		case PLAYERCLASS_ENGINEER:
+			m_TeeInfos.m_UseCustomColor = 0;
+			str_copy(m_TeeInfos.m_SkinName, "limekitty", sizeof(m_TeeInfos.m_SkinName));
+			break;
+		case PLAYERCLASS_SOLDIER:
+			m_TeeInfos.m_UseCustomColor = 0;
+			str_copy(m_TeeInfos.m_SkinName, "brownbear", sizeof(m_TeeInfos.m_SkinName));
+			break;
+		case PLAYERCLASS_SNIPER:
+			m_TeeInfos.m_UseCustomColor = 0;
+			str_copy(m_TeeInfos.m_SkinName, "warpaint", sizeof(m_TeeInfos.m_SkinName));
+			break;
+		case PLAYERCLASS_MERCENARY:
+			m_TeeInfos.m_UseCustomColor = 0;
+			str_copy(m_TeeInfos.m_SkinName, "bluestripe", sizeof(m_TeeInfos.m_SkinName));
+			break;
+		case PLAYERCLASS_SCIENTIST:
+			m_TeeInfos.m_UseCustomColor = 0;
+			str_copy(m_TeeInfos.m_SkinName, "toptri", sizeof(m_TeeInfos.m_SkinName));
+			break;
+		case PLAYERCLASS_CATAPULT:
+			m_TeeInfos.m_UseCustomColor = 0;
+			str_copy(m_TeeInfos.m_SkinName, "coala", sizeof(m_TeeInfos.m_SkinName));
+			break;
+		case PLAYERCLASS_BIOLOGIST:
+			m_TeeInfos.m_UseCustomColor = 0;
+			str_copy(m_TeeInfos.m_SkinName, "twintri", sizeof(m_TeeInfos.m_SkinName));
+			break;
+		case PLAYERCLASS_SCIOGIST:
+			if(info.m_Solar)
+			{
+				m_TeeInfos.m_UseCustomColor = 1;
+				m_TeeInfos.m_ColorBody = 255;
+				m_TeeInfos.m_ColorFeet = 0;
+				str_copy(m_TeeInfos.m_SkinName, "toptri", sizeof(m_TeeInfos.m_SkinName));
+			}
+			else 
+			{
+				m_TeeInfos.m_UseCustomColor = 0;
+				str_copy(m_TeeInfos.m_SkinName, "random", sizeof(m_TeeInfos.m_SkinName));
+			}
+			break;
+		case PLAYERCLASS_POLICE:
+			if(info.m_Solar)
+			{
+				m_TeeInfos.m_UseCustomColor = 0;
+				str_copy(m_TeeInfos.m_SkinName, "x_ninja", sizeof(m_TeeInfos.m_SkinName));
+			}
+			else 
+			{
+				m_TeeInfos.m_UseCustomColor = 0;
+				str_copy(m_TeeInfos.m_SkinName, "kitty_x_ninja", sizeof(m_TeeInfos.m_SkinName));
+			}
+			break;
+		case PLAYERCLASS_REVIVER:
+			if(info.m_Solar)
+			{
+				m_TeeInfos.m_UseCustomColor = 0;
+				str_copy(m_TeeInfos.m_SkinName, "bluekitty", sizeof(m_TeeInfos.m_SkinName));
+			}
+			else 
+			{
+				m_TeeInfos.m_UseCustomColor = 0;
+				str_copy(m_TeeInfos.m_SkinName, "coala_limekitty", sizeof(m_TeeInfos.m_SkinName));
+			}
+			break;
+		case PLAYERCLASS_LOOPER:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "bluekitty", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 255;
+			m_TeeInfos.m_ColorFeet = 0;
+			break;
+		case PLAYERCLASS_MEDIC:
+			m_TeeInfos.m_UseCustomColor = 0;
+			str_copy(m_TeeInfos.m_SkinName, "twinbop", sizeof(m_TeeInfos.m_SkinName));
+			break;
+		case PLAYERCLASS_HERO:
+			m_TeeInfos.m_UseCustomColor = 0;
+			str_copy(m_TeeInfos.m_SkinName, "redstripe", sizeof(m_TeeInfos.m_SkinName));
+			break;
+		case PLAYERCLASS_NINJA:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "default", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 255;
+			m_TeeInfos.m_ColorFeet = 0;
+			break;
+		case PLAYERCLASS_JOKER:
+			m_TeeInfos.m_UseCustomColor = 0;
+			str_copy(m_TeeInfos.m_SkinName, "pinky", sizeof(m_TeeInfos.m_SkinName));
+			break;
+		case PLAYERCLASS_SMOKER:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "cammostripes", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 3866368;
+			m_TeeInfos.m_ColorFeet = 65414;
+			break;
+		case PLAYERCLASS_BOOMER:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "saddo", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 3866368;
+			m_TeeInfos.m_ColorFeet = 65414;
+			break;
+		case PLAYERCLASS_HUNTER:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "warpaint", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 3866368;
+			m_TeeInfos.m_ColorFeet = 65414;
+			break;
+		case PLAYERCLASS_BAT:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "limekitty", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 3866368;
+			m_TeeInfos.m_ColorFeet = 2866368;
+			break;
+		case PLAYERCLASS_GHOST:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "twintri", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 3866368;
+			m_TeeInfos.m_ColorFeet = 65414;
+			break;
+		case PLAYERCLASS_SPIDER:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "pinky", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 3866368;
+			m_TeeInfos.m_ColorFeet = 65414;
+			break;
+		case PLAYERCLASS_GHOUL:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "cammo", sizeof(m_TeeInfos.m_SkinName));
+			{
+				int Hue = 58 * (1.0f - clamp(m_GhoulLevel/static_cast<float>(g_Config.m_InfGhoulStomachSize), 0.0f, 1.0f));
+				m_TeeInfos.m_ColorBody = (Hue<<16) + (255<<8);
+			}
+			m_TeeInfos.m_ColorFeet = 65414;
+			break;
+		case PLAYERCLASS_SLUG:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "coala", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 3866368;
+			m_TeeInfos.m_ColorFeet = 65414;
+			break;
+		case PLAYERCLASS_SLIME:
+			m_TeeInfos.m_UseCustomColor = 1;
+			if(info.m_Solar)
+			{
+				str_copy(m_TeeInfos.m_SkinName, "twinbop", sizeof(m_TeeInfos.m_SkinName));
+				m_TeeInfos.m_ColorBody = 3866368;
+				m_TeeInfos.m_ColorFeet = 3866368;
+			}
+			else
+			{
+				str_copy(m_TeeInfos.m_SkinName, "coala_cammo", sizeof(m_TeeInfos.m_SkinName));
+				m_TeeInfos.m_ColorBody = 3866368;
+				m_TeeInfos.m_ColorFeet = 65414;
+			}
+			break;
+		case PLAYERCLASS_VOODOO:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "bluestripe", sizeof(m_TeeInfos.m_SkinName));
+			if(m_VoodooIsSpirit == 0)
+			{
+				m_TeeInfos.m_ColorBody = 3866368;
+			}
+			else
+			{
+				m_TeeInfos.m_ColorBody = 6183936; // grey-green
+			}
+			m_TeeInfos.m_ColorFeet = 65414;
+			break;
+		case PLAYERCLASS_UNDEAD:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "redstripe", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 3014400;
+			m_TeeInfos.m_ColorFeet = 13168;
+			break;
+		case PLAYERCLASS_WITCH:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "redbopp", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 16776744;
+			m_TeeInfos.m_ColorFeet = 13168;
+			break;
+		case PLAYERCLASS_FREEZER:
+			m_TeeInfos.m_UseCustomColor = 1;
+			str_copy(m_TeeInfos.m_SkinName, "cammo", sizeof(m_TeeInfos.m_SkinName));
+			m_TeeInfos.m_ColorBody = 8257280;
+			m_TeeInfos.m_ColorFeet = 65414;
+			break;
+		case PLAYERCLASS_NIGHTMARE:
+			m_TeeInfos.m_UseCustomColor = 1;
+			if(info.m_Solar)
+			{
+				str_copy(m_TeeInfos.m_SkinName, "toptri", sizeof(m_TeeInfos.m_SkinName));
+				m_TeeInfos.m_ColorBody = 3866368;
+				m_TeeInfos.m_ColorFeet = 0;
+			}else
+			{
+				str_copy(m_TeeInfos.m_SkinName, "ghost", sizeof(m_TeeInfos.m_SkinName));
+				m_TeeInfos.m_ColorBody = 3866368;
+				m_TeeInfos.m_ColorFeet = 65414;
+			}
+			break;
+		default:
+			m_TeeInfos.m_UseCustomColor = 0;
+			str_copy(m_TeeInfos.m_SkinName, "default", sizeof(m_TeeInfos.m_SkinName));
+			Server()->SetClientClan(GetCID(), "");
+	}
+
 	if(
 		GameServer()->m_apPlayers[SnappingClient] && IsHuman() &&
 		(
@@ -384,8 +576,6 @@ void CPlayer::Snap(int SnappingClient)
 		pSpectatorInfo->m_X = m_ViewPos.x;
 		pSpectatorInfo->m_Y = m_ViewPos.y;
 	}
-	if(!MustSnap)
-		pPlayer->m_NumNoMustSnapPlayer++;
 }
 
 void CPlayer::FakeSnap(int SnappingClient)
@@ -596,221 +786,6 @@ int CPlayer::GetClass()
 	return m_class;
 }
 
-void CPlayer::SetClassSkin(int newClass, int State)
-{
-	IServer::CClientInfo info;
-	Server()->GetClientInfo(m_ClientID, &info);
-
-	switch(newClass)
-	{
-		case PLAYERCLASS_ENGINEER:
-			m_TeeInfos.m_UseCustomColor = 0;
-			str_copy(m_TeeInfos.m_SkinName, "limekitty", sizeof(m_TeeInfos.m_SkinName));
-			break;
-		case PLAYERCLASS_SOLDIER:
-			m_TeeInfos.m_UseCustomColor = 0;
-			str_copy(m_TeeInfos.m_SkinName, "brownbear", sizeof(m_TeeInfos.m_SkinName));
-			break;
-		case PLAYERCLASS_SNIPER:
-			m_TeeInfos.m_UseCustomColor = 0;
-			str_copy(m_TeeInfos.m_SkinName, "warpaint", sizeof(m_TeeInfos.m_SkinName));
-			break;
-		case PLAYERCLASS_MERCENARY:
-			m_TeeInfos.m_UseCustomColor = 0;
-			str_copy(m_TeeInfos.m_SkinName, "bluestripe", sizeof(m_TeeInfos.m_SkinName));
-			break;
-		case PLAYERCLASS_SCIENTIST:
-			m_TeeInfos.m_UseCustomColor = 0;
-			str_copy(m_TeeInfos.m_SkinName, "toptri", sizeof(m_TeeInfos.m_SkinName));
-			break;
-		case PLAYERCLASS_CATAPULT:
-			m_TeeInfos.m_UseCustomColor = 0;
-			str_copy(m_TeeInfos.m_SkinName, "coala", sizeof(m_TeeInfos.m_SkinName));
-			break;
-		case PLAYERCLASS_BIOLOGIST:
-			m_TeeInfos.m_UseCustomColor = 0;
-			str_copy(m_TeeInfos.m_SkinName, "twintri", sizeof(m_TeeInfos.m_SkinName));
-			break;
-		case PLAYERCLASS_SCIOGIST:
-			if(info.m_Solar)
-			{
-				m_TeeInfos.m_UseCustomColor = 1;
-				m_TeeInfos.m_ColorBody = 255;
-				m_TeeInfos.m_ColorFeet = 0;
-				str_copy(m_TeeInfos.m_SkinName, "toptri", sizeof(m_TeeInfos.m_SkinName));
-			}
-			else 
-			{
-				m_TeeInfos.m_UseCustomColor = 0;
-				str_copy(m_TeeInfos.m_SkinName, "random", sizeof(m_TeeInfos.m_SkinName));
-			}
-			break;
-		case PLAYERCLASS_POLICE:
-			if(info.m_Solar)
-			{
-				m_TeeInfos.m_UseCustomColor = 0;
-				str_copy(m_TeeInfos.m_SkinName, "x_ninja", sizeof(m_TeeInfos.m_SkinName));
-			}
-			else 
-			{
-				m_TeeInfos.m_UseCustomColor = 0;
-				str_copy(m_TeeInfos.m_SkinName, "kitty_x_ninja", sizeof(m_TeeInfos.m_SkinName));
-			}
-			break;
-		case PLAYERCLASS_REVIVER:
-			if(info.m_Solar)
-			{
-				m_TeeInfos.m_UseCustomColor = 0;
-				str_copy(m_TeeInfos.m_SkinName, "bluekitty", sizeof(m_TeeInfos.m_SkinName));
-			}
-			else 
-			{
-				m_TeeInfos.m_UseCustomColor = 0;
-				str_copy(m_TeeInfos.m_SkinName, "coala_limekitty", sizeof(m_TeeInfos.m_SkinName));
-			}
-			break;
-		case PLAYERCLASS_LOOPER:
-			m_TeeInfos.m_UseCustomColor = 1;
-			str_copy(m_TeeInfos.m_SkinName, "bluekitty", sizeof(m_TeeInfos.m_SkinName));
-			m_TeeInfos.m_ColorBody = 255;
-			m_TeeInfos.m_ColorFeet = 0;
-			break;
-		case PLAYERCLASS_MEDIC:
-			m_TeeInfos.m_UseCustomColor = 0;
-			str_copy(m_TeeInfos.m_SkinName, "twinbop", sizeof(m_TeeInfos.m_SkinName));
-			break;
-		case PLAYERCLASS_HERO:
-			m_TeeInfos.m_UseCustomColor = 0;
-			str_copy(m_TeeInfos.m_SkinName, "redstripe", sizeof(m_TeeInfos.m_SkinName));
-			break;
-		case PLAYERCLASS_NINJA:
-			m_TeeInfos.m_UseCustomColor = 1;
-			str_copy(m_TeeInfos.m_SkinName, "default", sizeof(m_TeeInfos.m_SkinName));
-			m_TeeInfos.m_ColorBody = 255;
-			m_TeeInfos.m_ColorFeet = 0;
-			break;
-		case PLAYERCLASS_JOKER:
-			m_TeeInfos.m_UseCustomColor = 0;
-			str_copy(m_TeeInfos.m_SkinName, "pinky", sizeof(m_TeeInfos.m_SkinName));
-			break;
-		case PLAYERCLASS_SMOKER:
-			m_TeeInfos.m_UseCustomColor = 1;
-			str_copy(m_TeeInfos.m_SkinName, "cammostripes", sizeof(m_TeeInfos.m_SkinName));
-			m_TeeInfos.m_ColorBody = 3866368;
-			m_TeeInfos.m_ColorFeet = 65414;
-			break;
-		case PLAYERCLASS_BOOMER:
-			m_TeeInfos.m_UseCustomColor = 1;
-			str_copy(m_TeeInfos.m_SkinName, "saddo", sizeof(m_TeeInfos.m_SkinName));
-			m_TeeInfos.m_ColorBody = 3866368;
-			m_TeeInfos.m_ColorFeet = 65414;
-			break;
-		case PLAYERCLASS_HUNTER:
-			m_TeeInfos.m_UseCustomColor = 1;
-			str_copy(m_TeeInfos.m_SkinName, "warpaint", sizeof(m_TeeInfos.m_SkinName));
-			m_TeeInfos.m_ColorBody = 3866368;
-			m_TeeInfos.m_ColorFeet = 65414;
-			break;
-		case PLAYERCLASS_BAT:
-			m_TeeInfos.m_UseCustomColor = 1;
-			str_copy(m_TeeInfos.m_SkinName, "limekitty", sizeof(m_TeeInfos.m_SkinName));
-			m_TeeInfos.m_ColorBody = 3866368;
-			m_TeeInfos.m_ColorFeet = 2866368;
-			break;
-		case PLAYERCLASS_GHOST:
-			m_TeeInfos.m_UseCustomColor = 1;
-			str_copy(m_TeeInfos.m_SkinName, "twintri", sizeof(m_TeeInfos.m_SkinName));
-			m_TeeInfos.m_ColorBody = 3866368;
-			m_TeeInfos.m_ColorFeet = 65414;
-			break;
-		case PLAYERCLASS_SPIDER:
-			m_TeeInfos.m_UseCustomColor = 1;
-			str_copy(m_TeeInfos.m_SkinName, "pinky", sizeof(m_TeeInfos.m_SkinName));
-			m_TeeInfos.m_ColorBody = 3866368;
-			m_TeeInfos.m_ColorFeet = 65414;
-			break;
-		case PLAYERCLASS_GHOUL:
-			m_TeeInfos.m_UseCustomColor = 1;
-			str_copy(m_TeeInfos.m_SkinName, "cammo", sizeof(m_TeeInfos.m_SkinName));
-			{
-				int Hue = 58 * (1.0f - clamp(State/static_cast<float>(g_Config.m_InfGhoulStomachSize), 0.0f, 1.0f));
-				m_TeeInfos.m_ColorBody = (Hue<<16) + (255<<8);
-			}
-			m_TeeInfos.m_ColorFeet = 65414;
-			break;
-		case PLAYERCLASS_SLUG:
-			m_TeeInfos.m_UseCustomColor = 1;
-			str_copy(m_TeeInfos.m_SkinName, "coala", sizeof(m_TeeInfos.m_SkinName));
-			m_TeeInfos.m_ColorBody = 3866368;
-			m_TeeInfos.m_ColorFeet = 65414;
-			break;
-		case PLAYERCLASS_SLIME:
-			m_TeeInfos.m_UseCustomColor = 1;
-			if(info.m_Solar)
-			{
-				str_copy(m_TeeInfos.m_SkinName, "twinbop", sizeof(m_TeeInfos.m_SkinName));
-				m_TeeInfos.m_ColorBody = 3866368;
-				m_TeeInfos.m_ColorFeet = 3866368;
-			}
-			else
-			{
-				str_copy(m_TeeInfos.m_SkinName, "coala_cammo", sizeof(m_TeeInfos.m_SkinName));
-				m_TeeInfos.m_ColorBody = 3866368;
-				m_TeeInfos.m_ColorFeet = 65414;
-			}
-			break;
-		case PLAYERCLASS_VOODOO:
-			m_TeeInfos.m_UseCustomColor = 1;
-			str_copy(m_TeeInfos.m_SkinName, "bluestripe", sizeof(m_TeeInfos.m_SkinName));
-			if(State == 1)
-			{
-				m_TeeInfos.m_ColorBody = 3866368;
-			}
-			else
-			{
-				m_TeeInfos.m_ColorBody = 6183936; // grey-green
-			}
-			m_TeeInfos.m_ColorFeet = 65414;
-			break;
-		case PLAYERCLASS_UNDEAD:
-			m_TeeInfos.m_UseCustomColor = 1;
-			str_copy(m_TeeInfos.m_SkinName, "redstripe", sizeof(m_TeeInfos.m_SkinName));
-			m_TeeInfos.m_ColorBody = 3014400;
-			m_TeeInfos.m_ColorFeet = 13168;
-			break;
-		case PLAYERCLASS_WITCH:
-			m_TeeInfos.m_UseCustomColor = 1;
-			str_copy(m_TeeInfos.m_SkinName, "redbopp", sizeof(m_TeeInfos.m_SkinName));
-			m_TeeInfos.m_ColorBody = 16776744;
-			m_TeeInfos.m_ColorFeet = 13168;
-			break;
-		case PLAYERCLASS_FREEZER:
-			m_TeeInfos.m_UseCustomColor = 1;
-			str_copy(m_TeeInfos.m_SkinName, "cammo", sizeof(m_TeeInfos.m_SkinName));
-			m_TeeInfos.m_ColorBody = 8257280;
-			m_TeeInfos.m_ColorFeet = 65414;
-			break;
-		case PLAYERCLASS_NIGHTMARE:
-			m_TeeInfos.m_UseCustomColor = 1;
-			if(info.m_Solar)
-			{
-				str_copy(m_TeeInfos.m_SkinName, "toptri", sizeof(m_TeeInfos.m_SkinName));
-				m_TeeInfos.m_ColorBody = 3866368;
-				m_TeeInfos.m_ColorFeet = 0;
-			}else
-			{
-				str_copy(m_TeeInfos.m_SkinName, "ghost", sizeof(m_TeeInfos.m_SkinName));
-				m_TeeInfos.m_ColorBody = 3866368;
-				m_TeeInfos.m_ColorFeet = 65414;
-			}
-			break;
-		default:
-			m_TeeInfos.m_UseCustomColor = 0;
-			str_copy(m_TeeInfos.m_SkinName, "default", sizeof(m_TeeInfos.m_SkinName));
-			Server()->SetClientClan(GetCID(), "");
-	}
-}
-
 void CPlayer::SetClass(int newClass)
 {	
 	if(m_class == newClass)
@@ -843,8 +818,6 @@ void CPlayer::SetClass(int newClass)
 		HookProtection(true);
 	else
 		HookProtection(true); // true = hook protection for zombies by default
-	
-	SetClassSkin(newClass);
 	
 	if(m_pCharacter)
 	{

@@ -157,7 +157,6 @@ public:
 	void ResetNumberKills();
 	
 	int GetClass();
-	void SetClassSkin(int newClass, int State = 0);
 	void SetClass(int newClass);
 	int GetOldClass();
 	void SetOldClass(int oldClass);
