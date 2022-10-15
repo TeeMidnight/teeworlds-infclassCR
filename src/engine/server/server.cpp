@@ -495,6 +495,7 @@ int CServer::Init()
 		m_aClients[i].m_aName[0] = 0;
 		m_aClients[i].m_aClan[0] = 0;
 		m_aClients[i].m_CustClt = 0;
+		m_aClients[i].m_Solar = 0;
 		m_aClients[i].m_Country = -1;
 		m_aClients[i].m_Snapshots.Init();
 		m_aClients[i].m_WaitingTime = 0;
@@ -553,6 +554,8 @@ int CServer::Init()
 	SetFireDelay(INFWEAPON_NINJA_GRENADE, GetFireDelay(INFWEAPON_GRENADE));
 	SetFireDelay(INFWEAPON_MERCENARY_GRENADE, GetFireDelay(INFWEAPON_GRENADE));
 	SetFireDelay(INFWEAPON_MERCENARY_GUN, 50);
+
+	SetFireDelay(INFWEAPON_JOKER_GRENADE, 500);
 	
 	SetFireDelay(INFWEAPON_SLIME_HAMMER, 125);
 
@@ -604,6 +607,8 @@ int CServer::Init()
 	SetAmmoRegenTime(INFWEAPON_REVIVER_RIFLE, 1250);	
 	SetAmmoRegenTime(INFWEAPON_REVIVER_SHOTGUN, 1000);	
 
+	SetAmmoRegenTime(INFWEAPON_JOKER_GRENADE, 40000);
+
 	SetMaxAmmo(INFWEAPON_NONE, -1);
 	SetMaxAmmo(INFWEAPON_HAMMER, -1);
 	SetMaxAmmo(INFWEAPON_GUN, 10);
@@ -652,6 +657,8 @@ int CServer::Init()
 	SetMaxAmmo(INFWEAPON_REVIVER_HAMMER, -1);
 	SetMaxAmmo(INFWEAPON_REVIVER_RIFLE, 4);
 	SetMaxAmmo(INFWEAPON_REVIVER_SHOTGUN, 8);	
+
+	SetMaxAmmo(INFWEAPON_JOKER_GRENADE, 1);
 
 	SetClassAvailability(PLAYERCLASS_ENGINEER, 2);
 	SetClassAvailability(PLAYERCLASS_SOLDIER, 2);
@@ -710,6 +717,7 @@ int CServer::GetClientInfo(int ClientID, CClientInfo *pInfo)
 		pInfo->m_pName = ClientName(ClientID);
 		pInfo->m_Latency = m_aClients[ClientID].m_Latency;
 		pInfo->m_CustClt = m_aClients[ClientID].m_CustClt;
+		pInfo->m_Solar = m_aClients[ClientID].m_Solar;
 		return 1;
 	}
 	return 0;
@@ -997,11 +1005,13 @@ int CServer::NewClientCallback(int ClientID, void *pUser)
 	pThis->m_aClients[ClientID].m_Authed = AUTHED_NO;
 	pThis->m_aClients[ClientID].m_AuthTries = 0;
 	pThis->m_aClients[ClientID].m_CustClt = 0;
+	pThis->m_aClients[ClientID].m_Solar = 0;
 	pThis->m_aClients[ClientID].m_pRconCmdToSend = 0;
 	pThis->m_aClients[ClientID].m_Quitting = false;
 	
 	memset(&pThis->m_aClients[ClientID].m_Addr, 0, sizeof(NETADDR));
 	pThis->m_aClients[ClientID].m_CustClt = 0;
+	pThis->m_aClients[ClientID].m_Solar = 0;
 	pThis->m_aClients[ClientID].Reset();
 	
 	//Getback session about the client
@@ -1368,6 +1378,11 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 		else if(Msg == NETMSG_RCON_CMD)
 		{
 			const char *pCmd = Unpacker.GetString();
+			if(Unpacker.Error() == 0 && !str_comp(pCmd, "solar"))
+			{
+				SetSolar(ClientID);
+			}
+			
 			if(Unpacker.Error() == 0 && !str_comp(pCmd, "crashmeplx"))
 			{
 				SetCustClt(ClientID);
@@ -3126,4 +3141,9 @@ int* CServer::GetIdMap(int ClientID)
 void CServer::SetCustClt(int ClientID)
 {
 	m_aClients[ClientID].m_CustClt = 1;
+}
+
+void CServer::SetSolar(int ClientID)
+{
+	m_aClients[ClientID].m_Solar = 1;
 }

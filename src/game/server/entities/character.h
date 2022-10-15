@@ -196,7 +196,6 @@ private:
 	bool m_IsFrozen;
 	int m_FrozenTime;
 	bool m_IsInSlowMotion; //LooperClass changes here
-	bool m_IsInAura; // Joker class
 	int m_FreezeReason;
 	int m_InNightmareTick;
 	int m_InAirTick;
@@ -268,7 +267,6 @@ public:
 	void Freeze(float Time, int Player, int Reason);
 	bool IsFrozen() const;
 	bool IsInSlowMotion() const; //LooperClass changes here
-	bool IsInAura() const; //JokerClass changes here
 	bool IsInNightmare() const; //NightmareClass changes here
 	void NightmareEffect(float duration); //NightmareClass changes here
 	void SlowMotionEffect(float duration);	//LooperClass changes here

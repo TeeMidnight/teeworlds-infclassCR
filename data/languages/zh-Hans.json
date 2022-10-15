@@ -244,6 +244,10 @@
 		"value": "{str:PlayerName} 进入服务器并加入游戏"
 	},
 	{
+		"key": "{str:PlayerName} used teelink client",
+		"value": "{str:PlayerName} 使用了teelink客户端"
+	},
+	{
 		"key": "You are muted for {sec:Duration}",
 		"value": "你被禁言{sec:Duration}"
 	},
@@ -983,4 +987,12 @@
 		"key": "Slime entity is ready!",
 		"value": "粘液体已经就绪!"
 	},
+	{
+		"key": "No teleporter!",
+		"value": "没有可传送的人类!"
+	},
+	{
+		"key": "Joker tele to you!",
+		"value": "小丑传送到了你这里!"
+	}
 ]}

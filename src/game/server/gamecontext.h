@@ -122,7 +122,6 @@ class CGameContext : public IGameServer
 	static bool ConVote(IConsole::IResult *pResult, void *pUserData);
 	static bool ConStartFunRound(IConsole::IResult *pResult, void *pUserData);
 	static bool ConchainSpecialMotdupdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
-	void Teleport(CCharacter *pChr, vec2 Pos);
 	static bool ConTeleport(IConsole::IResult *pResult, void *pUserData);
 
 
@@ -168,6 +167,7 @@ public:
 	int GetHumanCount();
 	int GetZombieCount();
 	int GetPlayerCount();
+	void Teleport(CCharacter *pChr, vec2 Pos);
 	static std::vector<int> spectators_id; //spectators vector
 	int m_NbActivePlayers;
 	int m_NbSpectators;

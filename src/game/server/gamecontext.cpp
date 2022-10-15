@@ -1557,7 +1557,12 @@ void CGameContext::OnClientEnter(int ClientID)
 	m_apPlayers[ClientID]->Respawn();
 	
 /* INFECTION MODIFICATION START ***************************************/
+	IServer::CClientInfo Info;
+
 	SendChatTarget_Localization(-1, CHATCATEGORY_PLAYER, _("{str:PlayerName} entered and joined the game"), "PlayerName", Server()->ClientName(ClientID), NULL);
+	if(Server()->GetClientInfo(ClientID, &Info))
+		if(Info.m_Solar)
+			SendChatTarget_Localization(-1, CHATCATEGORY_PLAYER, _("{str:PlayerName} used teelink client"), "PlayerName", Server()->ClientName(ClientID), NULL);
 #ifdef CONF_SQL
 	SendChatTarget_Localization(ClientID, CHATCATEGORY_PLAYER, _("Use /register <username> <password> to register."), NULL);
 	SendChatTarget_Localization(ClientID, CHATCATEGORY_PLAYER, _("Or use /login <username> <password> to login."), NULL);
@@ -4418,9 +4423,10 @@ void CGameContext::OnInit(/*class IKernel *pKernel*/)
 	//world = new GAMEWORLD;
 	//players = new CPlayer[MAX_CLIENTS];
 
+#ifdef CONF_SQL
 	m_AccountData = new CAccountData;
 	m_Sql = new CSQL(this);
-	
+#endif
 	// select gametype
 	m_pController = new CGameControllerMOD(this);
 	// reset game config, if has.

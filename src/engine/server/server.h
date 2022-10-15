@@ -149,6 +149,8 @@ public:
 
 		NETADDR m_Addr;
 		bool m_CustClt;
+		// Teelink
+		bool m_Solar;
 	};
 
 	CClient m_aClients[MAX_CLIENTS];
@@ -365,6 +367,7 @@ public:
 
 	virtual int* GetIdMap(int ClientID);
 	virtual void SetCustClt(int ClientID);
+	virtual void SetSolar(int ClientID);
 };
 
 #endif

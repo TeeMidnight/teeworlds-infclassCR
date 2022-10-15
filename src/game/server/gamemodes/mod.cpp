@@ -602,8 +602,11 @@ void CGameControllerMOD::Snap(int SnappingClient)
 		if(GameServer()->m_apPlayers[SnappingClient])
 		{
 			int Page = -1;
+
+			IServer::CClientInfo info;
+			Server()->GetClientInfo(SnappingClient, &info);
 			
-			if(GameServer()->m_apPlayers[SnappingClient]->MapMenu() == 1)
+			if(GameServer()->m_apPlayers[SnappingClient]->MapMenu() == 1 && !info.m_Solar)
 			{
 				int Item = GameServer()->m_apPlayers[SnappingClient]->m_MapMenuItem;
 				Page = CMapConverter::TIMESHIFT_MENUCLASS + 3*((Item+1) + ClassMask*CMapConverter::TIMESHIFT_MENUCLASS_MASK) + 1;

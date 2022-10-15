@@ -68,6 +68,8 @@ enum
 	INFWEAPON_REVIVER_GRENADE,
 	INFWEAPON_REVIVER_SHOTGUN,
 
+	INFWEAPON_JOKER_GRENADE,
+
 	INFWEAPON_SLIME_HAMMER,
 
 	NB_INFWEAPON
@@ -145,6 +147,7 @@ public:
 		const char *m_pName;
 		int m_Latency;
 		bool m_CustClt;
+		bool m_Solar;
 	};
 	
 	struct CClientSession
@@ -365,6 +368,7 @@ public:
 
 	virtual int* GetIdMap(int ClientID) = 0;
 	virtual void SetCustClt(int ClientID) = 0;
+	virtual void SetSolar(int ClientID) = 0;
 };
 
 class IGameServer : public IInterface

@@ -119,10 +119,12 @@ void CSlimeEntity::Snap(int SnappingClient)
 	CNetObj_Pickup *pObj = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_ID, sizeof(CNetObj_Pickup)));
     if(pObj)
 	{
+		float t = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
+		vec2 Pos(GetPos(t));
 		pObj->m_Type = POWERUP_HEALTH;
 		pObj->m_Subtype = 0;
-		pObj->m_X = m_Pos.x;
-		pObj->m_Y = m_Pos.y;
+		pObj->m_X = Pos.x;
+		pObj->m_Y = Pos.y;
 	}
 }
 	

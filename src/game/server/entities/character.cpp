@@ -228,7 +228,6 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 /* INFECTION MODIFICATION START ***************************************/
 	m_AntiFireTick = Server()->Tick();
 	m_IsFrozen = false;
-	m_IsInAura = false;
 	m_IsInSlowMotion = false;
 	m_FrozenTime = -1;
 	m_LoveTick = -1;
@@ -659,6 +658,9 @@ void CCharacter::FireWeapon()
 
 	if(GetClass() == PLAYERCLASS_SLUG && m_ActiveWeapon == WEAPON_HAMMER)
 		FullAuto = true;
+
+	if(GetClass() == PLAYERCLASS_JOKER && m_ActiveWeapon == WEAPON_GRENADE)
+		FullAuto = false;
 	
 	// check if we gonna fire
 	bool WillFire = false;
@@ -1555,6 +1557,36 @@ void CCharacter::FireWeapon()
 				}
 				GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
 			}
+			else if(GetClass() == PLAYERCLASS_JOKER)
+			{
+				if(GameServer()->GetHumanCount() < 2)
+				{
+					GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, 
+						BROADCAST_DURATION_GAMEANNOUNCE, _("No teleporter!"), NULL);
+					GameServer()->CreateSoundGlobal(SOUND_WEAPON_NOAMMO, m_pPlayer->GetCID());
+					
+					m_ReloadTimer = 500 * Server()->TickSpeed() / 1000;
+					return;
+				}
+
+				array<CCharacter*> apHumans;
+				vec2 OldPos(m_Pos);
+				for(int i = 0; i < MAX_CLIENTS;i ++)
+				{
+					CCharacter *pChr = GameServer()->GetPlayerChar(i);
+					if(pChr && pChr->IsHuman() && pChr->GetClass() != PLAYERCLASS_JOKER)
+						apHumans.add(pChr);
+				}
+
+				int TeleCID = random_int(0, apHumans.size()-1);
+
+				GameServer()->Teleport(this, apHumans[TeleCID]->m_Pos);
+				GameServer()->CreatePlayerSpawn(m_Pos);
+				GameServer()->CreateSound(m_Pos, SOUND_PLAYER_SPAWN);
+
+				GameServer()->SendBroadcast_Localization(TeleCID, BROADCAST_PRIORITY_WEAPONSTATE, 
+						BROADCAST_DURATION_GAMEANNOUNCE, _("Joker tele to you!"), NULL);
+			}
 			else
 			{
 				if(m_HasStunGrenade) 
@@ -1883,7 +1915,6 @@ void CCharacter::HandleWeapons()
 	{
 		int InfWID = GetInfWeaponID(i);
 		int AmmoRegenTime = Server()->GetAmmoRegenTime(InfWID);
-		AmmoRegenTime = int(AmmoRegenTime * (m_IsInAura ? 0.75 : 1));
 		int MaxAmmo = Server()->GetMaxAmmo(GetInfWeaponID(i));
 		
 		if(InfWID == INFWEAPON_NINJA_GRENADE)
@@ -2238,20 +2269,6 @@ void CCharacter::Tick()
 		}
 	}
 
-	if(IsHuman())
-	{
-		for(CCharacter *pChr = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); pChr; pChr = (CCharacter *)pChr->TypeNext())
-		{
-			if(pChr->GetClass() != PLAYERCLASS_JOKER || pChr->GetPlayer()->GetCID() == m_pPlayer->GetCID())continue;
-			float Len = distance(pChr->m_Pos, m_Pos);
-			if(Len < pChr->m_ProximityRadius+g_Config.m_InfJokerRadius)
-			{
-				m_IsInAura = true;
-				break;
-			}else m_IsInAura = false;
-		}
-	}
-
 	if(m_InNightmareTick > 0)
 	{
 		if(!(m_InNightmareTick % 50))
@@ -2434,7 +2451,7 @@ void CCharacter::Tick()
 					CTuningParams* pTuningParams = &m_pPlayer->m_NextTuningParams;
 					for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
 					{
-						if(p->IsZombie() || p->GetClass() == PLAYERCLASS_JOKER || p->IsInAura()) continue;
+						if(p->IsZombie() || p->GetClass() == PLAYERCLASS_JOKER) continue;
 
 						float Len = distance(p->m_Pos, m_Pos);
 						if(Len < m_ProximityRadius + pTuningParams->m_HookLength)
@@ -2593,7 +2610,9 @@ void CCharacter::Tick()
 			m_AirJumpCounter++;
 		}
 	}
-	
+	IServer::CClientInfo Info;
+	Server()->GetClientInfo(m_pPlayer->GetCID(), &Info);
+
 	if(m_pPlayer->MapMenu() == 1)
 	{
 		if(GetClass() != PLAYERCLASS_NONE)
@@ -3926,17 +3945,6 @@ void CCharacter::Snap(int SnappingClient)
 			pP->m_Subtype = 0;
 		}
 	}
-	else if(IsHuman() && IsInAura())
-	{
-		CNetObj_Pickup *pA = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_HeartID, sizeof(CNetObj_Pickup)));
-		if(!pA)
-			return;
-
-		pA->m_X = (int)m_Pos.x;
-		pA->m_Y = (int)m_Pos.y;
-		pA->m_Type = POWERUP_ARMOR;
-		pA->m_Subtype = 0;
-	}
 	else if((m_Armor + m_Health) < 10 && SnappingClient != m_pPlayer->GetCID() && IsZombie() && pClient->IsZombie())
 	{
 		CNetObj_Pickup *pP = static_cast<CNetObj_Pickup *>(Server()->SnapNewItem(NETOBJTYPE_PICKUP, m_HeartID, sizeof(CNetObj_Pickup)));
@@ -4109,7 +4117,6 @@ void CCharacter::Snap(int SnappingClient)
 	if(GetClass() == PLAYERCLASS_JOKER) EmoteNormal = EMOTE_HAPPY;
 	if(m_IsInvisible) EmoteNormal = EMOTE_BLINK;
 	if(m_LoveTick > 0 || m_HallucinationTick > 0 || m_SlowMotionTick > 0 || IsInNightmare()) EmoteNormal = EMOTE_SURPRISE;
-	else if(IsInAura()) EmoteNormal = EMOTE_HAPPY;
 	if(IsFrozen()) EmoteNormal = EMOTE_PAIN;
 
 	// write down the m_Core
@@ -4513,8 +4520,8 @@ void CCharacter::ClassSpawnAttributes()
 			m_pPlayer->m_InfectionTick = -1;
 			m_Health = 10;
 			m_aWeapons[WEAPON_HAMMER].m_Got = true;
-			GiveWeapon(WEAPON_GUN, -1);
 			GiveWeapon(WEAPON_SHOTGUN, -1);
+			GiveWeapon(WEAPON_GRENADE, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			
 			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_JOKER);
@@ -5004,11 +5011,6 @@ bool CCharacter::IsInSlowMotion() const
 	return m_SlowMotionTick > 0;
 }
 
-bool CCharacter::IsInAura() const
-{
-	return m_IsInAura;
-}
-
 bool CCharacter::IsInNightmare() const
 {
 	return m_InNightmareTick > 0;
@@ -5115,6 +5117,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_CATAPULT_GRENADE;
 			case PLAYERCLASS_REVIVER:
 				return INFWEAPON_REVIVER_GRENADE;
+			case PLAYERCLASS_JOKER:
+				return INFWEAPON_JOKER_GRENADE;
 			default:
 				return INFWEAPON_GRENADE;
 		}
