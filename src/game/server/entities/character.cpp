@@ -1559,15 +1559,6 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_JOKER)
 			{
-				if(GameServer()->GetHumanCount() < 2)
-				{
-					GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, 
-						BROADCAST_DURATION_GAMEANNOUNCE, _("No teleporter!"), NULL);
-					GameServer()->CreateSoundGlobal(SOUND_WEAPON_NOAMMO, m_pPlayer->GetCID());
-					
-					m_ReloadTimer = 500 * Server()->TickSpeed() / 1000;
-					return;
-				}
 
 				array<CCharacter*> apHumans;
 				vec2 OldPos(m_Pos);
@@ -1576,6 +1567,16 @@ void CCharacter::FireWeapon()
 					CCharacter *pChr = GameServer()->GetPlayerChar(i);
 					if(pChr && pChr->IsHuman() && pChr->GetClass() != PLAYERCLASS_JOKER)
 						apHumans.add(pChr);
+				}
+
+				if(GameServer()->GetHumanCount() < 2 || apHumans.size() < 1)
+				{
+					GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, 
+						BROADCAST_DURATION_GAMEANNOUNCE, _("No teleporter!"), NULL);
+					GameServer()->CreateSoundGlobal(SOUND_WEAPON_NOAMMO, m_pPlayer->GetCID());
+					
+					m_ReloadTimer = 500 * Server()->TickSpeed() / 1000;
+					return;
 				}
 
 				int TeleCID = random_int(0, apHumans.size()-1);
