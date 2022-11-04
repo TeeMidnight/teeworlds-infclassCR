@@ -44,7 +44,7 @@ bam server_debug
 查看原版[wiki](https://github.com/yavl/teeworlds-infclassR/wiki)
 
 # Teeworlds InfClassCR
-Slightly modified version of original [InfClassR by yavl](https://github.com/yavl/teeworlds-infclassCR).
+Slightly modified version of original [InfClassR by yavl](https://github.com/yavl/teeworlds-infclassR).
 ## Additional dependencies
 [GeoLite2++](https://www.ccoderun.ca/GeoLite2++/api/) is used for IP geolocation
 ```bash
