@@ -75,6 +75,7 @@ void CCharacterCore::Reset()
 	m_Passenger = nullptr;
 	m_IsPassenger = false;
 	m_ProbablyStucked = false;
+	m_IsMagic = false;
 }
 
 void CCharacterCore::Tick(bool UseInput, CParams* pParams)
@@ -248,6 +249,8 @@ void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 					continue;
 				if(!pCharCore || pCharCore == this || (pCharCore->m_HookProtected && (m_Infected == pCharCore->m_Infected)) || m_IsPassenger || m_Passenger == pCharCore)
 					continue;
+				if(pCharCore->m_IsMagic)
+					continue;
 
 				vec2 ClosestPoint = closest_point_on_line(m_HookPos, NewPos, pCharCore->m_Pos);
 				if(distance(pCharCore->m_Pos, ClosestPoint) < PhysSize+2.0f)
@@ -350,6 +353,9 @@ void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 			CCharacterCore *pCharCore = m_pWorld->m_apCharacters[i];
 			if(!pCharCore)
 				continue;
+			
+			if(pCharCore->m_IsMagic || m_IsMagic)
+				continue;
 
 			//player *p = (player*)ent;
 			if(pCharCore == this) // || !(p->flags&FLAG_ALIVE)
@@ -442,6 +448,8 @@ void CCharacterCore::Move(CParams* pParams)
 			{
 				CCharacterCore *pCharCore = m_pWorld->m_apCharacters[p];
 				if(!pCharCore || pCharCore == this)
+					continue;
+				if(pCharCore->m_IsMagic || m_IsMagic)
 					continue;
 				if (!m_Infected && !pCharCore->m_Infected)
 					continue;

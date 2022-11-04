@@ -228,6 +228,7 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 /* INFECTION MODIFICATION START ***************************************/
 	m_AntiFireTick = Server()->Tick();
 	m_IsFrozen = false;
+	m_IsMagic = false;
 	m_IsInSlowMotion = false;
 	m_FrozenTime = -1;
 	m_LoveTick = -1;
@@ -614,6 +615,17 @@ void CCharacter::UpdateTuningParam()
 		pTuningParams->m_AirControlAccel = pTuningParams->m_AirControlAccel * (1.0f + 0.5f*Factor);
 		pTuningParams->m_HookDragAccel = pTuningParams->m_HookDragAccel * (1.0f + 0.5f*Factor);
 		pTuningParams->m_HookDragSpeed = pTuningParams->m_HookDragSpeed * (1.0f + 0.5f*Factor);
+	}
+
+	if(GetClass() == PLAYERCLASS_MAGICIAN && m_IsMagic)
+	{
+		float Factor = 0.75f;
+		pTuningParams->m_GroundControlSpeed = pTuningParams->m_GroundControlSpeed * (1.0f + 0.5f*Factor);
+		pTuningParams->m_GroundControlAccel = pTuningParams->m_GroundControlAccel * (1.0f + 0.5f*Factor);
+		pTuningParams->m_GroundJumpImpulse = pTuningParams->m_GroundJumpImpulse * (1.0f + 0.35f*Factor);
+		pTuningParams->m_AirJumpImpulse = pTuningParams->m_AirJumpImpulse * (1.0f + 0.35f*Factor);
+		pTuningParams->m_AirControlSpeed = pTuningParams->m_AirControlSpeed * (1.0f + 0.5f*Factor);
+		pTuningParams->m_AirControlAccel = pTuningParams->m_AirControlAccel * (1.0f + 0.5f*Factor);
 	}
 
 	if(GetClass() == PLAYERCLASS_NIGHTMARE)
@@ -1315,21 +1327,36 @@ void CCharacter::FireWeapon()
 
 				GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
 			}
+			else if(GetClass() == PLAYERCLASS_MAGICIAN)
+			{
+				CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_GRENADE,
+					m_pPlayer->GetCID(),
+					ProjStartPos,
+					Direction,
+					(int)(Server()->TickSpeed()*GameServer()->Tuning()->m_GrenadeLifetime),
+					1, 1, 0, SOUND_GRENADE_EXPLODE, WEAPON_GUN);
+
+				// pack the Projectile and send it to the client Directly
+				CNetObj_Projectile p;
+				pProj->FillInfo(&p);
+
+				CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
+				Msg.AddInt(1);
+				for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
+					Msg.AddInt(((int *)&p)[i]);
+
+				Server()->SendMsg(&Msg, MSGFLAG_VITAL, m_pPlayer->GetCID());
+
+				GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
+			}
 			else
 			{
-				int Damage = 1;
-				float Force = 0.f;
-				if(GetClass() == PLAYERCLASS_MAGICIAN)
-				{
-					Damage = 2;
-					Force = 1.5f;
-				}
 				CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_GUN,
 					m_pPlayer->GetCID(),
 					ProjStartPos,
 					Direction,
 					(int)(Server()->TickSpeed()*GameServer()->Tuning()->m_GunLifetime),
-					Damage, 0, Force, -1, WEAPON_GUN);
+					1, 0, 0, -1, WEAPON_GUN);
 
 				// pack the Projectile and send it to the client Directly
 				CNetObj_Projectile p;
@@ -1351,6 +1378,9 @@ void CCharacter::FireWeapon()
 			int ShotSpread = 3;
 			if(GetClass() == PLAYERCLASS_BIOLOGIST)
 				ShotSpread = 1;
+	
+			if(GetClass() == PLAYERCLASS_MAGICIAN)
+				ShotSpread = 1;
 			
 			CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
 			Msg.AddInt(ShotSpread*2+1);
@@ -1360,7 +1390,7 @@ void CCharacter::FireWeapon()
 				Force = 10.0f;
 
 			if(GetClass() == PLAYERCLASS_MAGICIAN)
-				Force = 5.0f;
+				Force = 8.0f;
 				
 			for(int i = -ShotSpread; i <= ShotSpread; ++i)
 			{
@@ -1546,9 +1576,12 @@ void CCharacter::FireWeapon()
 				if(length(PortalShift) > 500.0f)
 					PortalShift = PortalDir * 500.0f;
 				vec2 PortalPos;
-				
+			
 				if(FindPortalPosition(m_Pos + PortalShift, PortalPos))
 				{
+					GameServer()->CreateExplosion(m_Pos, m_pPlayer->GetCID(),
+					 WEAPON_GRENADE, false, TAKEDAMAGEMODE_NOINFECTION, 1.5f);
+					GameServer()->CreatePlayerSpawn(m_Pos);
 					vec2 OldPos = m_Core.m_Pos;
 					m_Core.m_Pos = PortalPos;
 					m_Core.m_HookedPlayer = -1;
@@ -1568,7 +1601,7 @@ void CCharacter::FireWeapon()
 					GameServer()->CreateDeath(PortalPos, GetPlayer()->GetCID());
 					GameServer()->CreateSound(PortalPos, SOUND_CTF_RETURN);
 					new CLaserTeleport(GameWorld(), PortalPos, OldPos);
-					m_MagicTick = g_Config.m_InfMagicianInvisibleTick;
+					m_MagicTick = g_Config.m_InfMagicianMagicTick;
 				}
 			}
 			else
@@ -2126,6 +2159,39 @@ void CCharacter::Tick()
 		m_Core.m_HookState = HOOK_IDLE;
 	}
 	
+	if(m_MagicTick)
+	{
+		m_MagicTick--;
+
+		m_IsMagic = true;
+		m_Core.m_IsMagic = true;
+
+		int InvisibleSec = round_to_int(m_MagicTick/(float)Server()->TickSpeed());
+		GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE, BROADCAST_DURATION_REALTIME, _("You are invisible: {sec:EffectDuration}"), "EffectDuration", &InvisibleSec, NULL);
+			
+	}else 
+	{
+		m_Core.m_IsMagic = false;
+		m_IsMagic = false;
+	}
+
+	if(!m_IsMagic)
+	{
+		if(m_Core.m_IsPassenger)
+		{
+			for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
+			{
+				if(p->IsZombie()) continue;
+				if(!p->m_IsMagic) continue;
+				if(p->GetCore().m_Passenger == &m_Core)
+				{
+					m_IsMagic = true;
+					m_Core.m_IsMagic = true;
+				}
+			}
+		}
+	}
+
 	if(IsHuman() && IsAlive() && GameServer()->m_pController->IsInfectionStarted())
 	{
 		int Index = GameServer()->Collision()->GetZoneValueAt(GameServer()->m_ZoneHandle_Bonus, m_Pos.x, m_Pos.y);
@@ -2178,7 +2244,7 @@ void CCharacter::Tick()
 					GrantSpawnProtection();
 				}
 			}
-			else
+			else if(!m_IsMagic)
 			{
 				m_pPlayer->StartInfection();
 				Freeze(3, m_pPlayer->GetCID(), FREEZEREASON_INFECTION);
@@ -2286,14 +2352,7 @@ void CCharacter::Tick()
 			m_PoisonTick--;
 		}
 	}
-	
-	if(m_MagicTick)
-	{
-		m_MagicTick--;
 
-		int InvisibleSec = round_to_int(m_MagicTick/(float)Server()->TickSpeed());
-		GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE, BROADCAST_DURATION_REALTIME, _("You are invisible: {sec:EffectDuration}"), "EffectDuration", &InvisibleSec, NULL);
-	}
 	//NeedHeal
 	if(m_Armor >= 10)
 		m_NeedFullHeal = false;
@@ -3316,7 +3375,7 @@ void CCharacter::TickDefered()
 
 
 	if(Events&COREEVENT_HOOK_ATTACH_PLAYER) GameServer()->CreateSound(m_Pos, SOUND_HOOK_ATTACH_PLAYER, CmaskAll());
-	if( ( GetClass() != PLAYERCLASS_GHOST && GetClass() != PLAYERCLASS_NIGHTMARE ) || !m_IsInvisible)
+	if( ( GetClass() != PLAYERCLASS_GHOST && GetClass() != PLAYERCLASS_NIGHTMARE ) || !m_IsMagic || !m_IsInvisible)
 	{
 		if(Events&COREEVENT_GROUND_JUMP) GameServer()->CreateSound(m_Pos, SOUND_PLAYER_JUMP, Mask);
 		if(Events&COREEVENT_HOOK_ATTACH_GROUND) GameServer()->CreateSound(m_Pos, SOUND_HOOK_ATTACH_GROUND, Mask);
@@ -3647,7 +3706,9 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		Mode = TAKEDAMAGEMODE_NOINFECTION;
 	}
 	
-	if(GetClass() != PLAYERCLASS_HUNTER || Weapon != WEAPON_SHOTGUN)
+	if(GetClass() != PLAYERCLASS_HUNTER || 
+		(Weapon != WEAPON_SHOTGUN && pKillerPlayer 
+			&& pKillerPlayer->GetClass() != PLAYERCLASS_MAGICIAN))
 	{
 		m_Core.m_Vel += Force;
 	}
@@ -3714,17 +3775,19 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	m_DamageTaken++;
 
 	// create healthmod indicator
-	if(Server()->Tick() < m_DamageTakenTick+25)
+	if(!m_IsMagic)
 	{
-		// make sure that the damage indicators doesn't group together
-		GameServer()->CreateDamageInd(m_Pos, m_DamageTaken*0.25f, Dmg);
+		if(Server()->Tick() < m_DamageTakenTick+25)
+		{
+			// make sure that the damage indicators doesn't group together
+			GameServer()->CreateDamageInd(m_Pos, m_DamageTaken*0.25f, Dmg);
+		}
+		else
+		{
+			m_DamageTaken = 0;
+			GameServer()->CreateDamageInd(m_Pos, 0, Dmg);
+		}
 	}
-	else
-	{
-		m_DamageTaken = 0;
-		GameServer()->CreateDamageInd(m_Pos, 0, Dmg);
-	}
-
 /* INFECTION MODIFICATION START ***************************************/
 	if(Dmg)
 	{
@@ -3854,7 +3917,7 @@ void CCharacter::Snap(int SnappingClient)
 	
 /* INFECTION MODIFICATION START ***************************************/
 
-	if(GetClass() == PLAYERCLASS_MAGICIAN && m_MagicTick && SnappingClient != id)
+	if(GetClass() == PLAYERCLASS_MAGICIAN && pClient->IsZombie() && m_IsInvisible && SnappingClient != id)
 		return;
 
 	if(GetClass() == PLAYERCLASS_WITCH)
@@ -4073,6 +4136,7 @@ void CCharacter::Snap(int SnappingClient)
 	int EmoteNormal = EMOTE_NORMAL;
 	if(IsZombie()) EmoteNormal = EMOTE_ANGRY;
 	if(m_IsInvisible) EmoteNormal = EMOTE_BLINK;
+	if(m_IsMagic) EmoteNormal = EMOTE_HAPPY;
 	if(m_LoveTick > 0 || m_HallucinationTick > 0 || m_SlowMotionTick > 0 || IsInNightmare()) EmoteNormal = EMOTE_SURPRISE;
 	if(IsFrozen()) EmoteNormal = EMOTE_PAIN;
 
@@ -5049,6 +5113,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_SCIOGIST_SHOTGUN;
 			case PLAYERCLASS_REVIVER:
 				return INFWEAPON_REVIVER_SHOTGUN;
+			case PLAYERCLASS_MAGICIAN:
+				return INFWEAPON_MAGICIAN_SHOTGUN;
 			default:
 				return INFWEAPON_SHOTGUN;
 		}

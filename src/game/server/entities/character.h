@@ -223,6 +223,7 @@ public:
 	bool m_HasStunGrenade;
 	bool m_HasFreezeMine;// Freezer
 	bool m_ShieldExplode;
+	bool m_IsMagic;
 	int m_BroadcastWhiteHoleReady;
 	int m_BroadcastElasticHoleReady;// used to broadcast "WhiteHole ready" for a short period of time
 	int m_BroadcastHealBoomReady;
