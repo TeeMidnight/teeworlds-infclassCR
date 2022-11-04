@@ -21,6 +21,7 @@ public:
 	int GetType() const { return m_Type;}
 
 	vec2 m_ActualPos;
+	vec2 m_ActualDir;
 
 private:
 	vec2 m_Direction;

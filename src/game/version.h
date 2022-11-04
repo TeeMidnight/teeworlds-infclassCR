@@ -8,5 +8,10 @@
 #define GAME_NETVERSION "0.6 " GAME_NETVERSION_HASH
 #define LAST_COMPILE_DATE __DATE__
 //static const char GAME_RELEASE_VERSION[8] = "0.6.4";
-
+#define MOD_VERSION "0.6.0"
+#define VERSION_CODE "Joker"
+/*
+    0.6 ------ Joker
+    0.7 ------ ?
+*/
 #endif

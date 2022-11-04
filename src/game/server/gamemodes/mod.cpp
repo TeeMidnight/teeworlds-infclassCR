@@ -62,7 +62,7 @@ void CGameControllerMOD::OnClientDrop(int ClientID, int Type)
 		SetFirstInfectedNumber();
 		if(GameServer()->m_NbZombies == 1 && GameServer()->m_NbHumans > 0 )
 		{
-			Server()->Ban(ClientID, 60*g_Config.m_InfLeaverBanTime, "leaver");
+			Server()->Ban(ClientID, 600, Server()->Localization()->Localize(pPlayer->GetLanguage(), _("infect leaver")));
 			if(GameServer()->GetZombieCount() <= GetFirstInfNb()) // quit client not deleted, so zombie number should subtract 1
 			{
 				m_InfectedStarted = false;
@@ -550,6 +550,7 @@ void CGameControllerMOD::Snap(int SnappingClient)
 				case PLAYERCLASS_NINJA:
 				case PLAYERCLASS_MERCENARY:
 				case PLAYERCLASS_SNIPER:
+				case PLAYERCLASS_MAGICIAN:
 					Support++;
 					break;
 				case PLAYERCLASS_ENGINEER:
@@ -575,9 +576,6 @@ void CGameControllerMOD::Snap(int SnappingClient)
 				case PLAYERCLASS_REVIVER:
 					Reviver++;
 					break;
-				case PLAYERCLASS_JOKER:
-					Joker++;
-					break;
 			}
 		}
 		
@@ -593,8 +591,6 @@ void CGameControllerMOD::Snap(int SnappingClient)
 			ClassMask |= CMapConverter::MASK_SCIOGIST;
 		if(Reviver < g_Config.m_InfReviverLimit)
 			ClassMask |= CMapConverter::MASK_REVIVER;
-		if(Joker < g_Config.m_InfJokerLimit)
-			ClassMask |= CMapConverter::MASK_JOKER;
 	}
 	
 	if(SnappingClient != -1)
@@ -1136,8 +1132,8 @@ bool CGameControllerMOD::IsEnabledClass(int PlayerClass) {
 			return g_Config.m_InfEnablePolice;
 		case PLAYERCLASS_REVIVER:
 			return g_Config.m_InfEnableReviver;
-		case PLAYERCLASS_JOKER:
-			return g_Config.m_InfEnableJoker;
+		case PLAYERCLASS_MAGICIAN:
+			return g_Config.m_InfEnableMagician;
 		default:
 			return false;
 	}
@@ -1164,6 +1160,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			case PLAYERCLASS_NINJA:
 			case PLAYERCLASS_MERCENARY:
 			case PLAYERCLASS_SNIPER:
+			case PLAYERCLASS_MAGICIAN:
 				nbSupport++;
 				break;
 			case PLAYERCLASS_MEDIC:
@@ -1189,9 +1186,6 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			case PLAYERCLASS_REVIVER:
 				nbReviver++;
 				break;
-			case PLAYERCLASS_JOKER:
-				nbJoker++;
-				break;
 		}
 	}
 	
@@ -1211,6 +1205,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 		case PLAYERCLASS_NINJA:
 		case PLAYERCLASS_MERCENARY:
 		case PLAYERCLASS_SNIPER:
+		case PLAYERCLASS_MAGICIAN:
 			return (nbSupport < g_Config.m_InfSupportLimit);
 		case PLAYERCLASS_LOOPER:
 			return (nbDefender < g_Config.m_InfDefenderLimit);
@@ -1218,8 +1213,6 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			return (nbSciogist < g_Config.m_InfSciogistLimit);
 		case PLAYERCLASS_REVIVER:
 			return (nbReviver < g_Config.m_InfReviverLimit);
-		case PLAYERCLASS_JOKER:
-			return (nbJoker < g_Config.m_InfJokerLimit);
 	}
 	
 	return false;

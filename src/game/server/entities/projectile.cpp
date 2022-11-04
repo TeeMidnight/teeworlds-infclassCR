@@ -15,6 +15,7 @@ CProjectile::CProjectile(CGameWorld *pGameWorld, int Type, int Owner, vec2 Pos, 
 	m_Pos = Pos;
 	m_ActualPos = Pos;
 	m_Direction = Dir;
+	m_ActualDir = Dir;
 	m_LifeSpan = Span;
 	m_Owner = Owner;
 	m_Force = Force;
@@ -76,14 +77,15 @@ void CProjectile::Tick()
 	float Ct = (Server()->Tick()-m_StartTick)/(float)Server()->TickSpeed();
 	vec2 PrevPos = GetPos(Pt);
 	vec2 CurPos = GetPos(Ct);
+/* INFECTION MODIFICATION START ***************************************/
 	m_ActualPos = CurPos;
+	m_ActualDir = normalize(CurPos - PrevPos);
 	int Collide = GameServer()->Collision()->IntersectLine(PrevPos, CurPos, &CurPos, 0);
 	CCharacter *OwnerChar = GameServer()->GetPlayerChar(m_Owner);
 	CCharacter *TargetChr = GameServer()->m_World.IntersectCharacter(PrevPos, CurPos, 6.0f, CurPos, OwnerChar);
 
 	m_LifeSpan--;
 
-/* INFECTION MODIFICATION START ***************************************/
 	if(TargetChr || Collide || m_LifeSpan < 0 || GameLayerClipped(CurPos))
 	{
 		if(m_LifeSpan >= 0 || (m_Weapon == WEAPON_GRENADE && !m_IsPortal))

@@ -33,7 +33,6 @@ MACRO_CONFIG_INT(InfMedicLimit, inf_medic_limit, 20, 0, 64, CFGFLAG_SERVER, "Max
 MACRO_CONFIG_INT(InfHeroLimit, inf_hero_limit, 1, 0, 64, CFGFLAG_SERVER, "Maximum number of heros in game")
 MACRO_CONFIG_INT(InfSupportLimit, inf_support_limit, 40, 0, 64, CFGFLAG_SERVER, "Maximum number of supports in game")
 MACRO_CONFIG_INT(InfReviverLimit, inf_reviver_limit, 1, 0, 4, CFGFLAG_SERVER, "Maximum number of revivers in game")
-MACRO_CONFIG_INT(InfJokerLimit, inf_joker_limit, 1, 0, 4, CFGFLAG_SERVER, "Maximum number of jokers in game")
 
 MACRO_CONFIG_INT(InfSoldierBombs, inf_soldier_bombs, 3, 1, 16, CFGFLAG_SERVER, "Number of bombs for the soldier")
 MACRO_CONFIG_INT(InfMercBombs, inf_merc_bombs, 15, 1, 100, CFGFLAG_SERVER, "Number of poison grenades for the mercenary")
@@ -103,7 +102,7 @@ MACRO_CONFIG_INT(InfEnableNinja, inf_enable_ninja, 1, 0, 1, CFGFLAG_SERVER, "Mak
 MACRO_CONFIG_INT(InfEnableMedic, inf_enable_medic, 1, 0, 1, CFGFLAG_SERVER, "Makes the medic class available")
 MACRO_CONFIG_INT(InfEnableHero, inf_enable_hero, 1, 0, 1, CFGFLAG_SERVER, "Makes the hero class available")
 MACRO_CONFIG_INT(InfEnablePolice, inf_enable_police, 1, 0, 1, CFGFLAG_SERVER, "Makes the police class available")
-MACRO_CONFIG_INT(InfEnableJoker, inf_enable_joker, 1, 0, 1, CFGFLAG_SERVER, "Makes the joker class available")
+MACRO_CONFIG_INT(InfEnableMagician, inf_enable_magician, 1, 0, 1, CFGFLAG_SERVER, "Makes the magician class available")
 
 MACRO_CONFIG_INT(InfMinEngineerPlayer, inf_min_engineer_player, 8, 0, 32, CFGFLAG_SERVER, "Min engineer need player num")
 
@@ -115,12 +114,10 @@ MACRO_CONFIG_INT(FunRoundGhoulStomachSize, funround_ghoul_stomach_size, 40, 0, 1
 MACRO_CONFIG_INT(FunRoundUndeadProba, funround_undead_proba, 6, 0, 100, CFGFLAG_SERVER, "Fun round undead proba")
 MACRO_CONFIG_INT(FunRoundWitchProba, funround_witch_proba, 5, 0, 100, CFGFLAG_SERVER, "Fun round witch proba")
 MACRO_CONFIG_INT(FunRoundFreezerProba, funround_freezer_proba, 5, 0, 100, CFGFLAG_SERVER, "Fun round freezer proba")
-MACRO_CONFIG_INT(FunRoundProba, funround_proba, 6, 0, 100, CFGFLAG_SERVER, "Fun round proba")
+MACRO_CONFIG_INT(FunRoundProba, funround_proba, 6, 0, 1000, CFGFLAG_SERVER, "Fun round proba(‰)")
 // class config
-
 MACRO_CONFIG_INT(InfFreezerReslowlyTime, inf_freezer_reslowly_time, 200, 0, 1000, CFGFLAG_SERVER, "tick")
-
-MACRO_CONFIG_INT(InfJokerRadius, inf_joker_radius, 280, 0, 1200, CFGFLAG_SERVER, "Radius of Joker Aura")
+MACRO_CONFIG_INT(InfMagicianInvisibleTick, inf_magician_invisible_tick, 250, 0, 1000, CFGFLAG_SERVER, "tick")
 
 //weapon config
 MACRO_CONFIG_INT(InfElasticEntityRadius, inf_elastic_entity_radius, 46, 0, 200, CFGFLAG_SERVER, "Radius of elastic entitys")
@@ -144,9 +141,9 @@ MACRO_CONFIG_INT(InfReviverGrenadeLifeSpan, inf_reviver_grenade_life_span, 5, 0,
 MACRO_CONFIG_INT(InfReviverGrenadeSlowTime, inf_reviver_grenade_slow_time, 4, 0, 100, CFGFLAG_SERVER, "Reviver grenade slow time")
 
 MACRO_CONFIG_INT(InfPlasmaPlusRange, inf_plasma_plus_range, 128, 0, 2000, CFGFLAG_SERVER, "Range of plasma plus")
-MACRO_CONFIG_INT(InfPlasmaPlusLifeSpan, inf_plasma_plus_life_span, 3, 0, 10, CFGFLAG_SERVER, "plasma plus life span")
-MACRO_CONFIG_INT(InfPlasmaPlusDamage, inf_plasma_plus_damage, 6, 0, 20, CFGFLAG_SERVER, "Damage of plasma plus")
-MACRO_CONFIG_INT(InfPlasmaPlusSpeed, inf_plasma_plus_speed, 24, 0, 20, CFGFLAG_SERVER, "Speed of plasma plus")
+MACRO_CONFIG_INT(InfPlasmaPlusLifeSpan, inf_plasma_plus_life_span, 3, 0, 100, CFGFLAG_SERVER, "plasma plus life span")
+MACRO_CONFIG_INT(InfPlasmaPlusDamage, inf_plasma_plus_damage, 5, 0, 20, CFGFLAG_SERVER, "Damage of plasma plus")
+MACRO_CONFIG_INT(InfPlasmaPlusSpeed, inf_plasma_plus_speed, 16, 0, 20, CFGFLAG_SERVER, "Speed of plasma plus")
 
 //Looper class config
 MACRO_CONFIG_INT(InfSlowMotionWallDuration, inf_slow_motion_wall_duration, 30, 0, 1024, CFGFLAG_SERVER, "How long looper wall slow motion effect will slow down zombies (in centiSec)")

@@ -98,8 +98,8 @@ int CRoundStatistics::CPlayer::OnScoreEvent(int EventType, int Class)
 		case PLAYERCLASS_REVIVER:
 			m_ReviverScore += Points;
 			break;
-		case PLAYERCLASS_JOKER:
-			m_JokerScore += Points;
+		case PLAYERCLASS_MAGICIAN:
+			m_MagicianScore += Points;
 			break;
 		case PLAYERCLASS_SMOKER:
 			m_SmokerScore += Points;

@@ -233,6 +233,7 @@ public:
 	int m_ReslowlyTick;
 	int m_PoisonTick;
 	int m_Poison;
+	int m_MagicTick;// Magician
 	int m_SlowMotionTick; //LooperClass changes here
 	int m_PoisonFrom;
 	int m_LastFreezer;
