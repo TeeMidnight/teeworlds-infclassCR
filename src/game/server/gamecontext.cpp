@@ -185,7 +185,7 @@ const char *CGameContext::GetClassName(int Class)
 		case PLAYERCLASS_CATAPULT: return ("Catapult");break;
 		case PLAYERCLASS_POLICE: return ("Police");break;
 		case PLAYERCLASS_REVIVER: return ("Reviver");break;
-		case PLAYERCLASS_JOKER: return ("Joker");break;
+		case PLAYERCLASS_MAGICIAN: return ("Magician");break;
 		//Zombies
 		case PLAYERCLASS_SMOKER: return ("Smoker");break;
 		case PLAYERCLASS_BOOMER: return ("Boomer");break;
@@ -201,7 +201,7 @@ const char *CGameContext::GetClassName(int Class)
 		case PLAYERCLASS_SLIME: return ("Slime");break;
 		case PLAYERCLASS_FREEZER: return ("Freezer");break;
 		case PLAYERCLASS_NIGHTMARE: return ("Nightmare");break;
-		default: return ("None");break;
+		default: return ("Unknown class");break;
 	}
 }
 
@@ -321,44 +321,6 @@ int CGameContext::RandomZombieToWitch()
 	int id = random_int(0, zombies_id.size() - 1);
 	m_apPlayers[zombies_id[id]]->SetClass(PLAYERCLASS_WITCH);
 	return zombies_id[id];
-}
-
-void CGameContext::SetAvailabilities(std::vector<int> value) { // todo: should be order-independent, e.g with std map
-	if (value.empty())
-		value = std::vector<int>(14); //increased by 1 human class from 9 to 14
-	g_Config.m_InfEnableBiologist = value[0];
-	g_Config.m_InfEnableEngineer = value[1];
-	g_Config.m_InfEnableHero = value[2];
-	g_Config.m_InfEnableMedic = value[3];
-	g_Config.m_InfEnableMercenary = value[4];
-	g_Config.m_InfEnableNinja = value[5];
-	g_Config.m_InfEnableScientist = value[6];
-	g_Config.m_InfEnableSniper = value[7];
-	g_Config.m_InfEnableSoldier = value[8];
-	g_Config.m_InfEnableLooper = value[9];
-	g_Config.m_InfEnableSciogist = value[10];
-	g_Config.m_InfEnableCatapult = value[11];
-	g_Config.m_InfEnablePolice = value[12];
-	g_Config.m_InfEnableReviver = value[13];
-	g_Config.m_InfEnableJoker = value[14];
-}
-
-void CGameContext::SetProbabilities(std::vector<int> value) { // todo: should be order-independent, e.g with std map
-	if (value.empty())
-		value = std::vector<int>(13);
-	g_Config.m_InfProbaBat = value[0];
-	g_Config.m_InfProbaBoomer = value[1];
-	g_Config.m_InfProbaGhost = value[2];
-	g_Config.m_InfProbaGhoul = value[3];
-	g_Config.m_InfProbaHunter = value[4];
-	g_Config.m_InfProbaSlug = value[5];
-	g_Config.m_InfProbaSmoker = value[6];
-	g_Config.m_InfProbaSpider = value[7];
-	g_Config.m_InfProbaVoodoo = value[8];
-	g_Config.m_InfGhoulThreshold = value[9];
-	g_Config.m_InfGhoulStomachSize = value[10];
-	g_Config.m_InfProbaSlime = value[11];
-	g_Config.m_InfProbaFreezer = value[12];
 }
 
 void CGameContext::CreateDamageInd(vec2 Pos, float Angle, int Amount)
@@ -831,100 +793,8 @@ void CGameContext::SendBroadcast_Localization_P(int To, int Priority, int LifeSp
 void CGameContext::SendBroadcast_ClassIntro(int ClientID, int Class)
 {
 	const char* pClassName = 0;
-	
-	switch(Class)
-	{
-		case PLAYERCLASS_ENGINEER:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Engineer"));
-			break;
-		case PLAYERCLASS_SOLDIER:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Soldier"));
-			break;
-		case PLAYERCLASS_MEDIC:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Medic"));
-			break;
-		case PLAYERCLASS_HERO:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Hero"));
-			break;
-		case PLAYERCLASS_NINJA:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Ninja"));
-			break;
-		case PLAYERCLASS_MERCENARY:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Mercenary"));
-			break;
-		case PLAYERCLASS_SNIPER:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Sniper"));
-			break;
-		case PLAYERCLASS_SCIENTIST:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Scientist"));
-			break;
-		case PLAYERCLASS_CATAPULT:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Catapult"));
-			break;
-		case PLAYERCLASS_BIOLOGIST:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Biologist"));
-			break;
-		case PLAYERCLASS_SCIOGIST:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Sciogist"));
-			break;
-		case PLAYERCLASS_REVIVER:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Reviver"));
-			break;
-		case PLAYERCLASS_POLICE:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Police"));
-			break;
-		case PLAYERCLASS_LOOPER:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Looper"));
-			break;
-		case PLAYERCLASS_JOKER:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Joker"));
-			break;
-		case PLAYERCLASS_SMOKER:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Smoker"));
-			break;
-		case PLAYERCLASS_HUNTER:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Hunter"));
-			break;
-		case PLAYERCLASS_BAT:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Bat"));
-			break;
-		case PLAYERCLASS_BOOMER:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Boomer"));
-			break;
-		case PLAYERCLASS_GHOST:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Ghost"));
-			break;
-		case PLAYERCLASS_SPIDER:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Spider"));
-			break;
-		case PLAYERCLASS_GHOUL:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Ghoul"));
-			break;
-		case PLAYERCLASS_VOODOO:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Voodoo"));
-			break;
-		case PLAYERCLASS_SLUG:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Slug"));
-			break;
-		case PLAYERCLASS_SLIME:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Slime"));
-			break;
-		case PLAYERCLASS_WITCH:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Witch"));
-			break;
-		case PLAYERCLASS_UNDEAD:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Undead"));
-			break;
-		case PLAYERCLASS_FREEZER:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Freezer"));
-			break;
-		case PLAYERCLASS_NIGHTMARE:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Nightmare"));
-			break;
-		default:
-			pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), _("Unknown class"));
-			break;
-	}
+
+	pClassName = Server()->Localization()->Localize(m_apPlayers[ClientID]->GetLanguage(), GetClassName(Class));
 	
 	if(Class < END_HUMANCLASS)
 		SendBroadcast_Localization(ClientID, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("You are a human: {str:ClassName}"), "ClassName", pClassName, NULL);
@@ -3003,7 +2873,7 @@ bool CGameContext::ConSetClass(IConsole::IResult *pResult, void *pUserData)
 	else if(str_comp(pClassName, "catapult") == 0) pPlayer->SetClass(PLAYERCLASS_CATAPULT);
 	else if(str_comp(pClassName, "sciogist") == 0) pPlayer->SetClass(PLAYERCLASS_SCIOGIST);
 	else if(str_comp(pClassName, "reviver") == 0) pPlayer->SetClass(PLAYERCLASS_REVIVER);
-	else if(str_comp(pClassName, "joker") == 0) pPlayer->SetClass(PLAYERCLASS_JOKER);
+	else if(str_comp(pClassName, "magician") == 0) pPlayer->SetClass(PLAYERCLASS_MAGICIAN);
 	else if(str_comp(pClassName, "looper") == 0) pPlayer->SetClass(PLAYERCLASS_LOOPER);
 	else if(str_comp(pClassName, "police") == 0) pPlayer->SetClass(PLAYERCLASS_POLICE);
 	else if(str_comp(pClassName, "medic") == 0) pPlayer->SetClass(PLAYERCLASS_MEDIC);
@@ -3186,10 +3056,10 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 				CheckClass = PLAYERCLASS_REVIVER;
 				str_copy(aChatTitle, "reviver", sizeof(aChatTitle));
 			}
-			else if(str_comp(aNameFound, "!joker") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			else if(str_comp(aNameFound, "!magician") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
-				CheckClass = PLAYERCLASS_JOKER;
-				str_copy(aChatTitle, "joker", sizeof(aChatTitle));
+				CheckClass = PLAYERCLASS_MAGICIAN;
+				str_copy(aChatTitle, "magician", sizeof(aChatTitle));
 			}
 			else if(str_comp(aNameFound, "!looper") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
@@ -3288,7 +3158,7 @@ bool CGameContext::PrivateMessage(const char* pStr, int ClientID, bool TeamChat)
 					if(m_apPlayers[i] && str_comp(Server()->ClientName(i), aNameFound) == 0)
 					{
 						CheckID = i;
-						str_copy(aChatTitle, "private", sizeof(aChatTitle));
+						str_copy(aChatTitle, "->|", sizeof(aChatTitle));
 						CheckTeam = -1;
 						break;
 					}

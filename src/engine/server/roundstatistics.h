@@ -45,7 +45,7 @@ public:
 		int m_ReviverScore;
 		int m_PoliceScore;
 		int m_CatapultScore;
-		int m_JokerScore;
+		int m_MagicianScore;
 		
 		int m_SmokerScore;
 		int m_HunterScore;

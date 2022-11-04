@@ -231,6 +231,7 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_IsInSlowMotion = false;
 	m_FrozenTime = -1;
 	m_LoveTick = -1;
+	m_MagicTick = 0;
 	m_SlowMotionTick = -1;
 	m_HallucinationTick = -1;
 	m_SlipperyTick = -1;
@@ -615,13 +616,6 @@ void CCharacter::UpdateTuningParam()
 		pTuningParams->m_HookDragSpeed = pTuningParams->m_HookDragSpeed * (1.0f + 0.5f*Factor);
 	}
 
-	if(GetClass() == PLAYERCLASS_JOKER)
-	{
-		pTuningParams->m_Gravity = 0.4f;
-		pTuningParams->m_HookLength = 640.0f;
-		pTuningParams->m_GroundJumpImpulse = 18.2f;
-	}
-
 	if(GetClass() == PLAYERCLASS_NIGHTMARE)
 	{
 		pTuningParams->m_Gravity = 0.35f;
@@ -659,9 +653,6 @@ void CCharacter::FireWeapon()
 
 	if(GetClass() == PLAYERCLASS_SLUG && m_ActiveWeapon == WEAPON_HAMMER)
 		FullAuto = true;
-
-	if(GetClass() == PLAYERCLASS_JOKER && m_ActiveWeapon == WEAPON_GRENADE)
-		FullAuto = false;
 	
 	// check if we gonna fire
 	bool WillFire = false;
@@ -1135,21 +1126,17 @@ void CCharacter::FireWeapon()
 								GameServer()->ClearBroadcast(pTarget->GetPlayer()->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE);
 							}
 						}
-						else if(GetClass() == PLAYERCLASS_JOKER)
+						else if(GetClass() == PLAYERCLASS_MAGICIAN)
 						{
-							/* affects mercenary only if love bombs are disabled. */
 							if (pTarget->IsZombie())
 							{
 								pTarget->TakeDamage(vec2(0.f, -1.f) + normalize(Dir + vec2(0.f, -1.1f)) * 10.0f, 30, 
 										m_pPlayer->GetCID(), m_ActiveWeapon, TAKEDAMAGEMODE_NOINFECTION);
-								IncreaseHealth(2);
 							}else if(pTarget->IsFrozen())
 							{
 								pTarget->Unfreeze();
 								GameServer()->ClearBroadcast(pTarget->GetPlayer()->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE);
 							}
-
-							
 						}
 						else if(GetClass() == PLAYERCLASS_MEDIC)
 						{
@@ -1257,18 +1244,6 @@ void CCharacter::FireWeapon()
 						}
 					}
 				}
-				
-				if(GetClass() == PLAYERCLASS_JOKER)
-				{
-					for(CElasticEntity* p = (CElasticEntity*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_ELASTIC_ENTITY); p; p = (CElasticEntity*) p->TypeNext())
-					{
-						float Len = distance(p->m_ActualPos, ProjStartPos);
-						if(Len < 16 + p->m_Radius)
-						{
-							p->Collision(false);
-						}
-					}
-				}
 
 				if(!ShowAttackAnimation)
 					return;
@@ -1343,14 +1318,18 @@ void CCharacter::FireWeapon()
 			else
 			{
 				int Damage = 1;
-				if(GetClass() == PLAYERCLASS_JOKER)
-					Damage = 3;
+				float Force = 0.f;
+				if(GetClass() == PLAYERCLASS_MAGICIAN)
+				{
+					Damage = 2;
+					Force = 1.5f;
+				}
 				CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_GUN,
 					m_pPlayer->GetCID(),
 					ProjStartPos,
 					Direction,
 					(int)(Server()->TickSpeed()*GameServer()->Tuning()->m_GunLifetime),
-					Damage, 0, 0, -1, WEAPON_GUN);
+					Damage, 0, Force, -1, WEAPON_GUN);
 
 				// pack the Projectile and send it to the client Directly
 				CNetObj_Projectile p;
@@ -1377,9 +1356,11 @@ void CCharacter::FireWeapon()
 			Msg.AddInt(ShotSpread*2+1);
 
 			float Force = 2.0f;
-			if(GetClass() == PLAYERCLASS_MEDIC || GetClass() == PLAYERCLASS_SCIOGIST
-				|| GetClass() == PLAYERCLASS_JOKER)
+			if(GetClass() == PLAYERCLASS_MEDIC || GetClass() == PLAYERCLASS_SCIOGIST)
 				Force = 10.0f;
+
+			if(GetClass() == PLAYERCLASS_MAGICIAN)
+				Force = 5.0f;
 				
 			for(int i = -ShotSpread; i <= ShotSpread; ++i)
 			{
@@ -1558,36 +1539,37 @@ void CCharacter::FireWeapon()
 				}
 				GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
 			}
-			else if(GetClass() == PLAYERCLASS_JOKER)
+			else if(GetClass() == PLAYERCLASS_MAGICIAN)
 			{
-
-				array<CCharacter*> apHumans;
-				vec2 OldPos(m_Pos);
-				for(int i = 0; i < MAX_CLIENTS;i ++)
+				vec2 PortalShift = vec2(m_Input.m_TargetX, m_Input.m_TargetY);
+				vec2 PortalDir = normalize(PortalShift);
+				if(length(PortalShift) > 500.0f)
+					PortalShift = PortalDir * 500.0f;
+				vec2 PortalPos;
+				
+				if(FindPortalPosition(m_Pos + PortalShift, PortalPos))
 				{
-					CCharacter *pChr = GameServer()->GetPlayerChar(i);
-					if(pChr && pChr->IsHuman() && pChr->GetClass() != PLAYERCLASS_JOKER)
-						apHumans.add(pChr);
+					vec2 OldPos = m_Core.m_Pos;
+					m_Core.m_Pos = PortalPos;
+					m_Core.m_HookedPlayer = -1;
+					m_Core.m_HookState = HOOK_RETRACTED;
+					m_Core.m_HookPos = m_Core.m_Pos;
+					if(g_Config.m_InfScientistTpSelfharm > 0) {
+						auto pScientist = GetPlayer()->GetCharacter();
+						pScientist->TakeDamage(vec2(0.0f, 0.0f), g_Config.m_InfScientistTpSelfharm * 2, GetPlayer()->GetCID(), WEAPON_HAMMER, TAKEDAMAGEMODE_SELFHARM);
+					}
+					CCharacterCore *p = m_Core.m_Passenger;
+					while (p != nullptr)
+					{
+						p->m_HookState = HOOK_RETRACTED;
+						p = p->m_Passenger;
+					}
+					GameServer()->CreateDeath(OldPos, GetPlayer()->GetCID());
+					GameServer()->CreateDeath(PortalPos, GetPlayer()->GetCID());
+					GameServer()->CreateSound(PortalPos, SOUND_CTF_RETURN);
+					new CLaserTeleport(GameWorld(), PortalPos, OldPos);
+					m_MagicTick = g_Config.m_InfMagicianInvisibleTick;
 				}
-
-				if(GameServer()->GetHumanCount() < 2 || apHumans.size() < 1)
-				{
-					GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, 
-						BROADCAST_DURATION_GAMEANNOUNCE, _("No teleporter!"), NULL);
-					GameServer()->CreateSoundGlobal(SOUND_WEAPON_NOAMMO, m_pPlayer->GetCID());
-					
-					m_ReloadTimer = 500 * Server()->TickSpeed() / 1000;
-					return;
-				}
-
-				int TeleCID = random_int(0, apHumans.size()-1);
-
-				GameServer()->Teleport(this, apHumans[TeleCID]->m_Pos);
-				GameServer()->CreatePlayerSpawn(m_Pos);
-				GameServer()->CreateSound(m_Pos, SOUND_PLAYER_SPAWN);
-
-				GameServer()->SendBroadcast_Localization(TeleCID, BROADCAST_PRIORITY_WEAPONSTATE, 
-						BROADCAST_DURATION_GAMEANNOUNCE, _("Joker tele to you!"), NULL);
 			}
 			else
 			{
@@ -2009,28 +1991,6 @@ void CCharacter::HandleWeapons()
 			}
 		}
 	}
-
-	if(GetClass() == PLAYERCLASS_JOKER)
-	{
-		if(m_Core.m_HookedPlayer > 0)
-		{
-			CCharacter *VictimChar = GameServer()->GetPlayerChar(m_Core.m_HookedPlayer);
-			if(VictimChar)
-			{
-				float Rate = 3.0f;
-				int Damage = 2;
-
-				if(m_HookDmgTick + Server()->TickSpeed()*Rate < Server()->Tick())
-				{
-					m_HookDmgTick = Server()->Tick();
-					VictimChar->TakeDamage(vec2(0.0f,0.0f), Damage, m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
-					if(VictimChar->IsZombie())
-						IncreaseOverallHp(3);
-				}
-			}
-			
-		}
-	}
 /* INFECTION MODIFICATION END *****************************************/
 
 	return;
@@ -2246,7 +2206,7 @@ void CCharacter::Tick()
 		}
 		else
 		{
-			int FreezeSec = 1+(m_FrozenTime/Server()->TickSpeed());
+			int FreezeSec = round_to_int(m_FrozenTime/(float)Server()->TickSpeed());
 			GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE, BROADCAST_DURATION_REALTIME, _("You are frozen: {sec:EffectDuration}"), "EffectDuration", &FreezeSec, NULL);
 		}
 	}
@@ -2266,7 +2226,7 @@ void CCharacter::Tick()
 		}
 		else
 		{
-			int SloMoSec = 1+(m_SlowMotionTick/Server()->TickSpeed());
+			int SloMoSec = round_to_int(m_SlowMotionTick/(float)Server()->TickSpeed());
 			GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE, BROADCAST_DURATION_REALTIME, _("You are slowed: {sec:EffectDuration}"), "EffectDuration", &SloMoSec, NULL);
 		}
 	}
@@ -2278,7 +2238,7 @@ void CCharacter::Tick()
 			GameServer()->CreateSound(m_Pos, SOUND_PLAYER_PAIN_LONG);
 		}
 		--m_InNightmareTick;
-		int NightmareSec = 1+(m_InNightmareTick/Server()->TickSpeed());
+		int NightmareSec = round_to_int(m_InNightmareTick/(float)Server()->TickSpeed());
 		GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE, BROADCAST_DURATION_REALTIME, _("You are in nightmare: {sec:EffectDuration}"), "EffectDuration", &NightmareSec, NULL);
 	}
 
@@ -2327,7 +2287,13 @@ void CCharacter::Tick()
 		}
 	}
 	
-	
+	if(m_MagicTick)
+	{
+		m_MagicTick--;
+
+		int InvisibleSec = round_to_int(m_MagicTick/(float)Server()->TickSpeed());
+		GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE, BROADCAST_DURATION_REALTIME, _("You are invisible: {sec:EffectDuration}"), "EffectDuration", &InvisibleSec, NULL);
+	}
 	//NeedHeal
 	if(m_Armor >= 10)
 		m_NeedFullHeal = false;
@@ -2453,7 +2419,7 @@ void CCharacter::Tick()
 					CTuningParams* pTuningParams = &m_pPlayer->m_NextTuningParams;
 					for(CCharacter *p = (CCharacter*) GameWorld()->FindFirst(CGameWorld::ENTTYPE_CHARACTER); p; p = (CCharacter *)p->TypeNext())
 					{
-						if(p->IsZombie() || p->GetClass() == PLAYERCLASS_JOKER) continue;
+						if(p->IsZombie()) continue;
 
 						float Len = distance(p->m_Pos, m_Pos);
 						if(Len < m_ProximityRadius + pTuningParams->m_HookLength)
@@ -2643,19 +2609,15 @@ void CCharacter::Tick()
 					case CMapConverter::MENUCLASS_ENGINEER:
 						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_ENGINEER))
 						{
-							if((GameServer()->GetActivePlayerCount() >= g_Config.m_InfMinEngineerPlayer))
-							{
-								GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Engineer"), NULL);
-							}
-							else
-							{
-								GameServer()->SendBroadcast_Localization_P(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, g_Config.m_InfMinEngineerPlayer,
+							GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Engineer"), NULL);
+							Broadcast = true;
+						}else if(GameServer()->GetActivePlayerCount() < g_Config.m_InfMinEngineerPlayer)
+						{
+							GameServer()->SendBroadcast_Localization_P(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME, g_Config.m_InfMinEngineerPlayer,
 								_P("Need one player", "Need {int:MinPlayers} players"),
 								"MinPlayers", &g_Config.m_InfMinEngineerPlayer,
 								NULL
 								);	
-							}
-							Broadcast = true;
 						}
 						break;
 					case CMapConverter::MENUCLASS_SOLDIER:
@@ -2749,10 +2711,10 @@ void CCharacter::Tick()
 							Broadcast = true;
 						}
 						break;
-					case CMapConverter::MENUCLASS_JOKER:
-						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_JOKER))
+					case CMapConverter::MENUCLASS_MAGICIAN:
+						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_MAGICIAN))
 						{
-							GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Joker"), NULL);
+							GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Magician"), NULL);
 							Broadcast = true;
 						}
 						break;
@@ -2818,8 +2780,8 @@ void CCharacter::Tick()
 					case CMapConverter::MENUCLASS_REVIVER:
 						NewClass = PLAYERCLASS_REVIVER;
 						break;
-					case CMapConverter::MENUCLASS_JOKER:
-						NewClass = PLAYERCLASS_JOKER;
+					case CMapConverter::MENUCLASS_MAGICIAN:
+						NewClass = PLAYERCLASS_MAGICIAN;
 						break;
 				}
 				
@@ -3601,11 +3563,6 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		Dmg = Dmg/2;
 	}
 
-	if(GetClass() == PLAYERCLASS_JOKER)
-	{
-		Dmg = (int)(Dmg * 1.5);
-	}
-
 	if(Mode == TAKEDAMAGEMODE_ALL)
 	{
 		if(pKillerChar->IsZombie() == IsZombie())
@@ -3896,10 +3853,9 @@ void CCharacter::Snap(int SnappingClient)
 		pClient = nullptr;
 	
 /* INFECTION MODIFICATION START ***************************************/
-	if(GetClass() == PLAYERCLASS_JOKER)
-	{
-		
-	}
+
+	if(GetClass() == PLAYERCLASS_MAGICIAN && m_MagicTick && SnappingClient != id)
+		return;
 
 	if(GetClass() == PLAYERCLASS_WITCH)
 	{
@@ -4022,7 +3978,7 @@ void CCharacter::Snap(int SnappingClient)
 	{
 	if(SnappingClient == m_pPlayer->GetCID())
 	{
-		if(GetClass() == PLAYERCLASS_SCIENTIST && m_ActiveWeapon == WEAPON_GRENADE)
+		if((GetClass() == PLAYERCLASS_SCIENTIST || GetClass() == PLAYERCLASS_MAGICIAN) && m_ActiveWeapon == WEAPON_GRENADE)
 		{
 			vec2 PortalShift = vec2(m_Input.m_TargetX, m_Input.m_TargetY);
 			vec2 PortalDir = normalize(PortalShift);
@@ -4116,7 +4072,6 @@ void CCharacter::Snap(int SnappingClient)
 		return;
 	int EmoteNormal = EMOTE_NORMAL;
 	if(IsZombie()) EmoteNormal = EMOTE_ANGRY;
-	if(GetClass() == PLAYERCLASS_JOKER) EmoteNormal = EMOTE_HAPPY;
 	if(m_IsInvisible) EmoteNormal = EMOTE_BLINK;
 	if(m_LoveTick > 0 || m_HallucinationTick > 0 || m_SlowMotionTick > 0 || IsInNightmare()) EmoteNormal = EMOTE_SURPRISE;
 	if(IsFrozen()) EmoteNormal = EMOTE_PAIN;
@@ -4517,20 +4472,21 @@ void CCharacter::ClassSpawnAttributes()
 				m_pPlayer->m_knownClass[PLAYERCLASS_NINJA] = true;
 			}
 			break;
-		case PLAYERCLASS_JOKER:
+		case PLAYERCLASS_MAGICIAN:
 			RemoveAllGun();
 			m_pPlayer->m_InfectionTick = -1;
 			m_Health = 10;
 			m_aWeapons[WEAPON_HAMMER].m_Got = true;
+			GiveWeapon(WEAPON_GUN, -1);
 			GiveWeapon(WEAPON_SHOTGUN, -1);
 			GiveWeapon(WEAPON_GRENADE, -1);
 			m_ActiveWeapon = WEAPON_HAMMER;
 			
-			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_JOKER);
-			if(!m_pPlayer->IsKnownClass(PLAYERCLASS_JOKER))
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_MAGICIAN);
+			if(!m_pPlayer->IsKnownClass(PLAYERCLASS_MAGICIAN))
 			{
-				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "joker", NULL);
-				m_pPlayer->m_knownClass[PLAYERCLASS_JOKER] = true;
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "magician", NULL);
+				m_pPlayer->m_knownClass[PLAYERCLASS_MAGICIAN] = true;
 			}
 			break;
 		case PLAYERCLASS_NONE:
@@ -5072,6 +5028,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_POLICE_GUN;
 			case PLAYERCLASS_SCIENTIST:
 				return INFWEAPON_SCIENTIST_GUN;
+			case PLAYERCLASS_MAGICIAN:
+				return INFWEAPON_MAGICIAN_GUN;
 			default:
 				return INFWEAPON_GUN;
 		}
@@ -5119,8 +5077,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_CATAPULT_GRENADE;
 			case PLAYERCLASS_REVIVER:
 				return INFWEAPON_REVIVER_GRENADE;
-			case PLAYERCLASS_JOKER:
-				return INFWEAPON_JOKER_GRENADE;
+			case PLAYERCLASS_MAGICIAN:
+				return INFWEAPON_MAGICIAN_GRENADE;
 			default:
 				return INFWEAPON_GRENADE;
 		}

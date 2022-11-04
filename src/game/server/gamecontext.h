@@ -185,8 +185,6 @@ public:
 	int m_FunRoundHumanClass;
 	int m_FunRoundZombieClass;
 	int m_FunRoundsPassed;
-	void SetAvailabilities(std::vector<int> value);
-	void SetProbabilities(std::vector<int> value);
 	
 	#if defined(MEASURE_TICKS)
 		CMeasureTicks *m_pMeasure;

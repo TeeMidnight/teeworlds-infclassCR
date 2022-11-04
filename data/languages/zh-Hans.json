@@ -168,8 +168,8 @@
 		"value": "归命师"
 	},
 	{
-		"key": "Joker",
-		"value": "小丑"
+		"key": "Magician",
+		"value": "魔术师"
 	},
 	{
 		"key": "Smoker",
@@ -880,6 +880,10 @@
 		"value": "你处于梦魇之中,剩余时间: {sec:EffectDuration}"
 	},
 	{
+		"key": "You are invisible: {sec:EffectDuration}",
+		"value": "你隐身了, 剩余时间: {sec:EffectDuration}"
+	},
+	{
 		"key": "Anti-AirMine is active",
 		"value": "防空地雷已经激活"
 	},
@@ -998,5 +1002,9 @@
 	{
 		"key": "Joker tele to you!",
 		"value": "小丑传送到了你这里!"
+	},
+	{
+		"key": "infect leaver",
+		"value": "作为感染离开"
 	}
 ]}

@@ -687,7 +687,7 @@ void CMapConverter::Finalize()
 	int CatapultImageID = AddExternalImage("../skins/coala", 256, 128);
 	int PoliceImageID = AddExternalImage("../skins/kitty_x_ninja", 256, 128);
 	int ReviverImageID = AddExternalImage("../skins/coala_limekitty", 256, 128);
-	int JokerImageID = AddExternalImage("../skins/pinky", 256, 128);
+	int MagicianImageID = AddExternalImage("../skins/redbopp", 256, 128);
 	
 	//Menu
 	
@@ -785,9 +785,6 @@ void CMapConverter::Finalize()
 							break;
 						case MENUCLASS_SCIOGIST:
 							ClassMask = MASK_SCIOGIST;
-							break;
-						case MENUCLASS_JOKER:
-							ClassMask = MASK_JOKER;
 							break;
 						default:
 							ClassMask = MASK_SUPPORT;
@@ -963,8 +960,8 @@ void CMapConverter::Finalize()
 							case MENUCLASS_REVIVER:
 								AddTeeLayer("Reviver", ReviverImageID, Pos, 64.0f, m_NumEnvs-1);
 								break;
-							case MENUCLASS_JOKER:
-								AddTeeLayer("Joker", JokerImageID, Pos, 64.0f, m_NumEnvs-1);
+							case MENUCLASS_MAGICIAN:
+								AddTeeLayer("Magician", MagicianImageID, Pos, 64.0f, m_NumEnvs-1);
 								break;
 						}
 					}

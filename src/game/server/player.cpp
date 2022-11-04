@@ -413,9 +413,9 @@ void CPlayer::Snap(int SnappingClient)
 			m_TeeInfos.m_ColorBody = 255;
 			m_TeeInfos.m_ColorFeet = 0;
 			break;
-		case PLAYERCLASS_JOKER:
+		case PLAYERCLASS_MAGICIAN:
 			m_TeeInfos.m_UseCustomColor = 0;
-			str_copy(m_TeeInfos.m_SkinName, "pinky", sizeof(m_TeeInfos.m_SkinName));
+			str_copy(m_TeeInfos.m_SkinName, "redbopp", sizeof(m_TeeInfos.m_SkinName));
 			break;
 		case PLAYERCLASS_SMOKER:
 			m_TeeInfos.m_UseCustomColor = 1;
