@@ -238,6 +238,7 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_PositionLocked = false;
 	m_PositionLockAvailable = false;
 	m_Poison = 0;
+	m_PoisonFrom = -1;
   
 	m_VoodooAboutToDie = false;
 	m_VoodooTimeAlive = Server()->TickSpeed()*g_Config.m_InfVoodooAliveTime;
