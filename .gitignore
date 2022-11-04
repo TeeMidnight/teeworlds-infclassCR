@@ -1,7 +1,7 @@
 test.cfg
 
 .vs*
-./bam
+bam
 .bam
 /config.lua
 /datasrc/__pycache__
