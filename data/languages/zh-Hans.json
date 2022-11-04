@@ -292,6 +292,10 @@
 		"value": "感谢:\n {str:ListOfContributors}"
 	},
 	{
+		"key": "Mod version:{str:ModVersion}, Version code:{str:VersionCode}",
+		"value": "模组版本:{str:ModVersion}, 版本代号:{str:VersionCode}"
+	},
+	{
 		"key": "Server version from {str:ServerCompileDate} ",
 		"value": "服务器构建版本: {str:ServerCompileDate} "
 	},
