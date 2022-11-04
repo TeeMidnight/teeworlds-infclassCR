@@ -117,7 +117,7 @@ MACRO_CONFIG_INT(FunRoundFreezerProba, funround_freezer_proba, 5, 0, 100, CFGFLA
 MACRO_CONFIG_INT(FunRoundProba, funround_proba, 6, 0, 1000, CFGFLAG_SERVER, "Fun round proba(‰)")
 // class config
 MACRO_CONFIG_INT(InfFreezerReslowlyTime, inf_freezer_reslowly_time, 200, 0, 1000, CFGFLAG_SERVER, "tick")
-MACRO_CONFIG_INT(InfMagicianInvisibleTick, inf_magician_invisible_tick, 250, 0, 1000, CFGFLAG_SERVER, "tick")
+MACRO_CONFIG_INT(InfMagicianMagicTick, inf_magician_magic_tick, 250, 0, 1000, CFGFLAG_SERVER, "tick")
 
 //weapon config
 MACRO_CONFIG_INT(InfElasticEntityRadius, inf_elastic_entity_radius, 46, 0, 200, CFGFLAG_SERVER, "Radius of elastic entitys")
