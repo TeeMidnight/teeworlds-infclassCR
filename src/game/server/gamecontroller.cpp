@@ -449,7 +449,7 @@ void IGameController::Tick()
 			}
 			
 			CycleMap();
-			if(random_int(0, 100) <= g_Config.m_FunRoundProba)
+			if(random_int(0, 1000) <= g_Config.m_FunRoundProba)
 			{
 				GameServer()->StartFunRound();
 			}
