@@ -505,7 +505,7 @@ void CPlayer::Snap(int SnappingClient)
 		case PLAYERCLASS_WITCH:
 			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_SkinName, "redbopp", sizeof(m_TeeInfos.m_SkinName));
-			m_TeeInfos.m_ColorBody = 16776744;
+			m_TeeInfos.m_ColorBody = 13172480;
 			m_TeeInfos.m_ColorFeet = 13168;
 			break;
 		case PLAYERCLASS_FREEZER:

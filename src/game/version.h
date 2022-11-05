@@ -11,7 +11,12 @@
 #define MOD_VERSION "0.6.0"
 #define VERSION_CODE "Joker"
 /*
+    0.1 ------ Grenade
+    0.2 ------ Smoker
+    0.3 ------ Beta
+    0.4 ------ Infect
+    0.5 ------ Witch
     0.6 ------ Joker
-    0.7 ------ ?
+    0.7 ------ Nightmare
 */
 #endif
