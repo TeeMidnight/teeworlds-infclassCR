@@ -1560,12 +1560,15 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_SCIOGIST)
 			{
-				for(int i = 1;i <= 3;i++)
+				int ShotSpread = 2;
+				for(int i = -1;i <= 1;i++)
 				{
-					float Spreading[] = {-0.315f, -0.210f, 0.210f};
-					float angle = GetAngle(Direction);
-					angle += Spreading[i] * 2.0f*(0.25f + 0.75f*static_cast<float>(10-3)/10.0f);
-					CSciogistGrenade *pSciGre = new CSciogistGrenade(GameWorld(), m_pPlayer->GetCID(), ProjStartPos, vec2(cosf(angle), sinf(angle)));
+					float Spreading[] = {-0.21f, -0.14f, -0.070f, 0, 0.070f, 0.14f, 0.21f};
+					float a = GetAngle(Direction);
+					float v = 1-(absolute(i)/(float)ShotSpread);
+					a += Spreading[i+3] * 2.0f*(0.25f + 0.75f*static_cast<float>(10-m_aWeapons[WEAPON_GRENADE].m_Ammo)/10.0f);
+					float Speed = mix((float)GameServer()->Tuning()->m_ShotgunSpeeddiff, 1.0f, v);
+					CSciogistGrenade *pSciGre = new CSciogistGrenade(GameWorld(), m_pPlayer->GetCID(), ProjStartPos, vec2(cosf(a), sinf(a)*Speed));
 				}
 				GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
 			}
@@ -3917,7 +3920,7 @@ void CCharacter::Snap(int SnappingClient)
 	
 /* INFECTION MODIFICATION START ***************************************/
 
-	if(GetClass() == PLAYERCLASS_MAGICIAN && pClient->IsZombie() && m_IsInvisible && SnappingClient != id)
+	if(GetClass() == PLAYERCLASS_MAGICIAN && pClient->IsZombie() && m_IsMagic)
 		return;
 
 	if(GetClass() == PLAYERCLASS_WITCH)
