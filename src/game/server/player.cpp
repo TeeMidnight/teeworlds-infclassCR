@@ -574,10 +574,19 @@ void CPlayer::OnDisconnect(const char *pReason)
 
 	if(Server()->ClientIngame(m_ClientID))
 	{
-		GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_PLAYER, _("{str:PlayerName} has left the game ({str:Reason})"),
-			"PlayerName", Server()->ClientName(m_ClientID),
-			"Reason", pReason,
-			NULL);
+		if(pReason && *pReason)
+		{
+			GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_PLAYER, _("{str:PlayerName} has left the game ({str:Reason})"),
+				"PlayerName", Server()->ClientName(m_ClientID),
+				"Reason", pReason,
+				NULL);
+		}
+		else
+		{
+			GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_PLAYER, _("{str:PlayerName} has left the game"),
+				"PlayerName", Server()->ClientName(m_ClientID),
+				NULL);
+		}
 	}
 }
 
