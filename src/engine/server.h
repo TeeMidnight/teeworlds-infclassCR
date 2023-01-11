@@ -120,6 +120,7 @@ enum
 	CHATCATEGORY_ACCUSATION,
 };
 
+static const int DemoClientID = -1;
 /* INFECTION MODIFICATION END *****************************************/
 
 class IServer : public IInterface
@@ -200,14 +201,11 @@ public:
 		T tmp;
 		if (ClientID == -1)
 		{
-			//Only for demo record
-			SendPackMsgOne(pMsg, Flags|MSGFLAG_NOSEND, -1);
-
 			for(int i = 0; i < MAX_CLIENTS; i++)
 				if(ClientIngame(i))
 				{
 					mem_copy(&tmp, pMsg, sizeof(T));
-					result = SendPackMsgTranslate(&tmp, Flags|MSGFLAG_NORECORD, i);
+					result = SendPackMsgTranslate(&tmp, Flags, i);
 				}
 		} else {
 			mem_copy(&tmp, pMsg, sizeof(T));
@@ -250,7 +248,7 @@ public:
 	template<class T>
 	int SendPackMsgOne(T *pMsg, int Flags, int ClientID)
 	{
-		CMsgPacker Packer(pMsg->MsgID());
+		CMsgPacker Packer(pMsg->MsgID(), false);
 		if(pMsg->Pack(&Packer))
 			return -1;
 		return SendMsg(&Packer, Flags, ClientID);
@@ -258,6 +256,9 @@ public:
 
 	bool Translate(int& target, int client)
 	{
+		if(client == DemoClientID)
+			return true;
+
 		CClientInfo info;
 		GetClientInfo(client, &info);
 		if (info.m_CustClt)

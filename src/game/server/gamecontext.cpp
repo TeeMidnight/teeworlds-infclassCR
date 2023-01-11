@@ -14,6 +14,10 @@
 #include "gamemodes/mod.h"
 #include <algorithm>
 
+#ifdef CONF_GEOLOCATION
+	#include <infclasscr/geolocation.h>
+#endif
+
 enum
 {
 	RESET,
@@ -74,11 +78,6 @@ void CGameContext::Construct(int Resetting)
 	m_FunRoundHumanClass = START_HUMANCLASS;
 	m_FunRoundZombieClass = START_INFECTEDCLASS;
 	m_FunRoundsPassed = 0;
-	
-	
-	#ifdef CONF_GEOLOCATION
-	geolocation = new Geolocation("GeoLite2-Country.mmdb");
-	#endif
 }
 
 CGameContext::CGameContext(int Resetting)
@@ -103,10 +102,12 @@ CGameContext::~CGameContext()
 	if(!m_Resetting)
 		delete m_pVoteOptionHeap;
 	
-	#ifdef CONF_GEOLOCATION
-	delete geolocation;
-	geolocation = nullptr;
-	#endif
+#ifdef CONF_GEOLOCATION
+	if(!m_Resetting)
+	{
+		Geolocation::Shutdown();
+	}
+#endif
 }
 
 void CGameContext::Clear()
@@ -1991,9 +1992,6 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 				Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "game", aBuf);
 			}
 			Server()->SetClientClan(ClientID, pMsg->m_pClan);
-			#ifdef CONF_GEOLOCATION
-			Server()->SetClientCountry(ClientID, pMsg->m_Country);
-			#endif
 			
 /* INFECTION MODIFICATION START ***************************************/
 			str_copy(pPlayer->m_TeeInfos.m_CustomSkinName, pMsg->m_pSkin, sizeof(pPlayer->m_TeeInfos.m_CustomSkinName));
@@ -2041,10 +2039,11 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			Server()->SetClientCountry(ClientID, pMsg->m_Country);
 
 			// IP geolocation start
-			#ifdef CONF_GEOLOCATION
+#ifdef CONF_GEOLOCATION
 			std::string ip = Server()->GetClientIP(ClientID);
-			Server()->SetClientCountry(ClientID, geolocation->get_country_iso_numeric_code(ip));
-			#endif
+			int LocatedCountry = Geolocation::get_country_iso_numeric_code(ip);
+			Server()->SetClientCountry(ClientID, LocatedCountry);
+#endif
 			// IP geolocation end
 
 			str_copy(pPlayer->m_TeeInfos.m_CustomSkinName, pMsg->m_pSkin, sizeof(pPlayer->m_TeeInfos.m_CustomSkinName));
@@ -4109,6 +4108,8 @@ void CGameContext::OnConsoleInit()
 /* INFECTION MODIFICATION END *****************************************/
 
 	Console()->Chain("sv_motd", ConchainSpecialMotdupdate, this);
+
+	InitGeolocation();
 }
 
 void CGameContext::OnInit(/*class IKernel *pKernel*/)
@@ -4422,4 +4423,22 @@ void CGameContext::RemoveSpectatorCID(int ClientID) {
 bool CGameContext::IsSpectatorCID(int ClientID) {
 	auto& vec = CGameContext::spectators_id;
 	return std::find(vec.begin(), vec.end(), ClientID) != vec.end();
+}
+
+void CGameContext::InitGeolocation()
+{
+#ifdef CONF_GEOLOCATION
+	const char aGeoDBFileName[] = "GeoLite2-Country.mmdb";
+	char aBuf[512];
+	Storage()->GetDataPath(aGeoDBFileName, aBuf, sizeof(aBuf));
+	if(aBuf[0])
+	{
+		Geolocation::Initialize(aBuf);
+	}
+	else
+	{
+		str_format(aBuf, sizeof(aBuf), "Unable to find geolocation data file %s", aGeoDBFileName);
+		Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", aBuf);
+	}
+#endif
 }

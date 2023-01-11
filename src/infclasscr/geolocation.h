@@ -1,19 +1,20 @@
 #ifndef INFCLASSR_GEOLOCATION_H
 #define INFCLASSR_GEOLOCATION_H
 
-#ifdef CONF_GEOLOCATION
-
 #include <infclasscr/GeoLite2PP/GeoLite2PP.hpp>
-#include <iostream>
 
 class Geolocation {
 private:
-    GeoLite2PP::DB *db;
-    int get_iso_numeric_code(GeoLite2PP::MStr& m);
+	GeoLite2PP::DB *db;
+	int get_iso_numeric_code(GeoLite2PP::MStr& m);
+	Geolocation(const char* path_to_mmdb);
+	~Geolocation();
+
 public:
-    Geolocation(const char* path_to_mmdb);
-    ~Geolocation();
-    int get_country_iso_numeric_code(std::string& ip);
+	static bool Initialize(const char *pPathToDB);
+	static void Shutdown();
+
+	static int get_country_iso_numeric_code(std::string& ip);
 };
-#endif
+
 #endif

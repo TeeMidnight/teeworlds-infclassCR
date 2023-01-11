@@ -345,7 +345,7 @@ CServer::CServer() : m_DemoRecorder(&m_SnapshotDelta)
 	m_pCurrentMapData = 0;
 	m_CurrentMapSize = 0;
 
-	m_MapReload = 0;
+	m_MapReload = false;
 
 	m_RconClientID = IServer::RCON_CID_SERV;
 	m_RconAuthLevel = AUTHED_ADMIN;
@@ -2343,10 +2343,8 @@ int CServer::Run()
 			int NewTicks = 0;
 
 			// load new map
-			if(m_MapReload || m_CurrentGameTick >= 0x6FFFFFFF) // force reload to make sure the ticks stay within a valid range
+			if(str_comp(g_Config.m_SvMap, m_aCurrentMap) != 0 || m_MapReload || m_CurrentGameTick >= 0x6FFFFFFF) // force reload to make sure the ticks stay within a valid range
 			{
-				m_MapReload = 0;
-
 				// load map
 				if(LoadMap(g_Config.m_SvMap))
 				{
@@ -2589,7 +2587,7 @@ bool CServer::ConStopRecord(IConsole::IResult *pResult, void *pUser)
 
 bool CServer::ConMapReload(IConsole::IResult *pResult, void *pUser)
 {
-	((CServer *)pUser)->m_MapReload = 1;
+	((CServer *)pUser)->m_MapReload = true;
 	
 	return true;
 }

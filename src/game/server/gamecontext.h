@@ -20,10 +20,6 @@
 #include "player.h"
 
 
-#ifdef CONF_GEOLOCATION
-	#include <infclasscr/geolocation.h>
-#endif
-
 #ifdef _MSC_VER
 typedef __int32 int32_t;
 typedef unsigned __int32 uint32_t;
@@ -92,10 +88,6 @@ class CGameContext : public IGameServer
 	int m_TargetToKill;
 	int m_TargetToKillCoolDown;
 	int m_HeroGiftCooldown;
-
-	#ifdef CONF_GEOLOCATION
-	Geolocation* geolocation;
-	#endif
 
 	static bool ConTuneParam(IConsole::IResult *pResult, void *pUserData);
 	static bool ConTuneReset(IConsole::IResult *pResult, void *pUserData);
@@ -387,6 +379,7 @@ public:
 	void RemoveSpectatorCID(int ClientID);
 	bool IsSpectatorCID(int ClientID);
 	// InfClassR end
+	void InitGeolocation();
 };
 
 inline int64_t CmaskAll() { return -1LL; }
