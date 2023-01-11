@@ -3,11 +3,18 @@
 #ifndef ENGINE_SERVER_SERVER_H
 #define ENGINE_SERVER_SERVER_H
 
+#include <base/hash.h>
+
 #include <engine/server.h>
-#include <engine/server/netsession.h>
 #include <engine/server/roundstatistics.h>
 #include <game/server/classes.h>
 #include <game/voting.h>
+#include <engine/shared/uuid_manager.h>
+
+
+#include <list>
+#include <memory>
+#include <vector>
 
 class CSnapIDPool
 {
@@ -71,6 +78,7 @@ class CServer : public IServer
 	class IGameServer *m_pGameServer;
 	class IConsole *m_pConsole;
 	class IStorage *m_pStorage;
+	class IRegister *m_pRegister;
 
 public:
 	class IGameServer *GameServer() { return m_pGameServer; }
@@ -169,6 +177,7 @@ public:
 	//int m_CurrentGameTick;
 	int m_RunServer;
 	int m_MapReload;
+	bool m_ReloadedWhenEmpty;
 	int m_RconClientID;
 	int m_RconAuthLevel;
 	int m_PrintCBIndex;
@@ -179,6 +188,7 @@ public:
 	char m_aCurrentMap[64];
 	
 	unsigned m_CurrentMapCrc;
+	SHA256_DIGEST m_CurrentMapSha256;
 	unsigned char *m_pCurrentMapData;
 	unsigned int m_CurrentMapSize;
 
@@ -187,8 +197,6 @@ public:
 	int m_ServerInfoNumRequests;
 
 	CDemoRecorder m_DemoRecorder;
-	CRegister m_Register;
-	CMapChecker m_MapChecker;
 
 	CServer();
 	virtual ~CServer();
@@ -222,13 +230,16 @@ public:
 	int MaxClients() const;
 
 	virtual int SendMsg(CMsgPacker *pMsg, int Flags, int ClientID);
-	int SendMsgEx(CMsgPacker *pMsg, int Flags, int ClientID, bool System);
 
 	void DoSnapshot();
 
 	static int ClientRejoinCallback(int ClientID, void *pUser);
-	static int NewClientCallback(int ClientID, void *pUser);
-	static int DelClientCallback(int ClientID, int Type, const char *pReason, void *pUser);
+	static int NewClientNoAuthCallback(int ClientID, void *pUser);
+	static int NewClientCallback(int ClientID, void *pUser, bool Sixup);
+	static int DelClientCallback(int ClientID, const char *pReason, void *pUser);
+
+	void SendRconType(int ClientID, bool UsernameReq);
+	void SendCapabilities(int ClientID);
 
 	void SendMap(int ClientID);
 	void SendMapData(int ClientID, int Chunk);
@@ -243,16 +254,43 @@ public:
 
 	void ProcessClientPacket(CNetChunk *pPacket);
 
-	void SendServerInfoConnless(const NETADDR *pAddr, int Token, int Type);
-	void SendServerInfo(const NETADDR *pAddr, int Token, int Type, bool SendClients);
-	void UpdateServerInfo();
+class CCache
+	{
+	public:
+		class CCacheChunk
+		{
+		public:
+			CCacheChunk(const void *pData, int Size);
+			CCacheChunk(const CCacheChunk &) = delete;
 
-	void PumpNetwork();
+			std::vector<uint8_t> m_vData;
+		};
+
+		std::list<CCacheChunk> m_Cache;
+
+		CCache();
+		~CCache();
+
+		void AddChunk(const void *pData, int Size);
+		void Clear();
+	};
+	CCache m_aServerInfoCache[3 * 2];
+	CCache m_aSixupServerInfoCache[2];
+	bool m_ServerInfoNeedsUpdate;
+
+	void ExpireServerInfo() override;
+	void CacheServerInfo(CCache *pCache, int Type, bool SendClients);
+	void SendServerInfo(const NETADDR *pAddr, int Token, int Type, bool SendClients);
+	bool RateLimitServerInfoConnless();
+	void SendServerInfoConnless(const NETADDR *pAddr, int Token, int Type);
+	void UpdateRegisterServerInfo();
+	void UpdateServerInfo(bool Resend = false);
+
+	void PumpNetwork(bool PacketWaiting);
 
 	char *GetMapName();
 	int LoadMap(const char *pMapName);
 
-	void InitRegister(CNetServer *pNetServer, IEngineMasterServer *pMasterServer, IConsole *pConsole);
 	int Run();
 
 	static bool ConKick(IConsole::IResult *pResult, void *pUser);
@@ -266,10 +304,6 @@ public:
 	static bool ConchainMaxclientsperipUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
 	static bool ConchainModCommandUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
 	static bool ConchainConsoleOutputLevelUpdate(IConsole::IResult *pResult, void *pUserData, IConsole::FCommandCallback pfnCallback, void *pCallbackUserData);
-
-	static bool ConMute(class IConsole::IResult *pResult, void *pUser);
-	static bool ConUnmute(class IConsole::IResult *pResult, void *pUser);
-	static bool ConWhisper(class IConsole::IResult *pResult, void *pUser);
 	
 	void RegisterCommands();
 
@@ -325,11 +359,8 @@ public:
 
 	virtual void Ban(int ClientID, int Seconds, const char* pReason);
 private:
-	bool InitCaptcha();
 
 	CRoundStatistics m_RoundStatistics;
-	CNetSession<IServer::CClientSession> m_NetSession;
-	CNetSession<IServer::CClientAccusation> m_NetAccusation;
 
 	IServer::CMapVote m_MapVotes[MAX_VOTE_OPTIONS];
 	int m_MapVotesCounter;

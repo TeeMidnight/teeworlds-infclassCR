@@ -62,10 +62,6 @@ public:
 				fs_makedir(GetPath(TYPE_SAVE, "maps", aPath, sizeof(aPath)));
 				fs_makedir(GetPath(TYPE_SAVE, "downloadedmaps", aPath, sizeof(aPath)));
 			}
-			if(StorageType == STORAGETYPE_SERVER)
-			{
-				fs_makedir(GetPath(TYPE_SAVE, "clientmaps", aPath, sizeof(aPath)));
-			}
 			fs_makedir(GetPath(TYPE_SAVE, "dumps", aPath, sizeof(aPath)));
 			fs_makedir(GetPath(TYPE_SAVE, "demos", aPath, sizeof(aPath)));
 			fs_makedir(GetPath(TYPE_SAVE, "demos/auto", aPath, sizeof(aPath)));
@@ -169,7 +165,7 @@ public:
 		}
 
 		// 2) use compiled-in data-dir if present
-		if(fs_is_dir(DATA_DIR "/mapres"))
+		if(fs_is_dir(DATA_DIR "/maps"))
 		{
 			str_copy(m_aDatadir, DATA_DIR, sizeof(m_aDatadir));
 			return;
@@ -187,7 +183,7 @@ public:
 				char aBaseDir[MAX_PATH_LENGTH];
 				str_copy(aBaseDir, pArgv0, Pos+1);
 				str_format(m_aDatadir, sizeof(m_aDatadir), "%s/data", aBaseDir);
-				str_append(aBaseDir, "/data/mapres", sizeof(aBaseDir));
+				str_append(aBaseDir, "/data/maps", sizeof(aBaseDir));
 
 				if(fs_is_dir(aBaseDir))
 					return;
@@ -241,8 +237,6 @@ public:
 			fs_listdir(GetPath(Type, pPath, aBuffer, sizeof(aBuffer)), pfnCallback, Type, pUser);
 		}
 	}
-
-	
 
 	const char *GetPath(int Type, const char *pDir, char *pBuffer, unsigned BufferSize)
 	{

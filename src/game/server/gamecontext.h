@@ -19,13 +19,6 @@
 #include "gameworld.h"
 #include "player.h"
 
-#include <infclasscr/sql.h>
-
-//#define MEASURE_TICKS // uncomment, to measure server performance
-#if defined(MEASURE_TICKS)
-	#include <engine/server/measure_ticks.h>
-#endif
-
 
 #ifdef CONF_GEOLOCATION
 	#include <infclasscr/geolocation.h>
@@ -185,10 +178,7 @@ public:
 	int m_FunRoundHumanClass;
 	int m_FunRoundZombieClass;
 	int m_FunRoundsPassed;
-	
-	#if defined(MEASURE_TICKS)
-		CMeasureTicks *m_pMeasure;
-	#endif
+
 
 	// voting
 	void StartVote(const char *pDesc, const char *pCommand, const char *pReason);
@@ -261,7 +251,7 @@ public:
 
 	virtual void OnClientConnected(int ClientID);
 	virtual void OnClientEnter(int ClientID);
-	virtual void OnClientDrop(int ClientID, int Type, const char *pReason);
+	virtual void OnClientDrop(int ClientID, const char *pReason);
 	virtual void OnClientDirectInput(int ClientID, void *pInput);
 	virtual void OnClientPredictedInput(int ClientID, void *pInput);
 
@@ -283,12 +273,6 @@ private:
 	static bool ConSetClass(IConsole::IResult *pResult, void *pUserData);
 	
 	static bool ConChatInfo(IConsole::IResult *pResult, void *pUserData);
-#ifdef CONF_SQL
-	static bool ConRegister(IConsole::IResult *pResult, void *pUserData);
-	static bool ConLogin(IConsole::IResult *pResult, void *pUserData);
-	static bool ConLogout(IConsole::IResult *pResult, void *pUserData);
-	static bool ConTop5(IConsole::IResult *pResult, void *pUserData);
-#endif
 	static bool ConStatus(IConsole::IResult *pResult, void *pUserData);
 	static bool ConHelp(IConsole::IResult *pResult, void *pUserData);
 	static bool ConCustomSkin(IConsole::IResult *pResult, void *pUserData);
@@ -385,12 +369,6 @@ private:
 	
 	int m_aHitSoundState[MAX_CLIENTS]; //1 for hit, 2 for kill (no sounds must be sent)	
 
-#ifdef CONF_SQL
-	/* SQL */
-	CSQL *m_Sql;
-	CAccountData *m_AccountData;
-#endif
-
 
 public:
 	virtual int GetTargetToKill();
@@ -403,20 +381,11 @@ public:
 
 	virtual void OnRoundOver();
 
-#ifdef CONF_SQL
-	/* SQL */
-	CSQL *Sql() const { return m_Sql; };
-	CAccountData *AccountData() {return m_AccountData; };
-	void LogoutAccount(int ClientID);
-#endif
-
 /* INFECTION MODIFICATION END *****************************************/
 	// InfClassR begin
 	void AddSpectatorCID(int ClientID);
 	void RemoveSpectatorCID(int ClientID);
 	bool IsSpectatorCID(int ClientID);
-	bool IsSnapPlayer(int ClientID);
-	int m_SnapState;
 	// InfClassR end
 };
 

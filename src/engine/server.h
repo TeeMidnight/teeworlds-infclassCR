@@ -150,6 +150,7 @@ public:
 		int m_Latency;
 		bool m_CustClt;
 		bool m_Solar;
+		int m_Authed;
 	};
 	
 	struct CClientSession
@@ -371,6 +372,8 @@ public:
 	virtual int* GetIdMap(int ClientID) = 0;
 	virtual void SetCustClt(int ClientID) = 0;
 	virtual void SetSolar(int ClientID) = 0;
+
+	virtual void ExpireServerInfo() = 0;
 };
 
 class IGameServer : public IInterface
@@ -391,7 +394,7 @@ public:
 
 	virtual void OnClientConnected(int ClientID) = 0;
 	virtual void OnClientEnter(int ClientID) = 0;
-	virtual void OnClientDrop(int ClientID, int Type, const char *pReason) = 0;
+	virtual void OnClientDrop(int ClientID, const char *pReason) = 0;
 	virtual void OnClientDirectInput(int ClientID, void *pInput) = 0;
 	virtual void OnClientPredictedInput(int ClientID, void *pInput) = 0;
 

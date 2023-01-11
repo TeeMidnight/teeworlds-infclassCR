@@ -32,7 +32,7 @@ public:
 
 	void OnDirectInput(CNetObj_PlayerInput *NewInput);
 	void OnPredictedInput(CNetObj_PlayerInput *NewInput);
-	void OnDisconnect(int Type, const char *pReason);
+	void OnDisconnect(const char *pReason);
 
 	void KillCharacter(int Weapon = WEAPON_GAME);
 	CCharacter *GetCharacter();
@@ -142,9 +142,6 @@ public:
 	int m_Authed;
 	int m_ScoreRound;
 	int m_HumanTime;
-	int m_NumNoMustSnapPlayer;
-	int m_NumMustSnapPlayer;
-	int m_MustSnapPlayer[MAX_CLIENTS];
 	
 	bool m_knownClass[NB_PLAYERCLASS];
 	int m_InfectionTick;
@@ -163,7 +160,6 @@ public:
 	bool IsZombie() const;
 	bool IsHuman() const;
 	bool IsSpectator() const;
-	bool IsPlayerMustSnap(int ClientID) const;
 	void StartInfection(bool force = false);
 	bool IsKnownClass(int c);
 	
@@ -195,21 +191,6 @@ public:
 	int m_LastHumanClasses[2];
 
 	void SetToSpirit(bool IsSpirit);
-
-
-	#ifdef CONF_SQL
-	// Account
-	bool LoggedIn;
-	struct
-	{
-		int m_UserID;
-		char m_Username[20];
-		char m_Password[20];
-		
-	} m_AccData;
-	#endif
-
-	void Logout();
 
 /* INFECTION MODIFICATION END *****************************************/
 };

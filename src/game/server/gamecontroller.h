@@ -158,7 +158,7 @@ public:
 	virtual int ChooseInfectedClass(const CPlayer* pPlayer) const = 0;
 	virtual bool IsChoosableClass(int PlayerClass) = 0;
 	virtual bool IsSpawnable(vec2 Position, int TeleZoneIndex) = 0;
-	virtual void OnClientDrop(int ClientID, int Type) {};
+	virtual void OnClientDrop(int ClientID) {};
 	virtual bool IsInfectionStarted() = 0;
 	
 	int GetRoundId() { return m_RoundId; }

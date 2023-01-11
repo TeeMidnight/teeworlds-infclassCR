@@ -14,10 +14,6 @@
 #include "gamemodes/mod.h"
 #include <algorithm>
 
-#ifdef CONF_SQL
-#include <engine/server/crypt.h>
-#endif
-
 enum
 {
 	RESET,
@@ -73,21 +69,12 @@ void CGameContext::Construct(int Resetting)
 
 	if(Resetting==NO_RESET)
 		m_pVoteOptionHeap = new CHeap();
-	
-#ifdef CONF_SQL
-	/* SQL */
-	m_AccountData = 0;
-	m_Sql = 0;
-#endif
 
 	m_FunRound = false;
 	m_FunRoundHumanClass = START_HUMANCLASS;
 	m_FunRoundZombieClass = START_INFECTEDCLASS;
 	m_FunRoundsPassed = 0;
 	
-	#if defined(MEASURE_TICKS)
-		m_pMeasure = new CMeasureTicks(10,"GameServerTick");
-	#endif
 	
 	#ifdef CONF_GEOLOCATION
 	geolocation = new Geolocation("GeoLite2-Country.mmdb");
@@ -140,13 +127,6 @@ void CGameContext::Clear()
 	m_pVoteOptionLast = pVoteOptionLast;
 	m_NumVoteOptions = NumVoteOptions;
 	m_Tuning = Tuning;
-	
-#ifdef CONF_SQL
-	delete m_Sql;
-	delete m_AccountData;
-	m_Sql = 0;
-	m_AccountData = 0;
-#endif
 
 	for(int i=0; i<MAX_CLIENTS; i++)
 	{
@@ -597,7 +577,7 @@ void CGameContext::SendChatTarget_Localization(int To, int Category, const char*
 				tmpBuf.copy(Buffer);
 				Server()->Localization()->Format_VL(tmpBuf, "en", pText, VarArgs);
 				Msg.m_pMessage = tmpBuf.buffer();
-				Server()->SendPackMsg(&Msg, MSGFLAG_VITAL|MSGFLAG_NOSEND, -1);
+				Server()->SendPackMsg(&Msg, MSGFLAG_VITAL | MSGFLAG_NOSEND, -1);
 			}
 			Server()->Localization()->Format_VL(Buffer, m_apPlayers[i]->GetLanguage(), pText, VarArgs);
 			
@@ -998,25 +978,6 @@ void CGameContext::SendScoreSound(int ClientID)
 
 void CGameContext::OnTick()
 {
-	#if defined(MEASURE_TICKS)
-		m_pMeasure->Begin(); // when the tick starts	
-	#endif
-	
-	if(!(Server()->Tick() % 150))
-	{
-		m_SnapState++;
-		switch (m_SnapState)
-		{
-			case SNAPPLAYER_STATE64: if(m_NbPlayers < 32) m_SnapState = SNAPPLAYER_STATE32;break;
-			case SNAPPLAYER_STATE96: if(m_NbPlayers < 64) m_SnapState = SNAPPLAYER_STATE32;break;
-			case SNAPPLAYER_STATE128: if(m_NbPlayers < 96) m_SnapState = SNAPPLAYER_STATE32;break;
-			case SNAPPLAYER_STATE160: if(m_NbPlayers < 128) m_SnapState = SNAPPLAYER_STATE32;break;
-			case SNAPPLAYER_STATE192: if(m_NbPlayers < 160) m_SnapState = SNAPPLAYER_STATE32;break;
-			case SNAPPLAYER_STATE224: if(m_NbPlayers < 192) m_SnapState = SNAPPLAYER_STATE32;break;
-			case SNAPPLAYER_STATE256: if(m_NbPlayers < 224) m_SnapState = SNAPPLAYER_STATE32;break;
-		}
-	}
-
 	for(int i=0; i<MAX_CLIENTS; i++)
 	{		
 		if(m_apPlayers[i])
@@ -1400,10 +1361,6 @@ void CGameContext::OnTick()
 		}
 	}
 #endif
-
-	#if defined(MEASURE_TICKS)
-		m_pMeasure->End(); // when the tick ends	
-	#endif
 	
 }
 
@@ -1433,10 +1390,6 @@ void CGameContext::OnClientEnter(int ClientID)
 	if(Server()->GetClientInfo(ClientID, &Info))
 		if(Info.m_Solar)
 			SendChatTarget_Localization(-1, CHATCATEGORY_PLAYER, _("{str:PlayerName} used teelink client"), "PlayerName", Server()->ClientName(ClientID), NULL);
-#ifdef CONF_SQL
-	SendChatTarget_Localization(ClientID, CHATCATEGORY_PLAYER, _("Use /register <username> <password> to register."), NULL);
-	SendChatTarget_Localization(ClientID, CHATCATEGORY_PLAYER, _("Or use /login <username> <password> to login."), NULL);
-#endif
 /* INFECTION MODIFICATION END *****************************************/
 
 	char aBuf[512];
@@ -1510,12 +1463,12 @@ void CGameContext::OnClientConnected(int ClientID)
 	
 }
 
-void CGameContext::OnClientDrop(int ClientID, int Type, const char *pReason)
+void CGameContext::OnClientDrop(int ClientID, const char *pReason)
 {
-	m_pController->OnClientDrop(ClientID, Type);
+	m_pController->OnClientDrop(ClientID);
 	
 	AbortVoteKickOnDisconnect(ClientID);
-	m_apPlayers[ClientID]->OnDisconnect(Type, pReason);
+	m_apPlayers[ClientID]->OnDisconnect(pReason);
 	delete m_apPlayers[ClientID];
 	m_apPlayers[ClientID] = 0;
 
@@ -1607,11 +1560,11 @@ void CGameContext::OnCallVote(void *pRawMsg, int ClientID)
 	pPlayer->m_LastVoteTry = Now;
 			
 	CNetMsg_Cl_CallVote *pMsg = (CNetMsg_Cl_CallVote *)pRawMsg;
-	const char *pReason = pMsg->m_Reason[0] ? pMsg->m_Reason : "No reason given";
+	const char *pReason = pMsg->m_pReason[0] ? pMsg->m_pReason : "No reason given";
 
-	if(str_comp_nocase(pMsg->m_Type, "kick") == 0)
+	if(str_comp_nocase(pMsg->m_pType, "kick") == 0)
 	{
-		int KickID = str_toint(pMsg->m_Value);
+		int KickID = str_toint(pMsg->m_pValue);
 		if(KickID < 0 || KickID >= MAX_CLIENTS || !m_apPlayers[KickID])
 		{
 			SendChatTarget(ClientID, "Invalid client id to kick");
@@ -1660,14 +1613,14 @@ void CGameContext::OnCallVote(void *pRawMsg, int ClientID)
 		char aDesc[VOTE_DESC_LENGTH] = {0};
 		char aCmd[VOTE_CMD_LENGTH] = {0};
 
-		if(str_comp_nocase(pMsg->m_Type, "option") == 0)
+		if(str_comp_nocase(pMsg->m_pType, "option") == 0)
 		{
 			// this vote is not a kick/ban or spectate vote
 
 			CVoteOptionServer *pOption = m_pVoteOptionFirst;
 			while(pOption) // loop through all option votes to find out which vote it is
 			{
-				if(str_comp_nocase(pMsg->m_Value, pOption->m_aDescription) == 0) // found out which vote it is
+				if(str_comp_nocase(pMsg->m_pValue, pOption->m_aDescription) == 0) // found out which vote it is
 				{
 					int MapVoteType = IsMapVote(pOption->m_aCommand);
 					if (MapVoteType > 0) // this is a map vote
@@ -1723,12 +1676,12 @@ void CGameContext::OnCallVote(void *pRawMsg, int ClientID)
 
 			if(!pOption)
 			{
-				str_format(aChatmsg, sizeof(aChatmsg), "'%s' isn't an option on this server", pMsg->m_Value);
+				str_format(aChatmsg, sizeof(aChatmsg), "'%s' isn't an option on this server", pMsg->m_pValue);
 				SendChatTarget(ClientID, aChatmsg);
 				return;
 			}
 		}
-		else if(str_comp_nocase(pMsg->m_Type, "spectate") == 0)
+		else if(str_comp_nocase(pMsg->m_pType, "spectate") == 0)
 		{
 			if(!g_Config.m_SvVoteSpectate)
 			{
@@ -1736,7 +1689,7 @@ void CGameContext::OnCallVote(void *pRawMsg, int ClientID)
 				return;
 			}
 
-			int SpectateID = str_toint(pMsg->m_Value);
+			int SpectateID = str_toint(pMsg->m_pValue);
 			if(SpectateID < 0 || SpectateID >= MAX_CLIENTS || !m_apPlayers[SpectateID] || m_apPlayers[SpectateID]->GetTeam() == TEAM_SPECTATORS)
 			{
 				SendChatTarget(ClientID, "Invalid client id to move");
@@ -3278,91 +3231,6 @@ void CGameContext::MutePlayer(const char* pStr, int ClientID)
 	}
 }
 
-#ifdef CONF_SQL
-
-bool CGameContext::ConRegister(IConsole::IResult *pResult, void *pUserData)
-{
-	CGameContext *pSelf = (CGameContext *) pUserData;
-
-    if (pResult->NumArguments() != 2) {
-        pSelf->SendChatTarget_Localization(pResult->GetClientID(), CHATCATEGORY_DEFAULT, _("Usage: /register <username> <password>"));
-        return false;
-    }
-
-    char Username[512];
-    char Password[512];
-    str_copy(Username, pResult->GetString(0), sizeof(Username));
-    str_copy(Password, pResult->GetString(1), sizeof(Password));
-
-    char aHash[64];
-	Crypt(Password, (const unsigned char*) "d9", 1, 14, aHash);
-
-    pSelf->Sql()->create_account(Username, aHash, pResult->GetClientID());
-    return true;
-}
-
-bool CGameContext::ConLogin(IConsole::IResult *pResult, void *pUserData)
-{
-	CGameContext *pSelf = (CGameContext *) pUserData;
-    if (pResult->NumArguments() != 2) {
-        pSelf->SendChatTarget_Localization(pResult->GetClientID(), CHATCATEGORY_DEFAULT, _("usage: /login <username> <password>"));
-        return false;
-    }
-
-    char Username[512];
-    char Password[512];
-    str_copy(Username, pResult->GetString(0), sizeof(Username));
-    str_copy(Password, pResult->GetString(1), sizeof(Password));
-
-    char aHash[64]; //Result
-	mem_zero(aHash, sizeof(aHash));
-	Crypt(Password, (const unsigned char*) "d9", 1, 14, aHash);
-	
-    pSelf->Sql()->login(Username, aHash, pResult->GetClientID());
-    return true;
-}
-
-bool CGameContext::ConLogout(IConsole::IResult *pResult, void *pUserData)
-{
-	CGameContext *pSelf = (CGameContext *) pUserData;
-    pSelf->LogoutAccount(pResult->GetClientID());
-}
-
-bool CGameContext::ConTop5(IConsole::IResult *pResult, void *pUserData)
-{
-	CGameContext *pSelf = (CGameContext *) pUserData;
-
-	char ScoreType[8];
-
-	if(pResult->NumArguments() >= 1)
-	{
-		if(str_comp(pResult->GetString(0), "zombie") == 0)
-		{
-			mem_copy(ScoreType, "Zombie", sizeof(ScoreType));
-		}else if(str_comp(pResult->GetString(0), "human") == 0)
-		{
-			mem_copy(ScoreType, "Human", sizeof(ScoreType));
-		}else
-		{
-			pSelf->SendChatTarget_Localization(pResult->GetClientID(), CHATCATEGORY_DEFAULT, _("No this top5."));
-			return true;
-		}
-	} 
-
-	pSelf->Sql()->ShowTop5(pResult->GetClientID(), ScoreType);
-	return true;
-}
-
-void CGameContext::LogoutAccount(int ClientID)
-{
-	CPlayer *pP = m_apPlayers[ClientID];
-    CCharacter *pChr = pP->GetCharacter();
-    pP->Logout();
-    SendChatTarget(pP->GetCID(), _("Logout succesful"));
-}
-
-#endif
-
 bool CGameContext::ConStatus(IConsole::IResult *pResult, void *pUserData)
 {
 	CGameContext *pSelf = (CGameContext *) pUserData;
@@ -3387,11 +3255,7 @@ bool CGameContext::ConStatus(IConsole::IResult *pResult, void *pUserData)
 				i,
 				aBufName,
 				pSelf->Server()->GetClientAntiPing(i),
-				#ifdef CONF_SQL
-					pSelf->m_apPlayers[i]->LoggedIn,
-				#else 
 					0,
-				#endif
 				AuthLevel,
 				pSelf->Server()->GetClientIP(i)
 			);
@@ -4103,12 +3967,6 @@ bool CGameContext::ConCmdList(IConsole::IResult *pResult, void *pUserData)
 	Buffer.append("\n\n");
 	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, "/msg, /mute", NULL);
 	Buffer.append("\n\n");
-#ifdef CONF_SQL
-	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, "/register, /login, /logout, /setemail", NULL);
-	Buffer.append("\n\n");
-	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, "/challenge, /top, /rank, /goal", NULL);
-	Buffer.append("\n\n");
-#endif
 	pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Press <F3> to enable or disable hook protection"), NULL);
 			
 	pSelf->SendMOTD(ClientID, Buffer.buffer());
@@ -4241,12 +4099,6 @@ void CGameContext::OnConsoleInit()
 	
 	//Chat Command
 	Console()->Register("info", "", CFGFLAG_CHAT|CFGFLAG_USER, ConChatInfo, this, "Display information about the mod");
-#ifdef CONF_SQL
-	Console()->Register("register", "?s?s", CFGFLAG_CHAT|CFGFLAG_USER, ConRegister, this, "Create an account");
-	Console()->Register("login", "?s?s", CFGFLAG_CHAT|CFGFLAG_USER, ConLogin, this, "Login to an account");
-	Console()->Register("logout", "", CFGFLAG_CHAT|CFGFLAG_USER, ConLogout, this, "Logout");
-	Console()->Register("top5", "s<human|zombie>", CFGFLAG_CHAT|CFGFLAG_USER, ConTop5, this, "showTop5");
-#endif
 	Console()->Register("help", "?s<page>", CFGFLAG_CHAT|CFGFLAG_USER, ConHelp, this, "Display help");
 	Console()->Register("customskin", "s<all|me|none>", CFGFLAG_CHAT|CFGFLAG_USER, ConCustomSkin, this, "Display information about the mod");
 	Console()->Register("alwaysrandom", "i<0|1>", CFGFLAG_CHAT|CFGFLAG_USER, ConAlwaysRandom, this, "Display information about the mod");
@@ -4294,11 +4146,6 @@ void CGameContext::OnInit(/*class IKernel *pKernel*/)
 	// reset everything here
 	//world = new GAMEWORLD;
 	//players = new CPlayer[MAX_CLIENTS];
-
-#ifdef CONF_SQL
-	m_AccountData = new CAccountData;
-	m_Sql = new CSQL(this);
-#endif
 	// select gametype
 	m_pController = new CGameControllerMOD(this);
 	// reset game config, if has.
@@ -4492,33 +4339,6 @@ void CGameContext::FlagCollected()
 
 void CGameContext::OnRoundOver()
 {
-#ifdef CONF_SQL
-	int HScore=0, ZScore=0;
-	int HighScorePlayer[3] = {0, 0, 0};
-	for(int i = 0;i < MAX_CLIENTS;i ++)
-	{
-		CPlayer *pPlayer = m_apPlayers[i];
-		if(pPlayer && pPlayer->LoggedIn)
-		{
-			if(pPlayer->IsZombie())
-			{
-				ZScore = Server()->RoundStatistics()->PlayerScore(i)/90+1;
-				SendChatTarget_Localization(i, CHATCATEGORY_SCORE, 
-					_("You get {int:Score} in this round."), "Score", &ZScore, NULL);
-			}else if(pPlayer->IsHuman())
-			{
-				HScore = Server()->RoundStatistics()->PlayerScore(i)/120+2;
-				SendChatTarget_Localization(i, CHATCATEGORY_SCORE, 
-					_("You get {int:Score} in this round."), "Score", &HScore, NULL);
-			}
-			char aBuf[16];
-			str_format(aBuf, sizeof(aBuf), "\u002b%d", HScore);
-			char bBuf[16];
-			str_format(bBuf, sizeof(bBuf), "\u002b%d", ZScore);
-			Sql()->UpdateScore(pPlayer->GetCID(), aBuf, bBuf);
-		}
-	}
-#endif
 }
 
 void CGameContext::OnPreSnap() {}
@@ -4602,20 +4422,4 @@ void CGameContext::RemoveSpectatorCID(int ClientID) {
 bool CGameContext::IsSpectatorCID(int ClientID) {
 	auto& vec = CGameContext::spectators_id;
 	return std::find(vec.begin(), vec.end(), ClientID) != vec.end();
-}
-
-bool CGameContext::IsSnapPlayer(int ClientID)
-{
-	switch(m_SnapState)
-	{
-		case SNAPPLAYER_STATE32: if(ClientID > 31) return false;
-		case SNAPPLAYER_STATE64: if(ClientID < 32 || ClientID > 63) return false;
-		case SNAPPLAYER_STATE96: if(ClientID < 64 || ClientID > 95) return false;
-		case SNAPPLAYER_STATE128: if(ClientID < 96 || ClientID > 127) return false;
-		case SNAPPLAYER_STATE160: if(ClientID < 128 || ClientID > 159) return false;
-		case SNAPPLAYER_STATE192: if(ClientID < 160 || ClientID > 191) return false;
-		case SNAPPLAYER_STATE224: if(ClientID < 192 || ClientID > 223) return false;
-		case SNAPPLAYER_STATE256: if(ClientID < 224) return false;
-	}
-	return true;
 }

@@ -32,7 +32,7 @@ public:
 	virtual bool IsEnabledClass(int PlayerClass);
 	virtual bool IsChoosableClass(int PlayerClass);
 	virtual bool CanVote();
-	virtual void OnClientDrop(int ClientID, int Type);
+	virtual void OnClientDrop(int ClientID);
 	virtual bool IsInfectionStarted();
 	
 	void ResetFinalExplosion();

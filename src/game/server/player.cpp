@@ -25,8 +25,6 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	m_LastActionTick = Server()->Tick();
 	m_LastActionMoveTick = Server()->Tick();
 	m_TeamChangeTick = Server()->Tick();
-	m_NumMustSnapPlayer = 0;
-	m_NumNoMustSnapPlayer = 0;
 	
 /* INFECTION MODIFICATION START ***************************************/
 	m_Authed = IServer::AUTHED_NO;
@@ -64,10 +62,6 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 		m_LastHumanClasses[i] = -1;
 
 	m_VoodooIsSpirit = false;
-	#ifdef CONF_SQL
-	m_AccData.m_UserID = 0;
-	LoggedIn = false;
-	#endif
 /* INFECTION MODIFICATION END *****************************************/
 }
 
@@ -84,20 +78,6 @@ void CPlayer::Tick()
 #endif
 	if(!Server()->ClientIngame(m_ClientID))
 		return;
-	m_NumNoMustSnapPlayer = 0;
-	m_NumMustSnapPlayer = 0;
-	for(int i = 0;i < MAX_CLIENTS;i ++)
-	{
-		if(m_NumMustSnapPlayer >= DDNET_MAX_CLIENTS)
-		{
-			break;
-		}
-		CPlayer *pPlayer = GameServer()->m_apPlayers[i];
-		if(!pPlayer) continue;
-		if(!pPlayer->GetCharacter()) continue;
-		if(!pPlayer->GetCharacter()->NetworkClipped(m_ClientID))
-			m_MustSnapPlayer[m_NumMustSnapPlayer++] = i;
-	}
 
 	Server()->SetClientLanguage(m_ClientID, m_aLanguage);
 
@@ -302,15 +282,6 @@ void CPlayer::Snap(int SnappingClient)
 					str_copy(aClanName, Server()->Localization()->Localize(pPlayer->GetLanguage() , GameServer()->GetClassName(m_class)), sizeof(aClanName));
 			}
 
-#ifdef CONF_SQL
-			char ClanToSnap[16];
-			if(LoggedIn)
-			{
-				str_copy(ClanToSnap, "@", sizeof(ClanToSnap));
-				str_append(ClanToSnap, aClanName, sizeof(ClanToSnap));
-				StrToInts(&pClientInfo->m_Clan0, 4, ClanToSnap);
-			}else 
-#endif
 			{
 				StrToInts(&pClientInfo->m_Clan0, 4, aClanName);
 			}
@@ -597,39 +568,16 @@ void CPlayer::FakeSnap(int SnappingClient)
 	StrToInts(&pClientInfo->m_Skin0, 6, m_TeeInfos.m_SkinName);
 }
 
-void CPlayer::OnDisconnect(int Type, const char *pReason)
+void CPlayer::OnDisconnect(const char *pReason)
 {
 	KillCharacter();
 
 	if(Server()->ClientIngame(m_ClientID))
 	{
-		if(Type == CLIENTDROPTYPE_BAN)
-		{
-			GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_PLAYER, _("{str:PlayerName} has been banned ({str:Reason})"),
-				"PlayerName", Server()->ClientName(m_ClientID),
-				"Reason", pReason,
-				NULL);
-		}
-		else if(Type == CLIENTDROPTYPE_KICK)
-		{
-			GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_PLAYER, _("{str:PlayerName} has been kicked ({str:Reason})"),
-				"PlayerName", Server()->ClientName(m_ClientID),
-				"Reason", pReason,
-				NULL);
-		}
-		else if(pReason && *pReason)
-		{
-			GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_PLAYER, _("{str:PlayerName} has left the game ({str:Reason})"),
-				"PlayerName", Server()->ClientName(m_ClientID),
-				"Reason", pReason,
-				NULL);
-		}
-		else
-		{
-			GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_PLAYER, _("{str:PlayerName} has left the game"),
-				"PlayerName", Server()->ClientName(m_ClientID),
-				NULL);
-		}
+		GameServer()->SendChatTarget_Localization(-1, CHATCATEGORY_PLAYER, _("{str:PlayerName} has left the game ({str:Reason})"),
+			"PlayerName", Server()->ClientName(m_ClientID),
+			"Reason", pReason,
+			NULL);
 	}
 }
 
@@ -882,18 +830,6 @@ bool CPlayer::IsSpectator() const
 	return m_Team == TEAM_SPECTATORS;
 }
 
-bool CPlayer::IsPlayerMustSnap(int ClientID) const
-{
-	for(int i = 0 ; i < m_NumMustSnapPlayer; i++)
-	{
-		if(m_MustSnapPlayer[i] == ClientID)
-		{
-			return true;
-		}
-	}
-	return false;
-}
-
 bool CPlayer::IsKnownClass(int c)
 {
 	return m_knownClass[c];
@@ -974,12 +910,4 @@ void CPlayer::SetToSpirit(bool IsSpirit)
 {
 	m_VoodooIsSpirit = IsSpirit;
 }
-
-#ifdef CONF_SQL
-void CPlayer::Logout()
-{
-	m_AccData.m_UserID = 0;
-	LoggedIn = false;
-}
-#endif
 /* INFECTION MODIFICATION END *****************************************/

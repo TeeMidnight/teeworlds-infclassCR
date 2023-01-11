@@ -3920,7 +3920,7 @@ void CCharacter::Snap(int SnappingClient)
 	
 /* INFECTION MODIFICATION START ***************************************/
 
-	if(GetClass() == PLAYERCLASS_MAGICIAN && pClient->IsZombie() && m_IsMagic)
+	if(pClient && pClient->IsZombie() && m_IsMagic)
 		return;
 
 	if(GetClass() == PLAYERCLASS_WITCH)

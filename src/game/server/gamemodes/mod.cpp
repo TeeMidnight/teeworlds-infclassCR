@@ -49,12 +49,8 @@ CGameControllerMOD::~CGameControllerMOD()
 	if(m_GrowingMap) delete[] m_GrowingMap;
 }
 
-void CGameControllerMOD::OnClientDrop(int ClientID, int Type)
+void CGameControllerMOD::OnClientDrop(int ClientID)
 {
-	if(Type == CLIENTDROPTYPE_BAN) return;
-	if(Type == CLIENTDROPTYPE_KICK) return;
-	if(Type == CLIENTDROPTYPE_SHUTDOWN) return;	
-	
 	CPlayer* pPlayer = GameServer()->m_apPlayers[ClientID];
 	GameServer()->CountInfPlayers();
 	if(pPlayer && pPlayer->IsZombie() && m_InfectedStarted)
@@ -496,7 +492,7 @@ void CGameControllerMOD::Tick()
 			char aBuf[512];
 			str_format(aBuf, sizeof(aBuf), "round_end too few players round='%d of %d'", m_RoundCount+1, g_Config.m_SvRoundsPerMap);
 			GameServer()->Console()->Print(IConsole::OUTPUT_LEVEL_DEBUG, "game", aBuf);
-			
+			 
 			EndRound(WINNER_NONE);
 		}
 		

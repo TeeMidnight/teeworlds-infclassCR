@@ -23,7 +23,7 @@ int CEcon::NewClientCallback(int ClientID, void *pUser)
 	return 0;
 }
 
-int CEcon::DelClientCallback(int ClientID, int Type, const char *pReason, void *pUser)
+int CEcon::DelClientCallback(int ClientID, const char *pReason, void *pUser)
 {
 	CEcon *pThis = (CEcon *)pUser;
 
@@ -59,7 +59,7 @@ bool CEcon::ConLogout(IConsole::IResult *pResult, void *pUserData)
 	CEcon *pThis = static_cast<CEcon *>(pUserData);
 
 	if(pThis->m_UserClientID >= 0 && pThis->m_UserClientID < NET_MAX_CONSOLE_CLIENTS && pThis->m_aClients[pThis->m_UserClientID].m_State != CClient::STATE_EMPTY)
-		pThis->m_NetConsole.Drop(pThis->m_UserClientID, CLIENTDROPTYPE_LOGOUT, "Logout");
+		pThis->m_NetConsole.Drop(pThis->m_UserClientID, "Logout");
 		
 	return true;
 }
@@ -91,7 +91,7 @@ void CEcon::Init(IConsole *pConsole, CNetBan *pNetBan)
 		BindAddr.port = g_Config.m_EcPort;
 	}
 
-	if(m_NetConsole.Open(BindAddr, pNetBan, 0))
+	if(m_NetConsole.Open(BindAddr, pNetBan))
 	{
 		m_NetConsole.SetCallbacks(NewClientCallback, DelClientCallback, this);
 		m_Ready = true;
@@ -140,7 +140,7 @@ void CEcon::Update()
 				if(m_aClients[ClientID].m_AuthTries >= MAX_AUTH_TRIES)
 				{
 					if(!g_Config.m_EcBantime)
-						m_NetConsole.Drop(ClientID, CLIENTDROPTYPE_KICK, "Too many authentication tries");
+						m_NetConsole.Drop(ClientID, "Too many authentication tries");
 					else
 						m_NetConsole.NetBan()->BanAddr(m_NetConsole.ClientAddr(ClientID), g_Config.m_EcBantime*60, "Too many authentication tries");
 				}
@@ -161,7 +161,7 @@ void CEcon::Update()
 	{
 		if(m_aClients[i].m_State == CClient::STATE_CONNECTED &&
 			time_get() > m_aClients[i].m_TimeConnected + g_Config.m_EcAuthTimeout * time_freq())
-			m_NetConsole.Drop(i, CLIENTDROPTYPE_KICK, "authentication timeout");
+			m_NetConsole.Drop(i, "authentication timeout");
 	}
 }
 

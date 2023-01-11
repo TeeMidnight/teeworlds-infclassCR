@@ -39,6 +39,8 @@ static const unsigned char SERVERBROWSE_FWRESPONSE[] = {255, 255, 255, 255, 'f',
 static const unsigned char SERVERBROWSE_FWOK[] = {255, 255, 255, 255, 'f', 'w', 'o', 'k'};
 static const unsigned char SERVERBROWSE_FWERROR[] = {255, 255, 255, 255, 'f', 'w', 'e', 'r'};
 
+static const unsigned char SERVERBROWSE_CHALLENGE[] = {255, 255, 255, 255, 'c', 'h', 'a', 'l'};
+
 
 // packet headers for the 0.5 branch
 
