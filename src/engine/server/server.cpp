@@ -1339,7 +1339,7 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 		else if(Msg == NETMSG_INPUT)
 		{
 			CClient::CInput *pInput;
-			int64 TagTime;
+			int64_t TagTime;
 
 			m_aClients[ClientID].m_LastAckedSnapshot = Unpacker.GetInt();
 			int IntendedTick = Unpacker.GetInt();
@@ -1353,7 +1353,7 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 				m_aClients[ClientID].m_SnapRate = CClient::SNAPRATE_FULL;
 
 			if(m_aClients[ClientID].m_Snapshots.Get(m_aClients[ClientID].m_LastAckedSnapshot, &TagTime, 0, 0) >= 0)
-				m_aClients[ClientID].m_Latency = (int)(((time_get()-TagTime)*1000)/time_freq());
+				m_aClients[ClientID].m_Latency = (int)(((time_get() - TagTime) * 1000) / time_freq());
 
 			// add message to report the input timing
 			// skip packets that are old
@@ -2043,6 +2043,12 @@ int CServer::LoadMap(const char *pMapName)
 
 	if(!m_pMap->Load(aBuf))
 		return 0;
+
+	// stop recording when we change map
+	m_DemoRecorder.Stop();
+	
+	// reinit snapshot ids
+	m_IDPool.TimeoutIDs();
 			
 /* INFECTION MODIFICATION START ***************************************/
 	//The map format of InfectionClass is different from the vanilla format.
@@ -2107,12 +2113,6 @@ int CServer::LoadMap(const char *pMapName)
 		io_close(File);
 		Console()->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "server", "maps/infc_x_current.map loaded in memory");
 	}
-
-	// stop recording when we change map
-	m_DemoRecorder.Stop();
-	
-	// reinit snapshot ids
-	m_IDPool.TimeoutIDs();
 
 	str_copy(m_aCurrentMap, pMapName, sizeof(m_aCurrentMap));
 	ResetMapVotes();
