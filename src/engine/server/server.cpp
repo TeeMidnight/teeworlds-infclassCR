@@ -2071,7 +2071,7 @@ int CServer::LoadMap(const char *pMapName)
 		dfServerMap.Close();
 		
 		char aClientMapName[256];
-		str_format(aClientMapName, sizeof(aClientMapName), "clientmaps/%s/tw06-highres.map", MAP_VERSION);
+		str_format(aClientMapName, sizeof(aClientMapName), "clientmaps/%s/%s.map", MAP_VERSION, pMapName);
 		
 		CMapConverter MapConverter(Storage(), m_pMap, Console());
 		if(!MapConverter.Load())
@@ -2085,7 +2085,7 @@ int CServer::LoadMap(const char *pMapName)
 		char aClientMapDir[256];
 		str_format(aClientMapDir, sizeof(aClientMapDir), "clientmaps/%s", MAP_VERSION);
 		
-		if(Storage()->CreateFolder(aClientMapDir, IStorage::TYPE_SAVE) != 0)
+		if(Storage()->CreateFolder(aClientMapDir, IStorage::TYPE_SAVE))
 		{
 			dbg_msg("infclass", "Can't create the directory '%s'", aClientMapDir);
 		}
