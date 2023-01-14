@@ -2085,7 +2085,7 @@ int CServer::LoadMap(const char *pMapName)
 		char aClientMapDir[256];
 		str_format(aClientMapDir, sizeof(aClientMapDir), "clientmaps/%s", MAP_VERSION);
 		
-		if(Storage()->CreateFolder(aClientMapDir, IStorage::TYPE_SAVE))
+		if(!Storage()->CreateFolder(aClientMapDir, IStorage::TYPE_SAVE))
 		{
 			dbg_msg("infclass", "Can't create the directory '%s'", aClientMapDir);
 		}
