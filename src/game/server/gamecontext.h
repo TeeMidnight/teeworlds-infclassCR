@@ -380,6 +380,7 @@ public:
 	bool IsSpectatorCID(int ClientID);
 	// InfClassR end
 	void InitGeolocation();
+	void OnUpdatePlayerServerInfo(char *aBuf, int BufSize, int ID) override;
 };
 
 inline int64_t CmaskAll() { return -1LL; }

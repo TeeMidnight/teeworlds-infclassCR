@@ -30,6 +30,8 @@
 #include <game/mapitems.h>
 #include <game/gamecore.h>
 
+#include <game/version.h>
+
 #include <mastersrv/mastersrv.h>
 
 #include "register.h"
@@ -1901,6 +1903,9 @@ void CServer::UpdateRegisterServerInfo()
 			char aCName[32];
 			char aCClan[32];
 
+			char aExtraPlayerInfo[512];
+			GameServer()->OnUpdatePlayerServerInfo(aExtraPlayerInfo, sizeof(aExtraPlayerInfo), i);
+
 			char aClientInfo[256];
 			str_format(aClientInfo, sizeof(aClientInfo),
 				"%s{"
@@ -1909,13 +1914,15 @@ void CServer::UpdateRegisterServerInfo()
 				"\"country\":%d,"
 				"\"score\":%d,"
 				"\"is_player\":%s"
+				"%s"
 				"}",
 				!FirstPlayer ? "," : "",
 				EscapeJson(aCName, sizeof(aCName), ClientName(i)),
 				EscapeJson(aCClan, sizeof(aCClan), ClientClan(i)),
 				m_aClients[i].m_Country,
 				RoundStatistics()->PlayerScore(i),
-				JsonBool(GameServer()->IsClientPlayer(i)));
+				JsonBool(GameServer()->IsClientPlayer(i)),
+				aExtraPlayerInfo);
 			str_append(aInfo, aClientInfo, sizeof(aInfo));
 			FirstPlayer = false;
 		}
@@ -2064,7 +2071,7 @@ int CServer::LoadMap(const char *pMapName)
 		dfServerMap.Close();
 		
 		char aClientMapName[256];
-		str_format(aClientMapName, sizeof(aClientMapName), "clientmaps/%s_%08x/tw06-highres.map", pMapName, ServerMapCrc);
+		str_format(aClientMapName, sizeof(aClientMapName), "clientmaps/%s/tw06-highres.map", MAP_VERSION);
 		
 		CMapConverter MapConverter(Storage(), m_pMap, Console());
 		if(!MapConverter.Load())
@@ -2076,11 +2083,9 @@ int CServer::LoadMap(const char *pMapName)
 		//The map must be converted
 		
 		char aClientMapDir[256];
-		str_format(aClientMapDir, sizeof(aClientMapDir), "clientmaps/%s_%08x", pMapName, ServerMapCrc);
-			
-		char aFullPath[512];
-		Storage()->GetCompletePath(IStorage::TYPE_SAVE, aClientMapDir, aFullPath, sizeof(aFullPath));
-		if(fs_makedir(aFullPath) != 0)
+		str_format(aClientMapDir, sizeof(aClientMapDir), "clientmaps/%s", MAP_VERSION);
+		
+		if(Storage()->CreateFolder(aClientMapDir, IStorage::TYPE_SAVE) != 0)
 		{
 			dbg_msg("infclass", "Can't create the directory '%s'", aClientMapDir);
 		}

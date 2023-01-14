@@ -9,8 +9,9 @@
 #define LAST_COMPILE_DATE __DATE__
 //static const char GAME_RELEASE_VERSION[8] = "0.6.4";
 #define MOD_NAME "InfclassCR"
-#define MOD_VERSION "0.7.0"
-#define VERSION_CODE "Nighemare"
+#define MOD_VERSION "0.7.1"
+#define MAP_VERSION "v10"
+#define VERSION_CODE "Nightmare"
 /*
     0.1 ------ Grenade
     0.2 ------ Smoker
