@@ -10,7 +10,7 @@
 //static const char GAME_RELEASE_VERSION[8] = "0.6.4";
 #define MOD_NAME "InfclassCR"
 #define MOD_VERSION "0.7.1"
-#define MAP_VERSION "v10"
+#define MAP_VERSION "v11"
 #define VERSION_CODE "Nightmare"
 /*
     0.1 ------ Grenade
