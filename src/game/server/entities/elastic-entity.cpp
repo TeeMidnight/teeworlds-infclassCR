@@ -155,10 +155,9 @@ void CElasticEntity::Tick()
 		float Len = distance(pChr->m_Pos, m_ActualPos);
 		if(Len < pChr->m_ProximityRadius+m_Radius)
 		{
-			vec2 Vel = pChr->GetVel();
-			pChr->SetVel(vec2((int)(m_ActualDir.x*25.0f), (int)(m_ActualDir.y*25.0f)));
+			vec2 Vel = normalize(pChr->m_Pos - m_ActualPos);
+			pChr->SetVel(pChr->GetVel() + Vel * 8.0f);
 			pChr->TakeDamage(vec2(0.0f,0.0f), g_Config.m_InfElasticEntityDamage, m_Owner, WEAPON_RIFLE, TAKEDAMAGEMODE_NOINFECTION);
-			Collision(false);
 		}
 	}
 

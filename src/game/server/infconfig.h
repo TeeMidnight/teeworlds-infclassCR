@@ -128,10 +128,6 @@ MACRO_CONFIG_INT(InfElasticEntityDamage, inf_elastic_entity_damage, 15, 0, 100, 
 MACRO_CONFIG_INT(InfElasticGrenadeLifeSpan, inf_elastic_grenade_life_span, 2, 0, 100, CFGFLAG_SERVER, "Elastic grenade life span")
 MACRO_CONFIG_INT(InfElasticGrenadeCheckNum, inf_elastic_grenade_check_num, 3, 0, 10, CFGFLAG_SERVER, "Elastic grenade life span")
 
-MACRO_CONFIG_INT(InfPoliceShieldRadius, inf_police_shield_Radius, 100, 0, 0, CFGFLAG_SERVER, "Police shield radius")
-MACRO_CONFIG_INT(InfPoliceShieldExplodeTime, inf_police_shield_explode_time, 4, 0, 0, CFGFLAG_SERVER, "Police shield explode time")
-MACRO_CONFIG_INT(InfPoliceShieldDamage, inf_police_shield_damage, 8, 0, 0, CFGFLAG_SERVER, "Police shield damage")
-
 MACRO_CONFIG_INT(InfAntiAirMineRadius, inf_anti_airmine_radius, 64, 0, 1024, CFGFLAG_SERVER, "Radius of anti-airmines")
 MACRO_CONFIG_INT(InfAntiAirMineSpeed, inf_anti_airmine_speed, 40, 0, 180, CFGFLAG_SERVER, "Rotation speed of anti-airmines")
 MACRO_CONFIG_INT(InfAntiAirMineLifeSpan, inf_anti_airmine_life_span, 20, 0, 100, CFGFLAG_SERVER, "Anti-Airmines life span")
@@ -142,7 +138,7 @@ MACRO_CONFIG_INT(InfReviverGrenadeSlowTime, inf_reviver_grenade_slow_time, 4, 0,
 
 MACRO_CONFIG_INT(InfPlasmaPlusRange, inf_plasma_plus_range, 128, 0, 2000, CFGFLAG_SERVER, "Range of plasma plus")
 MACRO_CONFIG_INT(InfPlasmaPlusLifeSpan, inf_plasma_plus_life_span, 3, 0, 100, CFGFLAG_SERVER, "plasma plus life span")
-MACRO_CONFIG_INT(InfPlasmaPlusDamage, inf_plasma_plus_damage, 5, 0, 20, CFGFLAG_SERVER, "Damage of plasma plus")
+MACRO_CONFIG_INT(InfPlasmaPlusDamage, inf_plasma_plus_damage, 4, 0, 20, CFGFLAG_SERVER, "Damage of plasma plus")
 MACRO_CONFIG_INT(InfPlasmaPlusSpeed, inf_plasma_plus_speed, 16, 0, 20, CFGFLAG_SERVER, "Speed of plasma plus")
 
 //Looper class config

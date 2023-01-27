@@ -28,8 +28,8 @@ void CSlimeEntity::Reset()
 
 vec2 CSlimeEntity::GetPos(float Time)
 {
-	float Curvature = GameServer()->Tuning()->m_GrenadeCurvature;
-	float Speed = 3000.0f;
+	float Curvature = 3.25f;
+	float Speed = 2000.0f;
 
 	return CalcPos(m_Pos, m_Direction, Curvature, Speed, Time);
 }

@@ -25,7 +25,7 @@ CSciogistGrenade::CSciogistGrenade(CGameWorld *pGameWorld, int Owner, vec2 Pos, 
 
 void CSciogistGrenade::Explode()
 {
-	GameServer()->CreateExplosion(m_ActualPos, m_Owner, WEAPON_GRENADE, false, TAKEDAMAGEMODE_NOINFECTION);
+	GameServer()->CreateExplosion(m_ActualPos, m_Owner, WEAPON_GRENADE, false, TAKEDAMAGEMODE_NOINFECTION, 0.75f);
 	GameServer()->CreateSound(m_ActualPos, SOUND_GRENADE_EXPLODE);
 	if(m_OwnerChar && m_OwnerChar->m_HasElasticHole)
 	{

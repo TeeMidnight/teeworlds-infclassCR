@@ -58,7 +58,6 @@ void CGameControllerMOD::OnClientDrop(int ClientID)
 		SetFirstInfectedNumber();
 		if(GameServer()->m_NbZombies == 1 && GameServer()->m_NbHumans > 0 )
 		{
-			Server()->Ban(ClientID, 600, Server()->Localization()->Localize(pPlayer->GetLanguage(), _("infect leaver")));
 			if(GameServer()->GetZombieCount() <= GetFirstInfNb()) // quit client not deleted, so zombie number should subtract 1
 			{
 				m_InfectedStarted = false;

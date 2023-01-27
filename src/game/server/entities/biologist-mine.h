@@ -10,7 +10,7 @@ class CBiologistMine : public CEntity
 public:
 	enum
 	{
-		NUM_SIDE = 10,
+		NUM_SIDE = 8,
 		NUM_PARTICLES = 1,
 		NUM_IDS = NUM_SIDE + NUM_PARTICLES,
 	};

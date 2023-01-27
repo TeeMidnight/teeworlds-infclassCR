@@ -88,8 +88,8 @@ void CElasticHole::Tick()
 		float Len = distance(pChr->m_Pos, m_Pos);
 		if(Len < pChr->m_ProximityRadius+m_Radius)
 		{
-			vec2 Vel = pChr->GetVel();
-			pChr->SetVel(vec2(Vel.x*-1.25, Vel.y*-1.25));
+			vec2 Vel = normalize(pChr->m_Pos - m_Pos);
+			pChr->SetVel(pChr->GetVel() + Vel * 8.0f);
 		}
 	}
 	if(m_Radius < 0)

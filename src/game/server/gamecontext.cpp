@@ -3506,9 +3506,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 			Buffer.append("~~ ");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Police"), NULL);
 			Buffer.append(" ~~\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Police can use hammer to use shield."), NULL);
-			Buffer.append(" ~~\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The shield can switch mode with the hammer."), NULL);
+			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Police can use hammer to set a shield."), NULL);
 			Buffer.append("\n\n");
 			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He also has a laser-rifle that can freeze zombies."), NULL);
 			Buffer.append("\n\n");

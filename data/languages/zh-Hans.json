@@ -412,12 +412,8 @@
 		"value": "如果弹射体消失了.它将会产生许多激光并且产生爆炸."
 	},
 	{
-		"key": "The Police can use hammer to use shield.",
-		"value": "警察可以使用锤子来触发盾牌."
-	},
-	{
-		"key": "The shield can switch mode with the hammer.",
-		"value": "盾牌可以通过锤子切换模式."
+		"key": "The Police can use hammer to set a shield.",
+		"value": "警察可以使用锤子来放置盾牌."
 	},
 	{
 		"key": "He also has a laser-rifle that can freeze zombies.",
@@ -976,20 +972,12 @@
 		"value": "已经获得震爆弹..."
 	},
 	{
-		"key": "Use hammer to switch shield mode",
-		"value": "使用锤子来切换盾牌模式"
+		"key": "Shield: {int:Health}HP",
+		"value": "盾牌: {int:Health}点耐久"
 	},
 	{
-		"key": "Explode",
-		"value": "爆炸"
-	},
-	{
-		"key": "Defend",
-		"value": "防御"
-	},
-	{
-		"key": "Your shield mode is: {str:Mode}",
-		"value": "你的盾牌模式为: {str:Mode}"
+		"key": "Shield was destroy!",
+		"value": "护盾已被摧毁!"
 	},
 	{
 		"key": "Slime entity is ready!",

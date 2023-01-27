@@ -215,6 +215,7 @@ public:
 	int m_PositionLockTick;
 	bool m_PositionLocked;
 	bool m_PositionLockAvailable;
+	bool m_IsMagic;
 	bool m_HasAntiAirMine;
 	bool m_HasWhiteHole;
 	bool m_HasElasticHole;
@@ -222,8 +223,7 @@ public:
 	bool m_HasIndicator;
 	bool m_HasStunGrenade;
 	bool m_HasFreezeMine;// Freezer
-	bool m_ShieldExplode;
-	bool m_IsMagic;
+	int m_HookDamage;
 	int m_BroadcastWhiteHoleReady;
 	int m_BroadcastElasticHoleReady;// used to broadcast "WhiteHole ready" for a short period of time
 	int m_BroadcastHealBoomReady;

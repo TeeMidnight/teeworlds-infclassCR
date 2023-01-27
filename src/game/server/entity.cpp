@@ -65,9 +65,8 @@ bool CEntity::IsDontSnapEntity(int SnappingClient, vec2 Pos)
 	}
 
 	CPlayer *pPlayer = GameServer()->m_apPlayers[SnappingClient];
-	if(!pPlayer)return true;
 
-	if(pPlayer->GetCharacter())
+	if(pPlayer && pPlayer->GetCharacter())
 	{
 		if(pPlayer->GetCharacter()->IsInNightmare())
 		{
