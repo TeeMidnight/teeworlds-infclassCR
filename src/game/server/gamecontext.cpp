@@ -5,6 +5,10 @@
 #include <engine/shared/config.h>
 #include <engine/map.h>
 #include <engine/console.h>
+#include <engine/shared/datafile.h>
+#include <engine/shared/linereader.h>
+#include <engine/shared/jsonwriter.h>
+#include <engine/shared/memheap.h>
 #include <engine/storage.h>
 #include <engine/server/roundstatistics.h>
 #include "gamecontext.h"
@@ -1460,10 +1464,16 @@ void CGameContext::OnClientEnter(int ClientID)
 
 	m_VoteUpdate = true;
 
+	// send active vote
+	if(m_VoteCloseTime)
+		SendVoteSet(ClientID);
+
 	// Count players
 	CountActivePlayers();
 	CountSpectators();
 	CountInfPlayers();
+
+	Server()->ExpireServerInfo();
 }
 
 void CGameContext::OnClientConnected(int ClientID)
@@ -1783,6 +1793,7 @@ void CGameContext::OnCallVote(void *pRawMsg, int ClientID)
 			pPlayer->m_LastVoteCall = Now;
 		}
 	}
+	Server()->ExpireServerInfo();
 }
 
 void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
@@ -2064,7 +2075,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			Server()->SetClientClan(ClientID, pMsg->m_pClan);
 
 			/* INFECTION MODIFICATION START ***************************************/
-			str_copy(pPlayer->m_TeeInfos.m_CustomSkinName, pMsg->m_pSkin, sizeof(pPlayer->m_TeeInfos.m_CustomSkinName));
+			str_copy(pPlayer->m_TeeInfos.m_aCustomSkinName, pMsg->m_pSkin, sizeof(pPlayer->m_TeeInfos.m_aCustomSkinName));
 			//~ pPlayer->m_TeeInfos.m_UseCustomColor = pMsg->m_UseCustomColor;
 			//~ pPlayer->m_TeeInfos.m_ColorBody = pMsg->m_ColorBody;
 			//~ pPlayer->m_TeeInfos.m_ColorFeet = pMsg->m_ColorFeet;
@@ -2116,7 +2127,7 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 #endif
 			// IP geolocation end
 
-			str_copy(pPlayer->m_TeeInfos.m_CustomSkinName, pMsg->m_pSkin, sizeof(pPlayer->m_TeeInfos.m_CustomSkinName));
+			str_copy(pPlayer->m_TeeInfos.m_aCustomSkinName, pMsg->m_pSkin, sizeof(pPlayer->m_TeeInfos.m_aCustomSkinName));
 			//~ pPlayer->m_TeeInfos.m_UseCustomColor = pMsg->m_UseCustomColor;
 			//~ pPlayer->m_TeeInfos.m_ColorBody = pMsg->m_ColorBody;
 			//~ pPlayer->m_TeeInfos.m_ColorFeet = pMsg->m_ColorFeet;
@@ -2430,6 +2441,8 @@ void CGameContext::OnMessage(int MsgID, CUnpacker *pUnpacker, int ClientID)
 			CNetMsg_Sv_ReadyToEnter m;
 			Server()->SendPackMsg(&m, MSGFLAG_VITAL | MSGFLAG_FLUSH, ClientID);
 		}
+
+		Server()->ExpireServerInfo();
 	}
 }
 
@@ -4483,9 +4496,9 @@ bool CGameContext::IsClientPlayer(int ClientID)
 	return m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetTeam() == TEAM_SPECTATORS ? false : true;
 }
 
-const char *CGameContext::GameType() { return m_pController && m_pController->m_pGameType ? m_pController->m_pGameType : ""; }
-const char *CGameContext::Version() { return GAME_VERSION; }
-const char *CGameContext::NetVersion() { return GAME_NETVERSION; }
+const char *CGameContext::GameType() const { return m_pController && m_pController->m_pGameType ? m_pController->m_pGameType : ""; }
+const char *CGameContext::Version() const { return GAME_VERSION; }
+const char *CGameContext::NetVersion() const { return GAME_NETVERSION; }
 
 IGameServer *CreateGameServer() { return new CGameContext; }
 
@@ -4568,43 +4581,34 @@ void CGameContext::InitGeolocation()
 #endif
 }
 
-void CGameContext::OnUpdatePlayerServerInfo(char *aBuf, int BufSize, int ID)
+void CGameContext::OnUpdatePlayerServerInfo(CJsonStringWriter *pJSonWriter, int Id)
 {
-	if (!m_apPlayers[ID])
+	if(!m_apPlayers[Id])
 		return;
 
-	char aCSkinName[64];
+	CTeeInfo &TeeInfo = m_apPlayers[Id]->m_TeeInfos;
 
-	CPlayer::CTeeInfo &TeeInfo = m_apPlayers[ID]->m_TeeInfos;
-
-	char aJsonSkin[400];
-	aJsonSkin[0] = '\0';
+	pJSonWriter->WriteAttribute("skin");
+	pJSonWriter->BeginObject();
 
 	// 0.6
-	if (TeeInfo.m_UseCustomColor)
+	pJSonWriter->WriteAttribute("name");
+	pJSonWriter->WriteStrValue(TeeInfo.m_aSkinName);
+
+	if(TeeInfo.m_UseCustomColor)
 	{
-		str_format(aJsonSkin, sizeof(aJsonSkin),
-				   "\"name\":\"%s\","
-				   "\"color_body\":%d,"
-				   "\"color_feet\":%d",
-				   EscapeJson(aCSkinName, sizeof(aCSkinName), TeeInfo.m_SkinName),
-				   TeeInfo.m_ColorBody,
-				   TeeInfo.m_ColorFeet);
-	}
-	else
-	{
-		str_format(aJsonSkin, sizeof(aJsonSkin),
-				   "\"name\":\"%s\"",
-				   EscapeJson(aCSkinName, sizeof(aCSkinName), TeeInfo.m_SkinName));
+		pJSonWriter->WriteAttribute("color_body");
+		pJSonWriter->WriteIntValue(TeeInfo.m_ColorBody);
+
+		pJSonWriter->WriteAttribute("color_feet");
+		pJSonWriter->WriteIntValue(TeeInfo.m_ColorFeet);
 	}
 
-	str_format(aBuf, BufSize,
-			   ",\"skin\":{"
-			   "%s"
-			   "},"
-			   "\"afk\":%s,"
-			   "\"team\":%d",
-			   aJsonSkin,
-			   JsonBool(false),
-			   m_apPlayers[ID]->GetTeam());
+	pJSonWriter->EndObject();
+
+	pJSonWriter->WriteAttribute("afk");
+	pJSonWriter->WriteBoolValue(false);
+
+	pJSonWriter->WriteAttribute("team");
+	pJSonWriter->WriteIntValue(m_apPlayers[Id]->GetTeam());
 }

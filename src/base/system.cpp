@@ -305,39 +305,134 @@ int mem_check_imp()
 	return 1;
 }
 
-IOHANDLE io_open(const char *filename, int flags)
+IOHANDLE io_open_impl(const char *filename, int flags)
 {
-	if(flags == IOFLAG_READ)
+	dbg_assert(flags == (IOFLAG_READ | IOFLAG_SKIP_BOM) || flags == IOFLAG_READ || flags == IOFLAG_WRITE || flags == IOFLAG_APPEND, "flags must be read, read+skipbom, write or append");
+#if defined(CONF_FAMILY_WINDOWS)
+	if((flags & IOFLAG_READ) != 0)
 	{
-	#if defined(CONF_FAMILY_WINDOWS)
 		// check for filename case sensitive
-		WIN32_FIND_DATA finddata;
+		WIN32_FIND_DATAW finddata;
 		HANDLE handle;
-		int length;
+		WCHAR wBuffer[IO_MAX_PATH_LENGTH];
+		char buffer[IO_MAX_PATH_LENGTH];
 
-		length = str_length(filename);
-		if(!filename || !length || filename[length-1] == '\\')
+		int length = str_length(filename);
+		if(!filename || !length || filename[length - 1] == '\\')
 			return 0x0;
-		handle = FindFirstFile(filename, &finddata);
+		MultiByteToWideChar(CP_UTF8, 0, filename, -1, wBuffer, sizeof(wBuffer) / sizeof(WCHAR));
+		handle = FindFirstFileW(wBuffer, &finddata);
 		if(handle == INVALID_HANDLE_VALUE)
 			return 0x0;
-		else if(str_comp(filename+length-str_length(finddata.cFileName), finddata.cFileName) != 0)
+		WideCharToMultiByte(CP_UTF8, 0, finddata.cFileName, -1, buffer, sizeof(buffer), NULL, NULL);
+		if(str_comp(filename + length - str_length(buffer), buffer) != 0)
 		{
 			FindClose(handle);
 			return 0x0;
 		}
 		FindClose(handle);
-	#endif
-		return (IOHANDLE)fopen(filename, "rb");
+		return (IOHANDLE) _wfsopen(wBuffer, L"rb", _SH_DENYNO);
 	}
 	if(flags == IOFLAG_WRITE)
-		return (IOHANDLE)fopen(filename, "wb");
+	{
+		WCHAR wBuffer[IO_MAX_PATH_LENGTH];
+		MultiByteToWideChar(CP_UTF8, 0, filename, -1, wBuffer, sizeof(wBuffer) / sizeof(WCHAR));
+		return (IOHANDLE) _wfsopen(wBuffer, L"wb", _SH_DENYNO);
+	}
+	if(flags == IOFLAG_APPEND)
+	{
+		WCHAR wBuffer[IO_MAX_PATH_LENGTH];
+		MultiByteToWideChar(CP_UTF8, 0, filename, -1, wBuffer, sizeof(wBuffer) / sizeof(WCHAR));
+		return (IOHANDLE) _wfsopen(wBuffer, L"ab", _SH_DENYNO);
+	}
 	return 0x0;
+#else
+	if((flags & IOFLAG_READ) != 0)
+		return (IOHANDLE) fopen(filename, "rb");
+	if(flags == IOFLAG_WRITE)
+		return (IOHANDLE) fopen(filename, "wb");
+	if(flags == IOFLAG_APPEND)
+		return (IOHANDLE) fopen(filename, "ab");
+	return 0x0;
+#endif
+}
+
+IOHANDLE io_open(const char *filename, int flags)
+{
+	IOHANDLE result = io_open_impl(filename, flags);
+	unsigned char buf[3];
+	if((flags & IOFLAG_SKIP_BOM) == 0 || !result)
+	{
+		return result;
+	}
+	if(io_read(result, buf, sizeof(buf)) != 3 || buf[0] != 0xef || buf[1] != 0xbb || buf[2] != 0xbf)
+	{
+		io_seek(result, 0, IOSEEK_START);
+	}
+	return result;
 }
 
 unsigned io_read(IOHANDLE io, void *buffer, unsigned size)
 {
 	return fread(buffer, 1, size, (FILE*)io);
+}
+
+void io_read_all(IOHANDLE io, void **result, unsigned *result_len)
+{
+	unsigned len = (unsigned) io_length(io);
+	char *buffer = (char *) malloc(len + 1);
+	unsigned read = io_read(io, buffer, len + 1); // +1 to check if the file size is larger than expected
+	if(read < len)
+	{
+		buffer = (char *) realloc(buffer, read + 1);
+		len = read;
+	}
+	else if(read > len)
+	{
+		unsigned cap = 2 * read;
+		len = read;
+		buffer = (char *) realloc(buffer, cap);
+		while((read = io_read(io, buffer + len, cap - len)) != 0)
+		{
+			len += read;
+			if(len == cap)
+			{
+				cap *= 2;
+				buffer = (char *) realloc(buffer, cap);
+			}
+		}
+		buffer = (char *) realloc(buffer, len + 1);
+	}
+	buffer[len] = 0;
+	*result = buffer;
+	*result_len = len;
+}
+
+static int mem_has_null(const void *block, unsigned size)
+{
+	const unsigned char *bytes = (const unsigned char *) block;
+	unsigned i;
+	for(i = 0; i < size; i++)
+	{
+		if(bytes[i] == 0)
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+char *io_read_all_str(IOHANDLE io)
+{
+	void *buffer;
+	unsigned len;
+	io_read_all(io, &buffer, &len);
+	if(mem_has_null(buffer, len))
+	{
+		mem_free(buffer);
+		return 0x0;
+	}
+	return (char *) buffer;
 }
 
 unsigned io_skip(IOHANDLE io, int size)
@@ -408,16 +503,51 @@ int io_flush(IOHANDLE io)
 	return 0;
 }
 
+struct THREAD_RUN
+{
+	void (*threadfunc)(void *);
+	void *u;
+};
+
+#if defined(CONF_FAMILY_UNIX)
+static void *thread_run(void *user)
+#elif defined(CONF_FAMILY_WINDOWS)
+static unsigned long __stdcall thread_run(void *user)
+#else
+#error not implemented
+#endif
+{
+	struct THREAD_RUN *data = (struct THREAD_RUN *) user;
+	void (*threadfunc)(void *) = data->threadfunc;
+	void *u = data->u;
+	free(data);
+	threadfunc(u);
+	return 0;
+}
+
 void *thread_init(void (*threadfunc)(void *), void *u)
 {
+	struct THREAD_RUN *data = (struct THREAD_RUN *) malloc(sizeof(*data));
+	data->threadfunc = threadfunc;
+	data->u = u;
 #if defined(CONF_FAMILY_UNIX)
-	pthread_t id;
-	pthread_create(&id, NULL, (void *(*)(void*))threadfunc, u);
-	return (void*)id;
+	{
+		pthread_t id;
+		pthread_attr_t attr;
+		pthread_attr_init(&attr);
+#if defined(CONF_PLATFORM_MACOS)
+		pthread_attr_set_qos_class_np(&attr, QOS_CLASS_USER_INTERACTIVE, 0);
+#endif
+		if(pthread_create(&id, &attr, thread_run, data) != 0)
+		{
+			return 0;
+		}
+		return (void *) id;
+	}
 #elif defined(CONF_FAMILY_WINDOWS)
-	return CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)threadfunc, u, 0, NULL);
+	return CreateThread(NULL, 0, thread_run, data, 0, NULL);
 #else
-	#error not implemented
+#error not implemented
 #endif
 }
 
@@ -1662,6 +1792,59 @@ int fs_rename(const char *oldname, const char *newname)
 	return 0;
 }
 
+int fs_file_time(const char *name, time_t *created, time_t *modified)
+{
+#if defined(CONF_FAMILY_WINDOWS)
+	WIN32_FIND_DATAW finddata;
+	HANDLE handle;
+	WCHAR wBuffer[IO_MAX_PATH_LENGTH];
+
+	MultiByteToWideChar(CP_UTF8, 0, name, -1, wBuffer, sizeof(wBuffer) / sizeof(WCHAR));
+	handle = FindFirstFileW(wBuffer, &finddata);
+	if(handle == INVALID_HANDLE_VALUE)
+		return 1;
+
+	*created = filetime_to_unixtime(&finddata.ftCreationTime);
+	*modified = filetime_to_unixtime(&finddata.ftLastWriteTime);
+	FindClose(handle);
+#elif defined(CONF_FAMILY_UNIX)
+	struct stat sb;
+	if(stat(name, &sb))
+		return 1;
+
+	*created = sb.st_ctime;
+	*modified = sb.st_mtime;
+#else
+#error not implemented
+#endif
+
+	return 0;
+}
+
+int fs_makedir_recursive(const char *path)
+{
+	char buffer[2048];
+	int len;
+	int i;
+	str_copy(buffer, path, sizeof(buffer));
+	len = str_length(buffer);
+	// ignore a leading slash
+	for(i = 1; i < len; i++)
+	{
+		char b = buffer[i];
+		if((buffer[i] == '/' || buffer[i] == '\\') && buffer[i + 1] != '\0' && buffer[i - 1] != ':')
+		{
+			buffer[i] = '\0';
+			if(fs_makedir(buffer) < 0)
+			{
+				return -1;
+			}
+			buffer[i] = b;
+		}
+	}
+	return fs_makedir(path);
+}
+
 void swap_endian(void *data, unsigned elem_size, unsigned num)
 {
 	char *src = (char*) data;
@@ -1750,6 +1933,16 @@ void str_copy(char *dst, const char *src, int dst_size)
 {
 	strncpy(dst, src, dst_size);
 	dst[dst_size-1] = 0; /* assure null termination */
+}
+
+void str_truncate(char *dst, int dst_size, const char *src, int truncation_len)
+{
+	int size = dst_size;
+	if(truncation_len < size)
+	{
+		size = truncation_len + 1;
+	}
+	str_copy(dst, src, size);
 }
 
 int str_length(const char *str)
@@ -1925,6 +2118,33 @@ const char *str_find(const char *haystack, const char *needle)
 
 	return 0;
 }
+
+const char *str_startswith_nocase(const char *str, const char *prefix)
+{
+	int prefixl = str_length(prefix);
+	if(str_comp_nocase_num(str, prefix, prefixl) == 0)
+	{
+		return str + prefixl;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+const char *str_startswith(const char *str, const char *prefix)
+{
+	int prefixl = str_length(prefix);
+	if(str_comp_num(str, prefix, prefixl) == 0)
+	{
+		return str + prefixl;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
 
 void str_hex(char *dst, int dst_size, const void *data, int data_size)
 {

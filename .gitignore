@@ -1,6 +1,6 @@
 test.cfg
 
-.vs*
+.vscode
 bam
 .bam
 /config.lua

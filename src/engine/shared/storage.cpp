@@ -12,15 +12,15 @@ class CStorage : public IStorage
 public:
 	enum
 	{
-		MAX_PATHS = 16,
-		MAX_PATH_LENGTH = 512
+		MAX_PATHS = 16
 	};
 
-	char m_aaStoragePaths[MAX_PATHS][MAX_PATH_LENGTH];
+	char m_aaStoragePaths[MAX_PATHS][IO_MAX_PATH_LENGTH];
 	int m_NumPaths;
-	char m_aDatadir[MAX_PATH_LENGTH];
-	char m_aUserdir[MAX_PATH_LENGTH];
-	char m_aCurrentdir[MAX_PATH_LENGTH];
+	char m_aDatadir[IO_MAX_PATH_LENGTH];
+	char m_aUserdir[IO_MAX_PATH_LENGTH];
+	char m_aCurrentdir[IO_MAX_PATH_LENGTH];
+	char m_aBinarydir[IO_MAX_PATH_LENGTH];
 
 	CStorage()
 	{
@@ -54,7 +54,7 @@ public:
 		// add save directories
 		if(StorageType != STORAGETYPE_BASIC && m_NumPaths && (!m_aaStoragePaths[TYPE_SAVE][0] || !fs_makedir(m_aaStoragePaths[TYPE_SAVE])))
 		{
-			char aPath[MAX_PATH_LENGTH];
+			char aPath[IO_MAX_PATH_LENGTH];
 			if(StorageType == STORAGETYPE_CLIENT)
 			{
 				fs_makedir(GetPath(TYPE_SAVE, "screenshots", aPath, sizeof(aPath)));
@@ -81,15 +81,15 @@ public:
 			for(unsigned i = 0; pArgv0[i]; i++)
 				if(pArgv0[i] == '/' || pArgv0[i] == '\\')
 					Pos = i;
-			if(Pos < MAX_PATH_LENGTH)
+			if(Pos < IO_MAX_PATH_LENGTH)
 			{
-				char aBuffer[MAX_PATH_LENGTH];
+				char aBuffer[IO_MAX_PATH_LENGTH];
 				str_copy(aBuffer, pArgv0, Pos+1);
 				str_append(aBuffer, "/storage.cfg", sizeof(aBuffer));
 				File = io_open(aBuffer, IOFLAG_READ);
 			}
 
-			if(Pos >= MAX_PATH_LENGTH || !File)
+			if(Pos >= IO_MAX_PATH_LENGTH || !File)
 			{
 				dbg_msg("storage", "couldn't open storage.cfg");
 				return;
@@ -128,7 +128,7 @@ public:
 		{
 			if(m_aUserdir[0])
 			{
-				str_copy(m_aaStoragePaths[m_NumPaths++], m_aUserdir, MAX_PATH_LENGTH);
+				str_copy(m_aaStoragePaths[m_NumPaths++], m_aUserdir, IO_MAX_PATH_LENGTH);
 				dbg_msg("storage", "added path '$USERDIR' ('%s')", m_aUserdir);
 			}
 		}
@@ -136,7 +136,7 @@ public:
 		{
 			if(m_aDatadir[0])
 			{
-				str_copy(m_aaStoragePaths[m_NumPaths++], m_aDatadir, MAX_PATH_LENGTH);
+				str_copy(m_aaStoragePaths[m_NumPaths++], m_aDatadir, IO_MAX_PATH_LENGTH);
 				dbg_msg("storage", "added path '$DATADIR' ('%s')", m_aDatadir);
 			}
 		}
@@ -149,7 +149,7 @@ public:
 		{
 			if(fs_is_dir(pPath))
 			{
-				str_copy(m_aaStoragePaths[m_NumPaths++], pPath, MAX_PATH_LENGTH);
+				str_copy(m_aaStoragePaths[m_NumPaths++], pPath, IO_MAX_PATH_LENGTH);
 				dbg_msg("storage", "added path '%s'", pPath);
 			}
 		}
@@ -178,9 +178,9 @@ public:
 				if(pArgv0[i] == '/' || pArgv0[i] == '\\')
 					Pos = i;
 
-			if(Pos < MAX_PATH_LENGTH)
+			if(Pos < IO_MAX_PATH_LENGTH)
 			{
-				char aBaseDir[MAX_PATH_LENGTH];
+				char aBaseDir[IO_MAX_PATH_LENGTH];
 				str_copy(aBaseDir, pArgv0, Pos+1);
 				str_format(m_aDatadir, sizeof(m_aDatadir), "%s/data", aBaseDir);
 				str_append(aBaseDir, "/data/maps", sizeof(aBaseDir));
@@ -224,7 +224,7 @@ public:
 
 	virtual void ListDirectory(int Type, const char *pPath, FS_LISTDIR_CALLBACK pfnCallback, void *pUser)
 	{
-		char aBuffer[MAX_PATH_LENGTH];
+		char aBuffer[IO_MAX_PATH_LENGTH];
 		if(Type == TYPE_ALL)
 		{
 			// list all available directories
@@ -246,7 +246,7 @@ public:
 
 	virtual IOHANDLE OpenFile(const char *pFilename, int Flags, int Type, char *pBuffer = 0, int BufferSize = 0)
 	{
-		char aBuffer[MAX_PATH_LENGTH];
+		char aBuffer[IO_MAX_PATH_LENGTH];
 		if(!pBuffer)
 		{
 			pBuffer = aBuffer;
@@ -293,6 +293,32 @@ public:
 		int BufferSize;
 	};
 
+	bool ReadFile(const char *pFilename, int Type, void **ppResult, unsigned *pResultLen)
+	{
+		IOHANDLE File = OpenFile(pFilename, IOFLAG_READ, Type);
+		if(!File)
+		{
+			*ppResult = 0x0;
+			*pResultLen = 0;
+			return false;
+		}
+		io_read_all(File, ppResult, pResultLen);
+		io_close(File);
+		return true;
+	}
+
+	char *ReadFileStr(const char *pFilename, int Type)
+	{
+		IOHANDLE File = OpenFile(pFilename, IOFLAG_READ | IOFLAG_SKIP_BOM, Type);
+		if(!File)
+		{
+			return 0;
+		}
+		char *pResult = io_read_all_str(File);
+		io_close(File);
+		return pResult;
+	}
+
 	static int FindFileCallback(const char *pName, int IsDir, int Type, void *pUser)
 	{
 		CFindCBData Data = *static_cast<CFindCBData *>(pUser);
@@ -302,8 +328,8 @@ public:
 				return 0;
 
 			// search within the folder
-			char aBuf[MAX_PATH_LENGTH];
-			char aPath[MAX_PATH_LENGTH];
+			char aBuf[IO_MAX_PATH_LENGTH];
+			char aPath[IO_MAX_PATH_LENGTH];
 			str_format(aPath, sizeof(aPath), "%s/%s", Data.pPath, pName);
 			Data.pPath = aPath;
 			fs_listdir(Data.pStorage->GetPath(Type, aPath, aBuf, sizeof(aBuf)), FindFileCallback, Type, &Data);
@@ -326,7 +352,7 @@ public:
 			return false;
 
 		pBuffer[0] = 0;
-		char aBuf[MAX_PATH_LENGTH];
+		char aBuf[IO_MAX_PATH_LENGTH];
 		CFindCBData Data;
 		Data.pStorage = this;
 		Data.pFilename = pFilename;
@@ -353,34 +379,47 @@ public:
 		return pBuffer[0] != 0;
 	}
 
-	virtual bool RemoveFile(const char *pFilename, int Type)
+	bool RemoveFile(const char *pFilename, int Type) override
 	{
 		if(Type < 0 || Type >= m_NumPaths)
 			return false;
 
-		char aBuffer[MAX_PATH_LENGTH];
+		char aBuffer[IO_MAX_PATH_LENGTH];
 		return !fs_remove(GetPath(Type, pFilename, aBuffer, sizeof(aBuffer)));
+	}
+
+	virtual bool RemoveBinaryFile(const char *pFilename)
+	{
+		char aBuffer[IO_MAX_PATH_LENGTH];
+		return !fs_remove(GetBinaryPath(pFilename, aBuffer, sizeof(aBuffer)));
 	}
 
 	virtual bool RenameFile(const char* pOldFilename, const char* pNewFilename, int Type)
 	{
 		if(Type < 0 || Type >= m_NumPaths)
 			return false;
-		char aOldBuffer[MAX_PATH_LENGTH];
-		char aNewBuffer[MAX_PATH_LENGTH];
+		char aOldBuffer[IO_MAX_PATH_LENGTH];
+		char aNewBuffer[IO_MAX_PATH_LENGTH];
 		return !fs_rename(GetPath(Type, pOldFilename, aOldBuffer, sizeof(aOldBuffer)), GetPath(Type, pNewFilename, aNewBuffer, sizeof (aNewBuffer)));
 	}
 
-	virtual bool CreateFolder(const char *pFoldername, int Type)
+	virtual bool RenameBinaryFile(const char* pOldFilename, const char* pNewFilename)
+	{
+		char aOldBuffer[IO_MAX_PATH_LENGTH];
+		char aNewBuffer[IO_MAX_PATH_LENGTH];
+		return !fs_rename(GetBinaryPath(pOldFilename, aOldBuffer, sizeof(aOldBuffer)), GetBinaryPath(pNewFilename, aNewBuffer, sizeof (aNewBuffer)));
+	}
+
+	bool CreateFolder(const char *pFoldername, int Type) override
 	{
 		if(Type < 0 || Type >= m_NumPaths)
 			return false;
 
-		char aBuffer[MAX_PATH_LENGTH];
+		char aBuffer[IO_MAX_PATH_LENGTH];
 		return !fs_makedir(GetPath(Type, pFoldername, aBuffer, sizeof(aBuffer)));
 	}
 
-	virtual void GetCompletePath(int Type, const char *pDir, char *pBuffer, unsigned BufferSize)
+	void GetCompletePath(int Type, const char *pDir, char *pBuffer, unsigned BufferSize) override
 	{
 		if(Type < 0 || Type >= m_NumPaths)
 		{
@@ -390,6 +429,12 @@ public:
 		}
 
 		GetPath(Type, pDir, pBuffer, BufferSize);
+	}
+
+	const char* GetBinaryPath(const char *pDir, char *pBuffer, unsigned BufferSize) override
+	{
+		str_format(pBuffer, BufferSize, "%s%s%s", m_aBinarydir, !m_aBinarydir[0] ? "" : "/", pDir);
+		return pBuffer;
 	}
 
 	const char *GetDataPath(const char *pFilename, char *pBuffer, unsigned BufferSize)
@@ -410,5 +455,11 @@ public:
 		return p;
 	}
 };
+
+const char *IStorage::FormatTmpPath(char *aBuf, unsigned BufSize, const char *pPath)
+{
+	str_format(aBuf, BufSize, "%s.%d.tmp", pPath, time(0));
+	return aBuf;
+}
 
 IStorage *CreateStorage(const char *pApplicationName, int StorageType, int NumArgs, const char **ppArguments) { return CStorage::Create(pApplicationName, StorageType, NumArgs, ppArguments); }

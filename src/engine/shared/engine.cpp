@@ -9,19 +9,6 @@
 #include <engine/shared/network.h>
 #include <engine/storage.h>
 
-CHostLookup::CHostLookup() = default;
-
-CHostLookup::CHostLookup(const char *pHostname, int Nettype)
-{
-	str_copy(m_aHostname, pHostname, sizeof(m_aHostname));
-	m_Nettype = Nettype;
-}
-
-void CHostLookup::Run()
-{
-	m_Result = net_host_lookup(m_aHostname, &m_Addr, m_Nettype);
-}
-
 class CEngine : public IEngine
 {
 public:
@@ -82,7 +69,7 @@ public:
 
 	~CEngine() override
 	{
-		m_JobPool.Destroy();
+		m_JobPool.Shutdown();
 	}
 
 	void Init() override
@@ -105,11 +92,6 @@ public:
 		m_JobPool.Add(std::move(pJob));
 	}
 };
-
-void IEngine::RunJobBlocking(IJob *pJob)
-{
-	CJobPool::RunBlocking(pJob);
-}
 
 IEngine *CreateEngine(const char *pAppname, int Jobs) { return new CEngine(false, pAppname, Jobs); }
 IEngine *CreateTestEngine(const char *pAppname, int Jobs) { return new CEngine(true, pAppname, Jobs); }

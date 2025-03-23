@@ -403,9 +403,9 @@ public:
 	virtual bool IsClientPlayer(int ClientID) = 0;
 	virtual int GetActivePlayerCount() = 0;
 
-	virtual const char *GameType() = 0;
-	virtual const char *Version() = 0;
-	virtual const char *NetVersion() = 0;
+	virtual const char *GameType() const = 0;
+	virtual const char *Version() const = 0;
+	virtual const char *NetVersion() const = 0;
 	
 	virtual class CLayers *Layers() = 0;
 	
@@ -429,7 +429,13 @@ public:
 	virtual int GetHeroGiftCoolDown() = 0;
 	virtual void FlagCollected() = 0;
 /* INFECTION MODIFICATION END *****************************************/
-	virtual void OnUpdatePlayerServerInfo(char *aBuf, int BufSize, int ID) = 0;
+	/**
+	 * Used to report custom player info to master servers.
+	 *
+	 * @param pJsonWriter A pointer to a CJsonStringWriter which the custom data will be added to.
+	 * @param i The client id.
+	 */
+	virtual void OnUpdatePlayerServerInfo(class CJsonStringWriter *pJSonWriter, int Id) = 0;
 };
 
 extern IGameServer *CreateGameServer();

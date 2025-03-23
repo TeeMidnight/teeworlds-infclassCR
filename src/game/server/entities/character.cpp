@@ -3931,7 +3931,7 @@ void CCharacter::Snap(int SnappingClient)
 	if(IsDontSnapEntity(SnappingClient) && SnappingClient != id)
 		return;
 	
-		CPlayer* pClient = GameServer()->m_apPlayers[SnappingClient];
+	CPlayer* pClient = GameServer()->m_apPlayers[SnappingClient];
 
 	if(SnappingClient == -1)
 		pClient = nullptr;

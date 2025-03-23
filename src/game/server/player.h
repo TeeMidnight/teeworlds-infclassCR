@@ -7,6 +7,7 @@
 #include "entities/character.h"
 #include "gamecontext.h"
 #include <game/server/classes.h>
+#include "teeinfo.h"
 
 // player object
 class CPlayer
@@ -72,16 +73,7 @@ public:
 	int m_LastKill;
 
 	// TODO: clean this up
-	struct CTeeInfo
-	{
-		char m_SkinName[64];
-/* INFECTION MODIFICATION START ***************************************/
-		char m_CustomSkinName[64];
-/* INFECTION MODIFICATION END *****************************************/
-		int m_UseCustomColor;
-		int m_ColorBody;
-		int m_ColorFeet;
-	} m_TeeInfos;
+	CTeeInfo m_TeeInfos;
 
 	int m_RespawnTick;
 	int m_DieTick;

@@ -189,13 +189,14 @@ int mem_check_imp();
 enum {
 	IOFLAG_READ = 1,
 	IOFLAG_WRITE = 2,
-	IOFLAG_RANDOM = 4,
+	IOFLAG_APPEND = 4,
+	IOFLAG_SKIP_BOM = 8,
 
 	IOSEEK_START = 0,
 	IOSEEK_CUR = 1,
 	IOSEEK_END = 2,
 
-	IO_MAX_PATH_LENGTH = 512,
+	IO_MAX_PATH_LENGTH = 512
 };
 
 typedef struct IOINTERNAL *IOHANDLE;
@@ -228,6 +229,39 @@ IOHANDLE io_open(const char *filename, int flags);
 
 */
 unsigned io_read(IOHANDLE io, void *buffer, unsigned size);
+
+/*
+	Function: io_read_all
+		Reads the rest of the file into a buffer.
+
+	Parameters:
+		io - Handle to the file to read data from.
+		result - Receives the file's remaining contents.
+		result_len - Receives the file's remaining length.
+
+	Remarks:
+		- Does NOT guarantee that there are no internal null bytes.
+		- The result must be freed after it has been used.
+*/
+void io_read_all(IOHANDLE io, void **result, unsigned *result_len);
+
+/*
+	Function: io_read_all_str
+		Reads the rest of the file into a zero-terminated buffer with
+		no internal null bytes.
+
+	Parameters:
+		io - Handle to the file to read data from.
+
+	Returns:
+		The file's remaining contents or null on failure.
+
+	Remarks:
+		- Guarantees that there are no internal null bytes.
+		- Guarantees that result will contain zero-termination.
+		- The result must be freed after it has been used.
+*/
+char *io_read_all_str(IOHANDLE io);
 
 /*
 	Function: io_skip
@@ -892,6 +926,23 @@ void str_append_num(char *dst, const char *src, int dst_size, int num);
 void str_copy(char *dst, const char *src, int dst_size);
 
 /*
+	Function: str_truncate
+		Truncates a string to a given length.
+
+	Parameters:
+		dst - Pointer to a buffer that shall receive the string.
+		dst_size - Size of the buffer dst.
+		src - String to be truncated.
+		truncation_len - Maximum length of the returned string (not
+		counting the zero termination).
+
+	Remarks:
+		- The strings are treated as zero-terminated strings.
+		- Garantees that dst string will contain zero-termination.
+*/
+void str_truncate(char *dst, int dst_size, const char *src, int truncation_len);
+
+/*
 	Function: str_length
 		Returns the length of a zero terminated string.
 
@@ -1119,6 +1170,60 @@ const char *str_find_nocase(const char *haystack, const char *needle);
 const char *str_find(const char *haystack, const char *needle);
 
 /*
+	Function: str_startswith_nocase
+		Checks case insensitive whether the string begins with a certain prefix.
+
+	Parameter:
+		str - String to check.
+		prefix - Prefix to look for.
+
+	Returns:
+		A pointer to the string str after the string prefix, or 0 if
+		the string prefix isn't a prefix of the string str.
+
+	Remarks:
+		- The strings are treated as zero-terminated strings.
+*/
+const char *str_startswith_nocase(const char *str, const char *prefix);
+
+/*
+	Function: str_startswith
+		Checks case sensitive whether the string begins with a certain prefix.
+
+	Parameter:
+		str - String to check.
+		prefix - Prefix to look for.
+
+	Returns:
+		A pointer to the string str after the string prefix, or 0 if
+		the string prefix isn't a prefix of the string str.
+
+	Remarks:
+		- The strings are treated as zero-terminated strings.
+*/
+const char *str_startswith(const char *str, const char *prefix);
+
+/*
+	Function: str_hex_decode
+		Takes a hex string *without spaces between bytes* and returns a
+		byte array.
+
+	Parameters:
+		dst - Buffer for the byte array
+		dst_size - size of the buffer
+		data - String to decode
+
+	Returns:
+		2 - String doesn't exactly fit the buffer
+		1 - Invalid character in string
+		0 - Success
+
+	Remarks:
+		- The contents of the buffer is only valid on success
+*/
+int str_hex_decode(void *dst, int dst_size, const char *src);
+
+/*
 	Function: str_hex
 		Takes a datablock and generates a hexstring of it.
 
@@ -1298,6 +1403,34 @@ int fs_remove(const char *filename);
 int fs_rename(const char *oldname, const char *newname);
 
 /*
+	Function: fs_file_time
+		Gets the creation and the last modification date of a file.
+
+	Parameters:
+		name - The filename.
+		created - Pointer to time_t
+		modified - Pointer to time_t
+
+	Returns:
+		0 on success non-zero on failure
+
+	Remarks:
+		- Returned time is in seconds since UNIX Epoch
+*/
+int fs_file_time(const char *name, time_t *created, time_t *modified);
+
+/*
+	Function: fs_makedir_recursive
+		Recursively create directories
+
+	Parameters:
+		path - Path to create
+
+	Returns:
+		Returns 0 on success. Negative value on failure.
+*/
+int fs_makedir_recursive(const char *path);
+/*
 	Group: Undocumented
 */
 
@@ -1376,6 +1509,29 @@ float str_tofloat(const char *str);
 int str_isspace(char c);
 char str_uppercase(char c);
 unsigned str_quickhash(const char *str);
+
+enum
+{
+	UTF8_BYTE_LENGTH = 4
+};
+
+/*
+	Function: str_next_token
+		Writes the next token after str into buf, returns the rest of the string.
+
+	Parameters:
+		str - Pointer to string.
+		delim - Delimiter for tokenization.
+		buffer - Buffer to store token in.
+		buffer_size - Size of the buffer.
+
+	Returns:
+		Pointer to rest of the string.
+
+	Remarks:
+		- The token is always null-terminated.
+*/
+const char *str_next_token(const char *str, const char *delim, char *buffer, int buffer_size);
 
 /*
 	Function: gui_messagebox

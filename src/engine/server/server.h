@@ -15,6 +15,17 @@
 #include <list>
 #include <memory>
 #include <vector>
+#include <engine/map.h>
+#include <engine/shared/demo.h>
+#include <engine/shared/protocol.h>
+#include <engine/shared/snapshot.h>
+#include <engine/shared/network.h>
+#include <engine/server/register.h>
+#include <engine/shared/console.h>
+#include <base/math.h>
+#include <engine/shared/econ.h>
+#include <engine/shared/netban.h>
+#include <engine/shared/http.h>
 
 class CSnapIDPool
 {
@@ -153,6 +164,12 @@ public:
 		IServer::CClientSession m_Session;
 		IServer::CClientAccusation m_Accusation;
 		
+
+		bool IncludedInServerInfo() const
+		{
+			return m_State != STATE_EMPTY;
+		}
+
 		// DDRace
 
 		NETADDR m_Addr;
@@ -170,6 +187,7 @@ public:
 	CNetServer m_NetServer;
 	CEcon m_Econ;
 	CServerBan m_ServerBan;
+	CHttp m_Http;
 
 	IEngineMap *m_pMap;
 
@@ -192,11 +210,14 @@ public:
 	unsigned char *m_pCurrentMapData;
 	unsigned int m_CurrentMapSize;
 
+	CDemoRecorder m_DemoRecorder;
+
 	bool m_ServerInfoHighLoad;
 	int64 m_ServerInfoFirstRequest;
 	int m_ServerInfoNumRequests;
-
-	CDemoRecorder m_DemoRecorder;
+	int64_t m_ServerInfoRequestLogTick;
+	int m_ServerInfoRequestLogRecords;
+	bool m_ServerInfoNeedsUpdate;
 
 	CServer();
 	virtual ~CServer();
@@ -276,7 +297,6 @@ class CCache
 	};
 	CCache m_aServerInfoCache[3 * 2];
 	CCache m_aSixupServerInfoCache[2];
-	bool m_ServerInfoNeedsUpdate;
 
 	void ExpireServerInfo() override;
 	void CacheServerInfo(CCache *pCache, int Type, bool SendClients);
@@ -291,6 +311,7 @@ class CCache
 	char *GetMapName();
 	int LoadMap(const char *pMapName);
 
+	void InitInterfaces(IKernel *pKernel);
 	int Run();
 
 	static bool ConKick(IConsole::IResult *pResult, void *pUser);
