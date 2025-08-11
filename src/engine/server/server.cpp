@@ -1946,6 +1946,10 @@ void CServer::UpdateServerInfo(bool Resend)
 
 	UpdateRegisterServerInfo();
 
+	for(int i = 0; i < 3; i++)
+		for(int j = 0; j < 2; j++)
+			CacheServerInfo(&m_aServerInfoCache[i * 2 + j], i, j);
+
 	if(Resend)
 	{
 		for(int i = 0; i < m_NetServer.MaxClients(); ++i)
