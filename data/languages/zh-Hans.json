@@ -153,7 +153,7 @@
 	},
 	{
 		"key": "Looper",
-		"value": "循环者"
+		"value": "环形师"
 	},
 	{
 		"key": "Catapult",
@@ -173,7 +173,7 @@
 	},
 	{
 		"key": "Smoker",
-		"value": "吸烟者"
+		"value": "烟鬼"
 	},
 	{
 		"key": "Voodoo",
@@ -437,7 +437,7 @@
 	},
 	{
 		"key": "The Looper has a laser wall that slows down zombies and a fast shooting low-range-laser-rifle.",
-		"value": "循环者拥有激光墙，它可以降低僵尸的移动速度，以及一柄快速射击的低范围激光枪."
+		"value": "环形师拥有激光墙，它可以降低僵尸的移动速度，以及一柄快速射击的低范围激光枪."
 	},
 	{
 		"key": "He also has a grenades.",
@@ -508,28 +508,8 @@
 		"value": "他拥有超棒的激光枪在固定时可以造成高达30点的伤害, 其他情况只能造成10~13点伤害."
 	},
 	{
-		"key": "The Joker can kill zombies with his hammer.then heal self 3 health.",
-		"value": "小丑可以用锤子杀死感染者,并治疗自己3点血量."
-	},
-	{
-		"key": "He can jump very high, and his gravity is low.",
-		"value": "他可以跳得很高并且他受到的重力较低."
-	},
-	{
-		"key": "His hook lenth is 20 block.And he can take 3 damage points per 3 seconds by hooking infected,\n and heal self 2 health.",
-		"value": "他的钩子有20格距离.并且可以通过钩住感染对感染每3秒造成3点伤害,并对自己治疗2格血."
-	},
-	{
-		"key": "His aura can speed up the recovery speed of humans' bullet.",
-		"value": "他的光环可以加快人类的子弹恢复速度."
-	},
-	{
-		"key": "The Aura can give humans +1 health or armor per {sec:Time}.",
-		"value": "光环可以每{sec:Time}给人类+1血量或者盾牌."
-	},
-	{
 		"key": "The Smoker can infect humans and heal infected with his hammer.",
-		"value": "吸烟者可以用锤子感染人类或者治愈感染者."
+		"value": "烟鬼可以用锤子感染人类或者治愈感染者."
 	},
 	{
 		"key": "He can also inflict {int:DamagePoints} damage points per second by hooking humans.",
@@ -657,7 +637,7 @@
 	},
 	{
 		"key": "When an infected dies, it may respawn near the Witch.",
-		"value": "当一个感染者死了,他有概率出生在女巫旁边."
+		"value": "当一个感染者死了,就有概率出生在女巫旁边."
 	},
 	{
 		"key": "If the Witch dies, she disappears and is replaced by another class of infected.",
@@ -793,7 +773,7 @@
 	},
 	{
 		"key": "Looper laser wall: {sec:RemainingTime}",
-		"value": "循环者激光墙: {sec:RemainingTime}"
+		"value": "环形师激光墙: {sec:RemainingTime}"
 	},
 	{
 		"key": "{int:NumBombs} bombs left",
@@ -982,14 +962,6 @@
 	{
 		"key": "Slime entity is ready!",
 		"value": "粘液体已经就绪!"
-	},
-	{
-		"key": "No teleporter!",
-		"value": "没有可传送的人类!"
-	},
-	{
-		"key": "Joker tele to you!",
-		"value": "小丑传送到了你这里!"
 	},
 	{
 		"key": "infect leaver",

@@ -1063,8 +1063,8 @@ int CServer::NewClientNoAuthCallback(int ClientID, void *pUser)
 	pThis->m_aClients[ClientID].m_pRconCmdToSend = 0;
 	pThis->m_aClients[ClientID].Reset();
 
-	pThis->SendMap(ClientID);
 	pThis->SendCapabilities(ClientID);
+	pThis->SendMap(ClientID);
 
 	return 0;
 }
@@ -1332,8 +1332,7 @@ void CServer::ProcessClientPacket(CNetChunk *pPacket)
 				str_format(aBuf, sizeof(aBuf), "player has entered the game. ClientID=%x addr=%s", ClientID, aAddrStr);
 				Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "server", aBuf);
 				m_aClients[ClientID].m_State = CClient::STATE_INGAME;
-				
-				SendServerInfo(m_NetServer.ClientAddr(ClientID), -1, SERVERINFO_EXTENDED, false);
+
 				GameServer()->OnClientEnter(ClientID);
 				ExpireServerInfo();
 			}
@@ -2108,13 +2107,13 @@ int CServer::LoadMap(const char *pMapName)
 		CDataFileReader dfGeneratedMap;
 		dfGeneratedMap.Open(Storage(), aClientMapName, IStorage::TYPE_ALL);
 		m_CurrentMapCrc = dfGeneratedMap.Crc();
-		dfGeneratedMap.Close();
 
 		m_CurrentMapSha256 = dfGeneratedMap.Sha256();
 		char aSha256[SHA256_MAXSTRSIZE];
 		sha256_str(m_CurrentMapSha256, aSha256, sizeof(aSha256));
+		dfGeneratedMap.Close();
 	
-		char aBufMsg[128];
+		char aBufMsg[256];
 		str_format(aBufMsg, sizeof(aBufMsg), "map crc is %08x, generated map crc is %08x", ServerMapCrc, m_CurrentMapCrc);
 		Console()->Print(IConsole::OUTPUT_LEVEL_ADDINFO, "server", aBufMsg);
 		str_format(aBufMsg, sizeof(aBufMsg), "map sha256 is %s, generated map sha256 is %s", aServerSha256, aSha256);

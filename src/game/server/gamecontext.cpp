@@ -3640,22 +3640,6 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 
 			pSelf->SendMOTD(ClientID, Buffer.buffer());
 		}
-		else if (str_comp_nocase(pHelpPage, "joker") == 0)
-		{
-			Buffer.append("~~ ");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("Joker"), NULL);
-			Buffer.append(" ~~\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("The Joker can kill zombies with his hammer.then heal self 3 health."), NULL);
-			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("He can jump very high, and his gravity is low."), NULL);
-			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("His hook lenth is 20 block.And he can take 3 damage points per 3 seconds by hooking infected,\n and heal self 2 health."), NULL);
-			Buffer.append("\n\n");
-			pSelf->Server()->Localization()->Format_L(Buffer, pLanguage, _("His aura can speed up the recovery speed of humans' bullet."), NULL);
-			Buffer.append("\n\n");
-
-			pSelf->SendMOTD(ClientID, Buffer.buffer());
-		}
 		else if (str_comp_nocase(pHelpPage, "smoker") == 0)
 		{
 			Buffer.append("~~ ");
@@ -3960,7 +3944,7 @@ bool CGameContext::ConHelp(IConsole::IResult *pResult, void *pUserData)
 												  NULL);
 		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", Buffer.buffer());
 
-		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", "engineer, soldier, scientist, sciogist , catapult, police, reviver , joker, medic, hero, ninja, mercenary, sniper, whiteHole");
+		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", "engineer, soldier, scientist, sciogist, catapult, police, reviver, medic, hero, ninja, mercenary, sniper, whiteHole");
 		pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "help", "smoker, hunter, bat, boomer, ghost, spider, slug, slime , ghoul, voodoo, undead, witch, freezer, nightmare.");
 	}
 

@@ -175,7 +175,6 @@ private:
 
 /* INFECTION MODIFICATION START ***************************************/
 private:
-	int m_AirJumpCounter;
 	bool m_FirstShot;
 	vec2 m_FirstShotCoord;
 	int m_HookDmgTick;
@@ -288,6 +287,7 @@ public:
 	void GiveGift(int GiftType);
 	int GetInfZoneTick();
 /* INFECTION MODIFICATION END *****************************************/
+	void SnapDDNet(int SnappingClient);
 };
 
 #endif

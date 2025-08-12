@@ -218,6 +218,10 @@ public:
 	bool m_ProbablyStucked;
 
 	int m_Jumped;
+	// m_JumpedTotal counts the jumps performed in the air
+	int m_JumpedTotal;
+	int m_Jumps;
+	int m_FreezeStart;
 
 	int m_Direction;
 	int m_Angle;

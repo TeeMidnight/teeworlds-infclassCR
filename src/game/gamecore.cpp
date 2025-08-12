@@ -71,11 +71,14 @@ void CCharacterCore::Reset()
 	m_HookState = HOOK_IDLE;
 	m_HookedPlayer = -1;
 	m_Jumped = 0;
+	m_JumpedTotal = 0;
+	m_Jumps = 2;
 	m_TriggeredEvents = 0;
 	m_Passenger = nullptr;
 	m_IsPassenger = false;
 	m_ProbablyStucked = false;
 	m_IsMagic = false;
+	m_FreezeStart = 0;
 }
 
 void CCharacterCore::Tick(bool UseInput, CParams* pParams)
@@ -148,17 +151,26 @@ void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 		{
 			if(!(m_Jumped&1))
 			{
-				if(Grounded)
+				if(Grounded && (!(m_Jumped & 2) || m_Jumps != 0))
 				{
 					m_TriggeredEvents |= COREEVENT_GROUND_JUMP;
 					m_Vel.y = -pTuningParams->m_GroundJumpImpulse;
-					m_Jumped |= 1;
+					if(m_Jumps > 1)
+					{
+						m_Jumped |= 1;
+					}
+					else
+					{
+						m_Jumped |= 3;
+					}
+					m_JumpedTotal = 0;
 				}
-				else if(!(m_Jumped&2))
+				else if(!(m_Jumped & 2))
 				{
 					m_TriggeredEvents |= COREEVENT_AIR_JUMP;
 					m_Vel.y = -pTuningParams->m_AirJumpImpulse;
 					m_Jumped |= 3;
+					m_JumpedTotal++;
 				}
 			}
 		}
@@ -198,7 +210,10 @@ void CCharacterCore::Tick(bool UseInput, CParams* pParams)
 	// 1 bit = to keep track if a jump has been made on this input
 	// 2 bit = to keep track if a air-jump has been made
 	if(Grounded)
+	{
 		m_Jumped &= ~2;
+		m_JumpedTotal = 0;
+	}
 
 	// do hook
 	if(m_HookState == HOOK_IDLE)

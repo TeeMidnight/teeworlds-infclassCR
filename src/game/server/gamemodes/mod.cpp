@@ -535,7 +535,6 @@ void CGameControllerMOD::Snap(int SnappingClient)
 		int Support = 0;
 		int Sciogist = 0;
 		int Reviver = 0;
-		int Joker = 0;
 		
 		CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
 		while(Iter.Next())
@@ -630,6 +629,21 @@ void CGameControllerMOD::Snap(int SnappingClient)
 	}
 	
 	pGameDataObj->m_FlagCarrierBlue = FLAG_ATSTAND;
+
+	CNetObj_GameInfoEx *pGameInfoEx = (CNetObj_GameInfoEx *)Server()->SnapNewItem(NETOBJTYPE_GAMEINFOEX, 0, sizeof(CNetObj_GameInfoEx));
+	if(!pGameInfoEx)
+		return;
+
+	pGameInfoEx->m_Flags = GAMEINFOFLAG_PREDICT_VANILLA | GAMEINFOFLAG_DONT_MASK_ENTITIES;
+
+	// We use DDRace entities to show infection and other custom infclass tiles (see CClientGameTileGetter::GetClientGameTileIndex)
+	pGameInfoEx->m_Flags |= GAMEINFOFLAG_ENTITIES_DDNET;
+
+	pGameInfoEx->m_Flags2 = GAMEINFOFLAG2_HUD_HEALTH_ARMOR | GAMEINFOFLAG2_HUD_AMMO | GAMEINFOFLAG2_HUD_DDRACE;
+	pGameInfoEx->m_Flags2 |= GAMEINFOFLAG2_NO_WEAK_HOOK;
+	pGameInfoEx->m_Flags2 |= GAMEINFOFLAG2_NO_SKIN_CHANGE_FOR_FROZEN;
+	pGameInfoEx->m_Version = GAMEINFO_CURVERSION;
+
 }
 
 int CGameControllerMOD::OnCharacterDeath(class CCharacter *pVictim, class CPlayer *pKiller, int Weapon)
@@ -1145,7 +1159,6 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 	int nbHero = 0;
 	int nbSupport = 0;
 	int nbReviver = 0;
-	int nbJoker = 0;
 
 	CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
 	while(Iter.Next())

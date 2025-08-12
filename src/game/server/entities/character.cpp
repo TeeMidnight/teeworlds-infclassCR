@@ -89,7 +89,6 @@ m_pConsole(pConsole)
 /* INFECTION MODIFICATION START ***************************************/
 	m_StartTick = Server()->Tick();
 
-	m_AirJumpCounter = 0;
 	m_FirstShot = true;
 	
 	m_FlagID = Server()->SnapNewID();
@@ -230,7 +229,7 @@ bool CCharacter::Spawn(CPlayer *pPlayer, vec2 Pos)
 	m_IsFrozen = false;
 	m_IsMagic = false;
 	m_IsInSlowMotion = false;
-	m_FrozenTime = -1;
+	m_FrozenTime = 0;
 	m_LoveTick = -1;
 	m_MagicTick = 0;
 	m_SlowMotionTick = -1;
@@ -1304,29 +1303,18 @@ void CCharacter::FireWeapon()
 		{
 			if(GetClass() == PLAYERCLASS_SCIENTIST)
 			{
-				CPlasmaPlus *pPlus = new CPlasmaPlus(GameWorld(), m_Pos, m_pPlayer->GetCID(),
+				new CPlasmaPlus(GameWorld(), m_Pos, m_pPlayer->GetCID(),
 					Direction, false, true);
 				GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
 			}
 			else if(GetClass() == PLAYERCLASS_MERCENARY)
 			{
-				CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_GUN,
+				new CProjectile(GameWorld(), WEAPON_GUN,
 					m_pPlayer->GetCID(),
 					ProjStartPos,
 					Direction,
 					(int)(Server()->TickSpeed()*GameServer()->Tuning()->m_GunLifetime),
 					1, 0, 0, -1, WEAPON_GUN);
-
-				// pack the Projectile and send it to the client Directly
-				CNetObj_Projectile p;
-				pProj->FillInfo(&p);
-
-				CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
-				Msg.AddInt(1);
-				for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
-					Msg.AddInt(((int *)&p)[i]);
-
-				Server()->SendMsg(&Msg, MSGFLAG_VITAL, m_pPlayer->GetCID());
 				
 				float MaxSpeed = GameServer()->Tuning()->m_GroundControlSpeed*1.7f;
 				vec2 Recoil = Direction*(-MaxSpeed/5.0f);
@@ -1341,67 +1329,34 @@ void CCharacter::FireWeapon()
 			}
 			else if(GetClass() == PLAYERCLASS_POLICE)
 			{
-				CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_SHOTGUN,
+				new CProjectile(GameWorld(), WEAPON_SHOTGUN,
 					m_pPlayer->GetCID(),
 					ProjStartPos,
 					Direction, 
 					(int)(Server()->TickSpeed()*GameServer()->Tuning()->m_GunLifetime),
 					12, 0, 0, -1, WEAPON_GUN);
 
-				// pack the Projectile and send it to the client Directly
-				CNetObj_Projectile p;
-				pProj->FillInfo(&p);
-
-				CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
-				Msg.AddInt(1);
-				for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
-					Msg.AddInt(((int *)&p)[i]);
-
-				Server()->SendMsg(&Msg, MSGFLAG_VITAL, m_pPlayer->GetCID());
-
 				GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
 			}
 			else if(GetClass() == PLAYERCLASS_MAGICIAN)
 			{
-				CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_GRENADE,
+				new CProjectile(GameWorld(), WEAPON_GRENADE,
 					m_pPlayer->GetCID(),
 					ProjStartPos,
 					Direction,
 					(int)(Server()->TickSpeed()*GameServer()->Tuning()->m_GrenadeLifetime),
 					1, 1, 0, SOUND_GRENADE_EXPLODE, WEAPON_GUN);
 
-				// pack the Projectile and send it to the client Directly
-				CNetObj_Projectile p;
-				pProj->FillInfo(&p);
-
-				CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
-				Msg.AddInt(1);
-				for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
-					Msg.AddInt(((int *)&p)[i]);
-
-				Server()->SendMsg(&Msg, MSGFLAG_VITAL, m_pPlayer->GetCID());
-
 				GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
 			}
 			else
 			{
-				CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_GUN,
+				new CProjectile(GameWorld(), WEAPON_GUN,
 					m_pPlayer->GetCID(),
 					ProjStartPos,
 					Direction,
 					(int)(Server()->TickSpeed()*GameServer()->Tuning()->m_GunLifetime),
 					1, 0, 0, -1, WEAPON_GUN);
-
-				// pack the Projectile and send it to the client Directly
-				CNetObj_Projectile p;
-				pProj->FillInfo(&p);
-
-				CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
-				Msg.AddInt(1);
-				for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
-					Msg.AddInt(((int *)&p)[i]);
-
-				Server()->SendMsg(&Msg, MSGFLAG_VITAL, m_pPlayer->GetCID());
 
 				GameServer()->CreateSound(m_Pos, SOUND_GUN_FIRE);
 			}
@@ -1415,9 +1370,6 @@ void CCharacter::FireWeapon()
 	
 			if(GetClass() == PLAYERCLASS_MAGICIAN)
 				ShotSpread = 1;
-			
-			CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
-			Msg.AddInt(ShotSpread*2+1);
 
 			float Force = 2.0f;
 			if(GetClass() == PLAYERCLASS_MEDIC || GetClass() == PLAYERCLASS_SCIOGIST)
@@ -1438,33 +1390,18 @@ void CCharacter::FireWeapon()
 				
 				if(GetClass() == PLAYERCLASS_BIOLOGIST)
 				{
-					CBouncingBullet *pProj = new CBouncingBullet(GameWorld(), m_pPlayer->GetCID(), ProjStartPos, vec2(cosf(a), sinf(a))*Speed);
-
-					// pack the Projectile and send it to the client Directly
-					CNetObj_Projectile p;
-					pProj->FillInfo(&p);
-					for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
-						Msg.AddInt(((int *)&p)[i]);
+					new CBouncingBullet(GameWorld(), m_pPlayer->GetCID(), ProjStartPos, vec2(cosf(a), sinf(a))*Speed);
 				}
 				else
 				{
-					CProjectile *pProj = new CProjectile(GameWorld(), WEAPON_SHOTGUN,
+					new CProjectile(GameWorld(), WEAPON_SHOTGUN,
 						m_pPlayer->GetCID(),
 						ProjStartPos,
 						vec2(cosf(a), sinf(a))*Speed,
 						(int)(Server()->TickSpeed()*LifeTime),
 						1, 0, Force, -1, WEAPON_SHOTGUN);
-
-					// pack the Projectile and send it to the client Directly
-					CNetObj_Projectile p;
-					pProj->FillInfo(&p);
-					for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
-						Msg.AddInt(((int *)&p)[i]);
 				}
-				
 			}
-
-			Server()->SendMsg(&Msg, MSGFLAG_VITAL, m_pPlayer->GetCID());
 
 			GameServer()->CreateSound(m_Pos, SOUND_SHOTGUN_FIRE);
 		} break;
@@ -1486,22 +1423,10 @@ void CCharacter::FireWeapon()
 				{
 					int ShotSpread = 1;
 					
-					CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
-					Msg.AddInt(ShotSpread*2+1);
-					
 					for(int i = -ShotSpread; i <= ShotSpread; ++i)
 					{
 						float a = GetAngle(Direction) + random_float()/3.0f;
-						
-						CScatterGrenade *pProj = new CScatterGrenade(GameWorld(), m_pPlayer->GetCID(), m_Pos, vec2(cosf(a), sinf(a)));
-						
-						// pack the Projectile and send it to the client Directly
-						CNetObj_Projectile p;
-						pProj->FillInfo(&p);
-						
-						for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
-							Msg.AddInt(((int *)&p)[i]);
-						Server()->SendMsg(&Msg, MSGFLAG_VITAL, m_pPlayer->GetCID());
+						new CScatterGrenade(GameWorld(), m_pPlayer->GetCID(), m_Pos, vec2(cosf(a), sinf(a)));
 					}
 					
 					GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
@@ -1523,23 +1448,11 @@ void CCharacter::FireWeapon()
 				if(!BombFound && m_aWeapons[m_ActiveWeapon].m_Ammo)
 				{
 					int ShotSpread = 0;
-					
-					CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
-					Msg.AddInt(ShotSpread*2+1);
-					
+
 					for(int i = -ShotSpread; i <= ShotSpread; ++i)
 					{
 						float a = GetAngle(Direction) + random_float()/5.0f;
-						
 						CMedicGrenade *pProj = new CMedicGrenade(GameWorld(), m_pPlayer->GetCID(), m_Pos, vec2(cosf(a), sinf(a)));
-
-						// pack the Projectile and send it to the client Directly
-						CNetObj_Projectile p;
-						pProj->FillInfo(&p);
-
-						for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
-							Msg.AddInt(((int *)&p)[i]);
-						Server()->SendMsg(&Msg, MSGFLAG_VITAL, m_pPlayer->GetCID());
 					}
 
 					GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
@@ -1646,10 +1559,6 @@ void CCharacter::FireWeapon()
 				if(m_HasStunGrenade) 
 				{
 					int ShotSpread = 2;
-					
-					CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
-					Msg.AddInt(ShotSpread*2+1);
-					
 					for(int i = -ShotSpread; i <= ShotSpread; ++i)
 					{
 						float a = GetAngle(Direction) + random_float()/3.0f;
@@ -1661,15 +1570,6 @@ void CCharacter::FireWeapon()
 							//Make them flash grenades
 							pProj->FlashGrenade();
 						}
-						
-						
-						// pack the Projectile and send it to the client Directly
-						CNetObj_Projectile p;
-						pProj->FillInfo(&p);
-						
-						for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
-							Msg.AddInt(((int *)&p)[i]);
-						Server()->SendMsg(&Msg, MSGFLAG_VITAL, m_pPlayer->GetCID());
 					}
 					
 					GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
@@ -1691,16 +1591,6 @@ void CCharacter::FireWeapon()
 					{
 						pProj->FlashGrenade();
 					}
-					
-					// pack the Projectile and send it to the client Directly
-					CNetObj_Projectile p;
-					pProj->FillInfo(&p);
-					
-					CMsgPacker Msg(NETMSGTYPE_SV_EXTRAPROJECTILE);
-					Msg.AddInt(1);
-					for(unsigned i = 0; i < sizeof(CNetObj_Projectile)/sizeof(int); i++)
-						Msg.AddInt(((int *)&p)[i]);
-					Server()->SendMsg(&Msg, MSGFLAG_VITAL, m_pPlayer->GetCID());
 					
 					GameServer()->CreateSound(m_Pos, SOUND_GRENADE_FIRE);
 					
@@ -2632,6 +2522,28 @@ void CCharacter::Tick()
 	
 	vec2 PrevPos = m_Core.m_Pos;
 	m_Core.Tick(true, &CoreTickParams);
+
+	// following jump rules can be overridden by tiles, like Refill Jumps, Stopper and Wall Jump
+	if(m_Core.m_Jumps == -1)
+	{
+		// The player has only one ground jump, so his feet are always dark
+		m_Core.m_Jumped |= 2;
+	}
+	else if(m_Core.m_Jumps == 0)
+	{
+		// The player has no jumps at all, so his feet are always dark
+		m_Core.m_Jumped |= 2;
+	}
+	else if(m_Core.m_Jumps == 1 && m_Core.m_Jumped > 0)
+	{
+		// If the player has only one jump, each jump is the last one
+		m_Core.m_Jumped |= 2;
+	}
+	else if(m_Core.m_JumpedTotal < m_Core.m_Jumps - 1 && m_Core.m_Jumped > 1)
+	{
+		// The player has not yet used up all his jumps, so his feet remain light
+		m_Core.m_Jumped = 1;
+	}
 	
 	if(GetClass() == PLAYERCLASS_SNIPER && m_PositionLocked)
 	{
@@ -2658,20 +2570,12 @@ void CCharacter::Tick()
 
 	if(GetClass() == PLAYERCLASS_HUNTER || GetClass() == PLAYERCLASS_SNIPER ||GetClass() == PLAYERCLASS_LOOPER)
 	{
-		if(IsGrounded()) m_AirJumpCounter = 0;
-		if(m_Core.m_TriggeredEvents&COREEVENT_AIR_JUMP && m_AirJumpCounter < 1)
-		{
-			m_Core.m_Jumped &= ~2;
-			m_AirJumpCounter++;
-		}
+		m_Core.m_Jumps = 3;
 	}
 
-	if(GetClass() == PLAYERCLASS_BAT) {
-		if(IsGrounded() || g_Config.m_InfBatAirjumpLimit == 0) m_AirJumpCounter = 0;
-		else if(m_Core.m_TriggeredEvents&COREEVENT_AIR_JUMP && m_AirJumpCounter < g_Config.m_InfBatAirjumpLimit) {
-			m_Core.m_Jumped &= ~2;
-			m_AirJumpCounter++;
-		}
+	if(GetClass() == PLAYERCLASS_BAT)
+	{
+		m_Core.m_Jumps = g_Config.m_InfBatAirjumpLimit;
 	}
 	IServer::CClientInfo Info;
 	Server()->GetClientInfo(m_pPlayer->GetCID(), &Info);
@@ -4178,6 +4082,8 @@ void CCharacter::Snap(int SnappingClient)
 	}
 /* INFECTION MODIFICATION END ***************************************/
 
+	SnapDDNet(SnappingClient);
+
 	CNetObj_Character *pCharacter = static_cast<CNetObj_Character *>(Server()->SnapNewItem(NETOBJTYPE_CHARACTER, id, sizeof(CNetObj_Character)));
 	if(!pCharacter)
 		return;
@@ -5046,12 +4952,14 @@ void CCharacter::Freeze(float Time, int Player, int Reason)
 	m_FreezeReason = Reason;
 	
 	m_LastFreezer = Player;
+	m_Core.m_FreezeStart = Server()->Tick();
 }
 
 void CCharacter::Unfreeze()
 {
 	m_IsFrozen = false;
-	m_FrozenTime = -1;
+	m_FrozenTime = 0;
+	m_Core.m_FreezeStart = 0;
 	
 	if(m_FreezeReason == FREEZEREASON_UNDEAD)
 	{
@@ -5240,5 +5148,60 @@ int CCharacter::GetInfZoneTick() // returns how many ticks long a player is alre
 {
 	if (m_InfZoneTick < 0) return 0;
 	return Server()->Tick()-m_InfZoneTick;
+}
+void CCharacter::SnapDDNet(int SnappingClient)
+{
+	int id = m_pPlayer->GetCID();
+
+	if(SnappingClient > -1 && !Server()->Translate(id, SnappingClient))
+		return;
+
+	CNetObj_DDNetCharacter *pDDNetCharacter = static_cast<CNetObj_DDNetCharacter *>(Server()->SnapNewItem(NETOBJTYPE_DDNETCHARACTER, id, sizeof(CNetObj_Character)));
+	if(!pDDNetCharacter)
+		return;
+	pDDNetCharacter->m_TargetX = m_Input.m_TargetX;
+	pDDNetCharacter->m_TargetY = m_Input.m_TargetY;
+	pDDNetCharacter->m_NinjaActivationTick = -1;
+	if(IsFrozen())
+	{
+		pDDNetCharacter->m_Flags |= CHARACTERFLAG_HAMMER_HIT_DISABLED;
+		pDDNetCharacter->m_Flags |= CHARACTERFLAG_SHOTGUN_HIT_DISABLED;
+		pDDNetCharacter->m_Flags |= CHARACTERFLAG_GRENADE_HIT_DISABLED;
+		pDDNetCharacter->m_Flags |= CHARACTERFLAG_LASER_HIT_DISABLED;
+		pDDNetCharacter->m_Flags |= CHARACTERFLAG_HOOK_HIT_DISABLED;
+
+		pDDNetCharacter->m_FreezeStart = m_Core.m_FreezeStart;
+		pDDNetCharacter->m_FreezeEnd = -1;
+	}
+	if(GetClass() == PLAYERCLASS_MERCENARY)
+		pDDNetCharacter->m_Flags |= CHARACTERFLAG_JETPACK;
+
+	if(GetClass() == PLAYERCLASS_SCIENTIST || GetClass() == PLAYERCLASS_MAGICIAN)
+		pDDNetCharacter->m_Flags |= CHARACTERFLAG_TELEGUN_GRENADE;
+
+	if(m_aWeapons[WEAPON_HAMMER].m_Got)
+		pDDNetCharacter->m_Flags |= CHARACTERFLAG_WEAPON_HAMMER;
+	if(m_aWeapons[WEAPON_GUN].m_Got)
+		pDDNetCharacter->m_Flags |= CHARACTERFLAG_WEAPON_GUN;
+	if(m_aWeapons[WEAPON_SHOTGUN].m_Got)
+		pDDNetCharacter->m_Flags |= CHARACTERFLAG_WEAPON_SHOTGUN;
+	if(m_aWeapons[WEAPON_GRENADE].m_Got)
+		pDDNetCharacter->m_Flags |= CHARACTERFLAG_WEAPON_GRENADE;
+	if(m_aWeapons[WEAPON_RIFLE].m_Got)
+		pDDNetCharacter->m_Flags |= CHARACTERFLAG_WEAPON_LASER;
+	if(m_ActiveWeapon == WEAPON_NINJA)
+		pDDNetCharacter->m_Flags |= CHARACTERFLAG_WEAPON_NINJA;
+	if(IsFrozen())
+		pDDNetCharacter->m_Flags |= CHARACTERFLAG_MOVEMENTS_DISABLED;
+
+	if(IsInLove())
+		pDDNetCharacter->m_Flags |= CHARACTERFLAG_HAMMER_HIT_DISABLED;
+	pDDNetCharacter->m_Jumps = m_Core.m_Jumps;
+	pDDNetCharacter->m_JumpedTotal = m_Core.m_JumpedTotal;
+
+	if(m_Core.m_Jumps > 100)
+	{
+		pDDNetCharacter->m_Flags |= CHARACTERFLAG_ENDLESS_JUMP;
+	}
 }
 /* INFECTION MODIFICATION END *****************************************/
