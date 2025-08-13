@@ -31,7 +31,7 @@ CPlayer::CPlayer(CGameContext *pGameServer, int ClientID, int Team)
 	m_ScoreRound = 0;
 	m_ScoreMode = PLAYERSCOREMODE_SCORE;
 	m_WinAsHuman = 0;
-	m_class = PLAYERCLASS_NONE;
+	m_Class = PLAYERCLASS_NONE;
 	m_InfectionTick = -1;
 	m_NumberKills = 0;
 	SetLanguage(Server()->GetClientLanguage(ClientID));
@@ -279,7 +279,7 @@ void CPlayer::Snap(int SnappingClient)
 					str_copy(aClanName, Server()->Localization()->Localize(pPlayer->GetLanguage() ,"????"), sizeof(aClanName));
 					break;
 				default:
-					str_copy(aClanName, Server()->Localization()->Localize(pPlayer->GetLanguage() , GameServer()->GetClassName(m_class)), sizeof(aClanName));
+					str_copy(aClanName, GameServer()->GetClassName(m_Class), sizeof(aClanName));
 			}
 
 			{
@@ -296,7 +296,7 @@ void CPlayer::Snap(int SnappingClient)
 	IServer::CClientInfo info;
 	Server()->GetClientInfo(SnappingClient, &info);
 
-	switch(m_class)
+	switch(m_Class)
 	{
 		case PLAYERCLASS_ENGINEER:
 			m_TeeInfos.m_UseCustomColor = 0;
@@ -742,12 +742,12 @@ void CPlayer::TryRespawn()
 /* INFECTION MODIFICATION START ***************************************/
 int CPlayer::GetClass()
 {
-	return m_class;
+	return m_Class;
 }
 
 void CPlayer::SetClass(int newClass)
 {	
-	if(m_class == newClass)
+	if(m_Class == newClass)
 		return;
 	
 	if(newClass > START_HUMANCLASS && newClass < END_HUMANCLASS)
@@ -771,9 +771,9 @@ void CPlayer::SetClass(int newClass)
 	m_GhoulLevel = 0;
 	m_GhoulLevelTick = 0;
 	
-	m_class = newClass;
+	m_Class = newClass;
 	
-	if(m_class < END_HUMANCLASS)
+	if(m_Class < END_HUMANCLASS)
 		HookProtection(true);
 	else
 		HookProtection(true); // true = hook protection for zombies by default
@@ -830,12 +830,12 @@ void CPlayer::StartInfection(bool force)
 
 bool CPlayer::IsZombie() const
 {
-	return (m_class > END_HUMANCLASS);
+	return (m_Class > END_HUMANCLASS);
 }
 
 bool CPlayer::IsHuman() const
 {
-	return !(m_class > END_HUMANCLASS);
+	return !(m_Class > END_HUMANCLASS);
 }
 
 bool CPlayer::IsSpectator() const

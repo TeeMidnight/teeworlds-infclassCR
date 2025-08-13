@@ -114,7 +114,7 @@ private:
 
 /* INFECTION MODIFICATION START ***************************************/
 private:
-	int m_class;
+	int m_Class;
 	int m_classOld;
 	int m_ScoreMode;
 	int m_DefaultScoreMode;
