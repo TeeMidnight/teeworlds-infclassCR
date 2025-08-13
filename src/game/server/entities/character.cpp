@@ -3578,8 +3578,6 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		
 		if(m_Health <= 0)
 		{
-			Die(From, Weapon);
-
 			// set attacker's face to happy (taunt!)
 			if (From >= 0 && From != m_pPlayer->GetCID() && pKillerPlayer)
 			{
@@ -3597,6 +3595,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 				if (pKillerChar)
 					pKillerChar->CheckSuperWeaponAccess();
 			}
+			Die(From, Weapon);
 			
 			return false;
 		}
