@@ -372,7 +372,7 @@ void CNetServer::OnPreConnMsg(NETADDR &Addr, CNetPacketConstruct &Packet)
 			// map if there are too many connection attempts at once.
 
 			// send mapchange + map data + con_ready + 3 x empty snap (with token)
-			CMsgPacker MapChangeMsg(NETMSG_MAP_CHANGE);
+			CMsgPacker MapChangeMsg(NETMSG_MAP_CHANGE, true);
 
 			if(Flooding)
 			{
@@ -389,7 +389,7 @@ void CNetServer::OnPreConnMsg(NETADDR &Addr, CNetPacketConstruct &Packet)
 				MapChangeMsg.AddInt(sizeof(g_aDummyMapData));
 			}
 
-			CMsgPacker MapDataMsg(NETMSG_MAP_DATA);
+			CMsgPacker MapDataMsg(NETMSG_MAP_DATA, true);
 
 			if(Flooding)
 			{
@@ -410,9 +410,9 @@ void CNetServer::OnPreConnMsg(NETADDR &Addr, CNetPacketConstruct &Packet)
 				MapDataMsg.AddRaw(g_aDummyMapData, sizeof(g_aDummyMapData)); // map data
 			}
 
-			CMsgPacker ConReadyMsg(NETMSG_CON_READY);
+			CMsgPacker ConReadyMsg(NETMSG_CON_READY, true);
 
-			CMsgPacker SnapEmptyMsg(NETMSG_SNAPEMPTY);
+			CMsgPacker SnapEmptyMsg(NETMSG_SNAPEMPTY, true);
 			SECURITY_TOKEN SecurityToken = GetVanillaToken(Addr);
 			SnapEmptyMsg.AddInt(SecurityToken);
 			SnapEmptyMsg.AddInt(SecurityToken + 1);
