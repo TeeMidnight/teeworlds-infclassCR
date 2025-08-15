@@ -274,6 +274,7 @@ function build(settings)
 
 	game_shared = Compile(settings, Collect("src/game/*.cpp"), nethash, network_source)
 	game_server = Compile(settings, CollectRecursive("src/game/server/*.cpp"), server_content_source)
+	infclasscr = {}
 	if config.geolocation.value then
 		infclasscr = Compile(settings, Collect("src/infclasscr/*.cpp", "src/infclasscr/GeoLite2PP/*.cpp"))
 	end
