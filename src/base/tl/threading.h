@@ -35,7 +35,6 @@
 #elif defined(_MSC_VER)
 	#include <intrin.h>
 
-	#define WIN32_LEAN_AND_MEAN
 	#include <windows.h>
 
 	inline unsigned atomic_inc(volatile unsigned *pValue)

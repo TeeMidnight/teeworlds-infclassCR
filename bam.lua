@@ -214,6 +214,8 @@ function build(settings)
 
 		-- add ICU also here
 		settings.cc.includes:Add("other\\icu\\include")
+
+		settings.cc.defines:Add("WIN32_LEAN_AND_MEAN")
 	end
 
 	-- compile zlib if needed
