@@ -44,10 +44,15 @@
 	#include <windows.h>
 	#include <winsock2.h>
 	#include <ws2tcpip.h>
+
 	#include <fcntl.h>
 	#include <direct.h>
 	#include <errno.h>
+	#include <process.h>
 	#include <wincrypt.h>
+
+	#include <share.h>
+	#include <shellapi.h>
 #else
 	#error NOT IMPLEMENTED
 #endif
@@ -1791,6 +1796,22 @@ int fs_rename(const char *oldname, const char *newname)
 	return 0;
 }
 
+#if defined(CONF_FAMILY_WINDOWS)
+static inline time_t filetime_to_unixtime(LPFILETIME filetime)
+{
+	time_t t;
+	ULARGE_INTEGER li;
+	li.LowPart = filetime->dwLowDateTime;
+	li.HighPart = filetime->dwHighDateTime;
+
+	li.QuadPart /= 10000000; // 100ns to 1s
+	li.QuadPart -= 11644473600LL; // Windows epoch is in the past
+
+	t = li.QuadPart;
+	return t == (time_t) li.QuadPart ? t : (time_t) -1;
+}
+#endif
+
 int fs_file_time(const char *name, time_t *created, time_t *modified)
 {
 #if defined(CONF_FAMILY_WINDOWS)
@@ -2660,7 +2681,7 @@ void secure_random_fill(void *bytes, size_t length)
 		dbg_break();
 	}
 #if defined(CONF_FAMILY_WINDOWS)
-	if(!CryptGenRandom(secure_random_data.provider, length, bytes))
+	if(!CryptGenRandom(secure_random_data.provider, length, (BYTE*) bytes))
 	{
 		dbg_msg("secure", "CryptGenRandom failed, last_error=%d", GetLastError());
 		dbg_break();
