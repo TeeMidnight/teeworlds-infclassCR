@@ -4537,7 +4537,7 @@ void CCharacter::ClassSpawnAttributes()
 			m_aWeapons[WEAPON_HAMMER].m_Got = true;
 			GiveWeapon(WEAPON_HAMMER, -1);
 			GiveWeapon(WEAPON_GUN, -1);
-			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_SHOTGUN, -1);
 			GiveWeapon(WEAPON_GRENADE, -1);
 			m_ActiveWeapon = WEAPON_GRENADE;
 			
