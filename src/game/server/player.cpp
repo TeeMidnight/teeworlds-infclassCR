@@ -378,6 +378,10 @@ void CPlayer::Snap(int SnappingClient)
 			m_TeeInfos.m_UseCustomColor = 0;
 			str_copy(m_TeeInfos.m_aSkinName, "redstripe", sizeof(m_TeeInfos.m_aSkinName));
 			break;
+		case PLAYERCLASS_ARTILLERY:
+			m_TeeInfos.m_UseCustomColor = 0;
+			str_copy(m_TeeInfos.m_aSkinName, "kintaro_2", sizeof(m_TeeInfos.m_aSkinName));
+			break;
 		case PLAYERCLASS_NINJA:
 			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_aSkinName, "default", sizeof(m_TeeInfos.m_aSkinName));

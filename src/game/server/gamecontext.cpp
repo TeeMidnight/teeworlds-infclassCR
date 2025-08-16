@@ -202,6 +202,9 @@ const char *CGameContext::GetClassName(int Class)
 	case PLAYERCLASS_MAGICIAN:
 		return ("Magician");
 		break;
+	case PLAYERCLASS_ARTILLERY:
+		return ("Artillery");
+		break;
 	// Zombies
 	case PLAYERCLASS_SMOKER:
 		return ("Smoker");
@@ -2959,6 +2962,8 @@ bool CGameContext::ConSetClass(IConsole::IResult *pResult, void *pUserData)
 		pPlayer->SetClass(PLAYERCLASS_MERCENARY);
 	else if (str_comp(pClassName, "sniper") == 0)
 		pPlayer->SetClass(PLAYERCLASS_SNIPER);
+	else if (str_comp(pClassName, "artillery") == 0)
+		pPlayer->SetClass(PLAYERCLASS_ARTILLERY);
 	else if (str_comp(pClassName, "smoker") == 0)
 		pPlayer->SetClass(PLAYERCLASS_SMOKER);
 	else if (str_comp(pClassName, "hunter") == 0)
@@ -3180,6 +3185,11 @@ bool CGameContext::PrivateMessage(const char *pStr, int ClientID, bool TeamChat)
 			{
 				CheckClass = PLAYERCLASS_SNIPER;
 				str_copy(aChatTitle, "sniper", sizeof(aChatTitle));
+			}
+			else if (str_comp(aNameFound, "!artillery") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
+			{
+				CheckClass = PLAYERCLASS_ARTILLERY;
+				str_copy(aChatTitle, "artillery", sizeof(aChatTitle));
 			}
 			else if (str_comp(aNameFound, "!smoker") == 0 && m_apPlayers[ClientID] && m_apPlayers[ClientID]->GetCharacter())
 			{
