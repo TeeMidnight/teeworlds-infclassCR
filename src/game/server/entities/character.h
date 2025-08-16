@@ -219,6 +219,7 @@ public:
 	bool m_HasWhiteHole;
 	bool m_HasElasticHole;
 	bool m_HasHealBoom;
+	bool m_HasAirStrike;
 	bool m_HasIndicator;
 	bool m_HasStunGrenade;
 	bool m_HasFreezeMine;// Freezer
@@ -226,6 +227,7 @@ public:
 	int m_BroadcastWhiteHoleReady;
 	int m_BroadcastElasticHoleReady;// used to broadcast "WhiteHole ready" for a short period of time
 	int m_BroadcastHealBoomReady;
+	int m_BroadcastAirStrikeReady;
 	int m_LoveTick;
 	int m_HallucinationTick;
 	int m_ReloadSlimeTick;

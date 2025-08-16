@@ -103,6 +103,7 @@ MACRO_CONFIG_INT(InfEnableMedic, inf_enable_medic, 1, 0, 1, CFGFLAG_SERVER, "Mak
 MACRO_CONFIG_INT(InfEnableHero, inf_enable_hero, 1, 0, 1, CFGFLAG_SERVER, "Makes the hero class available")
 MACRO_CONFIG_INT(InfEnablePolice, inf_enable_police, 1, 0, 1, CFGFLAG_SERVER, "Makes the police class available")
 MACRO_CONFIG_INT(InfEnableMagician, inf_enable_magician, 1, 0, 1, CFGFLAG_SERVER, "Makes the magician class available")
+MACRO_CONFIG_INT(InfEnableArtillery, inf_enable_artillery, 1, 0, 1, CFGFLAG_SERVER, "Make the artillery class available")
 
 MACRO_CONFIG_INT(InfMinEngineerPlayer, inf_min_engineer_player, 8, 0, 32, CFGFLAG_SERVER, "Min engineer need player num")
 

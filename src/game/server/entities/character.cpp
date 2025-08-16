@@ -129,6 +129,7 @@ m_pConsole(pConsole)
 	m_HasAntiAirMine = false;
 	m_HasElasticHole = false;
 	m_HasHealBoom = false;
+	m_HasAirStrike = false;
 	m_HasIndicator = false;
 	m_HasFreezeMine = true;
 	m_TurretCount = 0;
@@ -138,6 +139,8 @@ m_pConsole(pConsole)
 	m_BroadcastWhiteHoleReady = -100;
 	m_BroadcastElasticHoleReady = -100;
 	m_BroadcastHealBoomReady= -100;
+	m_BroadcastAirStrikeReady= -100;
+
 	m_pHeroFlag = nullptr;
 	m_ResetKillsTime = 0;
 /* INFECTION MODIFICATION END *****************************************/
@@ -1371,18 +1374,24 @@ void CCharacter::FireWeapon()
 			if(GetClass() == PLAYERCLASS_MAGICIAN)
 				ShotSpread = 1;
 
+			if(GetClass() == PLAYERCLASS_ARTILLERY)
+				ShotSpread = 4;
+
 			float Force = 2.0f;
 			if(GetClass() == PLAYERCLASS_MEDIC || GetClass() == PLAYERCLASS_SCIOGIST)
 				Force = 10.0f;
 
 			if(GetClass() == PLAYERCLASS_MAGICIAN)
 				Force = 8.0f;
+
+			if(GetClass() == PLAYERCLASS_ARTILLERY)
+				Force = 11.0f;
 				
 			for(int i = -ShotSpread; i <= ShotSpread; ++i)
 			{
-				float Spreading[] = {-0.21f, -0.14f, -0.070f, 0, 0.070f, 0.14f, 0.21f};
+				float Spreading[] = {-0.28f, -0.21f, -0.14f, -0.070f, 0, 0.070f, 0.14f, 0.21f, 0.28};
 				float a = GetAngle(Direction);
-				a += Spreading[i+3] * 2.0f*(0.25f + 0.75f*static_cast<float>(10-m_aWeapons[WEAPON_SHOTGUN].m_Ammo)/10.0f);
+				a += Spreading[i+4] * 2.0f*(0.25f + 0.75f*static_cast<float>(10-m_aWeapons[WEAPON_SHOTGUN].m_Ammo)/10.0f);
 				float v = 1-(absolute(i)/(float)ShotSpread);
 				float Speed = mix((float)GameServer()->Tuning()->m_ShotgunSpeeddiff, 1.0f, v);
 				
@@ -2717,6 +2726,13 @@ void CCharacter::Tick()
 							Broadcast = true;
 						}
 						break;
+					case CMapConverter::MENUCLASS_ARTILLERY:
+						if(GameServer()->m_pController->IsChoosableClass(PLAYERCLASS_ARTILLERY))
+						{
+							GameServer()->SendBroadcast_Localization(m_pPlayer->GetCID(), BROADCAST_PRIORITY_INTERFACE, BROADCAST_DURATION_REALTIME, _("Artillery"), NULL);
+							Broadcast = true;
+						}
+						break;
 				}
 			}
 			
@@ -2781,6 +2797,9 @@ void CCharacter::Tick()
 						break;
 					case CMapConverter::MENUCLASS_MAGICIAN:
 						NewClass = PLAYERCLASS_MAGICIAN;
+						break;
+					case CMapConverter::MENUCLASS_ARTILLERY:
+						NewClass = PLAYERCLASS_ARTILLERY;
 						break;
 				}
 				
@@ -3240,6 +3259,11 @@ void CCharacter::GiveGift(int GiftType)
 		case PLAYERCLASS_MERCENARY:
 			GiveWeapon(WEAPON_GUN, -1);
 			GiveWeapon(WEAPON_GRENADE, -1);
+			break;
+		case PLAYERCLASS_ARTILLERY:
+			GiveWeapon(WEAPON_SHOTGUN,-1);
+			GiveWeapon(WEAPON_GRENADE,-1);
+			GiveWeapon(WEAPON_RIFLE,-1);
 			break;
 	}
 }
@@ -4506,6 +4530,24 @@ void CCharacter::ClassSpawnAttributes()
 				m_pPlayer->m_knownClass[PLAYERCLASS_MAGICIAN] = true;
 			}
 			break;
+		case PLAYERCLASS_ARTILLERY:
+			RemoveAllGun();
+			m_pPlayer->m_InfectionTick = -1;
+			m_Health = 10;
+			m_aWeapons[WEAPON_HAMMER].m_Got = true;
+			GiveWeapon(WEAPON_HAMMER, -1);
+			GiveWeapon(WEAPON_GUN, -1);
+			GiveWeapon(WEAPON_RIFLE, -1);
+			GiveWeapon(WEAPON_GRENADE, -1);
+			m_ActiveWeapon = WEAPON_GRENADE;
+			
+			GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_ARTILLERY);
+			if(!m_pPlayer->IsKnownClass(PLAYERCLASS_ARTILLERY))
+			{
+				GameServer()->SendChatTarget_Localization(m_pPlayer->GetCID(), CHATCATEGORY_DEFAULT, _("Type “/help {str:ClassName}” for more information about your class"), "ClassName", "artillery", NULL);
+				m_pPlayer->m_knownClass[PLAYERCLASS_ARTILLERY] = true;
+			}
+			break;	
 		case PLAYERCLASS_NONE:
 			m_pPlayer->m_InfectionTick = -1;
 			m_Health = 10;
@@ -5070,6 +5112,8 @@ int CCharacter::GetInfWeaponID(int WID)
 				return INFWEAPON_REVIVER_SHOTGUN;
 			case PLAYERCLASS_MAGICIAN:
 				return INFWEAPON_MAGICIAN_SHOTGUN;
+			case PLAYERCLASS_ARTILLERY:
+				return INFWEAPON_ARTILLERY_SHOTGUN;
 			default:
 				return INFWEAPON_SHOTGUN;
 		}

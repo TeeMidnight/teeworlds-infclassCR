@@ -2,6 +2,7 @@ test.cfg
 
 .vscode
 bam
+bam.exe
 .bam
 /config.lua
 /datasrc/__pycache__

@@ -688,7 +688,8 @@ void CMapConverter::Finalize()
 	int PoliceImageID = AddExternalImage("../skins/kitty_x_ninja", 256, 128);
 	int ReviverImageID = AddExternalImage("../skins/coala_limekitty", 256, 128);
 	int MagicianImageID = AddExternalImage("../skins/redbopp", 256, 128);
-	
+	int ArtilleryImageID = AddExternalImage("../skins/kintaro_2", 256, 128);
+
 	//Menu
 	
 	const float MenuRadius = 250.0f;
@@ -962,6 +963,9 @@ void CMapConverter::Finalize()
 								break;
 							case MENUCLASS_MAGICIAN:
 								AddTeeLayer("Magician", MagicianImageID, Pos, 64.0f, m_NumEnvs-1);
+								break;
+							case MENUCLASS_ARTILLERY:
+								AddTeeLayer("Artillery", ArtilleryImageID, Pos, 64.0f, m_NumEnvs-1);
 								break;
 						}
 					}

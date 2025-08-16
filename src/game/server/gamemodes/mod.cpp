@@ -993,6 +993,9 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 	Probability[PLAYERCLASS_NINJA - START_HUMANCLASS - 1] =
 		(nbSupport < g_Config.m_InfSupportLimit && g_Config.m_InfEnableNinja) ?
 		1.0f : 0.0f;
+	Probability[PLAYERCLASS_ARTILLERY - START_HUMANCLASS - 1] =
+		(nbSupport < g_Config.m_InfSupportLimit && g_Config.m_InfEnableArtillery) ?
+		1.0f : 0.0f;
 
 	Probability[PLAYERCLASS_MEDIC - START_HUMANCLASS - 1] =
 		(nbMedic < g_Config.m_InfMedicLimit && g_Config.m_InfEnableMedic) ?
@@ -1143,6 +1146,8 @@ bool CGameControllerMOD::IsEnabledClass(int PlayerClass) {
 			return g_Config.m_InfEnableReviver;
 		case PLAYERCLASS_MAGICIAN:
 			return g_Config.m_InfEnableMagician;
+		case PLAYERCLASS_ARTILLERY:
+			return g_Config.m_InfEnableArtillery;
 		default:
 			return false;
 	}
@@ -1169,6 +1174,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			case PLAYERCLASS_MERCENARY:
 			case PLAYERCLASS_SNIPER:
 			case PLAYERCLASS_MAGICIAN:
+			case PLAYERCLASS_ARTILLERY:
 				nbSupport++;
 				break;
 			case PLAYERCLASS_MEDIC:
@@ -1214,6 +1220,7 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 		case PLAYERCLASS_MERCENARY:
 		case PLAYERCLASS_SNIPER:
 		case PLAYERCLASS_MAGICIAN:
+		case PLAYERCLASS_ARTILLERY:
 			return (nbSupport < g_Config.m_InfSupportLimit);
 		case PLAYERCLASS_LOOPER:
 			return (nbDefender < g_Config.m_InfDefenderLimit);
