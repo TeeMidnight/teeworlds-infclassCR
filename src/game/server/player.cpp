@@ -439,7 +439,14 @@ void CPlayer::Snap(int SnappingClient)
 		case PLAYERCLASS_BOOMER:
 			m_TeeInfos.m_UseCustomColor = 1;
 			str_copy(m_TeeInfos.m_aSkinName, "saddo", sizeof(m_TeeInfos.m_aSkinName));
-			m_TeeInfos.m_ColorBody = 3866368;
+			if(m_VoodooIsSpirit == 1 && g_Config.m_InfVoodooBoomer == 1)
+			{
+				m_TeeInfos.m_ColorBody = 6183936;
+			}
+			else
+			{
+				m_TeeInfos.m_ColorBody = 3866368; // grey-green
+			}
 			m_TeeInfos.m_ColorFeet = 65414;
 			break;
 		case PLAYERCLASS_HUNTER:

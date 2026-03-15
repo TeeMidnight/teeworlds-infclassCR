@@ -69,7 +69,8 @@ void CEngineerWall::Tick()
 						//skip classes that can't die.
 						if(p->GetClass() == PLAYERCLASS_UNDEAD && p->IsFrozen()) continue;
 						if(p->GetClass() == PLAYERCLASS_VOODOO && p->m_VoodooAboutToDie) continue;
-						
+						if(p->GetClass() == PLAYERCLASS_BOOMER && p->m_VoodooAboutToDie && g_Config.m_InfVoodooBoomer == 1) continue;
+
 						if(
 							pHook->GetPlayer() &&
 							pHook->IsHuman() &&
@@ -84,7 +85,7 @@ void CEngineerWall::Tick()
 						}
 					}
 					
-					if(p->GetClass() != PLAYERCLASS_UNDEAD && p->GetClass() != PLAYERCLASS_VOODOO)
+					if(p->GetClass() != PLAYERCLASS_UNDEAD && p->GetClass() != PLAYERCLASS_VOODOO && (p->GetClass() != PLAYERCLASS_BOOMER || g_Config.m_InfVoodooBoomer == 0))
 					{
 						int LifeSpanReducer = ((Server()->TickSpeed()*g_Config.m_InfBarrierTimeReduce)/100);
 						m_WallFlashTicks = 10;

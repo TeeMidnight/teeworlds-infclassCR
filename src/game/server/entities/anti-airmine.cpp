@@ -115,6 +115,7 @@ void CAntiAirMine::Tick()
             if(p->IsHuman()) continue;
             if(p->GetClass() == PLAYERCLASS_UNDEAD && p->IsFrozen()) continue;
             if(p->GetClass() == PLAYERCLASS_VOODOO && p->m_VoodooAboutToDie) continue;
+            if(p->GetClass() == PLAYERCLASS_BOOMER && p->m_VoodooAboutToDie && g_Config.m_InfVoodooBoomer == 1) continue;
 
             float Len = distance(p->m_Pos, m_Pos);
             if(Len < p->m_ProximityRadius+g_Config.m_InfAntiAirMineRadius)
@@ -129,6 +130,7 @@ void CAntiAirMine::Tick()
             if(p->IsHuman() && p->GetPlayer()->GetCID() != m_Owner) continue;
             if(p->GetClass() == PLAYERCLASS_UNDEAD && p->IsFrozen()) continue;
             if(p->GetClass() == PLAYERCLASS_VOODOO && p->m_VoodooAboutToDie) continue;
+            if(p->GetClass() == PLAYERCLASS_BOOMER && p->m_VoodooAboutToDie && g_Config.m_InfVoodooBoomer == 1) continue;
 			
 			for(int i = 0;i < NUM_LASERS; i++)
 			{

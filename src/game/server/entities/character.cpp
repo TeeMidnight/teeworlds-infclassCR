@@ -2247,13 +2247,17 @@ void CCharacter::Tick()
 	{
 		m_VoodooTimeAlive -= 1000;
 	}
-	else if (GetClass() == PLAYERCLASS_VOODOO && m_VoodooAboutToDie && m_VoodooTimeAlive <= 0)
+	if (GetClass() == PLAYERCLASS_BOOMER && m_VoodooAboutToDie && m_VoodooTimeAlive > 0 && g_Config.m_InfVoodooBoomer == 1)
+	{
+		m_VoodooTimeAlive -= 1500;
+	}
+	else if (GetClass() == PLAYERCLASS_VOODOO && m_VoodooAboutToDie && m_VoodooTimeAlive <= 0 || GetClass() == PLAYERCLASS_BOOMER && m_VoodooAboutToDie && m_VoodooTimeAlive <= 0 && g_Config.m_InfVoodooBoomer == 1)
 	{
 		Die(m_VoodooKiller, m_VoodooWeapon);
 	}
 
 	// Display time left to live
-	if (GetClass() == PLAYERCLASS_VOODOO && m_VoodooAboutToDie)
+	if (GetClass() == PLAYERCLASS_VOODOO && m_VoodooAboutToDie || GetClass() == PLAYERCLASS_BOOMER && m_VoodooAboutToDie && g_Config.m_InfVoodooBoomer == 1)
 	{
 		int Time = m_VoodooTimeAlive / Server()->TickSpeed();
 		GameServer()->SendBroadcast_Localization(GetPlayer()->GetCID(), BROADCAST_PRIORITY_WEAPONSTATE, BROADCAST_DURATION_REALTIME,
@@ -3612,7 +3616,7 @@ void CCharacter::Die(int Killer, int Weapon)
 	}
 
 	// Start counting down, delay killer message for later
-	if (GetClass() == PLAYERCLASS_VOODOO && !m_VoodooAboutToDie)
+	if (GetClass() == PLAYERCLASS_VOODOO && !m_VoodooAboutToDie || GetClass() == PLAYERCLASS_BOOMER && !m_VoodooAboutToDie && g_Config.m_InfVoodooBoomer == 1)
 	{
 		m_VoodooAboutToDie = true;
 		m_VoodooKiller = Killer;
@@ -3621,7 +3625,8 @@ void CCharacter::Die(int Killer, int Weapon)
 		return;
 		// If about to die, yet killed again, dont kill him either
 	}
-	else if (GetClass() == PLAYERCLASS_VOODOO && m_VoodooAboutToDie && m_VoodooTimeAlive > 0)
+
+	else if (GetClass() == PLAYERCLASS_VOODOO && m_VoodooAboutToDie && m_VoodooTimeAlive > 0 || GetClass() == PLAYERCLASS_BOOMER && m_VoodooAboutToDie && m_VoodooTimeAlive > 0 && g_Config.m_InfVoodooBoomer == 1)
 	{
 		return;
 	}

@@ -67,7 +67,8 @@ vec2 CDoctorFunnel::GetTargetPos()
 
             if (!Iter.Player()->IsZombie() ||
                 (Iter.Player()->GetClass() == PLAYERCLASS_UNDEAD && Iter.Player()->GetCharacter()->IsFrozen()) ||
-                (Iter.Player()->GetClass() == PLAYERCLASS_VOODOO && Iter.Player()->GetCharacter()->m_VoodooAboutToDie))
+                (Iter.Player()->GetClass() == PLAYERCLASS_VOODOO && Iter.Player()->GetCharacter()->m_VoodooAboutToDie) ||
+                (Iter.Player()->GetClass() == PLAYERCLASS_VOODOO && Iter.Player()->GetCharacter()->m_VoodooAboutToDie) && g_Config.m_InfVoodooBoomer == 1)
                 continue;
 
             if (distance(Iter.Player()->GetCharacter()->m_Pos, GameServer()->GetPlayerChar(m_Owner)->m_Pos) < 2000)
@@ -126,7 +127,8 @@ void CDoctorFunnel::Tick()
             {
                 if (!pChr->IsZombie() ||
                     (pChr->GetClass() == PLAYERCLASS_UNDEAD && pChr->IsFrozen()) ||
-                    (pChr->GetClass() == PLAYERCLASS_VOODOO && pChr->m_VoodooAboutToDie))
+                    (pChr->GetClass() == PLAYERCLASS_VOODOO && pChr->m_VoodooAboutToDie) ||
+                    (pChr->GetClass() == PLAYERCLASS_BOOMER && pChr->m_VoodooAboutToDie && g_Config.m_InfVoodooBoomer == 1))
                     continue;
 
                 float Len = distance(pChr->m_Pos, m_Pos);

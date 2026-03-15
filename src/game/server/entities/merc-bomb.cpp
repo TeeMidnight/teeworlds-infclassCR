@@ -55,6 +55,7 @@ void CMercenaryBomb::Tick()
 		if(p->IsHuman()) continue;
 		if(p->GetClass() == PLAYERCLASS_UNDEAD && p->IsFrozen()) continue;
 		if(p->GetClass() == PLAYERCLASS_VOODOO && p->m_VoodooAboutToDie) continue;
+		if(p->GetClass() == PLAYERCLASS_BOOMER && p->m_VoodooAboutToDie && g_Config.m_InfVoodooBoomer) continue;
 
 		float Len = distance(p->m_Pos, m_Pos);
 		if(Len < p->m_ProximityRadius+80.0f)
