@@ -148,7 +148,7 @@ void CTurret::Tick()
 		
 		if(!pChr->IsZombie() ||
 			(pChr->GetClass() == PLAYERCLASS_UNDEAD && pChr->IsFrozen() ) ||
-			(pChr->GetClass() == PLAYERCLASS_VOODOO && pChr->m_VoodooAboutToDie) 
+			(pChr->GetClass() == PLAYERCLASS_VOODOO && pChr->m_VoodooAboutToDie) ||
 			(pChr->GetClass() == PLAYERCLASS_BOOMER && pChr->m_VoodooAboutToDie && g_Config.m_InfVoodooBoomer == 1) ) continue;
 		
 		float Len = distance(pChr->m_Pos, m_Pos);
