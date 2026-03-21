@@ -143,6 +143,7 @@ CCharacter::CCharacter(CGameWorld *pWorld, IConsole *pConsole)
 	m_BroadcastHealBoomReady = -100;
 	m_BroadcastAirStrikeReady = -100;
 	m_Disguised = false;
+	m_HeroResistance = 0;
 
 	m_pHeroFlag = nullptr;
 	m_ResetKillsTime = 0;
@@ -3838,7 +3839,13 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 
 	if (GetClass() == PLAYERCLASS_HERO && Mode == TAKEDAMAGEMODE_INFECTION)
 	{
-		Dmg = 12;
+		if (m_HeroResistance >= 2)
+		{
+			Dmg = 0;
+			m_HeroResistance -= 2;
+		}
+		else
+			Dmg = 12;
 		// A zombie can't infect a hero
 		Mode = TAKEDAMAGEMODE_NOINFECTION;
 	}

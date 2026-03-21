@@ -251,6 +251,7 @@ public:
 	int m_ResetKillsTime;
 	int m_FunnelState;
 	int m_PowerBattery;
+	int m_HeroResistance;
 
 	std::optional<int> m_DisguisingTimer;
 	bool m_Disguised;
