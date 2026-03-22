@@ -3843,6 +3843,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		{
 			Dmg = 0;
 			m_HeroResistance -= 2;
+			GameServer()->CreateExplosion(m_Pos,m_pPlayer->GetCID(),WEAPON_GAME,false);
 		}
 		else
 			Dmg = 12;
