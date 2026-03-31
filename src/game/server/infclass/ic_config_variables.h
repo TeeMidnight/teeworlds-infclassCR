@@ -186,6 +186,20 @@ MACRO_CONFIG_INT(InfWhiteHoleAffectsHumans, inf_white_hole_affects_humans, 0, 0,
 MACRO_CONFIG_INT(InfWhiteHoleNumParticles, inf_white_hole_num_particles, 100, 20, 500, CFGFLAG_SERVER, "Number of particles that will be used for a white hole animation")
 MACRO_CONFIG_INT(InfWhiteHolePullStrength, inf_white_hole_pull_strength, 30, 0, 1000, CFGFLAG_SERVER, "How strong a white hole sucks players in")
 
+MACRO_CONFIG_INT(InfMinPlayersForAirStrike, inf_min_players_for_airstrike, 3, 0, 64, CFGFLAG_SERVER, "我是5号占位符")
+MACRO_CONFIG_INT(InfAirStrikeMinimalKills, inf_airstrike_minimal_kills, 3, 0, 1<<10, CFGFLAG_SERVER, "我是6号占位符")
+MACRO_CONFIG_INT(InfAirStrikeProbability, inf_airstrike_probability, 40, 0, 100, CFGFLAG_SERVER, "我是7号占位符")
+MACRO_CONFIG_INT(InfAirStrikeDeley, inf_airstrike_deley, 150, 0, 1<<20, CFGFLAG_SERVER, "我是8号占位符")
+MACRO_CONFIG_INT(InfAirStrikeDeleySuper, inf_airstrike_deley_super, 200, 0, 1<<20, CFGFLAG_SERVER, "我是9号占位符")
+MACRO_CONFIG_FLOAT(InfAirStrikeSpacing, inf_airstrike_spacing, 96.f, 0, 1<<20, CFGFLAG_SERVER, "我是10号占位符")
+MACRO_CONFIG_FLOAT(InfAirStrikeSpacingSuper, inf_airstrike_spacing_super, 96.f, 0, 1<<20, CFGFLAG_SERVER, "我是11号占位符")
+MACRO_CONFIG_INT(InfAirStrikeRange, inf_airstrike_range, 3, 0, 1<<10, CFGFLAG_SERVER, "我是12号占位符")
+MACRO_CONFIG_INT(InfAirStrikeRangeSuper, inf_airstrike_range_super, 4, 0, 1<<10, CFGFLAG_SERVER, "我是13号占位符")
+MACRO_CONFIG_INT(InfAirStrikeNum, inf_airstrike_num, 3, 0, 1<<20, CFGFLAG_SERVER, "我是14号占位符")
+MACRO_CONFIG_INT(InfAirStrikeNumSuper, inf_airstrike_num_super, 15, 0, 1<<20, CFGFLAG_SERVER, "我是15号占位符")
+MACRO_CONFIG_INT(InfAirStrikePerBomb, inf_airstrike_per_bomb, 1, 0, 1<<10, CFGFLAG_SERVER, "我是16号占位符")
+MACRO_CONFIG_INT(InfAirStrikePerBombSuper, inf_airstrike_per_bomb_super, 1, 0, 1<<10, CFGFLAG_SERVER, "我是17号占位符")
+
 MACRO_CONFIG_INT(InfSurvivalInfectedSpawningDelay, inf_survival_infected_spawning_delay, 7, 0, 30, CFGFLAG_SERVER, "The number of seconds for humans to pull themselves together")
 
 // Deprecated variables

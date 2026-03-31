@@ -70,6 +70,9 @@ public:
 	bool HasWhiteHole() const;
 	void GiveWhiteHole();
 	void RemoveWhiteHole();
+	bool HasAirStrike() const;
+	void GiveAirStrike();
+	void RemoveAirStrike();
 
 	void UpgradeMercBomb(CMercenaryBomb *pBomb, float UpgradePoints);
 	void OnHeroFlagTaken(CIcCharacter *pHero);
@@ -125,6 +128,8 @@ private:
 	int m_NinjaAmmoBuff = 0;
 	icArray<CEntity *, 24> m_apHitObjects;
 	bool m_HasWhiteHole = false;
+	int m_BroadcastAirStrikeReady;
+	bool m_HasAirStrike = false;
 
 	CHeroFlag *m_pHeroFlag = nullptr;
 };

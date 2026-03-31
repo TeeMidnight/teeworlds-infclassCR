@@ -34,6 +34,10 @@ static const char *gs_aInfclassWeaponNames[] = {
 	"mercenary_upgrade_",
 	"blinding_laser",
 	"tranquilizer_rifle",
+	
+	"artillery_shotgun",
+	"artillery_grenade",
+	"artillery_rifle",
 
 	"jaws",
 	"slime",

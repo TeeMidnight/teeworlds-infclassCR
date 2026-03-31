@@ -86,7 +86,10 @@ void CSuperWeaponIndicator::Tick()
 		else
 		{
 			m_IsWarmingUp = false;
-			pHuman->GiveWhiteHole();
+			if(pHuman->GetPlayerClass() == EPlayerClass::Scientist)
+				pHuman->GiveWhiteHole();
+			else if(pHuman->GetPlayerClass() == EPlayerClass::Artillery)
+				pHuman->GiveAirStrike();
 		}
 	}
 }

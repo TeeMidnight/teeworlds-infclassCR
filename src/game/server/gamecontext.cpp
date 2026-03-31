@@ -3781,6 +3781,11 @@ void CGameContext::PrivateMessage(const char* pStr, int ClientId, bool TeamChat)
 				CheckClass = EPlayerClass::Sniper;
 				str_copy(aChatTitle, "sniper");
 			}
+			else if(str_comp(aNameFound, "!artillery") == 0 && m_apPlayers[ClientId] && m_apPlayers[ClientId]->GetCharacter())
+			{
+				CheckClass = EPlayerClass::Sniper;
+				str_copy(aChatTitle, "artillery");
+			}
 			else if(str_comp(aNameFound, "!smoker") == 0 && m_apPlayers[ClientId] && m_apPlayers[ClientId]->GetCharacter())
 			{
 				CheckClass = EPlayerClass::Smoker;
@@ -4068,6 +4073,8 @@ void CGameContext::ConTop10(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->ShowTop10(ClientId, SQL_SCORETYPE_MERCENARY_SCORE);
 		else if(str_comp_nocase(pArg, "sniper") == 0)
 			pSelf->Server()->ShowTop10(ClientId, SQL_SCORETYPE_SNIPER_SCORE);
+		else if(str_comp_nocase(pArg, "artillery") == 0)
+			pSelf->Server()->ShowTop10(ClientId, SQL_SCORETYPE_ARTILLERY_SCORE);
 		else if(str_comp_nocase(pArg, "smoker") == 0)
 			pSelf->Server()->ShowTop10(ClientId, SQL_SCORETYPE_SMOKER_SCORE);
 		else if(str_comp_nocase(pArg, "hunter") == 0)
@@ -4120,6 +4127,8 @@ void CGameContext::ConRank(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->ShowRank(ClientId, SQL_SCORETYPE_MERCENARY_SCORE);
 		else if(str_comp_nocase(pArg, "sniper") == 0)
 			pSelf->Server()->ShowRank(ClientId, SQL_SCORETYPE_SNIPER_SCORE);
+		else if(str_comp_nocase(pArg, "artillery") == 0)
+			pSelf->Server()->ShowRank(ClientId, SQL_SCORETYPE_ARTILLERY_SCORE);
 		else if(str_comp_nocase(pArg, "smoker") == 0)
 			pSelf->Server()->ShowRank(ClientId, SQL_SCORETYPE_SMOKER_SCORE);
 		else if(str_comp_nocase(pArg, "hunter") == 0)
@@ -4173,6 +4182,8 @@ void CGameContext::ConGoal(IConsole::IResult *pResult, void *pUserData)
 			pSelf->Server()->ShowGoal(ClientId, SQL_SCORETYPE_MERCENARY_SCORE);
 		else if(str_comp_nocase(pArg, "sniper") == 0)
 			pSelf->Server()->ShowGoal(ClientId, SQL_SCORETYPE_SNIPER_SCORE);
+		else if(str_comp_nocase(pArg, "artillery") == 0)
+			pSelf->Server()->ShowGoal(ClientId, SQL_SCORETYPE_ARTILLERY_SCORE);
 		else if(str_comp_nocase(pArg, "smoker") == 0)
 			pSelf->Server()->ShowGoal(ClientId, SQL_SCORETYPE_SMOKER_SCORE);
 		else if(str_comp_nocase(pArg, "hunter") == 0)
@@ -4239,8 +4250,8 @@ void CGameContext::ChatHelp(int ClientId, const char *pHelpPage)
 		);
 		Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "chatresp", Buffer.buffer());
 		
-		Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "chatresp", "engineer, soldier, scientist, biologist, looper, medic, hero, ninja, mercenary, sniper, whitehole");
-		Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "chatresp", "smoker, hunter, bat, boomer, ghost, spider, ghoul, slug, voodoo, undead, witch.");
+		Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "chatresp", "engineer, soldier, scientist, biologist, looper, medic, hero, ninja, mercenary, sniper, artillery");
+		Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "chatresp", "whitehole, smoker, hunter, bat, boomer, ghost, spider, ghoul, slug, voodoo, undead, witch.");
 	}
 	else
 	{

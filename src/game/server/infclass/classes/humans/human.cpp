@@ -11,6 +11,8 @@
 #include <game/server/infclass/damage_context.h>
 #include <game/infclass/damage_type.h>
 #include <game/server/infclass/death_context.h>
+#include <game/server/infclass/entities/artillery-grenade.h>
+#include <game/server/infclass/entities/artillery-laser.h>
 #include <game/server/infclass/entities/biologist-mine.h>
 #include <game/server/infclass/entities/blinding-laser.h>
 #include <game/server/infclass/entities/bouncing-bullet.h>
@@ -42,6 +44,7 @@ CInfClassHuman::CInfClassHuman(CIcPlayer *pPlayer)
 	: CIcPlayerClass(pPlayer)
 {
 	m_BroadcastWhiteHoleReady = -100;
+	m_BroadcastAirStrikeReady = -100;
 
 	ResetUpgrades();
 }
@@ -126,6 +129,10 @@ bool CInfClassHuman::SetupSkin(const CSkinContext &Context, CWeakSkinInfo *pOutp
 		pOutput->UseCustomColor = 1;
 		pOutput->ColorBody = 255;
 		pOutput->ColorFeet = 0;
+		break;
+	case EPlayerClass::Artillery:
+		pOutput->pSkinName = "kintaro_2";
+		pOutput->UseCustomColor = 0;
 		break;
 	case EPlayerClass::None:
 		pOutput->pSkinName = "default";
@@ -926,6 +933,9 @@ void CInfClassHuman::OnShotgunFired(WeaponFireContext *pFireContext)
 	case EInfclassWeapon::MEDIC_SHOTGUN:
 		DamageType = EDamageType::MEDIC_SHOTGUN;
 		break;
+	case EInfclassWeapon::ARTILLERY_SHOTGUN:
+		ShotSpread = 4;
+		break;
 	default:
 		break;
 	}
@@ -992,6 +1002,12 @@ void CInfClassHuman::OnGrenadeFired(WeaponFireContext *pFireContext)
 		CIcProjectile *pProj = CIcProjectile::MakeGrenade(GameContext(), ProjStartPos, Direction, GetCid(), EDamageType::STUNNING_GRENADE);
 		pProj->SetFlashRadius(8);
 	}
+	else if(pFireContext->InfClassWeapon == EInfclassWeapon::ARTILLERY_GRENADE)
+	{
+		CArtilleryGrenade *pProj = new CArtilleryGrenade(GameContext(), (int)WEAPON_GRENADE, GetCid(), ProjStartPos, Direction * 2, (int)(Server()->TickSpeed() * GameServer()->Tuning()->m_GrenadeLifetime), 6, 0.f, EDamageType::ARTILLERY_GRENADE);
+		pProj->SetExplosive(true);
+		pProj->SetSoundImpact(SOUND_GRENADE_EXPLODE);
+	}
 	else
 	{
 		CIcProjectile::MakeGrenade(GameContext(), ProjStartPos, Direction, GetCid(), EDamageType::GRENADE);
@@ -1043,6 +1059,9 @@ void CInfClassHuman::OnLaserFired(WeaponFireContext *pFireContext)
 	case EInfclassWeapon::HERO_LASER:
 		CIcLaser::MakeLaser(GameServer(), GetPos(), Direction, StartEnergy, GetCid(), Damage, pFireContext->InfClassWeapon);
 		break;
+	case EInfclassWeapon::ARTILLERY_LASER:
+		new CArtilleryLaser(GameServer(), (int)WEAPON_LASER, GetCid(), GetPos() + Direction * GetProximityRadius() * 0.75f, Direction, (int)(Server()->TickSpeed() * GameServer()->Tuning()->m_GrenadeLifetime), 0, 0.f, EDamageType::ARTILLERY_LASER, m_HasAirStrike);
+		break;
 	default:
 		break;
 	}
@@ -1064,6 +1083,7 @@ void CInfClassHuman::GiveClassAttributes()
 	m_NinjaAmmoBuff = 0;
 
 	RemoveWhiteHole();
+	RemoveAirStrike();
 
 	CIcPlayerClass::GiveClassAttributes();
 
@@ -1154,6 +1174,12 @@ void CInfClassHuman::GiveClassAttributes()
 			// Give two extra grenades
 			m_NinjaAmmoBuff = 2;
 		}
+		break;
+	case EPlayerClass::Artillery:
+		m_pCharacter->GiveWeapon(WEAPON_SHOTGUN, -1);
+		m_pCharacter->GiveWeapon(WEAPON_GRENADE, -1);
+		m_pCharacter->GiveWeapon(WEAPON_LASER, -1);
+		m_pCharacter->SetActiveWeapon(WEAPON_SHOTGUN);
 		break;
 	case EPlayerClass::None:
 		m_pCharacter->GiveWeapon(WEAPON_HAMMER, -1);
@@ -1438,6 +1464,14 @@ void CInfClassHuman::BroadcastWeaponState() const
 			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCid(),
 				EBroadcastPriority::WEAPONSTATE, BROADCAST_DURATION_REALTIME,
 				_("The white hole is available!"),
+				NULL
+			);
+		}
+		else if(m_BroadcastAirStrikeReady + (2 * Server()->TickSpeed()) > Server()->Tick())
+		{
+			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCid(),
+				EBroadcastPriority::WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+				_("The airstrike is available!"),
 				NULL
 			);
 		}
@@ -2060,6 +2094,28 @@ void CInfClassHuman::GiveWhiteHole()
 void CInfClassHuman::RemoveWhiteHole()
 {
 	m_HasWhiteHole = false;
+
+	if(m_pCharacter)
+	{
+		m_pCharacter->SetSuperWeaponIndicatorEnabled(false);
+	}
+}
+
+bool CInfClassHuman::HasAirStrike() const
+{
+	return m_HasAirStrike;
+}
+
+void CInfClassHuman::GiveAirStrike()
+{
+	m_HasAirStrike = true;
+	m_BroadcastAirStrikeReady = Server()->Tick();
+	GameServer()->SendChatTarget_Localization(GetCid(), CHATCATEGORY_SCORE, _("The airstrike is ready, use the laser rifle to spawn it"), nullptr);
+}
+
+void CInfClassHuman::RemoveAirStrike()
+{
+	m_HasAirStrike = false;
 
 	if(m_pCharacter)
 	{

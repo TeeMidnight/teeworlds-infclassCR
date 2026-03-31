@@ -4601,6 +4601,10 @@ public:
 					str_copy(pMOTD, "== Best Sniper ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
 					break;
+				case SQL_SCORETYPE_ARTILLERY_SCORE:
+					str_copy(pMOTD, "== Best Artillery ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
+					pMOTD += str_length(pMOTD);
+					break;
 				case SQL_SCORETYPE_SMOKER_SCORE:
 					str_copy(pMOTD, "== Best Smoker ==\n32 best scores on this map\n\n", sizeof(aBuf)-(pMOTD-aBuf));
 					pMOTD += str_length(pMOTD);
@@ -5385,6 +5389,8 @@ public:
 				UpdateScore(pSqlServer, SQL_SCORETYPE_MERCENARY_SCORE, m_PlayerStatistics.m_MercenaryScore, "Mercenary");
 			if(m_PlayerStatistics.m_SniperScore > 0)
 				UpdateScore(pSqlServer, SQL_SCORETYPE_SNIPER_SCORE, m_PlayerStatistics.m_SniperScore, "Sniper");
+			if(m_PlayerStatistics.m_ArtilleryScore > 0)
+				UpdateScore(pSqlServer, SQL_SCORETYPE_SNIPER_SCORE, m_PlayerStatistics.m_ArtilleryScore, "Artillery");
 				
 			if(m_PlayerStatistics.m_SmokerScore > 0)
 				UpdateScore(pSqlServer, SQL_SCORETYPE_SMOKER_SCORE, m_PlayerStatistics.m_SmokerScore, "Smoker");

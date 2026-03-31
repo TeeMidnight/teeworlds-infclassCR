@@ -19,6 +19,7 @@ enum class EPlayerClass
 	Scientist,
 	Biologist,
 	Looper,
+	Artillery,
 
 	Smoker,
 	Boomer,
@@ -50,6 +51,7 @@ static constexpr EPlayerClass AllHumanClasses[]{
 	EPlayerClass::Scientist,
 	EPlayerClass::Biologist,
 	EPlayerClass::Looper,
+	EPlayerClass::Artillery,
 };
 
 static constexpr EPlayerClass AllInfectedClasses[]{
@@ -79,6 +81,7 @@ static constexpr EPlayerClass AllPlayerClasses[]{
 	EPlayerClass::Scientist,
 	EPlayerClass::Biologist,
 	EPlayerClass::Looper,
+	EPlayerClass::Artillery,
 
 	EPlayerClass::Smoker,
 	EPlayerClass::Boomer,

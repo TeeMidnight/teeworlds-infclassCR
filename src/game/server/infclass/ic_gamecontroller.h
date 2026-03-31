@@ -211,6 +211,7 @@ public:
 	int InfTurretDuration() const;
 	bool MercBombsEnabled() const;
 	bool WhiteHoleEnabled() const;
+	bool AirstrikeeEnabled() const;
 	float GetWhiteHoleLifeSpan() const;
 	int MinimumInfectedForRevival() const;
 	bool IsClassChooserEnabled() const;

@@ -33,6 +33,10 @@ enum class EDamageType
 	MERCENARY_GRENADE,
 	SCIENTIST_TELEPORT, // Self damage
 	STUNNING_GRENADE, // Only indirect kill via DEATH_TILE
+	ARTILLERY_SHOTGUN,
+	ARTILLERY_GRENADE,
+	ARTILLERY_LASER,
+	ARTILLERY_BOMB,
 
 	// Structures
 	LASER_WALL, // Engineer wall
