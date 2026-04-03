@@ -18,6 +18,7 @@ enum PLAYERCLASS
 	PLAYERCLASS_SCIENTIST,
 	PLAYERCLASS_BIOLOGIST,
 	PLAYERCLASS_LOOPER,
+	PLAYERCLASS_ARTILLERY,
 	END_HUMANCLASS,
 
 	START_INFECTEDCLASS,
@@ -92,6 +93,8 @@ const char *toString(EPlayerClass PlayerClass)
 		return "biologist";
 	case EPlayerClass::Looper:
 		return "looper";
+	case EPlayerClass::Artillery:
+		return "artillery";
 
 	case EPlayerClass::Smoker:
 		return "smoker";

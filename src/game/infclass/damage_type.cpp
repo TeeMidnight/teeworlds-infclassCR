@@ -23,6 +23,10 @@ static const char *gs_aDamageTypeNames[] = {
 	"mercenary_grenade",
 	"scientist_teleport",
 	"stunning_grenade",
+	"artillery_shotgun",
+	"artillery_grenade",
+	"artillery_laser",
+	"artillery_bomb",
 
 	"laser_wall",
 	"soldier_bomb",
@@ -106,18 +110,22 @@ int DamageTypeToWeapon(EDamageType DamageType, TAKEDAMAGEMODE *pMode)
 	case EDamageType::SHOTGUN:
 	case EDamageType::MEDIC_SHOTGUN:
 	case EDamageType::BIOLOGIST_SHOTGUN:
+	case EDamageType::ARTILLERY_SHOTGUN:
 		Weapon = WEAPON_SHOTGUN;
 		break;
 	case EDamageType::GRENADE:
 	case EDamageType::STUNNING_GRENADE:
 	case EDamageType::MERCENARY_GRENADE:
 	case EDamageType::INFECTED_GRENADE:
+	case EDamageType::ARTILLERY_GRENADE:
+	case EDamageType::ARTILLERY_BOMB:
 		Weapon = WEAPON_GRENADE;
 		break;
 	case EDamageType::LASER:
 	case EDamageType::SNIPER_RIFLE:
 	case EDamageType::SCIENTIST_LASER:
 	case EDamageType::LOOPER_LASER:
+	case EDamageType::ARTILLERY_LASER:
 		Weapon = WEAPON_LASER;
 		break;
 	case EDamageType::NINJA:

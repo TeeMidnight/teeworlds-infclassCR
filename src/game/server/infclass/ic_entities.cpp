@@ -22,6 +22,8 @@
 #include <game/server/infclass/entities/superweapon-indicator.h>
 #include <game/server/infclass/entities/turret.h>
 #include <game/server/infclass/entities/white-hole.h>
+#include <game/server/infclass/entities/artillery-grenade.h>
+#include <game/server/infclass/entities/artillery-laser.h>
 
 void CIcGameController::RegisterEntityTypes()
 {
@@ -47,6 +49,8 @@ void CIcGameController::RegisterEntityTypes()
 	GameWorld()->RegisterEntityType<CSuperWeaponIndicator>();
 	GameWorld()->RegisterEntityType<CTurret>();
 	GameWorld()->RegisterEntityType<CWhiteHole>();
+	GameWorld()->RegisterEntityType<CArtilleryGrenade>();
+	GameWorld()->RegisterEntityType<CArtilleryLaser>();
 }
 
 void CIcGameController::DestroyChildEntities(int OwnerId)
@@ -77,6 +81,8 @@ void CIcGameController::DestroyChildEntities(int OwnerId)
 		CSuperWeaponIndicator::EntityId,
 		CTurret::EntityId,
 		CWhiteHole::EntityId,
+		CArtilleryLaser::EntityId,
+		CArtilleryGrenade::EntityId,
 	};
 
 	const icArray<int, 32> aKeepTypes = {

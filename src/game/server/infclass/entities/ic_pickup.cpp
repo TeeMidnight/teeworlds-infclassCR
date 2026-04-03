@@ -135,6 +135,14 @@ SClassUpgrade GetUpgradeInfo(const PlayerUpgradesArray &Upgrades)
 		case EUpgradeType::EngineerWallTimeReductionDecrease:
 			UpgradeInfo.AddPickup(POWERUP_WEAPON, WEAPON_HAMMER);
 			break;
+		
+		case EUpgradeType::ArtilleryGrenadeRegen:
+			UpgradeInfo.AddPickup(POWERUP_WEAPON, WEAPON_GRENADE);
+			break;
+		case EUpgradeType::ArtilleryLaserBomb:
+		case EUpgradeType::ArtilleryLaserSuperAirStrike:
+			UpgradeInfo.AddPickup(POWERUP_WEAPON, WEAPON_LASER);
+			break;
 		}
 	}
 

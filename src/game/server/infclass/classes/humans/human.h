@@ -73,6 +73,9 @@ public:
 	bool HasWhiteHole() const;
 	void GiveWhiteHole();
 	void RemoveWhiteHole();
+	bool HasAirStrike() const;
+	void GiveAirStrike();
+	void RemoveAirStrike();
 
 	void GiveInvisibility(float Duration, int FromCID);
 	void ResetInvisibility();
@@ -145,6 +148,8 @@ private:
 	int m_NinjaComboFirstTick = 0;
 	icArray<CEntity *, 24> m_apHitObjects;
 	bool m_HasWhiteHole = false;
+	int m_BroadcastAirStrikeReady;
+	bool m_HasAirStrike = false;
 	int m_InvisibilityStartTick{};
 	int m_InvisibilityEndTick{};
 

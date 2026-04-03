@@ -34,4 +34,7 @@ enum class EUpgradeType
 	EngineerWallTime,
 	EngineerWallDamage,
 	EngineerWallTimeReductionDecrease,
+	ArtilleryGrenadeRegen,
+	ArtilleryLaserBomb,
+	ArtilleryLaserSuperAirStrike,
 };

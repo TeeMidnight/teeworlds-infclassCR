@@ -910,6 +910,12 @@ set_glob(GAME_SERVER GLOB_RECURSE src/game/server
   infclass/death_context.h
   infclass/debug-bot-player.cpp
   infclass/debug-bot-player.h
+  infclass/entities/artillery-grenade.cpp
+  infclass/entities/artillery-grenade.h
+  infclass/entities/artillery-laser.cpp
+  infclass/entities/artillery-laser.h
+  infclass/entities/artillery-projectile.cpp
+  infclass/entities/artillery-projectile.h
   infclass/entities/biologist-laser.cpp
   infclass/entities/biologist-laser.h
   infclass/entities/biologist-mine.cpp

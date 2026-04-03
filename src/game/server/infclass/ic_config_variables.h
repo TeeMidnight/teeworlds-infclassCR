@@ -217,6 +217,21 @@ MACRO_CONFIG_INT(InfBotDebugLevel, inf_bot_debug_level, 0, 0, 4, CFGFLAG_SERVER,
 MACRO_CONFIG_INT(InfBotRemoveDelay, inf_bot_remove_delay, 7, 0, 30, CFGFLAG_SERVER, "Delay the bots removal (on lives==0) for X seconds")
 MACRO_CONFIG_INT(InfBotBackjump, inf_bot_backjump, 1, 0, 1, CFGFLAG_SERVER, "Enable backjumps")
 MACRO_CONFIG_INT(InfBotCheckPos, inf_bot_check_pos, 0, 0, 1, CFGFLAG_SERVER, "Enable 'checked pos' logic for bots")
+
+MACRO_CONFIG_INT(InfMinPlayersForAirStrike, inf_min_players_for_airstrike, 3, 0, 64, CFGFLAG_SERVER, "我是5号占位符")
+MACRO_CONFIG_INT(InfAirStrikeMinimalKills, inf_airstrike_minimal_kills, 3, 0, 1<<10, CFGFLAG_SERVER, "我是6号占位符")
+MACRO_CONFIG_INT(InfAirStrikeProbability, inf_airstrike_probability, 40, 0, 100, CFGFLAG_SERVER, "我是7号占位符")
+MACRO_CONFIG_INT(InfAirStrikeInterval, inf_airstrike_interval, 150, 0, 1<<20, CFGFLAG_SERVER, "我是8号占位符")
+MACRO_CONFIG_INT(InfAirStrikeIntervalSuper, inf_airstrike_interval_super, 200, 0, 1<<20, CFGFLAG_SERVER, "我是9号占位符")
+MACRO_CONFIG_FLOAT(InfAirStrikeSpacing, inf_airstrike_spacing, 96.f, 0, 1<<20, CFGFLAG_SERVER, "我是10号占位符")
+MACRO_CONFIG_FLOAT(InfAirStrikeSpacingSuper, inf_airstrike_spacing_super, 96.f, 0, 1<<20, CFGFLAG_SERVER, "我是11号占位符")
+MACRO_CONFIG_INT(InfAirStrikeRadius, inf_airstrike_radius, 3, 0, 1<<10, CFGFLAG_SERVER, "我是12号占位符")
+MACRO_CONFIG_INT(InfAirStrikeRadiusSuper, inf_airstrike_radius_super, 4, 0, 1<<10, CFGFLAG_SERVER, "我是13号占位符")
+MACRO_CONFIG_INT(InfAirStrikeNum, inf_airstrike_num, 3, 0, 1<<20, CFGFLAG_SERVER, "我是14号占位符")
+MACRO_CONFIG_INT(InfAirStrikeNumSuper, inf_airstrike_num_super, 15, 0, 1<<20, CFGFLAG_SERVER, "我是15号占位符")
+MACRO_CONFIG_INT(InfAirStrikePerBomb, inf_airstrike_per_bomb, 1, 0, 1<<10, CFGFLAG_SERVER, "我是16号占位符")
+MACRO_CONFIG_INT(InfAirStrikePerBombSuper, inf_airstrike_per_bomb_super, 1, 0, 1<<10, CFGFLAG_SERVER, "我是17号占位符")
+
 MACRO_CONFIG_INT(InfSurvivalInfectedSpawningDelay, inf_survival_infected_spawning_delay, 7, 0, 30, CFGFLAG_SERVER, "The number of seconds for humans to pull themselves together")
 
 MACRO_CONFIG_INT(InfMaxHiveHooks, inf_hive_hooks, 3, 0, 64, CFGFLAG_SERVER, "Max concurrent hooks per player for Survival rounds")

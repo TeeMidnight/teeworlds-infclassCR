@@ -1372,12 +1372,13 @@ bool CIcGameController::IsSupportClass(EPlayerClass PlayerClass)
 {
 	switch(PlayerClass)
 	{
-	case EPlayerClass::Ninja:
-	case EPlayerClass::Mercenary:
-	case EPlayerClass::Sniper:
-		return true;
-	default:
-		return false;
+		case EPlayerClass::Ninja:
+		case EPlayerClass::Mercenary:
+		case EPlayerClass::Sniper:
+		case EPlayerClass::Artillery:
+			return true;
+		default:
+			return false;
 	}
 }
 
@@ -1461,6 +1462,8 @@ const char *CIcGameController::GetClassPluralName(EPlayerClass PlayerClass)
 		return "biologists";
 	case EPlayerClass::Looper:
 		return "loopers";
+	case EPlayerClass::Artillery:
+		return "artillery";
 
 	case EPlayerClass::Smoker:
 		return "smokers";
@@ -1521,6 +1524,8 @@ const char *CIcGameController::GetClassDisplayName(EPlayerClass PlayerClass, con
 		return _("Biologist");
 	case EPlayerClass::Looper:
 		return _("Looper");
+	case EPlayerClass::Artillery:
+		return _("Artillery");
 
 	case EPlayerClass::Smoker:
 		return _("Smoker");
@@ -1627,6 +1632,8 @@ const char *CIcGameController::GetClassPluralDisplayName(EPlayerClass PlayerClas
 		return _("Biologists");
 	case EPlayerClass::Looper:
 		return _("Loopers");
+	case EPlayerClass::Artillery:
+		return _("Artilleries");
 
 	case EPlayerClass::Smoker:
 		return _("Smokers");
@@ -1690,6 +1697,8 @@ EPlayerClass CIcGameController::MenuClassToPlayerClass(int MenuClass)
 		return EPlayerClass::Biologist;
 	case CMapConverter::MENUCLASS_LOOPER:
 		return EPlayerClass::Looper;
+	case CMapConverter::MENUCLASS_ARTILLERY:
+		return EPlayerClass::Artillery;
 	default:
 		return EPlayerClass::Invalid;
 	}
@@ -6046,6 +6055,20 @@ bool CIcGameController::WhiteHoleEnabled() const
 	return Config()->m_InfWhiteHoleProbability > 0;
 }
 
+bool CIcGameController::AirstrikeEnabled() const
+{
+	if(GetRoundType() == ERoundType::Survival)
+		return true;
+
+	if(GetRoundType() == ERoundType::Fast)
+		return false;
+
+	if(Server()->GetActivePlayerCount() < static_cast<uint32_t>(Config()->m_InfMinPlayersForAirStrike))
+		return false;
+
+	return Config()->m_InfAirStrikeProbability > 0;
+}
+
 float CIcGameController::GetWhiteHoleLifeSpan() const
 {
 	if(GetRoundType() == ERoundType::Survival)
@@ -7042,6 +7065,11 @@ bool CIcGameController::GetClassHelpPage(dynamic_string *pOutput, const char *pL
 							 " low-range laser rifle with a high fire rate."));
 		AddLine(_C("Looper", "They can also jump two times in the air."));
 		break;
+	case EPlayerClass::Artillery:
+		AddLine(_C("Artillery", "我是1号占位符"
+							 "我是2号占位符"));
+		AddLine(_C("Artillery", "我是3号占位符"));
+		break;
 	case EPlayerClass::Smoker:
 		AddLine(_C("Smoker", "Smoker has a powerful hook that hurts humans and sucks their blood,"
 							 " restoring the Smoker's health."));
@@ -7165,6 +7193,7 @@ void CIcGameController::SnapMapMenu(int SnappingClient, CNetObj_GameInfo *pGameI
 				Hero++;
 				break;
 			case EPlayerClass::Looper:
+			case EPlayerClass::Artillery:
 				Defender++;
 				break;
 			default:
@@ -8219,6 +8248,9 @@ void CIcGameController::InitWeapons()
 	SetWeaponForce(EInfclassWeapon::MERCENARY_UPGRADE_LASER, 0);
 	SetWeaponForce(EInfclassWeapon::BLINDING_LASER, GetWeaponForce(EInfclassWeapon::LASER));
 	SetWeaponForce(EInfclassWeapon::TRANQUILIZER_RIFLE, GetWeaponForce(EInfclassWeapon::LASER));
+	SetWeaponForce(EInfclassWeapon::ARTILLERY_SHOTGUN, 7);
+	SetWeaponForce(EInfclassWeapon::ARTILLERY_GRENADE, GetWeaponForce(EInfclassWeapon::GRENADE));
+	SetWeaponForce(EInfclassWeapon::ARTILLERY_LASER, GetWeaponForce(EInfclassWeapon::LASER));
 
 	SetFireDelay(EInfclassWeapon::NONE, 0);
 	SetFireDelay(EInfclassWeapon::HAMMER, 125);
@@ -8251,6 +8283,9 @@ void CIcGameController::InitWeapons()
 	SetFireDelay(EInfclassWeapon::MERCENARY_UPGRADE_LASER, 200);
 	SetFireDelay(EInfclassWeapon::BLINDING_LASER, GetFireDelay(EInfclassWeapon::LASER));
 	SetFireDelay(EInfclassWeapon::TRANQUILIZER_RIFLE, GetFireDelay(EInfclassWeapon::LASER));
+	SetFireDelay(EInfclassWeapon::ARTILLERY_SHOTGUN, 500);
+	SetFireDelay(EInfclassWeapon::ARTILLERY_GRENADE, 400);
+	SetFireDelay(EInfclassWeapon::ARTILLERY_LASER, 500);
 
 	SetAmmoRegenTime(EInfclassWeapon::NONE, 0);
 	SetAmmoRegenTime(EInfclassWeapon::HAMMER, 0);
@@ -8284,6 +8319,9 @@ void CIcGameController::InitWeapons()
 	SetAmmoRegenTime(EInfclassWeapon::LOOPER_GRENADE, 5000);
 	SetAmmoRegenTime(EInfclassWeapon::BLINDING_LASER, 10000);
 	SetAmmoRegenTime(EInfclassWeapon::TRANQUILIZER_RIFLE, 1000);
+	SetAmmoRegenTime(EInfclassWeapon::ARTILLERY_SHOTGUN, 1500);
+	SetAmmoRegenTime(EInfclassWeapon::ARTILLERY_GRENADE, 2500);
+	SetAmmoRegenTime(EInfclassWeapon::ARTILLERY_LASER, 5000);
 
 	SetMaxAmmo(EInfclassWeapon::NONE, -1);
 	SetMaxAmmo(EInfclassWeapon::HAMMER, -1);
@@ -8316,6 +8354,9 @@ void CIcGameController::InitWeapons()
 	SetMaxAmmo(EInfclassWeapon::LOOPER_GRENADE, 10);
 	SetMaxAmmo(EInfclassWeapon::BLINDING_LASER, 10);
 	SetMaxAmmo(EInfclassWeapon::TRANQUILIZER_RIFLE, 10);
+	SetMaxAmmo(EInfclassWeapon::ARTILLERY_SHOTGUN, 10);
+	SetMaxAmmo(EInfclassWeapon::ARTILLERY_GRENADE, 8);
+	SetMaxAmmo(EInfclassWeapon::ARTILLERY_LASER, 5);
 
 	// Infected weapons
 	SetWeaponForce(EInfclassWeapon::JAWS, GetWeaponForce(EInfclassWeapon::HAMMER));
@@ -8393,6 +8434,8 @@ bool CIcGameController::GetPlayerClassEnabled(EPlayerClass PlayerClass) const
 		return Config()->m_InfEnableSniper;
 	case EPlayerClass::Looper:
 		return Config()->m_InfEnableLooper;
+	case EPlayerClass::Artillery:
+		return Config()->m_InfEnableLooper; // 我是4号占位符
 	default:
 		break;
 	}

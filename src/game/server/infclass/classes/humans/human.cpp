@@ -11,6 +11,8 @@
 #include <game/infclass/damage_type.h>
 #include <game/server/infclass/damage_context.h>
 #include <game/server/infclass/death_context.h>
+#include <game/server/infclass/entities/artillery-grenade.h>
+#include <game/server/infclass/entities/artillery-laser.h>
 #include <game/server/infclass/entities/biologist-mine.h>
 #include <game/server/infclass/entities/blinding-laser.h>
 #include <game/server/infclass/entities/bouncing-bullet.h>
@@ -44,6 +46,7 @@ MACRO_ALLOC_POOL_ID_IMPL(CInfClassHuman, MAX_CLIENTS)
 CInfClassHuman::CInfClassHuman(CIcPlayer *pPlayer) : CIcPlayerClass(pPlayer)
 {
 	m_BroadcastWhiteHoleReady = -100;
+	m_BroadcastAirStrikeReady = -100;
 
 	ResetUpgrades();
 }
@@ -128,6 +131,10 @@ bool CInfClassHuman::SetupSkin(const CSkinContext &Context, CWeakSkinInfo *pOutp
 		pOutput->UseCustomColor = 1;
 		pOutput->ColorBody = 255;
 		pOutput->ColorFeet = 0;
+		break;
+	case EPlayerClass::Artillery:
+		pOutput->pSkinName = "kintaro_2";
+		pOutput->UseCustomColor = 0;
 		break;
 	case EPlayerClass::None:
 		pOutput->pSkinName = "default";
@@ -378,6 +385,18 @@ PlayerUpgradesArray GetUpgrades(EPlayerClass PlayerClass, int UpgradeLevel)
 			break;
 		}
 		break;
+	case EPlayerClass::Artillery:
+		switch(UpgradeLevel)
+		{
+		case 1:
+			return {EUpgradeType::ArtilleryGrenadeRegen};
+		case 2:
+			return {EUpgradeType::ArtilleryLaserBomb};
+		case 3:
+			return {EUpgradeType::ArtilleryLaserSuperAirStrike};
+		default:
+			break;
+		}
 	default:
 		break;
 	}
@@ -425,6 +444,27 @@ void CInfClassHuman::CheckSuperWeaponAccess()
 		{
 			// Scientist-laser.cpp will make it unavailable after usage and reset player kills
 			GameServer()->SendChatTarget_Localization(GetCid(), CHATCATEGORY_SCORE, _("White hole found, adjusting scientific parameters..."), nullptr);
+			m_pCharacter->SetSuperWeaponIndicatorEnabled(true);
+		}
+	}
+	else if(GetPlayerClass() == EPlayerClass::Artillery)
+	{
+		if(!GameController()->AirstrikeEnabled() || m_pCharacter->HasSuperWeaponIndicator())
+		{
+			// Can't receive a super weapon while having one available
+			return;
+		}
+
+		// enable white hole probabilities
+		if(Kills < Config()->m_InfAirStrikeMinimalKills)
+		{
+			return;
+		}
+
+		if(random_prob(Config()->m_InfAirStrikeProbability / 100.0f))
+		{
+			// Scientist-laser.cpp will make it unavailable after usage and reset player kills
+			GameServer()->SendChatTarget_Localization(GetCid(), CHATCATEGORY_SCORE, _("我是18号占位符"), nullptr);
 			m_pCharacter->SetSuperWeaponIndicatorEnabled(true);
 		}
 	}
@@ -828,6 +868,7 @@ void CInfClassHuman::OnKilledCharacter(CIcCharacter *pVictim, const DeathContext
 		}
 		break;
 	case EPlayerClass::Scientist:
+	case EPlayerClass::Artillery:
 		CheckSuperWeaponAccess();
 		break;
 	default:
@@ -1152,6 +1193,9 @@ void CInfClassHuman::OnShotgunFired(WeaponFireContext *pFireContext)
 			SpreadingValue *= 0.8f;
 		}
 		break;
+	case EInfclassWeapon::ARTILLERY_SHOTGUN:
+		ShotSpread = 4;
+		break;
 	default:
 		break;
 	}
@@ -1252,6 +1296,12 @@ void CInfClassHuman::OnGrenadeFired(WeaponFireContext *pFireContext)
 		CIcProjectile *pProj = CIcProjectile::MakeGrenade(GameContext(), ProjStartPos, Direction, GetCid(), EDamageType::BIOLOGIST_MINE);
 		pProj->SetSoundImpact(SOUND_LASER_BOUNCE);
 	}
+	else if(pFireContext->InfClassWeapon == EInfclassWeapon::ARTILLERY_GRENADE)
+	{
+		CArtilleryGrenade *pProj = new CArtilleryGrenade(GameContext(), (int)WEAPON_GRENADE, GetCid(), ProjStartPos, Direction * 2, (int)(Server()->TickSpeed() * GameServer()->Tuning()->m_GrenadeLifetime), 6, 0.f, EDamageType::ARTILLERY_GRENADE);
+		pProj->SetExplosive(true);
+		pProj->SetSoundImpact(SOUND_GRENADE_EXPLODE);
+	}
 	else
 	{
 		CIcProjectile::MakeGrenade(GameContext(), ProjStartPos, Direction, GetCid(), EDamageType::GRENADE);
@@ -1323,6 +1373,9 @@ void CInfClassHuman::OnLaserFired(WeaponFireContext *pFireContext)
 	case EInfclassWeapon::HERO_LASER:
 		CIcLaser::MakeLaser(GameServer(), GetPos(), Direction, StartEnergy, GetCid(), Damage, pFireContext->InfClassWeapon);
 		break;
+	case EInfclassWeapon::ARTILLERY_LASER:
+		new CArtilleryLaser(GameServer(), (int)WEAPON_LASER, GetCid(), GetPos() + Direction * GetProximityRadius() * 0.75f, Direction, (int)(Server()->TickSpeed() * GameServer()->Tuning()->m_GrenadeLifetime), 0, 0.f, EDamageType::ARTILLERY_LASER, m_HasAirStrike);
+		break;
 	default:
 		break;
 	}
@@ -1347,6 +1400,7 @@ void CInfClassHuman::GiveClassAttributes()
 	m_SurvivalNoHookEndTick = 0;
 
 	RemoveWhiteHole();
+	RemoveAirStrike();
 
 	CIcPlayerClass::GiveClassAttributes();
 
@@ -1445,6 +1499,12 @@ void CInfClassHuman::GiveClassAttributes()
 			// Give two extra grenades
 			m_NinjaAmmoBuff = 2;
 		}
+		break;
+	case EPlayerClass::Artillery:
+		m_pCharacter->GiveWeapon(WEAPON_SHOTGUN, -1);
+		m_pCharacter->GiveWeapon(WEAPON_GRENADE, -1);
+		m_pCharacter->GiveWeapon(WEAPON_LASER, -1);
+		m_pCharacter->SetActiveWeapon(WEAPON_SHOTGUN);
 		break;
 	case EPlayerClass::None:
 		m_pCharacter->GiveWeapon(WEAPON_HAMMER, -1);
@@ -1746,7 +1806,16 @@ void CInfClassHuman::BroadcastWeaponState() const
 			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCid(),
 				EBroadcastPriority::WEAPONSTATE, BROADCAST_DURATION_REALTIME,
 				_("The white hole is available!"),
-				nullptr);
+				NULL
+			);
+		}
+		else if(m_BroadcastAirStrikeReady + (2 * Server()->TickSpeed()) > Server()->Tick())
+		{
+			GameServer()->SendBroadcast_Localization(GetPlayer()->GetCid(),
+				EBroadcastPriority::WEAPONSTATE, BROADCAST_DURATION_REALTIME,
+				_("我是20号占位符"),
+				NULL
+			);
 		}
 		else if(NumMines > 0 && !pOwnWhiteHole)
 		{
@@ -2437,6 +2506,28 @@ void CInfClassHuman::RemoveWhiteHole()
 	}
 }
 
+bool CInfClassHuman::HasAirStrike() const
+{
+	return m_HasAirStrike;
+}
+
+void CInfClassHuman::GiveAirStrike()
+{
+	m_HasAirStrike = true;
+	m_BroadcastAirStrikeReady = Server()->Tick();
+	GameServer()->SendChatTarget_Localization(GetCid(), CHATCATEGORY_SCORE, _("我是19号占位符"), nullptr);
+}
+
+void CInfClassHuman::RemoveAirStrike()
+{
+	m_HasAirStrike = false;
+
+	if(m_pCharacter)
+	{
+		m_pCharacter->SetSuperWeaponIndicatorEnabled(false);
+	}
+}
+
 void CInfClassHuman::GiveInvisibility(float Duration, int FromCID)
 {
 	m_InvisibilityStartTick = Server()->Tick() + Server()->TickSpeed() * 3.0f;
@@ -2753,6 +2844,16 @@ void CInfClassHuman::GiveUpgrades(const PlayerUpgradesArray &NewUpgrades)
 			break;
 		case EUpgradeType::EngineerWallTimeReductionDecrease:
 			AddMessage(_("When the Infected hit your wall, the duration reduction of your wall is decreased by 75%"));
+			break;
+		case EUpgradeType::ArtilleryGrenadeRegen:
+			AddMessage(_("我是21号占位符"));
+			m_WeaponRegenIntervalModifier[WEAPON_GRENADE] = 0.75f;
+			break;
+		case EUpgradeType::ArtilleryLaserBomb:
+			AddMessage(_("我是22号占位符"));
+			break;
+		case EUpgradeType::ArtilleryLaserSuperAirStrike:
+			AddMessage(_("我是23号占位符"));
 			break;
 		}
 	}
