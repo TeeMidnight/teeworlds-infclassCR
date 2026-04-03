@@ -8435,7 +8435,7 @@ bool CIcGameController::GetPlayerClassEnabled(EPlayerClass PlayerClass) const
 	case EPlayerClass::Looper:
 		return Config()->m_InfEnableLooper;
 	case EPlayerClass::Artillery:
-		return Config()->m_InfEnableLooper; // 我是4号占位符
+		return Config()->m_InfEnableArtillery;
 	default:
 		break;
 	}
