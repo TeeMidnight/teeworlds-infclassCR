@@ -4855,7 +4855,7 @@ void CCharacter::ClassSpawnAttributes()
 		}
 		break;
 	case PLAYERCLASS_GHOST:
-		m_Health = 10;
+		m_Health = g_Config.m_InfGhostHealth;
 		m_Armor = 0;
 		RemoveAllGun();
 		m_aWeapons[WEAPON_HAMMER].m_Got = true;
