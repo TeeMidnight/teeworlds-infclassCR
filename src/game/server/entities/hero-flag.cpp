@@ -63,6 +63,8 @@ void CHeroFlag::GiveGift(CCharacter* pHero)
 	pHero->GiveWeapon(WEAPON_SHOTGUN, -1);
 	pHero->GiveWeapon(WEAPON_GRENADE, -1);
 	pHero->GiveWeapon(WEAPON_RIFLE, -1);
+	pHero->m_HeroResistance += 1;
+	GameServer()->SendBroadcast_Localization(pHero->GetPlayer()->GetCID(), BROADCAST_PRIORITY_EFFECTSTATE, BROADCAST_DURATION_REALTIME, _("Your resistance: {sec:Resistance}"), "Resistance", &pHero->m_HeroResistance, NULL);
 	SetCoolDown();
 
 	pHero->SetEmote(EMOTE_HAPPY, Server()->Tick() + Server()->TickSpeed());
@@ -91,7 +93,6 @@ void CHeroFlag::GiveGift(CCharacter* pHero)
 		return;
 
 	// Find other players	
-	pHero->m_HeroResistance += 1;
 	GameServer()->SendBroadcast_Localization(-1, BROADCAST_PRIORITY_GAMEANNOUNCE, BROADCAST_DURATION_GAMEANNOUNCE, _("The Hero found the flag!"), NULL);
 	GameServer()->CreateSoundGlobal(SOUND_CTF_CAPTURE);
 	GameServer()->FlagCollected();
