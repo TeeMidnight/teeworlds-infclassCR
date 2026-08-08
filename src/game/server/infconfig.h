@@ -127,7 +127,7 @@ MACRO_CONFIG_INT(FunRoundZageProba, funround_zage_proba, 2, 0, 100, CFGFLAG_SERV
 MACRO_CONFIG_INT(FunRoundProba, funround_proba, 6, 0, 1000, CFGFLAG_SERVER, "Fun round proba(‰)")
 // class config
 MACRO_CONFIG_INT(InfFreezerReslowlyTime, inf_freezer_reslowly_time, 200, 0, 100000, CFGFLAG_SERVER, "tick")
-MACRO_CONFIG_INT(InfMagicianMagicTick, inf_magician_magic_tick, 250, 0, 1000, CFGFLAG_SERVER, "tick")
+MACRO_CONFIG_INT(InfMagicianMagicTick, inf_magician_magic_tick, 250, 0, 100000, CFGFLAG_SERVER, "tick")
 
 MACRO_CONFIG_INT(InfDisguiseTimer, inf_disguise_time, 30, 10, 1000, CFGFLAG_SERVER, "Zage disguise time in seconds")
 
@@ -228,6 +228,7 @@ MACRO_CONFIG_INT(InfMedicReviveMinZombie, inf_medic_revive_min_zombie, 5, 0, 10,
 MACRO_CONFIG_INT(InfPoliceShieldHealth, inf_police_shield_health, 50, 0, 10000, CFGFLAG_SERVER, "the health of police shield")
 MACRO_CONFIG_INT(InfBoomerExplodeRadius, inf_boomer_explode_radius, 80, 0, 8000, CFGFLAG_SERVER, "the radius of boomer explode")
 MACRO_CONFIG_INT(InfSlugHealth, inf_slug_health, 10, 0, 10000, CFGFLAG_SERVER, "the health of slug")
+MACRO_CONFIG_INT(InfGhostHealth, inf_ghost_health, 10, 0, 10000, CFGFLAG_SERVER, "the health of ghost")
 MACRO_CONFIG_INT(InfHunterSpeed, inf_hunter_speed, 0, 0, 1000, CFGFLAG_SERVER, "the speed increase of hunter")//指的是比默认快多少%
 MACRO_CONFIG_INT(InfBoomerDecreaseSpeed, inf_boomer_decrease_speed, 0, 0, 100, CFGFLAG_SERVER, "the speed decrease of boomer")
 MACRO_CONFIG_INT(InfUndeadFreeze, inf_undead_freeze, 10, 0, 100, CFGFLAG_SERVER, "the freeze time of undead")
