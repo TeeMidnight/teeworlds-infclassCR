@@ -2483,7 +2483,7 @@ int CServer::Run()
 				for(int c = 0; c < g_Config.m_SvMaxClients; c++)
 				{
 					if(m_aClients[c].m_State >= CClient::STATE_READY && m_aClients[c].m_Session.m_MuteTick > 0)
-						m_aClients[i].m_Session.m_MuteTick--;
+						m_aClients[c].m_Session.m_MuteTick--;
 					if(m_aClients[c].m_State != CClient::STATE_INGAME)
 						continue;
 					bool ClientHadInput = false;
