@@ -30,6 +30,7 @@ MACRO_CONFIG_INT(SvVoteKickBantime, sv_vote_kick_bantime, 5, 0, 1440, CFGFLAG_SE
 MACRO_CONFIG_INT(SvMapUpdateRate, sv_mapupdaterate, 5, 1, 100, CFGFLAG_SERVER, "(Tw32) real id <-> vanilla id players map update rate")
 
 MACRO_CONFIG_INT(SvSkinStealAction, sv_skinstealaction, 0, 0, 1, CFGFLAG_SERVER, "How to punish skin stealing (currently only 1 = force pinky)")
+MACRO_CONFIG_INT(SvChatAntispam, sv_chat_antispam, 0, 0, 1, CFGFLAG_SERVER, "Antispam chat")
 
 // debug
 #ifdef CONF_DEBUG // this one can crash the server if not used correctly

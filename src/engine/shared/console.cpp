@@ -187,10 +187,10 @@ char CConsole::NextParam(const char *&pFormat)
 	{
 		pFormat++;
 
-		if (*pFormat == '<')
+		if (*pFormat == '<' || *pFormat == '[')
 		{
 			// skip bracket contents
-			for (; *pFormat != '>'; pFormat++)
+			for (; *pFormat != '>' && *pFormat != ']'; pFormat++)
 			{
 				if (!*pFormat)
 					return *pFormat;
@@ -809,13 +809,13 @@ void CConsole::GenerateUsage(const char* pParam, char* pUsage)
 		char ParamType = *pParam;
 		pParam++;
 
-		if (*pParam == '<')
+		if (*pParam == '<' || *pParam == '[')
 		{
 			if(ParamType == 'i')
 			{
 				pParam++;
 				
-				for (; *pParam != '>'; pParam++)
+				for (; *pParam != '>' || *pParam == ']'; pParam++)
 				{
 					if (*pParam)
 					{
@@ -836,7 +836,7 @@ void CConsole::GenerateUsage(const char* pParam, char* pUsage)
 				pUsage++;
 				pParam++;
 				
-				for (; *pParam != '>'; pParam++)
+				for (; *pParam != '>' && *pParam != ']'; pParam++)
 				{
 					if (*pParam)
 					{
