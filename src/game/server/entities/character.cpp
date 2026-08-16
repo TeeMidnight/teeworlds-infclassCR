@@ -142,8 +142,9 @@ CCharacter::CCharacter(CGameWorld *pWorld, IConsole *pConsole)
 	m_BroadcastElasticHoleReady = -100;
 	m_BroadcastHealBoomReady = -100;
 	m_BroadcastAirStrikeReady = -100;
-	m_Disguised = false;
+	m_Disguised = false;	
 	m_HeroResistance = 0;
+	m_MagicResistance = 0;
 
 	m_pHeroFlag = nullptr;
 	m_ResetKillsTime = 0;
@@ -432,7 +433,7 @@ void CCharacter::HandleNinja()
 				if (m_NumObjectsHit < 10)
 					m_apHitObjects[m_NumObjectsHit++] = aEnts[i];
 
-				aEnts[i]->TakeDamage(vec2(0, -10.0f), min(g_pData->m_Weapons.m_Ninja.m_pBase->m_Damage + m_NinjaStrengthBuff, 20), m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
+				aEnts[i]->TakeDamage(vec2(0, -10.0f), min(g_pData->m_Weapons.m_Ninja.m_pBase->m_Damage + m_Ninjaacceleration/2 + m_NinjaStrengthBuff, 20), m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
 			}
 		}
 	}
@@ -663,6 +664,19 @@ void CCharacter::UpdateTuningParam()
 		pTuningParams->m_AirControlAccel = pTuningParams->m_AirControlAccel * (1.0f - Factor);
 		pTuningParams->m_HookDragAccel = pTuningParams->m_HookDragAccel * (1.0f - Factor);
 		pTuningParams->m_HookDragSpeed = pTuningParams->m_HookDragSpeed * (1.0f - Factor);
+	}
+
+		if (GetClass() == PLAYERCLASS_NINJA)
+	{
+		float Factor = m_Ninjaacceleration * 0.05f;
+		pTuningParams->m_GroundControlSpeed = pTuningParams->m_GroundControlSpeed * (1.0f + Factor);
+		pTuningParams->m_GroundControlAccel = pTuningParams->m_GroundControlAccel * (1.0f + Factor);
+		pTuningParams->m_GroundJumpImpulse = pTuningParams->m_GroundJumpImpulse * (1.0f + Factor);
+		pTuningParams->m_AirJumpImpulse = pTuningParams->m_AirJumpImpulse * (1.0f + Factor);
+		pTuningParams->m_AirControlSpeed = pTuningParams->m_AirControlSpeed * (1.0f + Factor);
+		pTuningParams->m_AirControlAccel = pTuningParams->m_AirControlAccel * (1.0f + Factor);
+		pTuningParams->m_HookDragAccel = pTuningParams->m_HookDragAccel * (1.0f + Factor);
+		pTuningParams->m_HookDragSpeed = pTuningParams->m_HookDragSpeed * (1.0f + Factor);
 	}
 
 	if (GetClass() == PLAYERCLASS_MAGICIAN && m_IsMagic)
@@ -1047,6 +1061,10 @@ void CCharacter::FireWeapon()
 				m_DartDir = Direction;
 				m_DartLifeSpan = g_pData->m_Weapons.m_Ninja.m_Movetime * Server()->TickSpeed() / 1000;
 				m_DartOldVelAmount = length(m_Core.m_Vel);
+				if (g_Config.m_InfNinjaAcceleration == 1 & m_Ninjaacceleration < 6)
+                {
+                m_Ninjaacceleration += 1;
+                }
 
 				GameServer()->CreateSound(m_Pos, SOUND_NINJA_HIT);
 			}
@@ -1683,6 +1701,10 @@ void CCharacter::FireWeapon()
 				GameServer()->CreateSound(PortalPos, SOUND_CTF_RETURN);
 				new CLaserTeleport(GameWorld(), PortalPos, OldPos);
 				m_MagicTick = g_Config.m_InfMagicianMagicTick;
+				if (m_MagicResistance <= 2)
+                {
+                	m_MagicResistance += 1;
+                }
 			}
 		}
 		else if (GetClass() == PLAYERCLASS_ARTILLERY)
@@ -2244,6 +2266,11 @@ void CCharacter::Tick()
 	//~ else
 	//~ m_InWater = 0;
 	// Delayed Death
+	if (GetClass() == PLAYERCLASS_NINJA && g_Config.m_InfNinjaAcceleration == 1 && m_Ninjaacceleration > 0 && (Server()->Tick() - m_NinjaaccelerationTime) % g_Config.m_InfNinjaAccelerationDecreaseTime == 0)
+    {    
+        m_Ninjaacceleration -= 1;
+        m_NinjaaccelerationTime = Server()->Tick();
+    }
 	if (GetClass() == PLAYERCLASS_VOODOO && m_VoodooAboutToDie && m_VoodooTimeAlive > 0)
 	{
 		m_VoodooTimeAlive -= 1000;
@@ -3850,6 +3877,16 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		// A zombie can't infect a hero
 		Mode = TAKEDAMAGEMODE_NOINFECTION;
 	}
+	
+	if (GetClass() == PLAYERCLASS_MAGICIAN && Mode == TAKEDAMAGEMODE_INFECTION)
+    {
+        if (m_MagicResistance > 0)
+        {
+            Dmg = 0;
+                Mode = TAKEDAMAGEMODE_NOINFECTION;
+            m_MagicResistance -= 1;
+        }
+    }
 
 	if (GetClass() == PLAYERCLASS_DOCTOR && Mode == TAKEDAMAGEMODE_INFECTION)
 	{

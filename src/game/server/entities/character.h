@@ -252,6 +252,9 @@ public:
 	int m_FunnelState;
 	int m_PowerBattery;
 	int m_HeroResistance;
+	int m_MagicResistance;
+    int m_Ninjaacceleration = 0;
+    int m_NinjaaccelerationTime = 0;
 
 	std::optional<int> m_DisguisingTimer;
 	bool m_Disguised;
