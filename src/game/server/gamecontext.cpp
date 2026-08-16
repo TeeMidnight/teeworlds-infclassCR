@@ -3465,13 +3465,14 @@ bool CGameContext::ConStatus(IConsole::IResult *pResult, void *pUserData)
 			int AuthLevel = pSelf->m_apPlayers[i]->m_Authed == IServer::AUTHED_ADMIN ? 2 : pSelf->m_apPlayers[i]->m_Authed == IServer::AUTHED_MOD ? 1
 																																				  : 0;
 
-			str_format(aBuf, sizeof(aBuf), "(#%03i) %s: [antispoof=%d] [login=%d] [level=%d] [ip=%s]",
-					   i,
-					   aBufName,
-					   pSelf->Server()->GetClientAntiPing(i),
-					   0,
-					   AuthLevel,
-					   pSelf->Server()->GetClientIP(i));
+			str_format(aBuf, sizeof(aBuf), "(#%03i) %s: [antispoof=%d] [login=%d] [level=%d] [ip=%s] [version=%d]",
+					   	i,
+					   	aBufName,
+					   	pSelf->Server()->GetClientAntiPing(i),
+					   	0,
+					   	AuthLevel,
+					   	pSelf->Server()->GetClientIP(i).c_str(),
+						pSelf->Server()->GetClientVersion(i));
 			pSelf->Console()->Print(IConsole::OUTPUT_LEVEL_STANDARD, "Server", aBuf);
 		}
 	}
