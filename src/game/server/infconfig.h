@@ -35,6 +35,7 @@ MACRO_CONFIG_INT(InfSupportLimit, inf_support_limit, 40, 0, 64, CFGFLAG_SERVER, 
 MACRO_CONFIG_INT(InfReviverLimit, inf_reviver_limit, 1, 0, 4, CFGFLAG_SERVER, "Maximum number of revivers in game")
 MACRO_CONFIG_INT(InfDoctorLimit1, inf_doctor_limit_1, 1, 0, 4, CFGFLAG_SERVER, "Maximum number of doctors in game")
 MACRO_CONFIG_INT(InfDoctorLimit2, inf_doctor_limit_2, 2, 0, 4, CFGFLAG_SERVER, "Maximum number of doctors in game")
+MACRO_CONFIG_INT(InfNinjaLimit, inf_ninja_limit, 64, 0, 64, CFGFLAG_SERVER, "Maximum number of ninjas in game")
 
 MACRO_CONFIG_INT(InfSoldierBombs, inf_soldier_bombs, 3, 1, 128, CFGFLAG_SERVER, "Number of bombs for the soldier")
 MACRO_CONFIG_INT(InfMercBombs, inf_merc_bombs, 15, 1, 100, CFGFLAG_SERVER, "Number of poison grenades for the mercenary")

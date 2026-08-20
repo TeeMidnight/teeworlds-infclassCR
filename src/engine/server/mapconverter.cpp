@@ -853,6 +853,9 @@ void CMapConverter::Finalize()
 						case MENUCLASS_HERO:
 							ClassMask = MASK_HERO;
 							break;
+						case MENUCLASS_NINJA:
+							ClassMask = MASK_NINJA;
+							break;
 						case MENUCLASS_REVIVER:
 							ClassMask = MASK_REVIVER;
 							break;

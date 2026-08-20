@@ -530,13 +530,13 @@ void CGameControllerMOD::Snap(int SnappingClient)
 		int Sciogist = 0;
 		int Reviver = 0;
 		int Doctor = 0;
+		int Ninja = 0;
 
 		CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
 		while(Iter.Next())
 		{
 			switch(Iter.Player()->GetClass())
 			{
-				case PLAYERCLASS_NINJA:
 				case PLAYERCLASS_MERCENARY:
 				case PLAYERCLASS_SNIPER:
 				case PLAYERCLASS_MAGICIAN:
@@ -569,6 +569,9 @@ void CGameControllerMOD::Snap(int SnappingClient)
 				case PLAYERCLASS_DOCTOR:
 					Doctor++;
 					break;
+				case PLAYERCLASS_NINJA:
+					Ninja++;
+					break;
 			}
 		}
 		
@@ -578,6 +581,8 @@ void CGameControllerMOD::Snap(int SnappingClient)
 			ClassMask |= CMapConverter::MASK_MEDIC;
 		if(Hero < g_Config.m_InfHeroLimit)
 			ClassMask |= CMapConverter::MASK_HERO;
+		if(Ninja < g_Config.m_InfNinjaLimit)
+			ClassMask |= CMapConverter::MASK_NINJA;
 		if(Support < g_Config.m_InfSupportLimit)
 			ClassMask |= CMapConverter::MASK_SUPPORT;
 		if(Sciogist < g_Config.m_InfSciogistLimit)
@@ -955,13 +960,13 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 	int nbSciogist = 0;
 	int nbReviver = 0;
 	int nbDoctor = 0;
+	int nbNinja = 0;
 	CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);	
 	
 	while(Iter.Next())
 	{
 		switch(Iter.Player()->GetClass())
 		{
-			case PLAYERCLASS_NINJA:
 			case PLAYERCLASS_MERCENARY:
 			case PLAYERCLASS_SNIPER:
 			case PLAYERCLASS_MAGICIAN:
@@ -993,6 +998,9 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 				break;
 			case PLAYERCLASS_DOCTOR:
 				nbDoctor++;
+				break;
+			case PLAYERCLASS_NINJA:
+				nbNinja++;
 				break;
 		}
 	}
@@ -1026,7 +1034,7 @@ int CGameControllerMOD::ChooseHumanClass(const CPlayer *pPlayer) const
 		(nbSupport < g_Config.m_InfSupportLimit && g_Config.m_InfEnableSniper) ?
 		1.0f : 0.0f;
 	Probability[PLAYERCLASS_NINJA - START_HUMANCLASS - 1] =
-		(nbSupport < g_Config.m_InfSupportLimit && g_Config.m_InfEnableNinja) ?
+		(nbNinja < g_Config.m_InfNinjaLimit && g_Config.m_InfEnableNinja) ?
 		1.0f : 0.0f;
 	Probability[PLAYERCLASS_ARTILLERY - START_HUMANCLASS - 1] =
 		(nbSupport < g_Config.m_InfSupportLimit && g_Config.m_InfEnableArtillery) ?
@@ -1222,13 +1230,13 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 	int nbSupport = 0;
 	int nbReviver = 0;
 	int nbDoctor = 0;
+	int nbNinja = 0;
 
 	CPlayerIterator<PLAYERITER_INGAME> Iter(GameServer()->m_apPlayers);
 	while(Iter.Next())
 	{
 		switch(Iter.Player()->GetClass())
 		{
-			case PLAYERCLASS_NINJA:
 			case PLAYERCLASS_MERCENARY:
 			case PLAYERCLASS_SNIPER:
 			case PLAYERCLASS_MAGICIAN:
@@ -1261,6 +1269,9 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			case PLAYERCLASS_DOCTOR:
 				nbDoctor++;
 				break;
+			case PLAYERCLASS_NINJA:
+				nbNinja++;
+				break;
 		}
 	}
 	
@@ -1277,7 +1288,6 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			return (nbMedic < g_Config.m_InfMedicLimit);
 		case PLAYERCLASS_HERO:
 			return (nbHero < g_Config.m_InfHeroLimit);
-		case PLAYERCLASS_NINJA:
 		case PLAYERCLASS_MERCENARY:
 		case PLAYERCLASS_SNIPER:
 		case PLAYERCLASS_MAGICIAN:
@@ -1291,6 +1301,8 @@ bool CGameControllerMOD::IsChoosableClass(int PlayerClass)
 			return (nbReviver < g_Config.m_InfReviverLimit);
 		case PLAYERCLASS_DOCTOR:
 			return (nbDoctor < g_Config.m_InfDoctorLimit2);
+		case PLAYERCLASS_NINJA:
+			return (nbNinja < g_Config.m_InfNinjaLimit);
 	}
 	
 	return false;
