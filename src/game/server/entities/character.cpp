@@ -433,7 +433,7 @@ void CCharacter::HandleNinja()
 				if (m_NumObjectsHit < 10)
 					m_apHitObjects[m_NumObjectsHit++] = aEnts[i];
 
-				aEnts[i]->TakeDamage(vec2(0, -10.0f), min(g_pData->m_Weapons.m_Ninja.m_pBase->m_Damage + m_Ninjaacceleration/2 + m_NinjaStrengthBuff, 20), m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
+				aEnts[i]->TakeDamage(vec2(0, -10.0f), min(g_pData->m_Weapons.m_Ninja.m_pBase->m_Damage + m_Ninjaacceleration/3 + m_NinjaStrengthBuff, 20), m_pPlayer->GetCID(), WEAPON_NINJA, TAKEDAMAGEMODE_NOINFECTION);
 			}
 		}
 	}
@@ -668,7 +668,7 @@ void CCharacter::UpdateTuningParam()
 
 		if (GetClass() == PLAYERCLASS_NINJA)
 	{
-		float Factor = m_Ninjaacceleration * 0.05f;
+		float Factor = m_Ninjaacceleration * 0.03f;
 		pTuningParams->m_GroundControlSpeed = pTuningParams->m_GroundControlSpeed * (1.0f + Factor);
 		pTuningParams->m_GroundControlAccel = pTuningParams->m_GroundControlAccel * (1.0f + Factor);
 		pTuningParams->m_GroundJumpImpulse = pTuningParams->m_GroundJumpImpulse * (1.0f + Factor);
@@ -1061,7 +1061,11 @@ void CCharacter::FireWeapon()
 				m_DartDir = Direction;
 				m_DartLifeSpan = g_pData->m_Weapons.m_Ninja.m_Movetime * Server()->TickSpeed() / 1000;
 				m_DartOldVelAmount = length(m_Core.m_Vel);
-				if (g_Config.m_InfNinjaAcceleration == 1 & m_Ninjaacceleration < 6)
+				if (g_Config.m_InfNinjaAcceleration == 1 && g_Config.m_InfNinjaForesee == 0 && m_Ninjaacceleration < 6)
+                {
+                m_Ninjaacceleration += 1;
+                }
+				if (g_Config.m_InfNinjaAcceleration == 1 && g_Config.m_InfNinjaForesee == 1 && m_Ninjaacceleration < m_NinjaForesee)
                 {
                 m_Ninjaacceleration += 1;
                 }
@@ -2271,6 +2275,12 @@ void CCharacter::Tick()
         m_Ninjaacceleration -= 1;
         m_NinjaaccelerationTime = Server()->Tick();
     }
+	if (GetClass() == PLAYERCLASS_NINJA && g_Config.m_InfNinjaForesee == 1 && m_NinjaForesee < 10 && Server()->Tick() - m_NinjaForeseeTick >= Server()->TickSpeed() * 5)
+	{
+		m_NinjaForesee = min(10, m_NinjaForesee + 1);
+		m_NinjaForeseeTick = Server()->Tick();
+		m_Armor = m_NinjaForesee;
+	}
 	if (GetClass() == PLAYERCLASS_VOODOO && m_VoodooAboutToDie && m_VoodooTimeAlive > 0)
 	{
 		m_VoodooTimeAlive -= 1000;
@@ -3808,7 +3818,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 			Dmg = max(1, Dmg / 2);
 		}
 
-		if (m_Armor)
+		if (m_Armor && !(GetClass() == PLAYERCLASS_NINJA && g_Config.m_InfNinjaForesee == 1))
 		{
 			if (Dmg <= m_Armor)
 			{
@@ -3924,6 +3934,29 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 		Dmg = DamageAccepted;
 	}
 
+	if (GetClass() == PLAYERCLASS_NINJA && g_Config.m_InfNinjaForesee == 1 && Weapon == WEAPON_NINJA && pKillerPlayer && pKillerPlayer->IsZombie())
+	{
+		float DodgeChance = m_NinjaForesee * 0.1f;
+		if (random_prob(DodgeChance))
+		{
+			Dmg = 0;
+			if (pKillerChar)
+			{
+				pKillerChar->m_Core.m_HookedPlayer = -1;
+				pKillerChar->m_Core.m_HookState = HOOK_RETRACTED;
+				pKillerChar->m_Core.m_HookPos = pKillerChar->m_Pos;
+			}
+			m_NinjaForesee = max(0, m_NinjaForesee - 1);
+			m_Armor = m_NinjaForesee;
+			return false;
+		}
+		else
+		{
+			m_NinjaForesee = max(0, m_NinjaForesee - 3);
+			m_Armor = m_NinjaForesee;
+		}
+	}
+
 	if (m_ProtectionTick > 0)
 	{
 		Dmg = 0;
@@ -3994,7 +4027,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 	/* INFECTION MODIFICATION START ***************************************/
 	if (Dmg)
 	{
-		if (m_Armor)
+		if (m_Armor && !(GetClass() == PLAYERCLASS_NINJA && g_Config.m_InfNinjaForesee == 1))
 		{
 			if (Dmg <= m_Armor)
 			{
@@ -4762,6 +4795,13 @@ void CCharacter::ClassSpawnAttributes()
 		GiveWeapon(WEAPON_GRENADE, -1);
 		GiveWeapon(WEAPON_RIFLE, 3);
 		m_ActiveWeapon = WEAPON_HAMMER;
+
+		if(g_Config.m_InfNinjaForesee == 1)
+		{
+			m_NinjaForesee = 10;
+			m_NinjaForeseeTick = Server()->Tick();
+			m_Armor = m_NinjaForesee;
+		}
 
 		GameServer()->SendBroadcast_ClassIntro(m_pPlayer->GetCID(), PLAYERCLASS_NINJA);
 		if (!m_pPlayer->IsKnownClass(PLAYERCLASS_NINJA))

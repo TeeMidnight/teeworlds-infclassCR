@@ -255,6 +255,8 @@ public:
 	int m_MagicResistance;
     int m_Ninjaacceleration = 0;
     int m_NinjaaccelerationTime = 0;
+	int m_NinjaForesee;
+	int m_NinjaForeseeTick;
 
 	std::optional<int> m_DisguisingTimer;
 	bool m_Disguised;

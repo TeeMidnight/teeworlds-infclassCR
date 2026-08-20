@@ -242,4 +242,5 @@ MACRO_CONFIG_INT(InfInvisiableBoomer, inf_invisiable_boomer, 0, 0, 1, CFGFLAG_SE
 MACRO_CONFIG_INT(InfVoodooBoomer, inf_voodoo_boomer, 0, 0, 1, CFGFLAG_SERVER, "make boomer have about to die time like voodoo")
 MACRO_CONFIG_INT(InfNinjaAcceleration, inf_ninja_acceleration, 0, 0, 1, CFGFLAG_SERVER, "make ninja increase speed and strength every slash(6tier max,every 1tier+0.5speed,2tier+1dmg)")
 MACRO_CONFIG_INT(InfNinjaAccelerationDecreaseTime, inf_ninja_acceleration_decrease, 250, 0, 1000, CFGFLAG_SERVER, "time decrease of ninja acceleration tier(50=1s)")
+MACRO_CONFIG_INT(InfNinjaForesee, inf_ninja_foresee, 0, 0, 1, CFGFLAG_SERVER, "make ninja probability dodge hook and damage(10tier max,every 1tier+10probability)")
 #endif
