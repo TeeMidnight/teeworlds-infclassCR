@@ -1069,6 +1069,10 @@ void CCharacter::FireWeapon()
                 {
                 m_Ninjaacceleration += 1;
                 }
+				if (g_Config.m_InfNinjaAcceleration == 1 && g_Config.m_InfNinjaForesee == 1 && m_Ninjaacceleration > m_NinjaForesee)
+                {
+                m_Ninjaacceleration = m_NinjaForesee;
+                }
 
 				GameServer()->CreateSound(m_Pos, SOUND_NINJA_HIT);
 			}
