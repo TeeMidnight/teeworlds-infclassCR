@@ -3950,7 +3950,7 @@ bool CCharacter::TakeDamage(vec2 Force, int Dmg, int From, int Weapon, int Mode)
 				pKillerChar->m_Core.m_HookState = HOOK_RETRACTED;
 				pKillerChar->m_Core.m_HookPos = pKillerChar->m_Pos;
 			}
-			m_NinjaForesee = max(0, m_NinjaForesee - 3);
+			m_NinjaForesee = max(0, m_NinjaForesee - g_Config.m_InfNinjaForeseeDecrease);
 			m_Armor = m_NinjaForesee;
 			return false;
 		}
