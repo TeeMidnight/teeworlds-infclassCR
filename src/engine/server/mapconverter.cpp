@@ -1085,26 +1085,6 @@ bool CMapConverter::CreateMap(const char* pFilename)
 	CopyAnimations();
 	CopySounds();
 	
-	//Game Group
-	{
-		CMapItemGroup Item;
-		Item.m_Version = CMapItemGroup::CURRENT_VERSION;
-		Item.m_ParallaxX = 100;
-		Item.m_ParallaxY = 100;
-		Item.m_OffsetX = 0;
-		Item.m_OffsetY = 0;
-		Item.m_StartLayer = m_NumLayers;
-		Item.m_NumLayers = 1;
-		Item.m_UseClipping = 0;
-		Item.m_ClipX = 0;
-		Item.m_ClipY = 0;
-		Item.m_ClipW = 0;
-		Item.m_ClipH = 0;
-		StrToInts(Item.m_aName, sizeof(Item.m_aName)/sizeof(int), "Game");
-		
-		m_DataFile.AddItem(MAPITEMTYPE_GROUP, m_NumGroups++, sizeof(Item), &Item);
-	}
-	
 	CopyLayers();
 	
 	Finalize();
